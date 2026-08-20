@@ -1,0 +1,1719 @@
+app:
+  description: '3、修复总结不一致等问题；0723
+
+    2、优化04模块逻辑、字段，整体控制语句长度；0717
+
+    1、打通海外版售前总结流程；0717'
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  mode: workflow
+  name: EN海外GEO-售前-总结0723
+  use_icon_as_answer_icon: false
+kind: app
+version: 0.1.3
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: false
+      fileUploadConfig:
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 15
+        image_file_size_limit: 10
+        video_file_size_limit: 100
+        workflow_file_upload_limit: 10
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: ''
+    retriever_resource:
+      enabled: false
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        sourceType: start
+        targetType: llm
+      id: e-1800000000001-1800000002010
+      source: '1800000000001'
+      sourceHandle: source
+      target: '1800000002010'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: start
+        targetType: llm
+      id: e-1800000000001-1800000003010
+      source: '1800000000001'
+      sourceHandle: source
+      target: '1800000003010'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: start
+        targetType: llm
+      id: e-1800000000001-1800000004010
+      source: '1800000000001'
+      sourceHandle: source
+      target: '1800000004010'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: start
+        targetType: llm
+      id: e-1800000000001-1800000005010
+      source: '1800000000001'
+      sourceHandle: source
+      target: '1800000005010'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: code
+      id: e-1800000002010-1800000002020
+      source: '1800000002010'
+      sourceHandle: source
+      target: '1800000002020'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: code
+      id: e-1800000003010-1800000003020
+      source: '1800000003010'
+      sourceHandle: source
+      target: '1800000003020'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: code
+      id: e-1800000004010-1800000004020
+      source: '1800000004010'
+      sourceHandle: source
+      target: '1800000004020'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: code
+      id: e-1800000005010-1800000005020
+      source: '1800000005010'
+      sourceHandle: source
+      target: '1800000005020'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: code
+      id: e-1800000002020-1800000098010
+      source: '1800000002020'
+      sourceHandle: source
+      target: '1800000098010'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: code
+      id: e-1800000003020-1800000098010
+      source: '1800000003020'
+      sourceHandle: source
+      target: '1800000098010'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: code
+      id: e-1800000004020-1800000098010
+      source: '1800000004020'
+      sourceHandle: source
+      target: '1800000098010'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: code
+      id: e-1800000005020-1800000098010
+      source: '1800000005020'
+      sourceHandle: source
+      target: '1800000098010'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: llm
+      id: e-1800000098010-1800000001010
+      source: '1800000098010'
+      sourceHandle: source
+      target: '1800000001010'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: code
+      id: e-1800000001010-1800000001020
+      source: '1800000001010'
+      sourceHandle: source
+      target: '1800000001020'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: llm
+      id: e-1800000001020-1800000006010
+      source: '1800000001020'
+      sourceHandle: source
+      target: '1800000006010'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: code
+      id: e-1800000006010-1800000006020
+      source: '1800000006010'
+      sourceHandle: source
+      target: '1800000006020'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: llm
+      id: e-1800000006020-1800000010010
+      source: '1800000006020'
+      sourceHandle: source
+      target: '1800000010010'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: code
+      id: e-1800000010010-1800000010020
+      source: '1800000010010'
+      sourceHandle: source
+      target: '1800000010020'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: code
+      id: e-1800000010020-1800000099010
+      source: '1800000010020'
+      sourceHandle: source
+      target: '1800000099010'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: end
+      id: e-1800000099010-1800000099999
+      source: '1800000099010'
+      sourceHandle: source
+      target: '1800000099999'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        desc: 海外售前诊断总结输入：公共字段 + 6 模块 JSON string
+        selected: false
+        title: 1.开始
+        type: start
+        variables:
+        - label: 本品品牌名
+          max_length: null
+          options: []
+          required: true
+          type: text-input
+          variable: brand_name
+        - label: 客户/企业名称
+          max_length: null
+          options: []
+          required: true
+          type: text-input
+          variable: corp_name
+        - label: 产品/业务名称
+          max_length: null
+          options: []
+          required: false
+          type: text-input
+          variable: product_name
+        - label: 核心诊断主题
+          max_length: null
+          options: []
+          required: true
+          type: text-input
+          variable: core_topic
+        - label: 市场代码(如 US)
+          max_length: null
+          options: []
+          required: true
+          type: text-input
+          variable: market
+        - label: 语言代码(如 en-US)
+          max_length: null
+          options: []
+          required: true
+          type: text-input
+          variable: language
+        - label: 诊断任务ID
+          max_length: null
+          options: []
+          required: true
+          type: text-input
+          variable: task_id
+        - label: 数据总览输入(JSON string)
+          max_length: null
+          options: []
+          required: true
+          type: paragraph
+          variable: overview
+        - label: 竞品表现输入(JSON string)
+          max_length: null
+          options: []
+          required: true
+          type: paragraph
+          variable: competitor
+        - label: 引用来源输入(JSON string)
+          max_length: null
+          options: []
+          required: true
+          type: paragraph
+          variable: citation
+        - label: 品牌表达输入(JSON array string)
+          max_length: null
+          options: []
+          required: true
+          type: paragraph
+          variable: brand_expression
+        - label: 品牌进入机会输入(JSON string)
+          max_length: null
+          options: []
+          required: true
+          type: paragraph
+          variable: category_actions
+        - label: 问题明细(剥回答全文, JSON array string)
+          max_length: null
+          options: []
+          required: true
+          type: paragraph
+          variable: question_details
+      height: 445
+      id: '1800000000001'
+      position:
+        x: 0
+        y: 0
+      positionAbsolute:
+        x: 0
+        y: 0
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            max_tokens: 18001
+            temperature: 0.2
+            top_p: 0.7
+          mode: chat
+          name: deepseek/deepseek-v4-pro
+          provider: zhinao
+        prompt_template:
+        - id: 1800000001010-sys
+          role: system
+          text: '你是资深 GEO 品牌诊断专家。基于【数据总览 KPI】生成数据总览诊断结论。
+
+            【输出格式】{"title":"...","points":["..."],"conclusion":"..."}
+
+            【字段规则】
+
+            - title: 一句话核心大结论 30-40 汉字，适合 1~2 行展示；概括本品在进入回答后的内容与推荐顺位相对竞品的整体处境。（禁止提及未进入回答的数据情况，如“40条”“50条”等）
+
+            - points: 3~5 条，每条一条可独立展示的主要发现，每条 40-50个 汉字、只讲一个要点、以句号结束；只选择有数据支撑的维度，不按固定五段凑数；禁止把多个指标塞进一条(不要用逗号/分号拼成长句)；（禁止提及未进入回答的数据情况，如“40条”“50条”等）。
+
+            - conclusion: 一句话优化重点 40-50个 汉字，将作为最后一条要点追加展示；（禁止提及未进入回答的数据情况，如“40条”“50条”等）。
+
+            【差值铁律(重点)】
+
+            - 提及率/声量占比/平均排名的差值，必须直接引用 competitive_gaps 里对应指标的 gap_text 与 competitor_brand_name，禁止自己从
+            self_value/competitor_value 做减法，禁止从展示文本解析数字。
+
+            - competitive_gaps.<指标> 为 null 时，说明无可比较竞品，该维度不写差距结论。
+
+            - comparison_result 只有 ahead/behind/equal：behind=落后、ahead=领先、equal=并列。
+
+            【品牌进入机会引用铁律】
+
+            - 涉及品牌进入机会，只能引用下方【品牌进入机会已定稿结论】与 category_action_counts 数量，禁止自行重新分档。
+
+            - 客户文案禁止出现 P0/P1/P2 等内部编码；改写为“优先改进问题/持续优化问题/保持稳定问题”。
+
+            - 数据总览只写发现，不越权展开具体页面或内容行动。
+
+            【输入字段说明】
+
+            - 五项展示文本(已格式化，直接引用不要再加工百分号/井号)：category_mention_rate/share_of_voice/average_rank/positive_ratio/official_source_rate
+
+            - 整数：total_questions/non_branded_question_count/non_branded_valid_answer_count/mentioned_count/brand_official_page_count/self_top3_count
+
+            - competitive_gaps{mention_rate,share_of_voice,average_rank}: 各含 competitor_brand_name/self_value/competitor_value/gap_value/gap_percent_points(仅比例项)/comparison_result/gap_text
+
+            - category_action_counts{p0,p1,p2}: 三档问题数量
+
+            - top_brand_topics[]{topic,count,evidence_refs}: 最高频品牌主题；生成对应发现时须绑定 evidence_refs
+            校验，但 evidence_refs 不写进输出
+
+
+            【通用铁律】
+
+            1. 直接输出合法 JSON，禁止 Markdown、禁止代码块标记(```json```)、禁止注释、禁止任何额外说明文字。
+
+            2. 严格按指定 Schema 输出，不得增删改字段名。
+
+            3. 只用输入数据，禁止编造任何问题、回答、排名、引用、竞品或表达证据。
+
+            4. 输出语言固定为中文（客户为国内出海客户），即使被诊断内容为英文，分析文案也用中文。
+
+            5. 语言风格：专业简洁、第三方监理视角、结论先行、数据驱动、客观公允；涉及落后时措辞缓和，禁用极端词（严重落后/毫无建树/被动挨打）。
+
+            6. 禁用表达：赋能/深度赋能/全面提升/优化升级/建议您/我们应该；替换为：数据显示/表明/证实/观察到。
+
+            7. 【长度铁律(严格遵守，看板每句限 1-2 行)】模块分析类每条独立短句 40-50 个汉字，且每条只讲一个要点、以句号结束；title/summary/conclusion
+            一句话 40-50 个汉字；禁止把多个要点塞进一条(不要用分号/多句拼成一大段)。宁可拆成多条独立短句，也不要写成一长段。
+
+
+
+            【全局事实一致性铁律】
+
+            1. 输入 JSON 是唯一事实源；禁止沿用示例数字、常识或品牌知名度补全事实。
+
+            2. 同一指标在不同字段重复出现时，按本节点指定的字段优先级取值，不得混用或自行换算。
+
+            3. comparison_result=behind 只能写“落后/低于”，ahead 只能写“领先/高于”，equal 只能写“并列/接近”；输出前必须自检方向词与
+            comparison_result 一致。
+
+            4. 数值为 0、null、“-”含义不同：0 是有效零值；null 或“-”才是无有效比较/无有效排名，不得互相替换。
+
+            5. 只返回合法 JSON，不得输出推理过程、Markdown 或额外文字。'
+        - id: 1800000001010-usr
+          role: user
+          text: '品牌名称：{{#1800000000001.brand_name#}}
+
+            核心主题：{{#1800000000001.core_topic#}}
+
+
+            === 数据总览 KPI ===
+
+            {{#1800000000001.overview#}}
+
+
+            === 品牌进入机会已定稿结论（机会类发现只能引用这里，客户文案不得出现内部编码） ===
+
+            {{#1800000005020.summary_category_actions#}}
+
+
+            请直接输出 JSON，不要任何额外说明。'
+        selected: false
+        title: M1.数据总览
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 97
+      id: '1800000001010'
+      position:
+        x: 1278.2703874902716
+        y: 0
+      positionAbsolute:
+        x: 1278.2703874902716
+        y: 0
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import json\nimport re\n\ndef main(raw: str) -> dict:\n    def parse_json(s):\n\
+          \        s = (s or \"\").strip()\n        if \"---\" in s:\n           \
+          \ s = s.rsplit(\"---\", 1)[-1].strip()\n        s = re.sub(r\"^```(?:json)?\\\
+          s*\", \"\", s, flags=re.I)\n        s = re.sub(r\"\\s*```$\", \"\", s).strip()\n\
+          \        try:\n            return json.loads(s)\n        except Exception:\n\
+          \            pass\n        starts=[i for i,c in enumerate(s) if c in \"\
+          [{\"]\n        for start in starts:\n            opening=s[start]; closing=\"\
+          ]\" if opening==\"[\" else \"}\"\n            depth=0; in_str=False; esc=False\n\
+          \            for i in range(start,len(s)):\n                ch=s[i]\n  \
+          \              if in_str:\n                    if esc: esc=False\n     \
+          \               elif ch==\"\\\\\": esc=True\n                    elif ch=='\"\
+          ': in_str=False\n                else:\n                    if ch=='\"':\
+          \ in_str=True\n                    elif ch==opening: depth+=1\n        \
+          \            elif ch==closing:\n                        depth-=1\n     \
+          \                   if depth==0:\n                            try: return\
+          \ json.loads(s[start:i+1])\n                            except Exception:\
+          \ break\n        raise ValueError(\"invalid json\")\n    try:\n        obj=parse_json(raw)\n\
+          \        return {\"summary_overview\":json.dumps(obj,ensure_ascii=False)}\n\
+          \    except Exception:\n        return {\"summary_overview\":'{\"title\"\
+          :\"数据解析异常\",\"points\":[\"数据解析异常\",\"数据解析异常\",\"数据解析异常\"],\"conclusion\"\
+          :\"\"}'}"
+        code_language: python3
+        desc: ''
+        outputs:
+          summary_overview:
+            children: null
+            type: string
+        selected: false
+        title: M1.数据总览净化
+        type: code
+        variables:
+        - value_selector:
+          - '1800000001010'
+          - text
+          variable: raw
+      height: 53
+      id: '1800000001020'
+      position:
+        x: 1600
+        y: 0
+      positionAbsolute:
+        x: 1600
+        y: 0
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            max_tokens: 12000
+            temperature: 0.2
+            top_p: 0.7
+          mode: chat
+          name: deepseek/deepseek-v4-pro
+          provider: zhinao
+        prompt_template:
+        - id: 1800000002010-sys
+          role: system
+          text: '你是资深 GEO 竞品分析专家。只能依据【竞品表现数据】输出模块分析。
+
+            【输出格式】严格返回 3 条 JSON 字符串数组：["提及率结论","声量占比结论","平均排名结论"]。
+
+            【固定顺序】
+
+            1. 第一条：提及率（能否进入回答）。
+
+            2. 第二条：声量占比（声量位置）。
+
+            3. 第三条：平均排名（进入回答后的推荐顺位）。排名分析必须放第三条。
+
+            【字段唯一来源与优先级】
+
+            - 提及率本品值：mention_ranking 中 is_self=true 的 mention_rate；展示百分比时乘 100。差值与方向只引用
+            competitive_gaps.mention_rate。
+
+            - 声量占比本品及竞品值：只引用 share_segments[].rate_percent（优先）或 rate；禁止引用 share_chart.value
+            当百分比，禁止自行猜测 31%、33% 等值。差值与方向只引用 competitive_gaps.share_of_voice。
+
+            - 平均排名本品值：先找 rank_performance 中 is_self=true 的 average_rank；>0 表示本品有有效排名，=0
+            表示无有效排名。展示文本可核对 rank_rows 中 is_self=true 的 average_rank_text。
+
+            - competitive_gaps.average_rank=null 只代表无法形成“本品与最优竞品”的有效差值，不自动代表本品没有排名。必须先检查本品
+            average_rank，再决定“有排名”或“无有效排名”。
+
+            【竞品排名校验】
+
+            - 任一品牌只要 rank_performance.average_rank>0 或 rank_rows.average_rank_text
+            不是“-”，就有有效排名，禁止写“该品牌没有排名”。
+
+            - best_competitor_rank 只用于确认排名最优竞品；不得把其他竞品的排名状态套给本品。
+
+            【差值与方向铁律】
+
+            - 每项只用自己的 competitive_gaps；comparison_result=behind 写落后，ahead 写领先，equal
+            写并列/接近。
+
+            - gap_text 直接引用，不自行减法；某项 gap 为 null 时只陈述该项输入中的可验证现状，不编造差距。
+
+            【长度】每条 30~55 汉字，只讲一个指标，以句号结束。
+
+
+            【全局事实一致性铁律】
+
+            1. 输入 JSON 是唯一事实源；禁止沿用示例数字、常识或品牌知名度补全事实。
+
+            2. 同一指标在不同字段重复出现时，按本节点指定的字段优先级取值，不得混用或自行换算。
+
+            3. comparison_result=behind 只能写“落后/低于”，ahead 只能写“领先/高于”，equal 只能写“并列/接近”；输出前必须自检方向词与
+            comparison_result 一致。
+
+            4. 数值为 0、null、“-”含义不同：0 是有效零值；null 或“-”才是无有效比较/无有效排名，不得互相替换。
+
+            5. 只返回合法 JSON，不得输出推理过程、Markdown 或额外文字。'
+        - id: 1800000002010-usr
+          role: user
+          text: '品牌名称：{{#1800000000001.brand_name#}}
+
+
+            === 竞品表现数据 ===
+
+            {{#1800000000001.competitor#}}
+
+
+            请直接输出 JSON 数组，不要任何额外说明，不要 Markdown 代码块。'
+        selected: true
+        title: M2.竞品表现
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 97
+      id: '1800000002010'
+      position:
+        x: 320
+        y: 0
+      positionAbsolute:
+        x: 320
+        y: 0
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import json\nimport re\n\ndef main(raw: str) -> dict:\n    def parse_json(s):\n\
+          \        s = (s or \"\").strip()\n        if \"---\" in s:\n           \
+          \ s = s.rsplit(\"---\", 1)[-1].strip()\n        s = re.sub(r\"^```(?:json)?\\\
+          s*\", \"\", s, flags=re.I)\n        s = re.sub(r\"\\s*```$\", \"\", s).strip()\n\
+          \        try:\n            return json.loads(s)\n        except Exception:\n\
+          \            pass\n        starts=[i for i,c in enumerate(s) if c in \"\
+          [{\"]\n        for start in starts:\n            opening=s[start]; closing=\"\
+          ]\" if opening==\"[\" else \"}\"\n            depth=0; in_str=False; esc=False\n\
+          \            for i in range(start,len(s)):\n                ch=s[i]\n  \
+          \              if in_str:\n                    if esc: esc=False\n     \
+          \               elif ch==\"\\\\\": esc=True\n                    elif ch=='\"\
+          ': in_str=False\n                else:\n                    if ch=='\"':\
+          \ in_str=True\n                    elif ch==opening: depth+=1\n        \
+          \            elif ch==closing:\n                        depth-=1\n     \
+          \                   if depth==0:\n                            try: return\
+          \ json.loads(s[start:i+1])\n                            except Exception:\
+          \ break\n        raise ValueError(\"invalid json\")\n    try:\n        obj=parse_json(raw)\n\
+          \        return {\"summary_competitor_performance\":json.dumps(obj,ensure_ascii=False)}\n\
+          \    except Exception:\n        return {\"summary_competitor_performance\"\
+          :'[]'}"
+        code_language: python3
+        desc: ''
+        outputs:
+          summary_competitor_performance:
+            children: null
+            type: string
+        selected: false
+        title: M2.竞品表现净化
+        type: code
+        variables:
+        - value_selector:
+          - '1800000002010'
+          - text
+          variable: raw
+      height: 53
+      id: '1800000002020'
+      position:
+        x: 640
+        y: 0
+      positionAbsolute:
+        x: 640
+        y: 0
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            max_tokens: 12000
+            temperature: 0.2
+            top_p: 0.7
+          mode: chat
+          name: deepseek/deepseek-v4-pro
+          provider: zhinao
+        prompt_template:
+        - id: 1800000003010-sys
+          role: system
+          text: '你是资深 GEO 引用来源分析专家。只能依据【引用来源数据】生成引用来源与官网覆盖分析。
+
+            【输出格式】严格返回 3 条 JSON 字符串数组：["来源结构","官网引用事实","改进方向"]。
+
+            【固定三条】
+
+            1. 来源结构：按 source_type_bars[].label/value 陈述占比最高来源，并准确陈述“品牌官网”的 value。
+
+            2. 官网引用事实：brand_official_pages 是“已实际被 AI 回答引用的品牌官网页面”，不是官网页面库存；数组长度>0
+            时必须写“已有 N 个官网页面被引用”，绝不能写“无一被引用”。可概括已覆盖的页面类型，但不得把多种页面说成单一类型。
+
+            3. 改进方向：只针对现有覆盖缺口写“检查并完善”，不得否定已存在的引用成果。
+
+            【字段优先级与分类稳定性】
+
+            - 来源类型及占比只认 source_type_bars；source_type_distribution 仅作一致性核对。禁止把“企业网站”“竞品官网”“媒体评测”“品牌官网”“用户生成内容”“其他来源”相互改名或合并。
+
+            - 官网引用率只认 label=品牌官网 对应的 value；不存在时再看 distribution 中 source_type_name=品牌官网
+            的 rate×100。
+
+            - 官网页面数量只认 len(brand_official_pages)，每个元素都表示至少被引用过一次；quote_count 是引用次数。
+
+            - top_domains/top_pages 不得覆盖 brand_official_pages 的事实。
+
+            【长度】每条 30~55 汉字，只讲一个事实，以句号结束。
+
+
+            【全局事实一致性铁律】
+
+            1. 输入 JSON 是唯一事实源；禁止沿用示例数字、常识或品牌知名度补全事实。
+
+            2. 同一指标在不同字段重复出现时，按本节点指定的字段优先级取值，不得混用或自行换算。
+
+            3. comparison_result=behind 只能写“落后/低于”，ahead 只能写“领先/高于”，equal 只能写“并列/接近”；输出前必须自检方向词与
+            comparison_result 一致。
+
+            4. 数值为 0、null、“-”含义不同：0 是有效零值；null 或“-”才是无有效比较/无有效排名，不得互相替换。
+
+            5. 只返回合法 JSON，不得输出推理过程、Markdown 或额外文字。'
+        - id: 1800000003010-usr
+          role: user
+          text: '品牌名称：{{#1800000000001.brand_name#}}
+
+
+            === 引用来源数据 ===
+
+            {{#1800000000001.citation#}}
+
+
+            请直接输出 JSON 数组，不要任何额外说明，不要 Markdown 代码块。'
+        selected: false
+        title: M3.引用来源
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 97
+      id: '1800000003010'
+      position:
+        x: 320
+        y: 140
+      positionAbsolute:
+        x: 320
+        y: 140
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import json\nimport re\n\ndef main(raw: str) -> dict:\n    def parse_json(s):\n\
+          \        s = (s or \"\").strip()\n        if \"---\" in s:\n           \
+          \ s = s.rsplit(\"---\", 1)[-1].strip()\n        s = re.sub(r\"^```(?:json)?\\\
+          s*\", \"\", s, flags=re.I)\n        s = re.sub(r\"\\s*```$\", \"\", s).strip()\n\
+          \        try:\n            return json.loads(s)\n        except Exception:\n\
+          \            pass\n        starts=[i for i,c in enumerate(s) if c in \"\
+          [{\"]\n        for start in starts:\n            opening=s[start]; closing=\"\
+          ]\" if opening==\"[\" else \"}\"\n            depth=0; in_str=False; esc=False\n\
+          \            for i in range(start,len(s)):\n                ch=s[i]\n  \
+          \              if in_str:\n                    if esc: esc=False\n     \
+          \               elif ch==\"\\\\\": esc=True\n                    elif ch=='\"\
+          ': in_str=False\n                else:\n                    if ch=='\"':\
+          \ in_str=True\n                    elif ch==opening: depth+=1\n        \
+          \            elif ch==closing:\n                        depth-=1\n     \
+          \                   if depth==0:\n                            try: return\
+          \ json.loads(s[start:i+1])\n                            except Exception:\
+          \ break\n        raise ValueError(\"invalid json\")\n    try:\n        obj=parse_json(raw)\n\
+          \        return {\"summary_citation_sources\":json.dumps(obj,ensure_ascii=False)}\n\
+          \    except Exception:\n        return {\"summary_citation_sources\":'[]'}"
+        code_language: python3
+        desc: ''
+        outputs:
+          summary_citation_sources:
+            children: null
+            type: string
+        selected: false
+        title: M3.引用来源净化
+        type: code
+        variables:
+        - value_selector:
+          - '1800000003010'
+          - text
+          variable: raw
+      height: 53
+      id: '1800000003020'
+      position:
+        x: 640
+        y: 140
+      positionAbsolute:
+        x: 640
+        y: 140
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            max_tokens: 12000
+            temperature: 0.2
+            top_p: 0.7
+          mode: chat
+          name: deepseek/deepseek-v4-pro
+          provider: zhinao
+        prompt_template:
+        - id: 1800000004010-sys
+          role: system
+          text: '你是资深 GEO 品牌表达分析专家。输入是【已提及本品的表达证据数组】，每条含该品牌相关问题(query)与 AI 回答中对本品的情感倾向原文摘录(sentiment_quote)及情绪分(sentiment_score)。你要从这些原文摘录里归纳出高频【正向关键词】与【风险关键词】，每个关键词配一句话解释。
+
+            【输出格式】{"positive_evidence":[{"keyword":"...","explain":"..."}],"risk_evidence":[{"keyword":"...","explain":"..."}],"analysis_items":["...","...","..."]}
+
+            【情绪判定(按 0.1 界定)】sentiment_score > 0.1 → 正向；< -0.1 → 风险/负向；[-0.1,0.1] →
+            中性，不作证据。
+
+            【关键词铁律(核心)】
+
+            - positive_evidence：从正向摘录里归纳 3~5 个高频正向关键词(keyword)，每个 keyword 4~10 汉字(如''多场景适配''/''成熟精致''/''安全稳妥'')，explain
+            是对该关键词的一句话解释20-30 汉字。
+
+            - risk_evidence：从风险/负向或表达笼统的摘录里归纳 3~5 个风险关键词(keyword)，每个 4~10 汉字(如''留香与扩散争议''/''版本与配方信息混用'')，explain
+            一句话 20-30 汉字。风险不限于负向情绪，也含表达笼统、版本混用、渠道真假、证据不足。
+
+            - keyword 与 explain 都必须由输入 sentiment_quote 归纳得来，禁止编造输入里没有出现的表达；sentiment_quote
+            为空的记录不参与归纳。
+
+            - 若正向或风险摘录不足，就少归纳几个(可少于3)，但不得为凑数编造；两侧最多各 5 个。
+
+            注意：如果风险信息不足以给出结论和判断，则可以输出为空，但是不要输出：信息不足不宜主力；基于现有信息，不推荐将其作为主要制作工具。等内容
+
+            【analysis_items 铁律】固定 3 条短句，每条 25~45 汉字：第一条概括正向主题；第二条概括风险或中性信息缺口；第三条说明对决策的影响。若没有负向样本，必须明确“未发现负向表达”，不得虚构风险。
+
+            【数据归属校验】输入已经只包含本品记录；keyword/explain 只能归纳 sentiment_quote，不复述其他品牌或问题主题。
+
+            【输入字段】query/question_zh/sentiment_quote/sentiment_score(decimal 字符串)
+
+
+            【通用铁律】
+
+            1. 直接输出合法 JSON，禁止 Markdown、禁止代码块标记(```json```)、禁止注释、禁止任何额外说明文字。
+
+            2. 严格按指定 Schema 输出，不得增删改字段名。
+
+            3. 只用输入数据，禁止编造任何问题、回答、排名、引用、竞品或表达证据。
+
+            4. 输出语言固定为中文（客户为国内出海客户），即使被诊断内容为英文，分析文案也用中文。
+
+            5. 语言风格：专业简洁、第三方监理视角、结论先行、数据驱动、客观公允；涉及落后时措辞缓和，禁用极端词（严重落后/毫无建树/被动挨打）。
+
+            6. 禁用表达：赋能/深度赋能/全面提升/优化升级/建议您/我们应该；替换为：数据显示/表明/证实/观察到。
+
+            7. 【长度铁律(严格遵守，看板每句限 1 行)】模块分析类每条独立短句 40-60 个汉字，且每条只讲一个要点、以句号结束；title/summary/conclusion
+            一句话 40-60 个汉字；禁止把多个要点塞进一条(不要用分号/多句拼成一大段)。宁可拆成多条独立短句，也不要写成一长段。
+
+
+
+            【全局事实一致性铁律】
+
+            1. 输入 JSON 是唯一事实源；禁止沿用示例数字、常识或品牌知名度补全事实。
+
+            2. 同一指标在不同字段重复出现时，按本节点指定的字段优先级取值，不得混用或自行换算。
+
+            3. comparison_result=behind 只能写“落后/低于”，ahead 只能写“领先/高于”，equal 只能写“并列/接近”；输出前必须自检方向词与
+            comparison_result 一致。
+
+            4. 数值为 0、null、“-”含义不同：0 是有效零值；null 或“-”才是无有效比较/无有效排名，不得互相替换。
+
+            5. 只返回合法 JSON，不得输出推理过程、Markdown 或额外文字。'
+        - id: 1800000004010-usr
+          role: user
+          text: '品牌名称：{{#1800000000001.brand_name#}}
+
+
+            === 已提及本品的表达证据(JSON 数组，keyword 与 explain 从 sentiment_quote 归纳) ===
+
+            {{#1800000000001.brand_expression#}}
+
+
+            请直接输出 JSON，不要任何额外说明。'
+        selected: false
+        title: M4.品牌表达
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 97
+      id: '1800000004010'
+      position:
+        x: 320
+        y: 280
+      positionAbsolute:
+        x: 320
+        y: 280
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import json\nimport re\n\ndef main(raw: str) -> dict:\n    def parse_json(s):\n\
+          \        s = (s or \"\").strip()\n        if \"---\" in s:\n           \
+          \ s = s.rsplit(\"---\", 1)[-1].strip()\n        s = re.sub(r\"^```(?:json)?\\\
+          s*\", \"\", s, flags=re.I)\n        s = re.sub(r\"\\s*```$\", \"\", s).strip()\n\
+          \        try:\n            return json.loads(s)\n        except Exception:\n\
+          \            pass\n        starts=[i for i,c in enumerate(s) if c in \"\
+          [{\"]\n        for start in starts:\n            opening=s[start]; closing=\"\
+          ]\" if opening==\"[\" else \"}\"\n            depth=0; in_str=False; esc=False\n\
+          \            for i in range(start,len(s)):\n                ch=s[i]\n  \
+          \              if in_str:\n                    if esc: esc=False\n     \
+          \               elif ch==\"\\\\\": esc=True\n                    elif ch=='\"\
+          ': in_str=False\n                else:\n                    if ch=='\"':\
+          \ in_str=True\n                    elif ch==opening: depth+=1\n        \
+          \            elif ch==closing:\n                        depth-=1\n     \
+          \                   if depth==0:\n                            try: return\
+          \ json.loads(s[start:i+1])\n                            except Exception:\
+          \ break\n        raise ValueError(\"invalid json\")\n    try:\n        obj=parse_json(raw)\n\
+          \        return {\"summary_brand_expression\":json.dumps(obj,ensure_ascii=False)}\n\
+          \    except Exception:\n        return {\"summary_brand_expression\":'{\"\
+          positive_evidence\":[],\"risk_evidence\":[],\"analysis_items\":[\"数据解析异常。\"\
+          ,\"数据解析异常。\",\"数据解析异常。\"]}'}"
+        code_language: python3
+        desc: ''
+        outputs:
+          summary_brand_expression:
+            children: null
+            type: string
+        selected: false
+        title: M4.品牌表达净化
+        type: code
+        variables:
+        - value_selector:
+          - '1800000004010'
+          - text
+          variable: raw
+      height: 53
+      id: '1800000004020'
+      position:
+        x: 640
+        y: 280
+      positionAbsolute:
+        x: 640
+        y: 280
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            max_tokens: 12000
+            temperature: 0.2
+            top_p: 0.7
+          mode: chat
+          name: deepseek/deepseek-v4-pro
+          provider: zhinao
+        prompt_template:
+        - id: 1800000005010-sys
+          role: system
+          text: '你是资深 GEO 品牌进入机会分析专家。输入由后端按内部规则分成 p0/p1/p2，输出键名必须保留供程序映射，但客户文案不得出现内部编码。
+
+            【输出格式】{"p0":"...","p1":"...","p2":"..."}
+
+            【客户文案规则】
+
+            - p0 文案只描述“优先改进问题”的意图主题、品牌提及与排名现状。
+
+            - p1 文案只描述“持续优化问题”的意图主题、品牌提及与排名现状。
+
+            - p2 文案只描述“保持稳定问题”的意图主题、品牌提及与排名现状。
+
+            - 文案中严禁出现 P0、P1、P2、p0、p1、p2、内部分组、优先级编码等字样。
+
+            【职责边界】
+
+            - 本模块只输出分析发现，禁止给行动建议；禁止出现“建议、应、需、优先补齐、创建、新建、检查并完善、建设页面、强化内容”等行动措辞。
+
+            - 不得重新分档、排序或截取；只分析输入中每档已选中的问题。
+
+            - 不得引入竞品、引用来源或输入不存在的业务场景。
+
+            - 空数组对应输出空字符串。
+
+            【长度】每档 30~55 汉字，1 句，只讲现状和缺口，以句号结束。
+
+
+            【全局事实一致性铁律】
+
+            1. 输入 JSON 是唯一事实源；禁止沿用示例数字、常识或品牌知名度补全事实。
+
+            2. 同一指标在不同字段重复出现时，按本节点指定的字段优先级取值，不得混用或自行换算。
+
+            3. comparison_result=behind 只能写“落后/低于”，ahead 只能写“领先/高于”，equal 只能写“并列/接近”；输出前必须自检方向词与
+            comparison_result 一致。
+
+            4. 数值为 0、null、“-”含义不同：0 是有效零值；null 或“-”才是无有效比较/无有效排名，不得互相替换。
+
+            5. 只返回合法 JSON，不得输出推理过程、Markdown 或额外文字。'
+        - id: 1800000005010-usr
+          role: user
+          text: '品牌名称：{{#1800000000001.brand_name#}}
+
+
+            === 后端预分组问题（内部键仅供映射，客户文案不得出现编码） ===
+
+            {{#1800000000001.category_actions#}}
+
+
+            请直接输出 JSON，不要任何额外说明。'
+        selected: false
+        title: M5.品牌进入机会
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 97
+      id: '1800000005010'
+      position:
+        x: 320
+        y: 420
+      positionAbsolute:
+        x: 320
+        y: 420
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import json\nimport re\n\ndef main(raw: str, category_actions_raw:\
+          \ str) -> dict:\n    def parse_json(s):\n        s = (s or \"\").strip()\n\
+          \        if \"---\" in s:\n            s = s.rsplit(\"---\", 1)[-1].strip()\n\
+          \        s = re.sub(r\"^```(?:json)?\\s*\", \"\", s, flags=re.I)\n     \
+          \   s = re.sub(r\"\\s*```$\", \"\", s).strip()\n        try:\n         \
+          \   return json.loads(s)\n        except Exception:\n            pass\n\
+          \        starts=[i for i,c in enumerate(s) if c in \"[{\"]\n        for\
+          \ start in starts:\n            opening=s[start]; closing=\"]\" if opening==\"\
+          [\" else \"}\"\n            depth=0; in_str=False; esc=False\n         \
+          \   for i in range(start,len(s)):\n                ch=s[i]\n           \
+          \     if in_str:\n                    if esc: esc=False\n              \
+          \      elif ch==\"\\\\\": esc=True\n                    elif ch=='\"': in_str=False\n\
+          \                else:\n                    if ch=='\"': in_str=True\n \
+          \                   elif ch==opening: depth+=1\n                    elif\
+          \ ch==closing:\n                        depth-=1\n                     \
+          \   if depth==0:\n                            try: return json.loads(s[start:i+1])\n\
+          \                            except Exception: break\n        raise ValueError(\"\
+          invalid json\")\n    try:\n        obj=parse_json(raw)\n        try:\n \
+          \           groups=json.loads(category_actions_raw or \"{}\")\n        except\
+          \ Exception:\n            groups={}\n        if not isinstance(obj,dict):\
+          \ obj={}\n        for key in (\"p0\",\"p1\",\"p2\"):\n            if not\
+          \ (groups.get(key) or []): obj[key]=\"\"\n            elif key not in obj:\
+          \ obj[key]=\"\"\n        return {\"summary_category_actions\":json.dumps(obj,ensure_ascii=False)}\n\
+          \    except Exception:\n        return {\"summary_category_actions\":'{\"\
+          p0\":\"\",\"p1\":\"\",\"p2\":\"\"}'}"
+        code_language: python3
+        desc: ''
+        outputs:
+          summary_category_actions:
+            children: null
+            type: string
+        selected: false
+        title: M5.品牌进入机会净化
+        type: code
+        variables:
+        - value_selector:
+          - '1800000005010'
+          - text
+          variable: raw
+        - value_selector:
+          - '1800000000001'
+          - category_actions
+          variable: category_actions_raw
+      height: 53
+      id: '1800000005020'
+      position:
+        x: 640
+        y: 420
+      positionAbsolute:
+        x: 640
+        y: 420
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            max_tokens: 12000
+            temperature: 0.2
+            top_p: 0.7
+          mode: chat
+          name: deepseek/deepseek-v4-pro
+          provider: zhinao
+        prompt_template:
+        - id: 1800000006010-sys
+          role: system
+          text: '你是资深 GEO 战略顾问。程序已按固定阈值生成【行动判定上下文】，你不得重新判状态。
+
+            【输出格式】{"summary":"...","actions":[{"source_module":"...","title":"...","evidence":"...","action":"...","expected_impact":"..."}]}
+
+            【数量与映射】
+
+            - action_context.directions 收到几个方向就输出几条，最多 3 条；每个方向恰好 1 条，不补写缺失方向。
+
+            - direction=品牌进入机会→source_module=品牌进入机会；引用来源→引用来源；品牌表达→品牌表达。
+
+            【状态服从】
+
+            - 必须服从 state、posture 和 action_template，不得自行升级或反转状态。
+
+            - evidence 必须忠实压缩 key_evidence，数字、竞品名、页面数量和方向词不得改动。
+
+            【业务适配铁律】
+
+            - 品牌进入行动只能围绕 actual_themes 中真实出现的业务主题；没有出现“送礼、配送退换、授权渠道、线下门店”等主题时，禁止生成这些内容。
+
+            - 不得把消费品模板套给 SaaS、AI 工具、工业品或服务业。结合 core_topic/product_name 判断业务类型，但不得编造产品能力。
+
+            - 引用来源方向必须承认 official_page_count：大于0时写“已有页面被引用但仍需补强/扩展”，禁止写“无一被引用”。
+
+            - 无法确认客户是否已有时统一写“检查并完善”，禁止写“新建/创建”。
+
+            - 禁止指定平台、数量、频率、完成时间；禁止承诺提及率、排名、流量或转化提升到具体数值。
+
+            【字段长度】summary≤50汉字；title≤16汉字且以动词开头；evidence≤45汉字；action≤60汉字；expected_impact≤30汉字。
+
+
+            【全局事实一致性铁律】
+
+            1. 输入 JSON 是唯一事实源；禁止沿用示例数字、常识或品牌知名度补全事实。
+
+            2. 同一指标在不同字段重复出现时，按本节点指定的字段优先级取值，不得混用或自行换算。
+
+            3. comparison_result=behind 只能写“落后/低于”，ahead 只能写“领先/高于”，equal 只能写“并列/接近”；输出前必须自检方向词与
+            comparison_result 一致。
+
+            4. 数值为 0、null、“-”含义不同：0 是有效零值；null 或“-”才是无有效比较/无有效排名，不得互相替换。
+
+            5. 只返回合法 JSON，不得输出推理过程、Markdown 或额外文字。'
+        - id: 1800000006010-usr
+          role: user
+          text: '品牌名称：{{#1800000000001.brand_name#}}
+
+            产品/业务：{{#1800000000001.product_name#}}
+
+            核心主题：{{#1800000000001.core_topic#}}
+
+            市场：{{#1800000000001.market#}}
+
+
+            === 程序确定的行动判定上下文（状态、证据、真实主题均不可改） ===
+
+            {{#1800000098010.action_context#}}
+
+
+            === 已校验模块结论（仅辅助措辞，不得覆盖 action_context） ===
+
+            竞品表现：{{#1800000002020.summary_competitor_performance#}}
+
+            引用来源：{{#1800000003020.summary_citation_sources#}}
+
+            品牌表达：{{#1800000004020.summary_brand_expression#}}
+
+            品牌进入机会：{{#1800000005020.summary_category_actions#}}
+
+
+            直接输出 JSON。'
+        selected: false
+        title: M6.下一步行动
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 97
+      id: '1800000006010'
+      position:
+        x: 1921.7296125097287
+        y: 0
+      positionAbsolute:
+        x: 1921.7296125097287
+        y: 0
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import json\nimport re\n\ndef main(raw: str) -> dict:\n    def parse_json(s):\n\
+          \        s = (s or \"\").strip()\n        if \"---\" in s:\n           \
+          \ s = s.rsplit(\"---\", 1)[-1].strip()\n        s = re.sub(r\"^```(?:json)?\\\
+          s*\", \"\", s, flags=re.I)\n        s = re.sub(r\"\\s*```$\", \"\", s).strip()\n\
+          \        try:\n            return json.loads(s)\n        except Exception:\n\
+          \            pass\n        starts=[i for i,c in enumerate(s) if c in \"\
+          [{\"]\n        for start in starts:\n            opening=s[start]; closing=\"\
+          ]\" if opening==\"[\" else \"}\"\n            depth=0; in_str=False; esc=False\n\
+          \            for i in range(start,len(s)):\n                ch=s[i]\n  \
+          \              if in_str:\n                    if esc: esc=False\n     \
+          \               elif ch==\"\\\\\": esc=True\n                    elif ch=='\"\
+          ': in_str=False\n                else:\n                    if ch=='\"':\
+          \ in_str=True\n                    elif ch==opening: depth+=1\n        \
+          \            elif ch==closing:\n                        depth-=1\n     \
+          \                   if depth==0:\n                            try: return\
+          \ json.loads(s[start:i+1])\n                            except Exception:\
+          \ break\n        raise ValueError(\"invalid json\")\n    try:\n        obj=parse_json(raw)\n\
+          \        return {\"summary_priority_opportunities\":json.dumps(obj,ensure_ascii=False)}\n\
+          \    except Exception:\n        return {\"summary_priority_opportunities\"\
+          :'{\"summary\":\"数据解析异常\",\"actions\":[]}'}"
+        code_language: python3
+        desc: ''
+        outputs:
+          summary_priority_opportunities:
+            children: null
+            type: string
+        selected: false
+        title: M6.下一步行动净化
+        type: code
+        variables:
+        - value_selector:
+          - '1800000006010'
+          - text
+          variable: raw
+      height: 53
+      id: '1800000006020'
+      position:
+        x: 2240
+        y: 0
+      positionAbsolute:
+        x: 2240
+        y: 0
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            max_tokens: 12000
+            temperature: 0.2
+            top_p: 0.7
+          mode: chat
+          name: deepseek/deepseek-v4-pro
+          provider: zhinao
+        prompt_template:
+        - id: 1800000010010-sys
+          role: system
+          text: '你是资深 GEO 品牌诊断专家。综合整份报告各模块【已定稿结论】生成最终摘要(报告总览)。
+
+            【输出格式】{"title":"...","summary":"...","points":["..."],"conclusion":"..."}
+
+            【规则(所有字段必填非空，本字段是后台任务成功门禁)】
+
+            - title: 最终摘要标题 ≤30 汉字；summary: 整份报告概括性结论 ≤80 汉字；
+
+            - points: 3~5 条关键发现，每条一条可独立展示文本、≤40 汉字、只讲一个要点、以句号结束(不要拼成长段)；conclusion:
+            最终建议/结论 ≤80 汉字。
+
+            - 只综合下方各模块已定稿结论，禁止引入新数据或与各模块矛盾的口径。
+
+
+            【通用铁律】
+
+            1. 直接输出合法 JSON，禁止 Markdown、禁止代码块标记(```json```)、禁止注释、禁止任何额外说明文字。
+
+            2. 严格按指定 Schema 输出，不得增删改字段名。
+
+            3. 只用输入数据，禁止编造任何问题、回答、排名、引用、竞品或表达证据。
+
+            4. 输出语言固定为中文（客户为国内出海客户），即使被诊断内容为英文，分析文案也用中文。
+
+            5. 语言风格：专业简洁、第三方监理视角、结论先行、数据驱动、客观公允；涉及落后时措辞缓和，禁用极端词（严重落后/毫无建树/被动挨打）。
+
+            6. 禁用表达：赋能/深度赋能/全面提升/优化升级/建议您/我们应该；替换为：数据显示/表明/证实/观察到。
+
+            7. 【长度铁律(严格遵守，看板每句限 1 行)】模块分析类每条独立短句 ≤40 个汉字，且每条只讲一个要点、以句号结束；title/summary/conclusion
+            一句话 ≤50 个汉字；禁止把多个要点塞进一条(不要用分号/多句拼成一大段)。宁可拆成多条独立短句，也不要写成一长段。
+
+
+            【跨模块一致性自检】
+
+            - 数字以对应模块已校验结论为准，不得改写为其他百分比。
+
+            - 不得把 behind 写成领先，不得把已有排名写成无排名。
+
+            - 不得出现 P0/P1/P2 内部编码。
+
+            - 官网页面已被引用时，不得写“无一被引用”。
+
+
+            【全局事实一致性铁律】
+
+            1. 输入 JSON 是唯一事实源；禁止沿用示例数字、常识或品牌知名度补全事实。
+
+            2. 同一指标在不同字段重复出现时，按本节点指定的字段优先级取值，不得混用或自行换算。
+
+            3. comparison_result=behind 只能写“落后/低于”，ahead 只能写“领先/高于”，equal 只能写“并列/接近”；输出前必须自检方向词与
+            comparison_result 一致。
+
+            4. 数值为 0、null、“-”含义不同：0 是有效零值；null 或“-”才是无有效比较/无有效排名，不得互相替换。
+
+            5. 只返回合法 JSON，不得输出推理过程、Markdown 或额外文字。'
+        - id: 1800000010010-usr
+          role: user
+          text: '品牌名称：{{#1800000000001.brand_name#}}  核心主题：{{#1800000000001.core_topic#}}
+
+
+            === 各模块已定稿结论 ===
+
+            数据总览：{{#1800000001020.summary_overview#}}
+
+            竞品表现：{{#1800000002020.summary_competitor_performance#}}
+
+            引用来源：{{#1800000003020.summary_citation_sources#}}
+
+            品牌表达：{{#1800000004020.summary_brand_expression#}}
+
+            品牌进入机会：{{#1800000005020.summary_category_actions#}}
+
+            下一步行动：{{#1800000006020.summary_priority_opportunities#}}
+
+
+            请直接输出 JSON，不要任何额外说明。'
+        selected: false
+        title: M10.最终摘要
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 97
+      id: '1800000010010'
+      position:
+        x: 2560
+        y: 0
+      positionAbsolute:
+        x: 2560
+        y: 0
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import json\nimport re\n\ndef main(raw: str) -> dict:\n    def parse_json(s):\n\
+          \        s = (s or \"\").strip()\n        if \"---\" in s:\n           \
+          \ s = s.rsplit(\"---\", 1)[-1].strip()\n        s = re.sub(r\"^```(?:json)?\\\
+          s*\", \"\", s, flags=re.I)\n        s = re.sub(r\"\\s*```$\", \"\", s).strip()\n\
+          \        try:\n            return json.loads(s)\n        except Exception:\n\
+          \            pass\n        starts=[i for i,c in enumerate(s) if c in \"\
+          [{\"]\n        for start in starts:\n            opening=s[start]; closing=\"\
+          ]\" if opening==\"[\" else \"}\"\n            depth=0; in_str=False; esc=False\n\
+          \            for i in range(start,len(s)):\n                ch=s[i]\n  \
+          \              if in_str:\n                    if esc: esc=False\n     \
+          \               elif ch==\"\\\\\": esc=True\n                    elif ch=='\"\
+          ': in_str=False\n                else:\n                    if ch=='\"':\
+          \ in_str=True\n                    elif ch==opening: depth+=1\n        \
+          \            elif ch==closing:\n                        depth-=1\n     \
+          \                   if depth==0:\n                            try: return\
+          \ json.loads(s[start:i+1])\n                            except Exception:\
+          \ break\n        raise ValueError(\"invalid json\")\n    try:\n        obj=parse_json(raw)\n\
+          \        return {\"summary_final\":json.dumps(obj,ensure_ascii=False)}\n\
+          \    except Exception:\n        return {\"summary_final\":'{\"title\":\"\
+          海外 GEO 诊断结论\",\"summary\":\"数据解析异常\",\"points\":[\"数据解析异常\"],\"conclusion\"\
+          :\"数据解析异常\"}'}"
+        code_language: python3
+        desc: ''
+        outputs:
+          summary_final:
+            children: null
+            type: string
+        selected: false
+        title: M10.最终摘要净化
+        type: code
+        variables:
+        - value_selector:
+          - '1800000010010'
+          - text
+          variable: raw
+      height: 53
+      id: '1800000010020'
+      position:
+        x: 2880
+        y: 0
+      positionAbsolute:
+        x: 2880
+        y: 0
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import json\nimport re\n\ndef main(s_competitor, s_citation, s_brand,\
+          \ s_category, overview_raw, citation_raw, brand_expression_raw, category_actions_raw)\
+          \ -> dict:\n    def text(x):\n        return (x or \"\").strip()\n    def\
+          \ obj(x, default):\n        try:\n            v = json.loads(text(x))\n\
+          \            return v\n        except Exception:\n            return default\n\
+          \    def pct(v):\n        if isinstance(v, (int, float)):\n            return\
+          \ float(v)\n        m = re.search(r\"-?\\d+(?:\\.\\d+)?\", str(v or \"\"\
+          ))\n        return float(m.group()) if m else None\n\n    overview = obj(overview_raw,\
+          \ {})\n    citation = obj(citation_raw, {})\n    expressions = obj(brand_expression_raw,\
+          \ [])\n    categories = obj(category_actions_raw, {\"p0\":[],\"p1\":[],\"\
+          p2\":[]})\n    directions = []\n\n    gaps = overview.get(\"competitive_gaps\"\
+          ) or {}\n    mention_gap = gaps.get(\"mention_rate\")\n    rank_gap = gaps.get(\"\
+          average_rank\")\n    counts = overview.get(\"category_action_counts\") or\
+          \ {}\n    priority_count = int(counts.get(\"p0\") or 0)\n    mention_pp\
+          \ = None\n    if isinstance(mention_gap, dict):\n        mention_pp = pct(mention_gap.get(\"\
+          gap_percent_points\"))\n    if (isinstance(mention_gap, dict) and mention_gap.get(\"\
+          comparison_result\") == \"behind\" and mention_pp is not None and mention_pp\
+          \ >= 10) or priority_count >= 8:\n        state, posture = \"缺席型\", \"补齐\"\
+          \n        evidence = []\n        if isinstance(mention_gap, dict) and mention_gap.get(\"\
+          comparison_result\") == \"behind\":\n            evidence.append(\"品牌提及率比%s%s\"\
+          \ % (mention_gap.get(\"competitor_brand_name\") or \"最优竞品\", mention_gap.get(\"\
+          gap_text\") or \"\"))\n        evidence.append(\"优先改进问题共%d条\" % priority_count)\n\
+          \        template = \"围绕输入中未提及集中的真实意图与主题，检查并完善对应的事实信息入口\"\n    elif isinstance(rank_gap,\
+          \ dict) and rank_gap.get(\"comparison_result\") == \"behind\" and (pct(rank_gap.get(\"\
+          gap_value\")) or 0) >= 1:\n        state, posture = \"顺位型\", \"提升\"\n  \
+          \      evidence = [\"平均排名比%s%s\" % (rank_gap.get(\"competitor_brand_name\"\
+          ) or \"最优竞品\", rank_gap.get(\"gap_text\") or \"\")]\n        template =\
+          \ \"围绕真实比较场景检查并完善差异化说明与可验证证明点\"\n    else:\n        state, posture = \"\
+          领先型\", \"保持\"\n        evidence = [\"当前未命中显著缺席或顺位落后阈值\"]\n        template\
+          \ = \"保持输入中已有优势场景的信息更新并监测变化\"\n    themes=[]\n    for key in (\"p0\",\"\
+          p1\",\"p2\"):\n        for item in categories.get(key) or []:\n        \
+          \    if isinstance(item,dict):\n                q=item.get(\"question_zh\"\
+          ) or item.get(\"query\")\n                if q and q not in themes: themes.append(q)\n\
+          \    directions.append({\"direction\":\"品牌进入机会\",\"state\":state,\"posture\"\
+          :posture,\"action_template\":template,\n                       \"key_evidence\"\
+          :\"；\".join(evidence),\"evidence_refs\":[],\"actual_themes\":themes[:6]})\n\
+          \n    official_rate = None\n    for bar in citation.get(\"source_type_bars\"\
+          ) or []:\n        if isinstance(bar,dict) and bar.get(\"label\") == \"品牌官网\"\
+          :\n            official_rate = pct(bar.get(\"value\")); break\n    if official_rate\
+          \ is None:\n        official_rate = pct(overview.get(\"official_source_rate\"\
+          ))\n    pages = citation.get(\"brand_official_pages\") or []\n    page_count\
+          \ = len(pages) if isinstance(pages,list) else 0\n    if official_rate is\
+          \ not None:\n        if official_rate < 10:\n            state, posture\
+          \ = \"薄弱型\", \"补强\"\n            template = \"在承认已有官网引用页面的前提下，检查并完善可直接引用的事实结构\"\
+          \n        elif page_count <= 2:\n            state, posture = \"集中型\", \"\
+          扩展\"\n            template = \"在现有被引页面类型之外，检查并完善其他相关事实页面\"\n        else:\n\
+          \            state, posture = \"稳健型\", \"保持\"\n            template = \"\
+          保持现有官网被引内容更新，并监测页面结构变化\"\n        directions.append({\"direction\":\"引用来源\"\
+          ,\"state\":state,\"posture\":posture,\"action_template\":template,\n   \
+          \                        \"key_evidence\":\"品牌官网引用率为%s%%，已有%d个官网页面被引用\"\
+          \ % (('%g'%official_rate),page_count),\n                           \"evidence_refs\"\
+          :[],\"official_page_count\":page_count})\n\n    valid=[]\n    if isinstance(expressions,list):\n\
+          \        for x in expressions:\n            if not isinstance(x,dict): continue\n\
+          \            try: valid.append((float(x.get(\"sentiment_score\")), x.get(\"\
+          sentiment_quote\") or \"\"))\n            except Exception: pass\n    if\
+          \ valid:\n        neg=sum(1 for s,_ in valid if s < -0.1)\n        pos=sum(1\
+          \ for s,_ in valid if s > 0.1)\n        neg_rate=round(neg*100/len(valid),1);\
+          \ pos_rate=round(pos*100/len(valid),1)\n        if neg_rate >= 15:\n   \
+          \         state, posture, template = \"风险型\",\"澄清\",\"围绕输入中的真实负向主题检查并完善统一说明与证明材料\"\
+          \n        elif pos_rate < 50:\n            state, posture, template = \"\
+          平淡型\",\"强化\",\"围绕输入中的真实正向主题检查并完善清晰可感知的推荐理由\"\n        else:\n          \
+          \  state, posture, template = \"正向型\",\"巩固\",\"保持并更新输入中已有的主要正向表达\"\n   \
+          \     directions.append({\"direction\":\"品牌表达\",\"state\":state,\"posture\"\
+          :posture,\"action_template\":template,\n                           \"key_evidence\"\
+          :\"正向表达占比%s%%，负向表达占比%s%%\" % (('%g'%pos_rate),('%g'%neg_rate)),\n      \
+          \                     \"evidence_refs\":[]})\n\n    return {\"g_competitor\"\
+          :text(s_competitor),\"g_citation\":text(s_citation),\"g_brand\":text(s_brand),\n\
+          \            \"g_category\":text(s_category),\"action_context\":json.dumps({\"\
+          directions\":directions},ensure_ascii=False)}"
+        code_language: python3
+        desc: 汇聚 M2~M5 净化输出, 收口为单链
+        outputs:
+          action_context:
+            children: null
+            type: string
+          g_brand:
+            children: null
+            type: string
+          g_category:
+            children: null
+            type: string
+          g_citation:
+            children: null
+            type: string
+          g_competitor:
+            children: null
+            type: string
+        selected: false
+        title: 汇聚.并行收口
+        type: code
+        variables:
+        - value_selector:
+          - '1800000002020'
+          - summary_competitor_performance
+          variable: s_competitor
+        - value_selector:
+          - '1800000003020'
+          - summary_citation_sources
+          variable: s_citation
+        - value_selector:
+          - '1800000004020'
+          - summary_brand_expression
+          variable: s_brand
+        - value_selector:
+          - '1800000005020'
+          - summary_category_actions
+          variable: s_category
+        - value_selector:
+          - '1800000000001'
+          - overview
+          variable: overview_raw
+        - value_selector:
+          - '1800000000001'
+          - citation
+          variable: citation_raw
+        - value_selector:
+          - '1800000000001'
+          - brand_expression
+          variable: brand_expression_raw
+        - value_selector:
+          - '1800000000001'
+          - category_actions
+          variable: category_actions_raw
+      height: 81
+      id: '1800000098010'
+      position:
+        x: 960
+        y: 0
+      positionAbsolute:
+        x: 960
+        y: 0
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import json\ndef main(s_overview, s_competitor, s_citation, s_brand,\
+          \ s_category, s_next, s_final) -> dict:\n    def s(x, fb):\n        x =\
+          \ (x or \"\").strip()\n        if not x:\n            return fb\n      \
+          \  try:\n            json.loads(x)\n            return x\n        except\
+          \ Exception:\n            return fb\n    return {\n        \"summary_overview\"\
+          : s(s_overview, '{\"title\":\"\",\"points\":[],\"conclusion\":\"\"}'),\n\
+          \        \"summary_competitor_performance\": s(s_competitor, \"[]\"),\n\
+          \        \"summary_citation_sources\": s(s_citation, \"[]\"),\n        \"\
+          summary_brand_expression\": s(s_brand, '{\"positive_evidence\":[],\"risk_evidence\"\
+          :[],\"analysis_items\":[]}'),\n        \"summary_category_actions\": s(s_category,\
+          \ '{\"p0\":\"\",\"p1\":\"\",\"p2\":\"\"}'),\n        \"summary_priority_opportunities\"\
+          : s(s_next, '{\"summary\":\"\",\"actions\":[]}'),\n        \"summary_final\"\
+          : s(s_final, '{\"title\":\"\",\"summary\":\"\",\"points\":[],\"conclusion\"\
+          :\"\"}'),\n    }"
+        code_language: python3
+        desc: 汇总 8 个 summary_* 为 JSON string
+        outputs:
+          summary_brand_expression:
+            children: null
+            type: string
+          summary_category_actions:
+            children: null
+            type: string
+          summary_citation_sources:
+            children: null
+            type: string
+          summary_competitor_performance:
+            children: null
+            type: string
+          summary_final:
+            children: null
+            type: string
+          summary_overview:
+            children: null
+            type: string
+          summary_priority_opportunities:
+            children: null
+            type: string
+        selected: false
+        title: 汇总.数据合并
+        type: code
+        variables:
+        - value_selector:
+          - '1800000001020'
+          - summary_overview
+          variable: s_overview
+        - value_selector:
+          - '1800000002020'
+          - summary_competitor_performance
+          variable: s_competitor
+        - value_selector:
+          - '1800000003020'
+          - summary_citation_sources
+          variable: s_citation
+        - value_selector:
+          - '1800000004020'
+          - summary_brand_expression
+          variable: s_brand
+        - value_selector:
+          - '1800000005020'
+          - summary_category_actions
+          variable: s_category
+        - value_selector:
+          - '1800000006020'
+          - summary_priority_opportunities
+          variable: s_next
+        - value_selector:
+          - '1800000010020'
+          - summary_final
+          variable: s_final
+      height: 81
+      id: '1800000099010'
+      position:
+        x: 3200
+        y: 0
+      positionAbsolute:
+        x: 3200
+        y: 0
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        outputs:
+        - value_selector:
+          - '1800000099010'
+          - summary_overview
+          variable: summary_overview
+        - value_selector:
+          - '1800000099010'
+          - summary_competitor_performance
+          variable: summary_competitor_performance
+        - value_selector:
+          - '1800000099010'
+          - summary_citation_sources
+          variable: summary_citation_sources
+        - value_selector:
+          - '1800000099010'
+          - summary_brand_expression
+          variable: summary_brand_expression
+        - value_selector:
+          - '1800000099010'
+          - summary_category_actions
+          variable: summary_category_actions
+        - value_selector:
+          - '1800000099010'
+          - summary_priority_opportunities
+          variable: summary_priority_opportunities
+        - value_selector:
+          - '1800000099010'
+          - summary_final
+          variable: summary_final
+        selected: false
+        title: 结束
+        type: end
+      height: 245
+      id: '1800000099999'
+      position:
+        x: 3520
+        y: 0
+      positionAbsolute:
+        x: 3520
+        y: 0
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    viewport:
+      x: 146.97396497480258
+      y: 143.9430117063772
+      zoom: 0.6745522909649737

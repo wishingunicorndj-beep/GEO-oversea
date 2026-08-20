@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "workflows": {
+    "geo-query": {
+      "display_name": "Query生成工作流",
+      "version": "1.0.0",
+      "path": "workflows/geo-query.yml",
+      "status": "current",
+      "updated_at": "2026-08-20"
+    },
+    "geo-analysis": {
+      "display_name": "回答分析工作流",
+      "version": "1.0.0",
+      "path": "workflows/geo-analysis.yml",
+      "status": "current",
+      "updated_at": "2026-08-20"
+    },
+    "geo-summary": {
+      "display_name": "分析总结工作流",
+      "version": "1.0.0",
+      "path": "workflows/geo-summary.yml",
+      "status": "current",
+      "updated_at": "2026-08-20"
+    },
+    "geo-article": {
+      "display_name": "文章生成工作流",
+      "version": "1.0.0",
+      "path": "workflows/geo-article.yml",
+      "status": "current",
+      "updated_at": "2026-08-20"
+    }
+  }
+}

@@ -1,0 +1,7 @@
+.DS_Store
+*.tmp
+*.bak
+*.log
+secrets/
+.env
+.env.*

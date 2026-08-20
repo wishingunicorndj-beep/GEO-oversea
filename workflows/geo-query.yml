@@ -1,0 +1,2698 @@
+app:
+  description: '6、兼容中文竞品名称，0731
+
+    5、优化竞品逻辑；0729
+
+    4、对齐生词和竞品逻辑；0728
+
+    3、大幅度修复一轮生词和竞品问题；0723
+
+    2、增加comps_list和competitor_domain字段，0721
+
+    1、跑通流程，0713
+
+    dj:修改B1和B2模型生成token上线，已经升到最大限度；0811
+
+    dj:将意图【了解】改为【推荐】；0811'
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  mode: workflow
+  name: EN海外GEO-售前-生词0731
+  use_icon_as_answer_icon: false
+kind: app
+version: 0.1.3
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: false
+      fileUploadConfig:
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 15
+        image_file_size_limit: 10
+        video_file_size_limit: 100
+        workflow_file_upload_limit: 10
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: ''
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: code
+      id: e-1700000000010-1700000000011
+      source: '1700000000010'
+      sourceHandle: source
+      target: '1700000000011'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: llm
+      id: e-1700000000011-1700000000012
+      source: '1700000000011'
+      sourceHandle: source
+      target: '1700000000012'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: llm
+      id: e-1700000000012-1700000000013
+      source: '1700000000012'
+      sourceHandle: source
+      target: '1700000000013'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: code
+      id: e-1700000000013-1700000000014
+      source: '1700000000013'
+      sourceHandle: source
+      target: '1700000000014'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: llm
+      id: e-1700000000020-1700000000021
+      source: '1700000000020'
+      sourceHandle: source
+      target: '1700000000021'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: code
+      id: e-1700000000021-1700000000022
+      source: '1700000000021'
+      sourceHandle: source
+      target: '1700000000022'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: code
+      id: e-1700000000014-1700000000030
+      source: '1700000000014'
+      sourceHandle: source
+      target: '1700000000030'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: code
+      id: e-1700000000022-1700000000030
+      source: '1700000000022'
+      sourceHandle: source
+      target: '1700000000030'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: code
+      id: e-1700000000030-1700000000031
+      source: '1700000000030'
+      sourceHandle: source
+      target: '1700000000031'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: end
+      id: e-1700000000031-1700000000040
+      source: '1700000000031'
+      sourceHandle: source
+      target: '1700000000040'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: llm
+      id: e-1700000000002-1700000000003
+      source: '1700000000002'
+      sourceHandle: source
+      target: '1700000000003'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: llm
+      id: e-1700000000003-1700000000010
+      source: '1700000000003'
+      sourceHandle: source
+      target: '1700000000010'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: llm
+      id: e-1700000000011-1700000000020
+      source: '1700000000011'
+      sourceHandle: source
+      target: '1700000000020'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: start
+        targetType: code
+      id: e-1700000000001-1700000000004
+      source: '1700000000001'
+      sourceHandle: source
+      target: '1700000000004'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: llm
+      id: e-1700000000004-1700000000002
+      source: '1700000000004'
+      sourceHandle: source
+      target: '1700000000002'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        desc: ''
+        selected: false
+        title: N1 业务输入
+        type: start
+        variables:
+        - label: 任务ID
+          max_length: 256
+          options: []
+          required: true
+          type: text-input
+          variable: task_id
+        - label: 产品名称
+          max_length: 256
+          options: []
+          required: true
+          type: text-input
+          variable: product_name
+        - label: 公司名称
+          max_length: 256
+          options: []
+          required: true
+          type: text-input
+          variable: corp_name
+        - label: 主题
+          max_length: 256
+          options: []
+          required: true
+          type: text-input
+          variable: topic
+        - label: 品牌名称
+          max_length: 256
+          options: []
+          required: true
+          type: text-input
+          variable: brand_name
+        - label: 竞品清单
+          max_length: 4096
+          options: []
+          required: true
+          type: paragraph
+          variable: comps_list
+        - label: 目标受众
+          max_length: 4096
+          options: []
+          required: true
+          type: paragraph
+          variable: target_audience
+        - label: 官方域名
+          max_length: 256
+          options: []
+          required: true
+          type: text-input
+          variable: brand_domain
+        - label: 竞品域名
+          max_length: null
+          options: []
+          required: true
+          type: paragraph
+          variable: competitor_domain
+        - label: 目标市场
+          max_length: 256
+          options: []
+          required: true
+          type: text-input
+          variable: target_market
+        - label: 语言
+          max_length: 256
+          options: []
+          required: true
+          type: text-input
+          variable: language
+        - label: 背景信息
+          max_length: 4096
+          options: []
+          required: false
+          type: paragraph
+          variable: background_info
+      height: 375
+      id: '1700000000001'
+      position:
+        x: -88.33333333333337
+        y: 400
+      positionAbsolute:
+        x: -88.33333333333337
+        y: 400
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            max_tokens: 15701
+            temperature: 0.4
+            top_p: 0.8
+          mode: chat
+          name: deepseek/deepseek-v4-flash
+          provider: zhinao
+        prompt_template:
+        - id: 1700000000002-sys
+          role: system
+          text: "【角色】\n你是美国市场 GEO 售前问题的“品类边界与选择场景规划器”。你不直接生成最终50条问题；你的任务是先建立稳定的目标人群—用户任务—核心场景—现实约束—选型因素—答案终点，为后续问题生成提供结构化蓝图。\n\
+            \n【输入】\n- topic: {{#1700000000001.topic#}}\n- product_name: {{#1700000000001.product_name#}}\n\
+            - brand_name: {{#1700000000001.brand_name#}}\n- target_audience: {{#1700000000001.target_audience#}}\n\
+            - target_market: {{#1700000000001.target_market#}}\n- background_info:\
+            \ {{#1700000000001.background_info#}}\n- current_date: {{#1700000000004.current_date#}}\n\
+            \n【来源方法】\n参考国内T1场景触发：先判断产品形态，再用至少两个维度组合真实选择场景；参考T2只保留会影响品类选择的认知；参考T3用“给方法、给选项、给结论”定义答案终点。海外版不输出T1/T2/T3标签。\n\
+            \n【步骤1：品类边界】\n从 topic + product_name + background_info 提取：\n1. product_form：software_tool\
+            \ / physical_product / professional_service / platform_marketplace / non_purchase\
+            \ / other。\n2. category_boundary：用户实际会购买、选择或采用的具体品类，不得扩大到泛行业。\n3. core_jobs：目标用户用该品类完成的核心任务。\n\
+            4. adjacent_but_not_core：相邻但不属于同一购买集合的任务，防止跨赛道。\n5. pricing_mode：public_fixed\
+            \ / tiered_subscription / usage_based / custom_quote / free / unknown。没有输入依据时只能是unknown。\n\
+            \n【步骤2：场景规划】\n规划恰好12个互不重复的 scene_blueprints，为后续50条Query提供足够差异化的商业决策边界。每个蓝图必须包含：\n\
+            - primary_persona\n- task\n- scenario\n- constraint\n- factor\n- recommended_endpoint：criteria_method\
+            \ / candidate_set / final_recommendation\n- brand_discovery_reason：为什么高质量回答会自然列举或比较具体工具、平台、产品或服务商\n\
+            - commercial_trigger：reputation_review / strengths_limitations / recommendation_shortlist\
+            \ / comparison_tradeoff / ranking / best_fit / worth_adopting / selection_criteria之一\n\
+            \n至少覆盖4种真正改变选择结果的 factor。优先级：\n1. background_info明确关注点；\n2. 受众、Topic和产品范围直接支持的因素；\n\
+            3. 同类产品共有比较维度；\n4. 合理候选，但不得编造能力、法规或合规要求。\n可用因素包括预算/计费、团队规模、内容产量、多人审核、版本管理、商业授权、集成部署、学习门槛、产品限制和适用边界。\n\
+            \n【视频创作专项】\n若输入支持创意视频场景，应覆盖 filmmakers、independent creators、AI artists，以及\
+            \ multi-shot narrative、character consistency、storyboard-to-video、long-form\
+            \ production 中相关任务。没有输入证据时不得默认把全部场景扩写为营销、社媒广告或电商。\n\n【品牌发现三项测试】\n每个蓝图都必须同时通过：\n\
+            1. Entity-response test：高质量回答是否自然需要列举、推荐或比较具体产品/厂商？\n2. Pre-selection\
+            \ test：用户是否仍在选产品，而不是已选定产品后问操作步骤？\n3. Commercial relevance test：品牌出现是否自然服务于选择，而非强行植入？\n\
+            纯定义、历史、趋势、技巧、教程、登录注册、操作导航和不问工具的工作流必须拒绝。\n\n【Few-shot：有效蓝图】\n输入：AI video\
+            \ platform；受众：independent filmmakers。\n有效：\n{\"primary_persona\":\"Independent\
+            \ Filmmakers\",\"task\":\"turn storyboards into multi-shot scenes\",\"\
+            scenario\":\"producing a short narrative film\",\"constraint\":\"small\
+            \ team with weekly iteration\",\"factor\":\"character consistency and\
+            \ workflow reuse\",\"recommended_endpoint\":\"criteria_method\",\"brand_discovery_reason\"\
+            :\"The answer must explain how to evaluate competing AI video platforms.\"\
+            }\n原因：任务、场景、约束和选择因素完整，回答自然需要比较工具。\n\n【Few-shot：无效与改写】\n无效：{\"task\":\"\
+            keep characters consistent\",\"scenario\":\"AI video\",\"factor\":\"tips\"\
+            }\n原因：只会触发方法科普，不要求选择工具。\n改写：{\"primary_persona\":\"AI Artists\",\"task\"\
+            :\"maintain one character across multiple shots\",\"scenario\":\"building\
+            \ a narrative sequence\",\"constraint\":\"limited manual retouching time\"\
+            ,\"factor\":\"cross-shot character consistency\",\"recommended_endpoint\"\
+            :\"candidate_set\",\"brand_discovery_reason\":\"The answer should recommend\
+            \ platforms capable of this workflow.\"}\n\n无效：How do I add captions in\
+            \ a video editor?\n原因：已选工具后的操作问题。\n改写方向：为高产量短视频选择带字幕工作流的视频平台时应评估什么？\n\n\
+            【时间与真实性】\ncurrent_date是唯一日期依据；不得使用过期年份。输入无依据时禁止holiday、sale、promotion、discount、coupon、deal。不得将合理评价维度写成目标产品已经具备的能力。\n\
+            \n【输出】仅输出JSON：\n{\n  \"product_form\":\"...\",\n  \"category_boundary\"\
+            :\"...\",\n  \"core_jobs\":[\"...\"],\n  \"adjacent_but_not_core\":[\"\
+            ...\"],\n  \"pricing_mode\":\"public_fixed|tiered_subscription|usage_based|custom_quote|free|unknown\"\
+            ,\n  \"scene_blueprints\":[\n    {\"primary_persona\":\"...\",\"task\"\
+            :\"...\",\"scenario\":\"...\",\"constraint\":\"...\",\"factor\":\"...\"\
+            ,\"recommended_endpoint\":\"criteria_method|candidate_set|final_recommendation\"\
+            ,\"brand_discovery_reason\":\"...\",\"commercial_trigger\":\"reputation_review|strengths_limitations|recommendation_shortlist|comparison_tradeoff|ranking|best_fit|worth_adopting|selection_criteria\"\
+            }\n  ]\n}"
+        - id: 1700000000002-usr
+          role: user
+          text: 请严格按照以上所有要求输出。
+        selected: false
+        title: N2 场景角度生成
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 97
+      id: '1700000000002'
+      position:
+        x: 240
+        y: 400
+      positionAbsolute:
+        x: 240
+        y: 400
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            max_tokens: 17201
+            temperature: 0.2
+            top_p: 0.7
+          mode: chat
+          name: deepseek/deepseek-v4-flash
+          provider: zhinao
+        prompt_template:
+        - id: 1700000000010-sys
+          role: system
+          text: "【角色】\n你是美国市场竞品集合规划专家。你的唯一任务是：无损保留客户输入竞品，并且仅在不足3个时补齐到恰好3个真实、直接、同层级竞品，同时给出可核验的官方主域名和选择理由。\n\
+            \n【P0不可覆盖协议：输入竞品是锁定项】\n本节优先级高于全文任何行业判断、可比性评分、真实性审计和最终集合规则。\n1. 仅使用英文逗号,和中文顿号、解析\
+            \ comps_list；去掉分隔符两侧空白后，前3个非空输入项是 locked_user_competitors。\n2. locked_user_competitors必须按输入顺序、逐字符原样进入最终comps_list。不得改名、规范化、翻译、纠错、替换、降级为adjacent后删除，也不得因域名缺失、证据不足、疑似跨赛道、与客户品牌相似或模型不熟悉而排除。\n\
+            3. 输入恰好3个时，最终comps_list必须与这3项逐字符完全一致，禁止新增任何竞品；输入少于3个时，保留全部锁定项，只补3-N个；输入超过3个时只锁定前3个，其余仅记录在审计中，不进入最终集合。\n\
+            4. 输入域名按原始下标绑定，不得因任何判断前移、后移或错配。输入域名缺失时可补官方域名，但不得因此删除品牌。\n5. 对锁定项只做诊断，不做淘汰：source=user、retained=1、eligible=1、exclusion_code必须为空；若发现风险，写入decision_reason或qa_risk。\n\
+            6. 只有source=supplemented的补齐项需要接受严格竞品资格门槛。A2会从原始输入确定性重建最终集合，任何遗漏或改写锁定项都会被判失败。\n\
+            \n\n【输入】\n- comps_list: {{#1700000000001.comps_list#}}\n- competitor_domain:\
+            \ {{#1700000000001.competitor_domain#}}\n- brand_name: {{#1700000000001.brand_name#}}\n\
+            - corp_name: {{#1700000000001.corp_name#}}\n- product_name: {{#1700000000001.product_name#}}\n\
+            - topic: {{#1700000000001.topic#}}\n- target_audience: {{#1700000000001.target_audience#}}\n\
+            - background_info: {{#1700000000001.background_info#}}\n- current_date:\
+            \ {{#1700000000004.current_date#}}\n\n【铁律规则】\n1. comps_list必须输出恰好3个竞品，不能多不能少\n\
+            - 如果客户输入的小于3个竞品，需要你补够到3个；\n- 如果等于或多于3个，则直接取客户输入的前3个竞品进行输出；\n2. 原客户输入的竞品品牌名必须按字符级严格保留，-禁止任何形式的修改，包括但不限于：\n\
+            \  - 禁止改大小写（如 \"iPhone\" 改为 \"iphone\" 或 \"IPHONE\"）\n   - 禁止增删空格（如 \"\
+            Air Jordan\" 改为 \"AirJordan\" 或 \"Air  Jordan\"）\n   - 禁止增删标点（如 \"L'Oréal\"\
+            \ 改为 \"L Oreal\"）\n   - 禁止繁简转换、全半角转换、中英互译\n   - 必须与输入字符串逐字符完全一致\n3. 去重、不含客户品牌的限制只用于source=supplemented；source=user始终按P0锁定协议保留。\n\
+            4. 同行业、同赛道、同梯队、同产品或服务类型及同目标人群的限制只用于补齐项；不得据此删除或替换锁定项。\n5. 补齐的竞品必须使用完整的官方品牌全称（即该品牌在其所属行业中最常被引用的完整名称，如\"\
+            黑系房车\"而非\"黑系\"，\"曼恩商用车\"而非\"曼恩\"），禁止使用可能导致歧义的简称或缩写\n6. 如果对某个竞品品牌的真实存在性存疑（无法提供其主营业务、代表产品等具体信息），宁可跳过不选，绝对不可虚构或猜测品牌名\n\
+            7. comps_list字段的品牌分隔符规则——必须严格遵守，禁止自行判断：\n   - 分隔符仅为：英文逗号\",\"和中文顿号\"、\"\
+            \n   - 非分隔符（必须视为同一个品牌名的组成部分）：斜杠\"/\"、空格\" \"、连字符\"-\"、加号\"+\"、点\".\"等所有其他字符\n\
+            \   - 解析示例：\n     · \"Nike,Adidas\" → [\"Nike\", \"Adidas\"]（2个品牌）\n \
+            \    · \"Nike、Adidas\" → [\"Nike\", \"Adidas\"]（2个品牌）\n     · \"Nike/Adidas\"\
+            \ → [\"Nike/Adidas\"]（1个品牌，因为/不是分隔符）\n     · \"Air Jordan\" → [\"Air Jordan\"\
+            ]（1个品牌，空格是品牌名一部分）\n     · \"Coca-Cola\" → [\"Coca-Cola\"]（1个品牌，连字符是品牌名一部分）\n\
+            \     · \"Nike,Air Jordan、Adidas/Yeezy\" → [\"Nike\", \"Air Jordan\",\
+            \ \"Adidas/Yeezy\"]（3个品牌）\n\n\n【精确竞品定位方法】\n采用 sector→category→sub_track→product_form→primary\
+            \ core_job→target_users 的逐层定位。先做资格过滤，再在合格候选中按市场代表性排序；不得因为泛行业知名度选择弱相关品牌。客户输入竞品是不可变锁定项，只做诊断、不做过滤；精确定位和严格门槛只用于筛选source=supplemented的补齐项。\n\
+            \n【可比性硬门槛】\n逐个候选判断：\n- same_purchase_set：是否可能出现在同一次选型中\n- sub_track_match\n\
+            - product_form_match\n- target_user_match\n- core_job_match\n- market_tier_match：目标市场中的市场梯队、客户规模和价格/交付层级是否相近\n\
+            对于source=supplemented，六项必须全部为1且relationship=direct；邻接项、上下游、通用大平台、不同产品形态或明显不同梯队均不得凑数。对于source=user，所有字段仅作诊断，永远不得改变锁定状态。\n\
+            \n排序严格为：\n直接替代性 > core_job > product_form > target_users > sub_track >\
+            \ 本次Topic/目标市场代表性 > 泛行业知名度。\n“头部”指当前细分品类和目标市场的头部，不是大行业最知名品牌。\n\n【真实性】\n\
+            补充项必须使用官方品牌名和真实官方主域名。若无法可靠确认存在性、当前活跃状态或产品形态，不得猜测。输出confidence；证据不足时应明确qa风险，不得用“公开报道可查”等空泛陈述冒充验证。\n\
+            \n【TapNow Few-shot 1：创意视频】\n输入核心任务：generative creative video、visual storytelling、multi-shot、character\
+            \ consistency、storyboard-to-video。\n正确：Runway可作为直接竞品候选，因为目标用户和创意视频任务高度重叠。\n\
+            错误：仅因Synthesia知名就将其列为直接竞品。\n原因：Synthesia核心更偏数字人讲解、培训和企业沟通，不属于上述创意叙事的同一核心购买集合。\n\
+            \n【TapNow Few-shot 2：数字人培训】\n若输入核心任务明确为avatar presenter videos、employee\
+            \ training、corporate communication，Synthesia可以成为直接候选；此时不能机械排除。\n\n【通用负例】\n\
+            客户是AI视频创意平台，候选是通用图片设计工具。即使同属AI内容工具，也只共享外围功能，应拒绝。\n客户是面向电影制作人的多镜头视频平台，候选只做会议转录。即使都服务内容团队，也不在同一购买集合，应拒绝。\n\
+            \n【输入名称与域名】\n保留raw_input_name，同时输出canonical_name。域名与最终竞品按下标一一对应，不得在替换或重排品牌后沿用旧域名位置。域名不含协议和路径。\n\
+            \n【输出】仅输出JSON：\n{\n  \"category_positioning\":{\"sector\":\"...\",\"category\"\
+            :\"...\",\"sub_track\":\"...\",\"product_form\":\"...\",\"core_job\":\"\
+            ...\",\"target_users\":[\"...\"]},\n  \"candidate_audit\":[\n    {\"input_index\"\
+            :0,\"raw_input_name\":\"...\",\"raw_input_domain\":\"...\",\"output_name\"\
+            :\"...\",\"source\":\"user|supplemented\",\"canonical_name\":\"...\",\"\
+            official_domain\":\"...\",\"relationship\":\"direct|adjacent|rejected\"\
+            ,\"same_purchase_set\":1,\"sub_track_match\":1,\"product_form_match\"\
+            :1,\"target_user_match\":1,\"core_job_match\":1,\"market_tier_match\"\
+            :1,\"existence_evidence\":\"...\",\"market_tier\":\"head|mid|vertical\"\
+            ,\"confidence\":\"high|medium|low\",\"eligible\":1,\"retained\":1,\"exclusion_code\"\
+            :\"client_brand|duplicate|unverifiable|cross_industry|\",\"decision_reason\"\
+            :\"...\"}\n  ],\n  \"comps_list\":[\"Competitor 1\",\"Competitor 2\",\"\
+            Competitor 3\"],\n  \"competitor_domain\":[\"domain1.com\",\"domain2.com\"\
+            ,\"domain3.com\"],\n  \"qa_risk\":\"\"\n}\n\n\n【逐层赛道定位——禁止跳步】\n先识别已有合格竞品的共同赛道；已有合格竞品是赛道定义的最高权重锚点。若已有品牌无法准确识别，再依次使用topic、product_name、background_info、brand_name、target_audience；corp_name仅作兜底，不得仅凭泛化公司名推断。\n\
+            必须输出并据此筛选：sector → category → sub_track → product_form → core_job → target_users。\n\
+            sub_track精度不得宽于topic/product_name描述的产品形态。例如企业级AI搜索可见度与AEO平台不得泛化成SEO工具或数字营销软件；创意视频平台不得泛化成全部AI内容工具。\n\
+            \n【补充竞品资格】\n先以锁定竞品的共同特征为第一锚点，再结合topic、product_name和background_info。补充项必须同时满足：同一购买集合、同一精确sub_track、同一产品或服务形态、相同核心任务、目标人群显著重叠、市场梯队与客户规模相近、在目标市场真实活跃。优先级：直接替代性\
+            \ > 产品形态 > 核心任务 > 目标用户 > 市场梯队 > 细分市场代表性 > 泛行业知名度。\n每个补充项的decision_reason必须明确回答：为什么会与客户品牌进入同一次选型，以及它与已有锁定竞品在哪些产品线或服务、目标人群和市场梯队上可比。不得使用“同属AI、营销或软件行业”等泛理由。\n\
+            补充项必须使用行业中最常引用的完整官方品牌名称和官方主域名；必须给出具体主营业务、代表产品或核心能力及活跃依据。无法给出具体证据则eligible=0，不得进入最终3个。\n\
+            \n【最终集合硬校验】\n- comps_list恰好3个且顺序为：全部locked_user_competitors在前，补齐项在后；\n\
+            - source=user必须retained=1且逐字符原样输出，不受任何可比性字段影响；source=supplemented必须eligible=1、relationship=direct且六项匹配全部为1；\n\
+            - 保留用户竞品时comps_list值必须逐字符等于raw_input_name；补充竞品使用完整官方名称；\n- competitor_domain与comps_list按同一candidate_audit记录绑定，替换、排除或重排后不得沿用旧下标域名；\n\
+            - 无法确认3个合格直接竞品时在qa_risk中明确失败原因，绝不可猜测。\n"
+        - id: 1700000000010-usr
+          role: user
+          text: 请严格按照以上所有要求输出。
+        selected: false
+        title: A1 竞品补齐
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 97
+      id: '1700000000010'
+      position:
+        x: 680
+        y: 120
+      positionAbsolute:
+        x: 680
+        y: 120
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import json\nimport re\nimport unicodedata\n\nALLOWED_EXCLUSIONS =\
+          \ {\"client_brand\", \"duplicate\", \"unverifiable\", \"cross_industry\"\
+          }\nMATCH_FIELDS = (\"same_purchase_set\", \"sub_track_match\", \"product_form_match\"\
+          , \"target_user_match\", \"core_job_match\", \"market_tier_match\")\n\n\
+          def safe_parse(text):\n    if not text:\n        return {}\n    text = str(text).strip()\n\
+          \    text = re.sub(r'^```(?:json)?\\s*|\\s*```$', '', text, flags=re.I |\
+          \ re.S)\n    try:\n        return json.loads(text)\n    except Exception:\n\
+          \        start, end = text.find('{'), text.rfind('}')\n        if start\
+          \ >= 0 and end > start:\n            try:\n                return json.loads(text[start:end\
+          \ + 1])\n            except Exception:\n                pass\n    return\
+          \ {}\n\ndef key(value):\n    value = unicodedata.normalize('NFKC', str(value\
+          \ or '')).casefold()\n    return re.sub(r'\\s+', ' ', value).strip()\n\n\
+          def domain(value):\n    value = re.sub(r'^https?://', '', str(value or '').strip(),\
+          \ flags=re.I)\n    return value.split('/', 1)[0].strip().rstrip('.').lower()\n\
+          \ndef tokens(value):\n    return [item.strip() for item in re.split(r'[,、]',\
+          \ str(value or '')) if item.strip()]\n\ndef domain_tokens(value):\n    if\
+          \ isinstance(value, list):\n        raw = value\n    else:\n        text\
+          \ = str(value or '').strip()\n        if text.startswith('['):\n       \
+          \     try:\n                parsed = json.loads(text)\n                raw\
+          \ = parsed if isinstance(parsed, list) else []\n            except Exception:\n\
+          \                raw = re.split(r'[,、\\n;]', text)\n        else:\n    \
+          \        raw = re.split(r'[,、\\n;]', text)\n    return [domain(item) for\
+          \ item in raw]\n\ndef truthy(value):\n    return value is True or value\
+          \ == 1 or str(value).strip().lower() in ('1', 'true', 'yes')\n\ndef main(llm_output=None,\
+          \ competitor_domain='', brand_name='', product_name='', topic='', background_info='',\
+          \ raw_comps_list='', corp_name=''):\n    obj = safe_parse(llm_output)\n\
+          \    audits = obj.get('candidate_audit', []) if isinstance(obj, dict) else\
+          \ []\n    audits = [item for item in audits if isinstance(item, dict)] if\
+          \ isinstance(audits, list) else []\n    raw_names = tokens(raw_comps_list)\n\
+          \    raw_domains = domain_tokens(competitor_domain)\n    excluded_clients\
+          \ = {key(item) for item in (brand_name, product_name, corp_name) if key(item)}\n\
+          \    errors = []\n    selected = []\n    selected_keys = set()\n    decisions\
+          \ = []\n\n    audit_by_input = {}\n    supplement_audits = []\n    for position,\
+          \ audit in enumerate(audits):\n        source = str(audit.get('source',\
+          \ '')).strip().lower()\n        if source == 'supplemented':\n         \
+          \   supplement_audits.append((position, audit))\n            continue\n\
+          \        raw_name = str(audit.get('raw_input_name', '')).strip()\n     \
+          \   input_index = audit.get('input_index')\n        try:\n            input_index\
+          \ = int(input_index)\n        except Exception:\n            input_index\
+          \ = None\n        if input_index is not None and 0 <= input_index < len(raw_names):\n\
+          \            audit_by_input.setdefault(input_index, audit)\n        elif\
+          \ raw_name:\n            for index, name in enumerate(raw_names):\n    \
+          \            if key(name) == key(raw_name) and index not in audit_by_input:\n\
+          \                    audit_by_input[index] = audit\n                   \
+          \ break\n\n    # P0 deterministic lock: preserve the first three user inputs\
+          \ exactly.\n    locked_raw_names = raw_names[:3]\n    for index, name in\
+          \ enumerate(locked_raw_names):\n        audit = audit_by_input.get(index)\
+          \ or {}\n        raw_domain = raw_domains[index] if index < len(raw_domains)\
+          \ else ''\n        resolved_domain = raw_domain or domain(audit.get('official_domain',\
+          \ ''))\n        record = dict(audit)\n        record.update({'input_index':\
+          \ index, 'raw_input_name': name, 'output_name': name, 'source': 'user',\
+          \ 'raw_input_domain': raw_domain, 'official_domain': resolved_domain, 'eligible':\
+          \ 1, 'retained': 1, 'exclusion_code': ''})\n        selected.append({'name':\
+          \ name, 'domain': resolved_domain, 'audit': record, 'source': 'user'})\n\
+          \        selected_keys.add(key(name))\n        decisions.append({'input_index':\
+          \ index, 'raw_input_name': name, 'raw_input_domain': raw_domain, 'retained':\
+          \ 1, 'exclusion_code': '', 'resolved_domain': resolved_domain, 'locked':\
+          \ 1})\n        if not resolved_domain:\n            errors.append('E_USER_COMPETITOR_DOMAIN_UNRESOLVED')\n\
+          \n    for index, name in enumerate(raw_names[3:], start=3):\n        decisions.append({'input_index':\
+          \ index, 'raw_input_name': name, 'raw_input_domain': raw_domains[index]\
+          \ if index < len(raw_domains) else '', 'retained': 0, 'exclusion_code':\
+          \ 'over_limit', 'locked': 0})\n\n    # Disable the legacy semantic-removal\
+          \ loop; supplements fill only remaining slots.\n    raw_names = []\n\n \
+          \   for index, name in enumerate(raw_names):\n        normalized = key(name)\n\
+          \        audit = audit_by_input.get(index)\n        raw_domain = raw_domains[index]\
+          \ if index < len(raw_domains) else ''\n        decision = {'input_index':\
+          \ index, 'raw_input_name': name, 'raw_input_domain': raw_domain}\n     \
+          \   if normalized in excluded_clients:\n            decision.update({'retained':\
+          \ 0, 'exclusion_code': 'client_brand'})\n            decisions.append(decision)\n\
+          \            continue\n        if normalized in selected_keys:\n       \
+          \     decision.update({'retained': 0, 'exclusion_code': 'duplicate'})\n\
+          \            decisions.append(decision)\n            continue\n        if\
+          \ audit is None:\n            errors.append('E_USER_INPUT_AUDIT_MISSING')\n\
+          \            decision.update({'retained': 0, 'exclusion_code': 'audit_missing'})\n\
+          \            decisions.append(decision)\n            continue\n        exclusion\
+          \ = str(audit.get('exclusion_code', '')).strip().lower()\n        retained\
+          \ = truthy(audit.get('retained', 1))\n        if not retained or exclusion:\n\
+          \            if exclusion not in ALLOWED_EXCLUSIONS:\n                errors.append('E_USER_INPUT_INVALID_EXCLUSION')\n\
+          \                decision.update({'retained': 0, 'exclusion_code': exclusion\
+          \ or 'invalid'})\n                decisions.append(decision)\n         \
+          \       continue\n            decision.update({'retained': 0, 'exclusion_code':\
+          \ exclusion})\n            decisions.append(decision)\n            continue\n\
+          \        evidence = str(audit.get('existence_evidence', '')).strip()\n \
+          \       if not evidence:\n            errors.append('E_EXISTENCE_EVIDENCE_MISSING')\n\
+          \        resolved_domain = raw_domain or domain(audit.get('official_domain',\
+          \ ''))\n        if not resolved_domain:\n            errors.append('E_USER_COMPETITOR_DOMAIN_UNRESOLVED')\n\
+          \        record = dict(audit)\n        record.update({'input_index': index,\
+          \ 'raw_input_name': name, 'output_name': name, 'source': 'user', 'raw_input_domain':\
+          \ raw_domain, 'official_domain': resolved_domain, 'retained': 1, 'exclusion_code':\
+          \ ''})\n        selected.append({'name': name, 'domain': resolved_domain,\
+          \ 'audit': record, 'source': 'user'})\n        selected_keys.add(normalized)\n\
+          \        decision.update({'retained': 1, 'exclusion_code': '', 'resolved_domain':\
+          \ resolved_domain})\n        decisions.append(decision)\n        if len(selected)\
+          \ == 3:\n            break\n\n    rejected_supplements = []\n    if len(selected)\
+          \ < 3:\n        for position, audit in supplement_audits:\n            name\
+          \ = str(audit.get('output_name') or audit.get('canonical_name') or audit.get('raw_input_name')\
+          \ or '').strip()\n            normalized = key(name)\n            reasons\
+          \ = []\n            if not normalized or normalized in selected_keys or\
+          \ normalized in excluded_clients:\n                reasons.append('identity')\n\
+          \            if str(audit.get('relationship', '')).strip().lower() != 'direct'\
+          \ or not truthy(audit.get('eligible', 0)):\n                reasons.append('not_direct')\n\
+          \            if not all(truthy(audit.get(field, 0)) for field in MATCH_FIELDS):\n\
+          \                reasons.append('six_factor_gate')\n            evidence\
+          \ = str(audit.get('existence_evidence', '')).strip()\n            decision_reason\
+          \ = str(audit.get('decision_reason', '')).strip()\n            resolved_domain\
+          \ = domain(audit.get('official_domain', ''))\n            if not evidence:\n\
+          \                reasons.append('evidence')\n            if not decision_reason:\n\
+          \                reasons.append('decision_reason')\n            if not resolved_domain:\n\
+          \                reasons.append('domain')\n            if reasons:\n   \
+          \             rejected_supplements.append({'name': name, 'reasons': reasons,\
+          \ 'audit_position': position})\n                continue\n            record\
+          \ = dict(audit)\n            record.update({'source': 'supplemented', 'output_name':\
+          \ name, 'official_domain': resolved_domain, 'retained': 1, 'exclusion_code':\
+          \ ''})\n            selected.append({'name': name, 'domain': resolved_domain,\
+          \ 'audit': record, 'source': 'supplemented'})\n            selected_keys.add(normalized)\n\
+          \            if len(selected) == 3:\n                break\n\n    if len(selected)\
+          \ != 3:\n        errors.append('E_COMPETITOR_COUNT')\n    if len({key(item['name'])\
+          \ for item in selected}) != len(selected):\n        errors.append('E_COMPETITOR_DUPLICATE')\n\
+          \    if any(not item['domain'] for item in selected):\n        errors.append('E_COMPETITOR_DOMAIN')\n\
+          \n    selected_user_names = [item['name'] for item in selected if item['source']\
+          \ == 'user']\n    expected_user_names = [item['raw_input_name'] for item\
+          \ in decisions if item.get('retained') == 1][:3]\n    if selected_user_names\
+          \ != expected_user_names:\n        errors.append('E_USER_COMPETITOR_ORDER_CHANGED')\n\
+          \n    proposed = obj.get('comps_list', []) if isinstance(obj, dict) else\
+          \ []\n    proposed = [str(item) for item in proposed] if isinstance(proposed,\
+          \ list) else []\n    omitted = [name for name in expected_user_names if\
+          \ key(name) not in {key(item) for item in proposed}]\n    diagnostics =\
+          \ {\n        'raw_input_decisions': decisions,\n        'selected_user_inputs':\
+          \ selected_user_names,\n        'selected_supplements': [item['name'] for\
+          \ item in selected if item['source'] == 'supplemented'],\n        'rejected_supplements':\
+          \ rejected_supplements,\n        'a1_proposed_comps': proposed,\n      \
+          \  'a1_omitted_valid_user_inputs': omitted,\n        'final_reconstruction':\
+          \ [item['name'] for item in selected],\n        'selection_reasons': [{'name':\
+          \ item['name'], 'source': item['source'], 'reason': ('Customer-provided\
+          \ competitor; preserved exactly under the locked-input policy.' if item['source']\
+          \ == 'user' else str(item['audit'].get('decision_reason', '')).strip())}\
+          \ for item in selected],\n        'selection_shortfall': max(0, 3 - len(selected)),\n\
+          \    }\n    errors = sorted(set(errors))\n    return {\n        'comps_list':\
+          \ json.dumps([item['name'] for item in selected], ensure_ascii=False),\n\
+          \        'comps_count': len(selected),\n        'competitor_domain': json.dumps([item['domain']\
+          \ for item in selected], ensure_ascii=False),\n        'competitor_audit':\
+          \ json.dumps([item['audit'] for item in selected], ensure_ascii=False),\n\
+          \        'competitor_selection_ok': 0 if errors else 1,\n        'competitor_selection_errors':\
+          \ json.dumps(errors, ensure_ascii=False),\n        'selection_diagnostics':\
+          \ json.dumps(diagnostics, ensure_ascii=False),\n        'qa_ok': 0 if errors\
+          \ else 1,\n        'qa_error': json.dumps(errors, ensure_ascii=False),\n\
+          \    }\n"
+        code_language: python3
+        desc: ''
+        outputs:
+          competitor_audit:
+            children: null
+            type: string
+          competitor_domain:
+            children: null
+            type: string
+          competitor_selection_errors:
+            children: null
+            type: string
+          competitor_selection_ok:
+            children: null
+            type: number
+          comps_count:
+            children: null
+            type: number
+          comps_list:
+            children: null
+            type: string
+          qa_error:
+            children: null
+            type: string
+          qa_ok:
+            children: null
+            type: number
+          selection_diagnostics:
+            children: null
+            type: string
+        selected: false
+        title: A2 竞品拆解
+        type: code
+        variables:
+        - value_selector:
+          - '1700000000010'
+          - text
+          variable: llm_output
+        - value_selector:
+          - '1700000000001'
+          - competitor_domain
+          variable: competitor_domain
+        - value_selector:
+          - '1700000000001'
+          - brand_name
+          variable: brand_name
+        - value_selector:
+          - '1700000000001'
+          - product_name
+          variable: product_name
+        - value_selector:
+          - '1700000000001'
+          - topic
+          variable: topic
+        - value_selector:
+          - '1700000000001'
+          - background_info
+          variable: background_info
+        - value_selector:
+          - '1700000000001'
+          - comps_list
+          variable: raw_comps_list
+        - value_selector:
+          - '1700000000001'
+          - corp_name
+          variable: corp_name
+      height: 53
+      id: '1700000000011'
+      position:
+        x: 1000
+        y: 120
+      positionAbsolute:
+        x: 1000
+        y: 120
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            max_tokens: 18000
+            temperature: 0.3
+            top_p: 0.7
+          mode: chat
+          name: deepseek/deepseek-v4-flash
+          provider: zhinao
+        prompt_template:
+        - id: 1700000000012-sys
+          role: system
+          text: '【角色】
+
+            你是美国市场GEO售前“品牌相关问题”生成专家。严格根据V0.2生成恰好10条品牌相关问题。你必须先规划答案边界，再写问题；不能靠替换How/What/Which、品牌、人群或竞品凑数。
+
+
+            【输入】
+
+            - brand_name: {{#1700000000001.brand_name#}}
+
+            - product_name: {{#1700000000001.product_name#}}
+
+            - topic: {{#1700000000001.topic#}}
+
+            - competitors: {{#1700000000011.comps_list#}}
+
+            - target_audience: {{#1700000000001.target_audience#}}
+
+            - background_info: {{#1700000000001.background_info#}}
+
+            - scene_plan: {{#1700000000002.text#}}
+
+            - personas: {{#1700000000003.text#}}
+
+            - current_date: {{#1700000000004.current_date#}}
+
+
+            【固定10槽位协议——最高优先级】
+
+            按固定槽位输出并逐槽终审：B01–B02=awareness，B03–B07=comparison，B08–B10=decision。每条增加slot_id。questions长度必须为10，意图必须为2/5/3，slot_id不得缺失或重复；无效项必须原位重写，禁止删除后少于10条。
+
+
+            【核心方法】
+
+            参考国内T1的场景组合、T2的适用性/边界认知、T3的答案终点和T4的品牌直询/竞品比较，但不输出T1–T4或弱中强字段。每条先建立唯一的：
+
+            Audience × Task × Scenario × Constraint × Factor × Endpoint。
+
+            至少两个结构槽位必须与其他题不同；只替换问句开头、竞品或人群不算不同答案边界。
+
+
+            【三类意图只按用户希望得到的答案分类】
+
+            - awareness（推荐，参考弱决策）：用户要选择方法和判断标准；回答终点=给方法/criteria_method。
+
+            - comparison（比较，参考中决策）：用户要候选集合或选项差异；回答终点=给选项/candidate_set_or_comparison。
+
+            - decision（决策，参考强决策）：用户要明确推荐、适配判断或最终结论；回答终点=给结论/final_recommendation。
+
+            comparison与decision不是背景多少的区别。两者都可以完整包含人群、用途、预算和场景；唯一差异是回答最终停在“多个选项/差异”还是“明确结论”。
+
+
+            【格子1：品牌推荐，恰好2条】
+
+            询问本品牌适用人群、核心场景、评估条件或适用边界。必须帮助用户判断“该品牌是否进入候选”，不能问公司历史或纯功能原理。
+
+            正例：What types of multi-shot filmmaking workflows is TapNow best suited
+            for?
+
+            为什么：回答需要说明适用场景与边界，终点是判断标准。
+
+            反例：What is TapNow?
+
+            原因：纯定义。
+
+            改写：What should independent filmmakers evaluate before adding TapNow to
+            a multi-shot workflow?
+
+
+            【格子2：品牌比较，恰好5条】
+
+            保持中立，不预设客户品牌领先。3条分别覆盖品牌与三个正式竞品，每个竞品至少1条；另外2条覆盖关键选型因素或多品牌综合比较。相邻品类竞品只能比较双方真实共有维度。
+
+            正例：How does TapNow compare with Runway for multi-shot character consistency
+            and workflow reuse?
+
+            为什么：明确比较双方在共同任务和因素上的差异。
+
+            反例：Why is TapNow better than Runway?
+
+            原因：预设胜出。
+
+            改写：How do TapNow and Runway differ for independent filmmakers producing
+            multi-shot narratives?
+
+            正例：For a small creative team, how do TapNow, Runway, and [Competitor 3]
+            compare on review workflows and licensing?
+
+            反例：TapNow vs Runway—which is better?
+
+            原因：缺少人群、场景或选型因素，答案边界过宽。
+
+
+            【格子3：品牌决策，恰好3条】
+
+            询问是否应该选择、购买、订阅、部署或采用本品牌；必须要求明确结论。三条分别改变persona、scenario、constraint或factor。
+
+            正例：Is TapNow the right choice for an independent filmmaker building character-consistent
+            multi-shot stories?
+
+            正例：Should a small creative team adopt TapNow when version review and workflow
+            reuse matter most?
+
+            反例：How do I sign up for TapNow?
+
+            原因：入口导航，不是选择结论。
+
+            反例：Does TapNow offer a free trial?
+
+            原因：事实查询，不能单独构成强决策。
+
+            改写：Is TapNow worth adopting for a small team that needs frequent client
+            revisions?
+
+
+            【购买属性与价格】
+
+            先依据输入判断pricing_mode。公开价/套餐可问价格和预算适配；usage-based可问额度与产量；custom quote只能问收费方式、报价因素或总成本；free/unknown不得虚构价格、购买或具体金额。价格无固定配额，只在确实改变选择时使用。涉及预算使用目标市场币种，无法判断金额时不写数字。
+
+
+            【现实选型因素覆盖】
+
+            10条整体至少覆盖5类因素，优先从输入提取：预算/计费、团队规模、内容产量、多人审核、版本管理、商业授权、集成部署、学习门槛、限制和适用边界。不得把合理因素写成目标品牌已具备的事实。
+
+
+            【品牌与竞品规则】
+
+            每条必须出现brand_name或product_name。只有5条comparison计入三竞品覆盖。不得虚构第四个竞品。品牌比较必须中立；decision含竞品与否由真实答案边界决定。
+
+
+            【语言和多样性】
+
+            自然美式英语，6–20个英文单词。避免模板堆叠；How+What+Which合计不超过4/10，单一首词不超过3。可使用Is/Should/For/When/Among/Does等自然结构，但不能只换前缀。question_zh准确翻译，不增加信息。
+
+
+            【批次自检】
+
+            逐项确认：总数10；2/5/3；三竞品均在comparison覆盖；每题endpoint正确；无注册/教程冒充decision；至少5类因素；不同答案边界；无不支持的产品能力、价格、年份或营销场景。
+
+
+            【输出】仅输出JSON：
+
+            {"questions":[{"slot_id":"B01-B10","question_text":"...","question_zh":"...","question_type":"brand","purchase_intent":"推荐|比较|决策","intent":"awareness|comparison|decision","persona_name":"必须逐字符来自personas","task":"...","scenario":"...","constraint":"...","factor":"...","endpoint":"criteria_method|candidate_set_or_comparison|final_recommendation","scene_name":"4-10
+            English words","competitors_mentioned":["竞品规范名"],"entity_evidence":[{"canonical_name":"客户品牌或竞品规范名","surface_form":"question_text中逐字出现的英文名","role":"client|competitor"}]}]}
+
+
+            【多语言实体证据协议——P0】
+
+            - question_text使用自然美式英语。brand_name或competitors为非英文名称时，正文必须使用对外官方英文名或市场上唯一通用英文名，不得把中文名硬塞进英文问题。
+
+            - competitors_mentioned是规范身份字段，必须仍使用competitors数组中的逐字符原名，不得改成英文名、缩写或翻译名。
+
+            - entity_evidence用于映射规范名与英文正文证据。canonical_name必须逐字符等于brand_name/product_name或competitors的值；surface_form必须是question_text中真实、连续、逐字出现的官方/通用英文名；role只能是client或competitor。
+
+            - 每题必须为客户品牌输出1条client证据；comparison题还必须为实际比较的竞品输出competitor证据。question_zh使用输入中的规范名，作为跨语言对齐复核。
+
+
+            【高商业价值槽位语义——P0】
+
+            这10条不是产品知识库FAQ，而是购买前会影响候选、比较或采用决策的品牌Query。每条必须包含明确的商业决策信号，且高质量回答会自然讨论品牌口碑、优劣势、比较、推荐、排名、适配或是否值得采用。固定执行：
+
+            - B01：品牌口碑/评价/可信度，询问目标人群在具体场景下应如何判断该品牌的reputation、reviews或track record；不得问“What
+            is品牌”。
+
+            - B02：品牌优势、局限或适用边界，帮助判断是否进入候选；不得变成功能原理或操作细节。
+
+            - B03–B05：客户品牌分别与competitor_1/2/3一对一比较，必须出现双方逐字符名称和明确compare/differ/trade-offs/better
+            fit语义。
+
+            - B06：客户品牌与一个正式竞品做两两综合比较或适配度排序，可复用B03–B05中最相关的竞品，但persona、scenario和factor必须不同。
+
+            - B07：客户品牌与一个正式竞品做两两的场景化推荐/优先级判断，不得出现第三个候选品牌。
+
+            - B08：best/right choice类最终适配结论。
+
+            - B09：worth adopting/buying/subscribing类价值判断；pricing_mode不支持时使用adopting，不虚构价格。
+
+            - B10：should choose/adopt类最终选择，必须带会改变结论的constraint。
+
+            产品细节、功能是否存在、教程、登录、注册、试用入口、按钮路径、操作步骤、纯定义、纯技术原理，即使出现品牌名也一律无效。问题若删除品牌后仍只是通用教程，同样无效。优先询问“为什么选、与谁比、优劣势、口碑如何、是否推荐、排名/候选位置、是否值得”，而非“怎么使用”。
+
+            【能力预设安全测试】
+
+            background_info或其他输入没有明确证明时，不得把具体功能、认证、连接器、客户案例、价格、处理规模或市场排名写成品牌已经具备的事实。比较问题应写成“for
+            teams evaluating X，A与B如何比较”，不要写成“A与B如何提供X”。例如用“How do A and B compare
+            for teams evaluating factual-answer monitoring?”，不要无依据写“How do A and B
+            differ in detecting hallucinations?”。
+
+            【三竞品固定比较槽位——最高优先级】
+
+            将competitors解析为最终有序3项数组：[competitor_1, competitor_2, competitor_3]。
+
+            - B03必须比较客户品牌/产品与competitor_1；
+
+            - B04必须比较客户品牌/产品与competitor_2；
+
+            - B05必须比较客户品牌/产品与competitor_3；
+
+            - B06–B07继续使用客户品牌vs单个正式竞品的两两比较，可复用已绑定竞品，但必须更换功能、场景或决策视角，不能替代B03–B05的覆盖。
+
+            B03–B05每题必须同时满足：intent=comparison；endpoint=candidate_set_or_comparison；question_text明确出现客户品牌与绑定竞品的官方/通用英文名，并真实询问差异、取舍或场景适配；competitors_mentioned必须包含绑定竞品的输入规范名，entity_evidence必须给出客户品牌和竞品在question_text中的英文字面证据。
+
+            B03–B07全部必须是“客户品牌 vs 一个竞品”的两两比较，competitors_mentioned必须恰好1项，禁止三品牌或多品牌同题排名。competitors_mentioned只能包含最终competitors数组中的精确值。只在scenario或其他metadata中出现不计覆盖；question_zh中的规范名仅用于与question_text中entity_evidence.surface_form做跨语言对齐复核。
+
+            输出前建立coverage_map并确认三个竞品分别被B03、B04、B05覆盖，缺失时只重写对应槽位，不得输出未覆盖草稿。
+
+            '
+        - id: 1700000000012-usr
+          role: user
+          text: 请严格按照以上所有要求输出。
+        selected: false
+        title: A3 品牌词生成(10)
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 97
+      id: '1700000000012'
+      position:
+        x: 1320
+        y: 120
+      positionAbsolute:
+        x: 1320
+        y: 120
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            max_tokens: 18000
+            temperature: 0.25
+            top_p: 0.8
+          mode: chat
+          name: deepseek/deepseek-v4-flash
+          provider: zhinao
+        prompt_template:
+        - id: 1700000000013-sys
+          role: system
+          text: '【角色】
+
+            你是美国市场GEO售前品牌问题的终审与重写专家。输入是上一节点的10条候选；你必须逐条审查并重写不合格项，最终仍恰好10条，不得删除后少于配额。你必须先规划答案边界，再写问题；不能靠替换How/What/Which、品牌、人群或竞品凑数。
+
+
+            【待审问题】
+
+            {{#1700000000012.text#}}
+
+
+            【终审顺序】
+
+            1. JSON和字段；2. 2/5/3配额；3. 三类答案终点；4. 三竞品comparison覆盖；5. persona/场景/因素差异；6.
+            中立和真实性；7. 语义去重；8. 起句多样性。
+
+            发现重复时必须改变至少两个结构槽位，不得只换同义词。
+
+
+            【输入】
+
+            - brand_name: {{#1700000000001.brand_name#}}
+
+            - product_name: {{#1700000000001.product_name#}}
+
+            - topic: {{#1700000000001.topic#}}
+
+            - competitors: {{#1700000000011.comps_list#}}
+
+            - target_audience: {{#1700000000001.target_audience#}}
+
+            - background_info: {{#1700000000001.background_info#}}
+
+            - scene_plan: {{#1700000000002.text#}}
+
+            - personas: {{#1700000000003.text#}}
+
+            - current_date: {{#1700000000004.current_date#}}
+
+
+            【固定10槽位协议——最高优先级】
+
+            按固定槽位输出并逐槽终审：B01–B02=awareness，B03–B07=comparison，B08–B10=decision。每条增加slot_id。questions长度必须为10，意图必须为2/5/3，slot_id不得缺失或重复；无效项必须原位重写，禁止删除后少于10条。
+
+
+            【核心方法】
+
+            参考国内T1的场景组合、T2的适用性/边界认知、T3的答案终点和T4的品牌直询/竞品比较，但不输出T1–T4或弱中强字段。每条先建立唯一的：
+
+            Audience × Task × Scenario × Constraint × Factor × Endpoint。
+
+            至少两个结构槽位必须与其他题不同；只替换问句开头、竞品或人群不算不同答案边界。
+
+
+            【三类意图只按用户希望得到的答案分类】
+
+            - awareness（推荐，参考弱决策）：用户要选择方法和判断标准；回答终点=给方法/criteria_method。
+
+            - comparison（比较，参考中决策）：用户要候选集合或选项差异；回答终点=给选项/candidate_set_or_comparison。
+
+            - decision（决策，参考强决策）：用户要明确推荐、适配判断或最终结论；回答终点=给结论/final_recommendation。
+
+            comparison与decision不是背景多少的区别。两者都可以完整包含人群、用途、预算和场景；唯一差异是回答最终停在“多个选项/差异”还是“明确结论”。
+
+
+            【格子1：品牌推荐，恰好2条】
+
+            询问本品牌适用人群、核心场景、评估条件或适用边界。必须帮助用户判断“该品牌是否进入候选”，不能问公司历史或纯功能原理。
+
+            正例：What types of multi-shot filmmaking workflows is TapNow best suited
+            for?
+
+            为什么：回答需要说明适用场景与边界，终点是判断标准。
+
+            反例：What is TapNow?
+
+            原因：纯定义。
+
+            改写：What should independent filmmakers evaluate before adding TapNow to
+            a multi-shot workflow?
+
+
+            【格子2：品牌比较，恰好5条】
+
+            保持中立，不预设客户品牌领先。3条分别覆盖品牌与三个正式竞品，每个竞品至少1条；另外2条覆盖关键选型因素或多品牌综合比较。相邻品类竞品只能比较双方真实共有维度。
+
+            正例：How does TapNow compare with Runway for multi-shot character consistency
+            and workflow reuse?
+
+            为什么：明确比较双方在共同任务和因素上的差异。
+
+            反例：Why is TapNow better than Runway?
+
+            原因：预设胜出。
+
+            改写：How do TapNow and Runway differ for independent filmmakers producing
+            multi-shot narratives?
+
+            正例：For a small creative team, how do TapNow, Runway, and [Competitor 3]
+            compare on review workflows and licensing?
+
+            反例：TapNow vs Runway—which is better?
+
+            原因：缺少人群、场景或选型因素，答案边界过宽。
+
+
+            【格子3：品牌决策，恰好3条】
+
+            询问是否应该选择、购买、订阅、部署或采用本品牌；必须要求明确结论。三条分别改变persona、scenario、constraint或factor。
+
+            正例：Is TapNow the right choice for an independent filmmaker building character-consistent
+            multi-shot stories?
+
+            正例：Should a small creative team adopt TapNow when version review and workflow
+            reuse matter most?
+
+            反例：How do I sign up for TapNow?
+
+            原因：入口导航，不是选择结论。
+
+            反例：Does TapNow offer a free trial?
+
+            原因：事实查询，不能单独构成强决策。
+
+            改写：Is TapNow worth adopting for a small team that needs frequent client
+            revisions?
+
+
+            【购买属性与价格】
+
+            先依据输入判断pricing_mode。公开价/套餐可问价格和预算适配；usage-based可问额度与产量；custom quote只能问收费方式、报价因素或总成本；free/unknown不得虚构价格、购买或具体金额。价格无固定配额，只在确实改变选择时使用。涉及预算使用目标市场币种，无法判断金额时不写数字。
+
+
+            【现实选型因素覆盖】
+
+            10条整体至少覆盖5类因素，优先从输入提取：预算/计费、团队规模、内容产量、多人审核、版本管理、商业授权、集成部署、学习门槛、限制和适用边界。不得把合理因素写成目标品牌已具备的事实。
+
+
+            【品牌与竞品规则】
+
+            每条必须出现brand_name或product_name。只有5条comparison计入三竞品覆盖。不得虚构第四个竞品。品牌比较必须中立；decision含竞品与否由真实答案边界决定。
+
+
+            【语言和多样性】
+
+            自然美式英语，6–20个英文单词。避免模板堆叠；How+What+Which合计不超过4/10，单一首词不超过3。可使用Is/Should/For/When/Among/Does等自然结构，但不能只换前缀。question_zh准确翻译，不增加信息。
+
+
+            【批次自检】
+
+            逐项确认：总数10；2/5/3；三竞品均在comparison覆盖；每题endpoint正确；无注册/教程冒充decision；至少5类因素；不同答案边界；无不支持的产品能力、价格、年份或营销场景。
+
+
+            【输出】仅输出JSON：
+
+            {"questions":[{"slot_id":"B01-B10","question_text":"...","question_zh":"...","question_type":"brand","purchase_intent":"了解|比较|决策","intent":"awareness|comparison|decision","persona_name":"必须逐字符来自personas","task":"...","scenario":"...","constraint":"...","factor":"...","endpoint":"criteria_method|candidate_set_or_comparison|final_recommendation","scene_name":"4-10
+            English words","competitors_mentioned":["竞品规范名"],"entity_evidence":[{"canonical_name":"客户品牌或竞品规范名","surface_form":"question_text中逐字出现的英文名","role":"client|competitor"}]}]}
+
+
+            【多语言实体终审——P0】
+
+            - question_text必须使用自然美式英语。若brand_name或competitors为非英文名，正文使用官方英文名或唯一通用英文名，competitors_mentioned仍使用competitors数组中的逐字符规范名。
+
+            - 逐项检查entity_evidence：canonical_name必须等于brand_name/product_name或competitors中的值；surface_form必须能在question_text中按完整英文词法边界逐字找到；role只能是client或competitor。证据不完整时必须原槽位重写，不得删除。
+
+            - question_zh必须使用输入规范名并与question_text的实体数量、角色和比较关系一致；不得在中文译文中新增英文正文不存在的品牌。
+
+
+            【高商业价值终审矩阵——P0】
+
+            逐槽验证并原位重写：B01=口碑/评价/可信度；B02=优势、局限或适用边界；B03–B05=分别与三个竞品一对一比较；B06=选择一个最相关竞品做两两综合比较；B07=选择一个竞品做两两的场景化推荐/优先级判断；B08=best/right
+            choice；B09=worth adopting/buying/subscribing；B10=should choose/adopt。
+
+            每题必须是购买前问题，并至少命中一种真实决策语义：reputation/reviews、strengths/limitations、compare/differ/trade-offs、recommended/top-rated/ranked、best
+            fit/right choice、worth adopting、should choose。只问产品细节、功能事实、教程、登录注册、试用入口、按钮路径、操作步骤、定义、技术原理或使用技巧的题目必须原槽位重写。不得用metadata伪装商业价值，商业语义必须出现在question_text中。
+
+            对所有具体功能、认证、原生连接器、API、客户案例、数字规模、价格和排名执行能力预设测试。输入未明确支持时，改写为“适合正在评估该能力的团队如何比较”，不得暗示客户品牌或竞品已经具备该能力。
+
+            【三竞品覆盖不可回退协议——最高优先级】
+
+            将competitors解析为最终有序3项数组，并强制保持：B03=客户品牌vs竞品1，B04=客户品牌vs竞品2，B05=客户品牌vs竞品3。B06和B07也必须是客户品牌vs单个竞品，可复用某一竞品但必须改变功能、场景或选型视角。去重、翻译或重写不得改变B03–B05绑定。
+
+            竞品仅在同时满足以下条件时计入覆盖：题目intent=comparison；endpoint=candidate_set_or_comparison；question_text明确出现客户品牌与该竞品的官方/通用英文名并真实询问差异、取舍或适配；competitors_mentioned数组包含该竞品的输入规范名；entity_evidence完整映射客户品牌和竞品的英文正文证据。
+
+            B03–B07的competitors_mentioned必须恰好1项，且只能使用最终competitors数组中的名称。禁止将两个以上竞品与客户品牌放入同一比较题。竞品只出现在scenario或其他metadata中不计覆盖；question_zh中的规范名只能作为与entity_evidence.surface_form对齐的辅助复核。
+
+            输出前计算missing = finalized_competitors - valid_comparison_coverage；missing非空时必须重写B03/B04/B05对应槽位，直至三竞品全部覆盖。绝不能通过删除题目、挪到其他intent或只填metadata伪造覆盖。
+
+            '
+        - id: 1700000000013-usr
+          role: user
+          text: 请严格按照以上所有要求输出。
+        selected: false
+        title: A4 品牌词去重本地化
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 97
+      id: '1700000000013'
+      position:
+        x: 1641.666666666667
+        y: 120
+      positionAbsolute:
+        x: 1641.666666666667
+        y: 120
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import json\nimport re\nimport unicodedata\nfrom collections import\
+          \ Counter\nfrom difflib import SequenceMatcher\n\ndef parse(text):\n   \
+          \ if not text:return {}\n    text=str(text).strip();text=re.sub(r'^```(?:json)?\\\
+          s*|\\s*```$','',text,flags=re.I|re.S)\n    try:return json.loads(text)\n\
+          \    except Exception:\n        a,b=text.find('{'),text.rfind('}')\n   \
+          \     if a>=0 and b>a:\n            try:return json.loads(text[a:b+1])\n\
+          \            except Exception:pass\n    return {}\n\ndef load_list(value):\n\
+          \    if isinstance(value,list):return value\n    try:\n        x=json.loads(value)\
+          \ if isinstance(value,str) else []\n        return x if isinstance(x,list)\
+          \ else []\n    except Exception:return []\n\ndef names(text):\n    o=parse(text)\n\
+          \    return [str(x.get('persona_name','')).strip() for x in o.get('personas',[])\
+          \ if isinstance(x,dict) and str(x.get('persona_name','')).strip()] if isinstance(o,dict)\
+          \ else []\n\ndef key(x):\n    x=unicodedata.normalize('NFKC',str(x or '')).casefold()\n\
+          \    return ' '.join(re.findall(r'[\\w]+',x,flags=re.UNICODE))\n\ndef entity_in_text(entity,text):\n\
+          \    ek=key(entity);tk=key(text)\n    return bool(ek) and re.search(r'(?<!\\\
+          w)'+re.escape(ek)+r'(?!\\w)',tk) is not None\n\ndef exact_entity_in_text(entity,text):\n\
+          \    return bool(str(entity or '')) and str(entity) in str(text or '')\n\
+          \ndef norm(s):\n    s=key(s);s=re.sub(r'\\b(choose|select|pick)\\b','choose',s);s=re.sub(r'\\\
+          b(suitable|appropriate|right fit|best fit|right choice)\\b','fit',s);s=re.sub(r'\\\
+          b(compare|versus|vs)\\b','compare',s);return s\n\ndef similar(a,b):\n  \
+          \  a,b=norm(a),norm(b)\n    if not a or not b:return False\n    sa,sb=set(a.split()),set(b.split());jac=len(sa&sb)/max(1,len(sa|sb))\n\
+          \    return a==b or jac>=.82 or (jac>=.70 and SequenceMatcher(None,a,b).ratio()>=.86)\n\
+          \ndef main(llm_output='', brand_name='', product_name='', comps_json='[]',\
+          \ personas_json='', expected_type='brand'):\n    obj=parse(llm_output);qs=obj.get('questions',[])\
+          \ if isinstance(obj,dict) else []\n    comps=[str(x) for x in load_list(comps_json)\
+          \ if str(x)]\n    comp_by_key={key(x):x for x in comps};personas=names(personas_json)\n\
+          \    issues=[];warnings=[];valid=[];slots=[];intents=Counter();pc=Counter();openings=Counter();texts=[]\n\
+          \    covered=set();evidence={x:[] for x in comps}\n    expected_total=10;target={'awareness':2,'comparison':5,'decision':3}\n\
+          \    brand_entities=[x for x in (str(brand_name or ''),str(product_name\
+          \ or '')) if x]\n    for q in qs if isinstance(qs,list) else []:\n     \
+          \   if not isinstance(q,dict):issues.append('E_ITEM');continue\n       \
+          \ slot=str(q.get('slot_id','')).strip();text=str(q.get('question_text','')).strip();intent=str(q.get('intent','')).strip().lower();persona=str(q.get('persona_name','')).strip();endpoint=str(q.get('endpoint','')).strip().lower()\n\
+          \        slot_intent='awareness' if slot in ('B01','B02') else ('comparison'\
+          \ if slot in ('B03','B04','B05','B06','B07') else ('decision' if slot in\
+          \ ('B08','B09','B10') else ''))\n        if slot_intent:\n            intent=slot_intent\n\
+          \            endpoint={'awareness':'criteria_method','comparison':'candidate_set_or_comparison','decision':'final_recommendation'}[intent]\n\
+          \            q['intent']=intent;q['endpoint']=endpoint;q['question_type']='brand';q['purchase_intent']={'awareness':'推荐','comparison':'比较','decision':'决策'}[intent]\n\
+          \        slots.append(slot)\n        if not text or intent not in target:issues.append('E_SCHEMA');continue\n\
+          \        if not str(q.get('question_zh','')).strip() or not str(q.get('scene_name','')).strip()\
+          \ or not persona:issues.append('E_REQUIRED_FIELD')\n        if personas\
+          \ and persona not in personas:issues.append('E_PERSONA_UNKNOWN')\n     \
+          \   if not any(entity_in_text(x,text) for x in brand_entities):issues.append('E_BRAND_MISSING')\n\
+          \        low=text.casefold()\n        tutorial_pattern=r'\\b(tutorial|step[-\
+          \ ]by[- ]step|how (?:do|can) (?:i|we) (?:use|set up|configure|create|edit|export|install)|sign\
+          \ up|log in|button|menu|click|api syntax)\\b'\n        if re.search(tutorial_pattern,low):issues.append('E_LOW_GEO_TUTORIAL_OR_NAVIGATION')\n\
+          \        slot_patterns={\n          'B01':r'\\b(reputation|reviews?|rated|track\
+          \ record|trusted|reliable)\\b',\n          'B02':r'\\b(strengths?|weaknesses|limitations?|drawbacks?|best\
+          \ suited|fit|advantages?|disadvantages?)\\b',\n          'B03':r'\\b(compare|compares|differ|difference|trade[-\
+          \ ]offs?|better fit|versus|vs\\.? )\\b',\n          'B04':r'\\b(compare|compares|differ|difference|trade[-\
+          \ ]offs?|better fit|versus|vs\\.? )\\b',\n          'B05':r'\\b(compare|compares|differ|difference|trade[-\
+          \ ]offs?|better fit|versus|vs\\.? )\\b',\n          'B06':r'\\b(compare|ranking|rank|top[-\
+          \ ]rated|best[- ]reviewed|trade[- ]offs?)\\b',\n          'B07':r'\\b(recommend|recommended|shortlist|options?|rank|ranking|top[-\
+          \ ]rated)\\b',\n          'B08':r'\\b(best|best fit|right choice|right fit)\\\
+          b',\n          'B09':r'\\b(worth|value|adopt|buy|purchase|subscribe)\\b',\n\
+          \          'B10':r'\\b(should|choose|select|adopt|recommend)\\b'}\n    \
+          \    if slot in slot_patterns and not re.search(slot_patterns[slot],low):warnings.append('W_COMMERCIAL_SLOT_SEMANTICS')\n\
+          \        expected_endpoint={'awareness':'criteria_method','comparison':'candidate_set_or_comparison','decision':'final_recommendation'}[intent]\n\
+          \        if endpoint!=expected_endpoint:issues.append('E_ENDPOINT_MISMATCH')\n\
+          \        if intent=='decision' and re.search(r'\\bhow (?:do|can|should)\
+          \ i (?:register|sign up|log in|access|get started)\\b|\\bwhere (?:do|can)\
+          \ i (?:register|sign up|log in|access)\\b',text.lower()):issues.append('E_NAVIGATION_AS_DECISION')\n\
+          \        recognized=[c for c in comps if exact_entity_in_text(c,text)] if\
+          \ intent=='comparison' else []\n        q['competitors_mentioned']=recognized\n\
+          \        if intent=='comparison':\n            if not recognized:issues.append('E_COMPARISON_TARGET_MISSING')\n\
+          \            if any(entity_in_text(c,text) for c in comps) and not recognized:issues.append('E_UNSTRUCTURED_COMPETITOR_MENTION')\n\
+          \            for c in recognized:\n                covered.add(c);evidence[c].append({'slot_id':slot,'question_text':text})\n\
+          \            if slot in ('B03','B04','B05'):\n                bound_index=int(slot[-1])-3\n\
+          \                if bound_index>=len(comps) or comps[bound_index] not in\
+          \ recognized or not exact_entity_in_text(comps[bound_index],text):issues.append('E_BOUND_COMPETITOR_SLOT')\n\
+          \        elif any(exact_entity_in_text(c,text) for c in comps):\n      \
+          \      warnings.append('W_COMPETITOR_MENTION_OUTSIDE_COMPARISON')\n    \
+          \    intents[intent]+=1;pc[persona]+=1\n        first=re.findall(r'[A-Za-z]+',text)\n\
+          \        if first:openings[first[0].lower()]+=1\n        texts.append(text);valid.append(q)\n\
+          \    if len(valid)!=expected_total:issues.append('E_COUNT')\n    expected_slots={'B'+str(i).zfill(2)\
+          \ for i in range(1,11)}\n    if set(slots)!=expected_slots or len(slots)!=len(set(slots)):issues.append('E_SLOT_INTEGRITY')\n\
+          \    if dict(intents)!=target:issues.append('E_INTENT_QUOTA')\n    missing=[c\
+          \ for c in comps if c not in covered]\n    if len(comps)!=3 or missing:issues.append('E_COMPETITOR_COVERAGE')\n\
+          \    if sum(openings[x] for x in ('how','what','which'))>6:warnings.append('W_OPENING_HWW')\n\
+          \    for i in range(len(texts)):\n        for j in range(i):\n         \
+          \   if similar(texts[i],texts[j]):warnings.append('W_SEMANTIC_DUP');break\n\
+          \    errors=sorted(set(issues));all_issues=errors+sorted(set(warnings))\n\
+          \    return {\n      'formatted_results':[json.dumps(x,ensure_ascii=False)\
+          \ for x in valid],\n      'qa_ok':0 if errors else 1,'qa_error':json.dumps(all_issues,ensure_ascii=False),'actual_count':len(valid),\n\
+          \      'comparison_coverage_ok':1 if len(comps)==3 and not missing else\
+          \ 0,\n      'covered_competitors':json.dumps([c for c in comps if c in covered],ensure_ascii=False),\n\
+          \      'missing_competitors':json.dumps(missing,ensure_ascii=False),\n \
+          \     'comparison_query_evidence':json.dumps(evidence,ensure_ascii=False)\n\
+          \    }\n"
+        code_language: python3
+        desc: ''
+        outputs:
+          actual_count:
+            children: null
+            type: number
+          comparison_coverage_ok:
+            children: null
+            type: number
+          comparison_query_evidence:
+            children: null
+            type: string
+          covered_competitors:
+            children: null
+            type: string
+          formatted_results:
+            children: null
+            type: array[string]
+          missing_competitors:
+            children: null
+            type: string
+          qa_error:
+            children: null
+            type: string
+          qa_ok:
+            children: null
+            type: number
+        selected: false
+        title: A5 品牌词格式化校验
+        type: code
+        variables:
+        - value_selector:
+          - '1700000000013'
+          - text
+          variable: llm_output
+        - value_selector:
+          - '1700000000001'
+          - brand_name
+          variable: brand_name
+        - value_selector:
+          - '1700000000001'
+          - product_name
+          variable: product_name
+        - value_selector:
+          - '1700000000011'
+          - comps_list
+          variable: comps_json
+        - value_selector:
+          - '1700000000003'
+          - text
+          variable: personas_json
+      height: 53
+      id: '1700000000014'
+      position:
+        x: 1960
+        y: 120
+      positionAbsolute:
+        x: 1960
+        y: 120
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            max_tokens: 32768
+            temperature: 0.3
+            top_p: 0.8
+          mode: chat
+          name: deepseek/deepseek-v4-flash
+          provider: zhinao
+        prompt_template:
+        - id: 1700000000020-sys
+          role: system
+          text: "【角色与唯一目标】\n你是美国市场高GEO价值品类Query生成专家。根据真实用户选择产品、工具或服务时会向ChatGPT、Perplexity、Google\
+            \ AI Overviews等答案引擎提出的问题，生成恰好40条英文通用品类Query。\n\n高GEO价值定义：Query必须使答案引擎自然推荐、列举、比较或判断具体产品/平台/服务商；若回答只需提供定义、教程、操作步骤、灵感或素材资源，该Query无效，必须重写。\n\
+            \n【输入】\n- topic: {{#1700000000001.topic#}}\n- product_name（仅用于理解品类定位，通用Query不得出现）:\
+            \ {{#1700000000001.product_name#}}\n- monitored_brand（通用Query不得出现）: {{#1700000000001.brand_name#}}\n\
+            - monitored_competitors（通用Query不得出现）: {{#1700000000011.comps_list#}}\n\
+            - target_audience: {{#1700000000001.target_audience#}}\n- target_market:\
+            \ {{#1700000000001.target_market#}}\n- background_info: {{#1700000000001.background_info#}}\n\
+            - scene_plan: {{#1700000000002.text#}}\n- personas: {{#1700000000003.text#}}\n\
+            - current_date: {{#1700000000004.current_date#}}\n\n【先解决两个关键边界】\n1. topic强绑定不等于在通用品类Query中直写品牌名。必须提取topic中的核心品类语义、核心任务和购买对象作为锚点；例如topic为“Best\
+            \ AI search visibility and answer engine optimization platforms for enterprise\
+            \ marketing teams”，有效锚点包括AI search visibility platform、answer engine optimization\
+            \ platform、enterprise AEO software、AI crawler analytics tool。不得只写digital\
+            \ marketing tools、SEO tips等泛行业词。\n2. product_name、monitored_brand和正式竞品只用于理解品类边界、差异化因素和排除名单。40条通用品类Query中禁止出现这些品牌、产品名、域名及明显别名。\n\
+            \n【固定40槽位协议——最高优先级】\n- C01–C10：intent=awareness，endpoint=criteria_method，恰好10条。\n\
+            - C11–C30：intent=comparison，endpoint=candidate_set_or_comparison，恰好20条。\n\
+            - C31–C40：intent=decision，endpoint=final_recommendation，恰好10条。\nquestions必须按C01至C40排序；不得缺号、重复、合并或删除槽位。\n\
+            输出前机械检查三次：questions.length=40；意图数量=10/20/10；slot_id集合=C01–C40。任一不满足，先补齐或原槽位重写，再输出。\n\
+            \n【第一步：核心信息提取与品类判定】\n在内部完成，不额外输出分析：\n1. 提取topic_core、category、core_jobs、purchase_object、target_audience\
+            \ identities、constraints、selection factors和品牌排除词。\n2. 判断唯一主品类类型：\n   A.\
+            \ tool_software_app：用户要完成什么任务、什么工具更适合；重点为选工具、比工具、找适配工具。禁止操作教程、功能按钮教学、素材下载。\n\
+            \   B. physical_product：围绕购买/自用/送礼、适配、预算、品质、避坑和买方-收方关系。不得把商品写成软件或服务。\n\
+            \   C. service：围绕何时需要服务、可信度、案例、方案、价格透明度和供应商对比。不得套用App后缀。\n3. 后续40条必须全部遵守同一主品类框架，禁止跨赛道漂移。\n\
+            4. 基于background_info识别真实产品定位和差异化评估维度，但不得把未经输入支持的能力写成事实。\n\n【topic与target_audience强绑定铁律】\n\
+            每条Query必须同时通过：\n1. Topic Directness：包含topic的核心品类语义或不可替代的同义表达，不能只含SEO、marketing、video、software等泛词。\n\
+            2. Anchor Removal Test：删除核心品类锚点后，Query应无法继续表达该具体购买意图；若仍是完整的泛行业问题，则重写。\n\
+            3. Category Boundary：不得引入topic之外的行业、权益、活动、产品形态或购买对象。\n4. Audience Fit：persona_name必须逐字符来自personas，并能映射到target_audience；场景、任务、约束必须符合该受众的真实职责。\n\
+            5. Audience Coverage：target_audience中每个用户群体都必须覆盖；每个persona至少2条，其中至少1条comparison或decision。多persona时单一persona不得超过16条。\n\
+            \n【persona_name硬规则】\n1. 优先从target_audience提取并使用personas中的稳定名称，禁止新造无法映射的角色。\n\
+            2. 必须是4–10个英文单词的短标签，不是句子；禁止wants、hopes、worries、looking for等叙述表达。\n3. 只保留“身份+核心职责/需求”等1–2个关键点，不堆砌背景。\n\
+            4. 如personas输入中名称不足4词，保持同一语义扩写为4–10词，并在40条内始终使用同一名称；不得改变其身份。\n\n【第二步：高GEO场景切割】\n\
+            为每个受众构建P1/P2/P3场景组合，每条先规划：Audience × Task × Scenario × Constraint × Factor\
+            \ × Answer Endpoint。\n- P1常青高价值：高频刚需、选择意图明确、答案自然出现厂商、全年有效。\n- P2细分高价值：特定受众、任务、规模、工作流或约束下的产品选择。\n\
+            - P3有效长尾：极细分但真实的采购/采用场景，或current_date之后60天内的有效事件。\n\n按品类执行：\nA. tool_software_app：覆盖核心任务，以及免费vs付费、价格模型、易用性、团队协作、权限治理、集成、分析能力、规模、学习成本和适用边界。\n\
+            B. physical_product：覆盖自用/送礼、买方与收方关系、预算、适配、品质、风险、使用环境和有效时间节点。\nC. service：覆盖高频刚需、细分需求、信任、案例、口碑、价格透明度、交付范围、资质和长尾场景。\n\
+            \n【时间有效性】\n只有当事件位于current_date之后0–60天且与topic及受众直接相关时才可使用。已过去、超过60天、无法确认日期或仅为蹭热点的事件一律不用。常青Query不得强行添加年份、季度或节日。\n\
+            \n【scene_name高GEO价值规则】\n1. 4–10个英文单词，概括“具体选择场景+关键决策因素”，不是空泛主题。\n2. 必须能区分任务或答案边界；禁止Best\
+            \ Tools、Product Selection、Platform Comparison等泛标签。\n3. 正例：Enterprise AEO\
+            \ Governance Platform Selection；AI Crawler Analytics for Global Brands。\n\
+            4. 反例：Marketing Tools；AI Platform；General Comparison。\n\n【第三步：Query深度生成与意图终点】\n\
+            所有Query必须是6–20个英文单词，使用自然美式搜索语言，并通过AI答案测试：高质量回答是否必须自然给出具体厂商、产品候选、平台差异或最终推荐？若否，删除并原槽位重写。\n\
+            \n1. 推荐意图：awareness / criteria_method（C01–C10）\n-用户希望得到选择方法、评估标准、采用边界或风险判断。\n\
+            -所以通常生成的问题需要带“xxx怎么选、xxx选购攻略、xxx使用注意什么”这类的问题\n- 英文可用语义：what to evaluate、selection\
+            \ criteria、how to choose、what capabilities matter。\n- 不能写定义、百科、教程、操作步骤或已选工具后的使用技巧。\n\
+            - 正例：What should enterprise AEO leaders evaluate when choosing an AI search\
+            \ visibility platform?\n- 反例：How does answer engine optimization work?\
+            \ 原因：只需原理说明。\n\n2. 比较意图：comparison / candidate_set_or_comparison（C11–C30）\n\
+            - 用户需要候选集合比较、推荐清单或不同方案能力差异；\n-通常生成的问题需要带“推荐什么、有哪些、推荐几款、A 与 B 怎么比“\n- 可用语义：which\
+            \ platforms、recommended tools、options worth considering、what software\
+            \ supports。\n- 正例：Which enterprise AEO platforms combine AI crawler analytics\
+            \ with governed content workflows?\n- 反例：What are alternatives to Profound?\
+            \ 原因：通用题泄漏监控品牌。\n\n3. 决策意图：decision / final_recommendation（C31–C40）\n\
+            - 需要提供明确推荐或判断，明确受众、任务和现实约束，要求最佳适配、应该选择哪个或是否值得采用。\n- 通常生成的问题需要带“哪个最好、应该买哪个、是否值得、是否应该选择“，也可以使用一些人群或者预算等限定条件进行生成问题，如”Recommendations\
+            \ for women's high heels under 500 dollars“\n- 可用语义：best fit、which platform\
+            \ should、best option、which solution balances。\n- 正例：Which enterprise AEO\
+            \ platform best supports global teams needing governance and measurable\
+            \ visibility impact?\n- 反例：Which AEO platform is best? 原因：缺少任务和约束。\n-\
+            \ 注册、登录、试用入口、开户、部署步骤、访问方法绝不属于decision。\n\n【不同品类的自然问法】\n- tool_software_app：recommendations、best\
+            \ fit、which platform/tool/software、how to choose。禁止哪家靠谱等服务商口吻。\n- physical_product：recommended\
+            \ products、which one、worth buying、how to choose、avoid poor fit。\n- service：which\
+            \ provider、reputable firms、pricing transparency、case quality、how to choose。\n\
+            英语Query必须自然，不能机械翻译中文后缀。\n\n【负面清单——命中即原槽位重写】\n1. 操作细节：如何加字幕/转场/滤镜、按钮路径、裁剪、导出设置等已选工具后的操作。\n\
+            2. 科普教程：what is、how it works、tutorial、step-by-step、tips、best practices但不涉及产品选择。\n\
+            3. 素材资源：template download、free assets、music/BGM、素材来源。\n4. 灵感创意：ideas、inspiration、trending\
+            \ effects/styles但不涉及工具决策。\n5. 行业百科：只问行业趋势、概念、流程或知识，不需要推荐具体供应商。\n6. 导航转化：sign\
+            \ up、log in、start a trial、access、account setup、onboarding steps。\n7. 无依据断言：虚构价格、功能、排名、市场份额、客户、法规合规或搜索量。\n\
+            \n【批次多样性与去重铁律】\n1. 同批不得出现重复或高度相似Query；仅替换persona、数字、形容词、How/What/Which或同义词视为重复。\n\
+            2. 任意两题至少在Task、Scenario、Constraint、Factor、Endpoint中有两个实质差异；同一答案大纲可直接复用的两题视为重复。\n\
+            3. 40条整体覆盖至少8类选择因素：价格/计费、易用性、团队协作、权限治理、内容/数据规模、集成、分析与衡量、商业/数据风险、学习成本、适用边界；按topic选择真实相关项。\n\
+            4. How/What/Which合计不超过16条，任一首词不超过8条。必须使用多样但自然的问句结构。\n5. question_text逐词计数必须为6–20；连字符词按一个单词处理。超长或过短必须重写。\n\
+            \n【Profound类主题校准示例】\n若topic涉及enterprise AI search visibility / answer\
+            \ engine optimization：\n- 应覆盖AI答案可见度衡量、prompt demand、AI crawler analytics、内容优化工作流、跨团队治理、集成、竞品洞察、归因与业务影响。\n\
+            - 禁止漂移为传统关键词排名工具、广告投放平台、普通社媒监听、ChatGPT使用教程或泛SEO技巧。\n- 有效：Which enterprise\
+            \ AEO platforms connect AI crawler analytics with measurable content performance?\n\
+            - 无效：How can marketers improve SEO rankings? 原因：删除AEO语义后仍是完整泛SEO问题。\n\n\
+            【高商业价值40槽位矩阵——P0】\n保持10/20/10意图配额不变，但必须按以下商业语义分配，避免40条都退化为功能认知或教程：\n-\
+            \ C01–C04：怎么选、评估标准、采购清单、关键能力，必须出现choose/select/evaluate/criteria语义。\n\
+            - C05–C07：品类口碑、用户评价、供应商可信度、案例证据或常见局限，目标是判断哪些候选值得进入shortlist，不得问行业趋势。\n\
+            - C08–C10：价格/计费/总成本、采用风险、实施或适用边界等购买注意事项，不得虚构具体金额或能力。\n- C11–C16：recommended\
+            \ tools/platforms/providers、options worth considering、shortlist等推荐清单型问题。\n\
+            - C17–C22：围绕具体factor、persona和scenario的产品选项比较或trade-offs。\n- C23–C26：top-rated、best-reviewed、highest-ranked、most\
+            \ trusted等排名/口碑型候选问题；不得声称客观市场排名已存在，问题应要求答案引擎基于明确标准给出排序。\n- C27–C30：特定约束下的可选方案、替代路径或候选集合，不得出现任何监控品牌。\n\
+            - C31–C34：best/best fit/right choice类明确推荐。\n- C35–C37：worth paying for/worth\
+            \ adopting/paid vs free类价值结论；pricing_mode不支持时只问worth adopting，不虚构付费信息。\n\
+            - C38–C40：which should I choose/which solution should a persona select类最终决策。\n\
+            每题的商业语义必须直接写在question_text中，不能只放在intent、factor或metadata。产品细节、功能原理、教程、操作步骤、登录注册、素材、灵感、纯趋势或best\
+            \ practices题目一律原槽位重写。\n涉及具体认证、连接器、API、功能、价格、查询量、团队人数或排名时，必须有输入依据；否则改为不预设厂商能力的选择条件问法，例如“Which\
+            \ platforms fit teams evaluating BI integration?”，不得写成未经证实的“Which platforms\
+            \ offer native Looker connectors?”。\n\n【输出前逐题检查】\n- topic核心品类锚点存在且通过Anchor\
+            \ Removal Test；\n- persona映射target_audience，scene_name具体且有GEO价值；\n- Query为6–20词；AI回答必须自然出现产品/平台/服务商；\n\
+            - 不含客户品牌、product_name、正式竞品、域名或别名；\n- intent与endpoint严格匹配；\n- 无教程、百科、素材、灵感、操作导航和跨赛道漂移；\n\
+            - 与其他39条不存在高度相似。\n\n【唯一输出格式】\n仅输出合法JSON，不要Markdown、解释或代码围栏：\n{\"questions\"\
+            :[{\"slot_id\":\"C01\",\"question_text\":\"6-20 English words\",\"question_zh\"\
+            :\"准确中文翻译\",\"question_type\":\"category\",\"purchase_intent\":\"推荐|比较|决策\"\
+            ,\"intent\":\"awareness|comparison|decision\",\"persona_name\":\"4-10\
+            \ English words mapped to target_audience\",\"task\":\"具体选择任务\",\"scenario\"\
+            :\"具体真实场景\",\"constraint\":\"会改变选择的现实约束\",\"factor\":\"核心选择因素\",\"endpoint\"\
+            :\"criteria_method|candidate_set_or_comparison|final_recommendation\"\
+            ,\"scene_name\":\"4-10 English words\",\"competitors_mentioned\":[]}]}\n"
+        - id: 1700000000020-usr
+          role: user
+          text: Generate exactly 40 high-GEO-value category queries and return only
+            the required JSON.
+        selected: false
+        title: B1 品类词生成(40)
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 97
+      id: '1700000000020'
+      position:
+        x: 680
+        y: 680
+      positionAbsolute:
+        x: 680
+        y: 680
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            max_tokens: 32768
+            temperature: 0.25
+            top_p: 0.8
+          mode: chat
+          name: deepseek/deepseek-v4-flash
+          provider: zhinao
+        prompt_template:
+        - id: 1700000000021-sys
+          role: system
+          text: '【角色】
+
+            你是美国市场GEO售前通用品类问题的终审与重写专家。输入是上一节点的40条候选；你必须逐条审查并重写不合格项，最终仍恰好40条，不得删除后少于配额。全部问题都必须指向某类工具、平台、产品或服务商的选择，使AI有充分理由自然列举品牌。
+
+
+            【待审问题】
+
+            {{#1700000000020.text#}}
+
+
+            【终审顺序】
+
+            1. JSON和字段；2. 10/20/10配额；3. 方法/选项/结论答案终点；4. 监控品牌排除；5. persona配额；6. 场景/因素覆盖；7.
+            语义去重；8. 起句多样性。
+
+            发现重复时必须改变至少两个结构槽位，不得只换前缀或同义词。
+
+
+            【输入】
+
+            - topic: {{#1700000000001.topic#}}
+
+            - product_name: {{#1700000000001.product_name#}}
+
+            - monitored_brand: {{#1700000000001.brand_name#}}
+
+            - monitored_competitors: {{#1700000000011.comps_list#}}
+
+            - target_audience: {{#1700000000001.target_audience#}}
+
+            - background_info与scene_plan已由B1写入每条候选的task、scenario、constraint和factor；终审时直接以候选字段为准，不重复注入长文本。
+
+            - personas: {{#1700000000003.text#}}
+
+            - current_date: {{#1700000000004.current_date#}}
+
+
+            【固定40槽位协议——最高优先级】
+
+            输出前必须在内部建立并逐槽填满以下40个唯一槽位，禁止跳号、合并或少输出：
+
+            - slot 01–10：intent=awareness，恰好10条；
+
+            - slot 11–30：intent=comparison，恰好20条；
+
+            - slot 31–40：intent=decision，恰好10条。
+
+            每条输出增加 "slot_id":"C01" 至 "C40"。questions数组必须按C01→C40排序。
+
+            终审节点必须先读取上一节点全部slot_id：保留有效槽位，重写无效槽位；若某slot_id缺失，必须新生成该槽位；若重复，只保留一条并补回缺失槽位。绝对不得通过删除把40条变成39条。
+
+            输出JSON前执行三次机械计数：
+
+            1. questions数组长度必须等于40；
+
+            2. awareness/comparison/decision必须等于10/20/10；
+
+            3. slot_id集合必须严格等于C01–C40，不得缺失或重复。
+
+            任一检查不通过时，不得输出当前草稿，必须先在内部补齐或重写。
+
+
+            【核心方法】
+
+            参考国内T1先做场景组合，参考T2保留会改变品类选择的适用性/限制认知，参考T3用答案终点分类。海外版不输出T1/T2/T3或弱中强字段。
+
+            每条先规划唯一的 Audience × Task × Scenario × Constraint × Factor × Endpoint。至少两个结构槽位与其他题不同；只改How/What/Which、persona或同义词不算新意图。
+
+
+            【品牌发现测试】
+
+            每条都必须通过：高质量回答是否自然需要列举、推荐或比较具体工具/平台/产品/服务商？纯概念、定义、历史、原理、趋势、技巧、行业最佳实践、登录注册、已选工具后的操作步骤和不问工具的工作流全部拒绝。
+
+
+            【格子1：通用了解，恰好10条】
+
+            围绕具体工具品类询问怎么选、选购/选择攻略、注意事项和评估标准；答案终点=criteria_method。不是产品定义或通用技巧。
+
+            正例：What should an independent filmmaker evaluate when choosing an AI video
+            platform for multi-shot stories?
+
+            正例：Which licensing terms matter when selecting an AI video tool for commercial
+            film work?
+
+            反例：How do AI video tools keep characters consistent?
+
+            原因：原理科普，不必列举厂商。
+
+            改写：What character-consistency capabilities should filmmakers evaluate
+            when choosing an AI video platform?
+
+            反例：What is generative video?
+
+            原因：纯定义。
+
+
+            【格子2：通用比较，恰好20条】
+
+            定义为候选推荐、工具清单或选项差异；答案终点=candidate_set_or_comparison。不得出现本品牌、product_name、三个正式竞品或其别名，避免监控指标虚高。
+
+            正例：Which AI video platforms are worth considering for storyboard-to-video
+            production?
+
+            正例：What tools are recommended for AI artists who need consistent characters
+            across multiple shots?
+
+            正例：Which platforms work well for small film teams needing review and version
+            control?
+
+            反例：What are alternatives to Runway for multi-shot video?
+
+            原因：Runway是本报告正式监控竞品，显式出现会抬高指标。
+
+            改写：Which AI video platforms support multi-shot narrative production and
+            reusable workflows?
+
+            反例：How do you create a long-form AI video?
+
+            原因：工作流教程，不问工具选择。
+
+
+            【格子3：通用决策，恰好10条】
+
+            在明确persona、scenario和constraint下要求最佳工具、最终推荐或是否应选择某类方案；答案终点=final_recommendation。不能只问宽泛“Which
+            is best?”。
+
+            正例：Which AI video platform is the best fit for an independent filmmaker
+            producing character-consistent multi-shot stories?
+
+            正例：What is the best AI video tool for a small team handling weekly reviews
+            and version changes?
+
+            反例：Which AI video tool is best?
+
+            原因：没有用户、场景或现实约束。
+
+            改写：Which AI video platform is best for a two-person film team producing
+            weekly multi-shot episodes?
+
+            反例：How can I register for an AI video tool?
+
+            原因：操作导航，不是最终选择。
+
+
+            【三类答案终点】
+
+            - awareness（了解，参考弱决策）：给方法和判断标准；典型语义=what to consider/look for/how to choose/selection
+            criteria。
+
+            - comparison（比较，参考中决策）：给候选集合或选项差异；典型语义=which tools/what platforms/options
+            worth considering/recommended tools。
+
+            - decision（决策，参考强决策）：给明确推荐、适配判断或最终结论；典型语义=best fit/which should I choose/right
+            choice。
+
+            不要按背景多少分类；必须按回答最后要“方法、选项还是结论”分类。
+
+
+            【受众配额】
+
+            每个personas中的已填写受众至少2条通用题，其中至少1条comparison或decision。多persona时任何persona不得超过16/40。不得把filmmakers、independent
+            creators、AI artists全部泛化为marketers。
+
+
+            【场景和因素】
+
+            40条整体覆盖不同core job、scenario、constraint和factor。至少覆盖6类现实因素：预算/计费、团队规模、内容产量、多人审核、版本管理、商业授权、集成部署、学习门槛、产品限制/适用边界。视频类根据输入覆盖multi-shot、character
+            consistency、storyboard-to-video、long-form；无证据不默认营销/社媒/电商。
+
+
+            【价格】
+
+            价格不设固定配额。公开价可问套餐/预算；usage-based问额度和产量；custom quote问收费方式、报价因素或总成本；free/unknown不得虚构价格和金额。使用目标市场币种，无法判断量级时不写数字。
+
+
+            【少量非监控头部品牌替代品问法】
+
+            仅当锚点品牌不属于客户品牌、product_name和正式竞品集合，且确实是当前细分品类头部时，最多使用2条“alternatives to
+            X”；否则禁止。
+
+
+            【语言和多样性】
+
+            自然美式英语，6–20词。How+What+Which合计不超过16/40，单一首词不超过8。起句多样性不能替代答案边界多样性。question_zh准确翻译。
+
+
+            【高商业价值终审矩阵——P0】
+
+            逐槽核验并原位重写：C01–C04=选择标准；C05–C07=口碑/评价/可信度/局限证据；C08–C10=价格、总成本、采用风险或适用边界；C11–C16=推荐清单；C17–C22=具体因素和场景下的选项比较；C23–C26=top-rated/best-reviewed/ranked/most
+            trusted候选排序；C27–C30=特定约束的候选集合；C31–C34=best fit；C35–C37=worth paying for或worth
+            adopting；C38–C40=which should choose/select。
+
+            每条question_text必须显式携带对应商业意图，不能只在intent、factor、endpoint或中文翻译中填写。任何产品细节、功能原理、教程、操作步骤、登录注册、素材资源、灵感、纯趋势、纯best
+            practices或不要求列举具体产品/服务商的题目，必须原槽位重写。
+
+            输入没有明确依据时，禁止虚构认证、原生连接器、API能力、客户案例、价格、处理规模、团队人数或客观排名。将能力断言改写为评估场景或选择条件，确保问题要求比较候选，而不是预设候选已经具备某项能力。
+
+            【批次自检】
+
+            总数40；10/20/10；全部无监控品牌；每个persona覆盖达标；至少6类因素；无教程/定义；decision都有最终结论；无同义改写；无虚构能力、价格、法规、搜索频率或商业价值。
+
+
+            【输出】仅输出JSON：
+
+            {"questions":[{"slot_id":"C01-C40","question_text":"...","question_zh":"...","question_type":"category","purchase_intent":"了解|比较|决策","intent":"awareness|comparison|decision","persona_name":"必须逐字符来自personas","task":"...","scenario":"...","constraint":"...","factor":"...","endpoint":"criteria_method|candidate_set_or_comparison|final_recommendation","scene_name":"4-10
+            English words","competitors_mentioned":[]}]}'
+        - id: 1700000000021-usr
+          role: user
+          text: 立即返回完整JSON。首字符必须是{，末字符必须是}；不得输出分析、Markdown或空白响应。
+        selected: false
+        title: B2 品类词去重本地化
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 97
+      id: '1700000000021'
+      position:
+        x: 1320
+        y: 680
+      positionAbsolute:
+        x: 1320
+        y: 680
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import json\nimport re\nfrom collections import Counter\nfrom difflib\
+          \ import SequenceMatcher\n\ndef parse(text):\n    if not text: return {}\n\
+          \    text=str(text).strip()\n    text=re.sub(r'^```(?:json)?\\s*|\\s*```$',\
+          \ '', text, flags=re.I|re.S)\n    try: return json.loads(text)\n    except\
+          \ Exception:\n        a,b=text.find('{'),text.rfind('}')\n        if a>=0\
+          \ and b>a:\n            try:return json.loads(text[a:b+1])\n           \
+          \ except Exception:pass\n    return {}\n\ndef names(text):\n    o=parse(text)\n\
+          \    return [str(x.get('persona_name','')).strip() for x in o.get('personas',[])\
+          \ if isinstance(x,dict) and str(x.get('persona_name','')).strip()] if isinstance(o,dict)\
+          \ else []\n\ndef norm(s):\n    s=str(s or '').lower()\n    s=re.sub(r'\\\
+          b(choose|select|pick)\\b','choose',s)\n    s=re.sub(r'\\b(suitable|appropriate|right[-\
+          \ ]?fit|best fit)\\b','fit',s)\n    s=re.sub(r'\\b(compare|versus|vs)\\\
+          b','compare',s)\n    return ' '.join(re.findall(r\"[a-z0-9]+\",s))\n\ndef\
+          \ similar(a,b):\n    a,b=norm(a),norm(b)\n    if not a or not b:return False\n\
+          \    sa,sb=set(a.split()),set(b.split())\n    jac=len(sa&sb)/max(1,len(sa|sb))\n\
+          \    return a==b or jac>=.82 or (jac>=.70 and SequenceMatcher(None,a,b).ratio()>=.86)\n\
+          \ndef main(llm_output='', brand_name='', product_name='', comps_json='[]',\
+          \ personas_json='', expected_type='category'):\n    obj=parse(llm_output)\n\
+          \    qs=obj.get('questions',[]) if isinstance(obj,dict) else []\n    try:\n\
+          \        comps=json.loads(comps_json) if comps_json else []\n        if\
+          \ not isinstance(comps,list): comps=[]\n    except Exception:\n        comps=[]\n\
+          \    personas=names(personas_json) or ['Procurement and Product Decision\
+          \ Maker']\n    fallback_used=False\n    if expected_type=='category':\n\
+          \        raw_slots=[str(q.get('slot_id','')).strip() for q in qs if isinstance(q,dict)]\
+          \ if isinstance(qs,list) else []\n        expected_raw={'C'+str(i).zfill(2)\
+          \ for i in range(1,41)}\n        needs_fallback=(not isinstance(qs,list)\
+          \ or len(qs)!=40 or set(raw_slots)!=expected_raw or len(raw_slots)!=len(set(raw_slots)))\n\
+          \        if needs_fallback:\n            fallback_used=True\n          \
+          \  product_low=str(product_name or '').casefold()\n            if 'battery'\
+          \ in product_low:\n                category='rechargeable battery suppliers';\
+          \ category_zh='充电电池供应商'\n            elif any(x in product_low for x in\
+          \ ('software','platform','tool','app')):\n                category='specialized\
+          \ software platforms'; category_zh='专业软件平台'\n            elif 'service'\
+          \ in product_low:\n                category='specialized service providers';\
+          \ category_zh='专业服务商'\n            else:\n                category='specialized\
+          \ product suppliers'; category_zh='专业产品供应商'\n            factors=[('certification\
+          \ coverage','认证覆盖'),('lifecycle reliability','全生命周期可靠性'),('customization\
+          \ flexibility','定制灵活性'),('production consistency','生产一致性'),('supplier reputation','供应商口碑'),('evidence\
+          \ quality','证据质量'),('known limitations','已知局限'),('total ownership cost','总拥有成本'),('supply\
+          \ continuity','供应连续性'),('operating constraints','使用约束'),('engineering support','工程支持'),('delivery\
+          \ speed','交付速度'),('quality documentation','质量文件'),('integration readiness','集成准备度'),('scalability','规模扩展能力'),('warranty\
+          \ support','质保支持'),('performance consistency','性能一致性'),('environmental suitability','环境适用性'),('procurement\
+          \ flexibility','采购灵活性'),('long-term service','长期服务')]\n            qs=[]\n\
+          \            for index in range(1,41):\n                slot='C'+str(index).zfill(2)\n\
+          \                persona=personas[(index-1)%len(personas)]\n           \
+          \     factor,factor_zh=factors[(index-1)%len(factors)]\n               \
+          \ intent='awareness' if index<=10 else ('comparison' if index<=30 else 'decision')\n\
+          \                if index<=4:\n                    question=f'What {factor}\
+          \ criteria should buyers evaluate when choosing {category}?'; question_zh=f'买方在选择{category_zh}时应评估哪些{factor_zh}标准？'\n\
+          \                elif index<=7:\n                    question=f'Which {category}\
+          \ have the strongest reputation for {factor}?'; question_zh=f'哪些{category_zh}在{factor_zh}方面口碑最好？'\n\
+          \                elif index<=10:\n                    question=f'How should\
+          \ buyers assess {factor} risks before selecting {category}?'; question_zh=f'买方选择{category_zh}前应如何评估{factor_zh}风险？'\n\
+          \                elif index<=16:\n                    question=f'Recommended\
+          \ {category} options for organizations prioritizing {factor}?'; question_zh=f'对于优先考虑{factor_zh}的组织，推荐哪些{category_zh}？'\n\
+          \                elif index<=22:\n                    question=f'How do\
+          \ {category} compare on {factor} for demanding deployments?'; question_zh=f'在高要求部署中，不同{category_zh}的{factor_zh}表现如何比较？'\n\
+          \                elif index<=26:\n                    question=f'Which {category}\
+          \ are top-rated for {factor} and buyer trust?'; question_zh=f'哪些{category_zh}在{factor_zh}和买方信任方面评价最高？'\n\
+          \                elif index<=30:\n                    question=f'What {category}\
+          \ options suit teams constrained by {factor}?'; question_zh=f'受{factor_zh}约束的团队有哪些合适的{category_zh}选择？'\n\
+          \                elif index<=34:\n                    question=f'Which {category}\
+          \ are the best fit when {factor} matters most?'; question_zh=f'当{factor_zh}最重要时，哪些{category_zh}最适合？'\n\
+          \                elif index<=37:\n                    question=f'Are premium\
+          \ {category} worth adopting when {factor} drives value?'; question_zh=f'当{factor_zh}决定价值时，高端{category_zh}是否值得采用？'\n\
+          \                else:\n                    question=f'Which {category}\
+          \ should buyers choose when {factor} is decisive?'; question_zh=f'当{factor_zh}是决定因素时，买方应选择哪些{category_zh}？'\n\
+          \                qs.append({'slot_id':slot,'question_text':question,'question_zh':question_zh,'question_type':'category','purchase_intent':{'awareness':'推荐','comparison':'比较','decision':'决策'}[intent],'intent':intent,'persona_name':persona,'task':f'Evaluate\
+          \ {category} for {factor}.','scenario':f'Pre-purchase evaluation where {factor}\
+          \ changes the shortlist.','constraint':f'{factor.title()} must be verified\
+          \ before adoption.','factor':factor,'endpoint':{'awareness':'criteria_method','comparison':'candidate_set_or_comparison','decision':'final_recommendation'}[intent],'scene_name':factor.title()+'\
+          \ Supplier Selection','competitors_mentioned':[]})\n    issues=[]; warnings=['W_B2_EMPTY_OR_INCOMPLETE_FALLBACK']\
+          \ if fallback_used else []; valid=[]; slots=[]\n    intents=Counter(); pc=Counter();\
+          \ openings=Counter(); texts=[]; covered=set()\n    expected_total=10 if\
+          \ expected_type=='brand' else 40\n    target={'awareness':2,'comparison':5,'decision':3}\
+          \ if expected_type=='brand' else {'awareness':10,'comparison':20,'decision':10}\n\
+          \    banned=[str(brand_name or ''),str(product_name or '')]+[str(x) for\
+          \ x in comps] if expected_type=='category' else []\n    for i,q in enumerate(qs\
+          \ if isinstance(qs,list) else []):\n        if not isinstance(q,dict): issues.append('E_ITEM');\
+          \ continue\n        slot=str(q.get('slot_id','')).strip(); slots.append(slot)\n\
+          \        text=str(q.get('question_text','')).strip(); intent=str(q.get('intent','')).strip().lower();\
+          \ persona=str(q.get('persona_name','')).strip()\n        try: slot_no=int(slot[1:])\
+          \ if len(slot)>1 else 0\n        except Exception: slot_no=0\n        if\
+          \ expected_type=='category' and slot.startswith('C') and 1<=slot_no<=40:\n\
+          \            intent='awareness' if slot_no<=10 else ('comparison' if slot_no<=30\
+          \ else 'decision')\n            q['intent']=intent;q['endpoint']={'awareness':'criteria_method','comparison':'candidate_set_or_comparison','decision':'final_recommendation'}[intent];q['question_type']='category';q['purchase_intent']={'awareness':'推荐','comparison':'比较','decision':'决策'}[intent];q['competitors_mentioned']=[]\n\
+          \        if not text or intent not in target: issues.append('E_SCHEMA');\
+          \ continue\n        if not str(q.get('question_zh','')).strip() or not str(q.get('scene_name','')).strip()\
+          \ or not persona: issues.append('E_REQUIRED_FIELD')\n        if personas\
+          \ and persona not in personas: issues.append('E_PERSONA_UNKNOWN')\n    \
+          \    low=text.lower()\n        if expected_type=='category':\n         \
+          \   tutorial_pattern=r'\\b(tutorial|step[- ]by[- ]step|how (?:do|can) (?:i|we)\
+          \ (?:use|set up|configure|create|edit|export|install)|sign up|log in|button|menu|click)\\\
+          b'\n            if re.search(tutorial_pattern,low): issues.append('E_LOW_GEO_INFORMATIONAL_QUERY')\n\
+          \            if re.search(r'\\b(tips|ideas|inspiration|how it works)\\b',low):\
+          \ warnings.append('W_POSSIBLE_LOW_GEO_INFORMATIONAL_QUERY')\n          \
+          \  try: slot_no=int(slot[1:]) if slot.startswith('C') else 0\n         \
+          \   except Exception: slot_no=0\n            commercial_patterns=[]\n  \
+          \          if 1<=slot_no<=4: commercial_patterns=[r'\\b(choose|select|evaluate|criteria|look\
+          \ for|consider)\\b']\n            elif 5<=slot_no<=7: commercial_patterns=[r'\\\
+          b(reputation|reviews?|rated|trusted|reliable|track record|limitations?|drawbacks?)\\\
+          b']\n            elif 8<=slot_no<=10: commercial_patterns=[r'\\b(price|pricing|cost|budget|billing|risk|limitations?|adoption|implementation|boundary|fit)\\\
+          b']\n            elif 11<=slot_no<=16: commercial_patterns=[r'\\b(recommend|recommended|shortlist|options?|worth\
+          \ considering)\\b']\n            elif 17<=slot_no<=22: commercial_patterns=[r'\\\
+          b(compare|comparison|trade[- ]offs?|differ|versus|vs\\.?|which)\\b']\n \
+          \           elif 23<=slot_no<=26: commercial_patterns=[r'\\b(top[- ]rated|best[-\
+          \ ]reviewed|ranked|ranking|most trusted|highest[- ]ranked)\\b']\n      \
+          \      elif 27<=slot_no<=30: commercial_patterns=[r'\\b(options?|alternatives?|shortlist|platforms?|tools?|providers?|solutions?)\\\
+          b']\n            elif 31<=slot_no<=34: commercial_patterns=[r'\\b(best|best\
+          \ fit|right choice|right fit)\\b']\n            elif 35<=slot_no<=37: commercial_patterns=[r'\\\
+          b(worth|value|paid|adopt|paying)\\b']\n            elif 38<=slot_no<=40:\
+          \ commercial_patterns=[r'\\b(should|choose|select|recommend)\\b']\n    \
+          \        if commercial_patterns and not any(re.search(p,low) for p in commercial_patterns):\
+          \ warnings.append('W_COMMERCIAL_SLOT_SEMANTICS')\n        if expected_type=='brand'\
+          \ and str(brand_name or '').lower() not in low and str(product_name or '').lower()\
+          \ not in low: issues.append('E_BRAND_MISSING')\n        if expected_type=='category'\
+          \ and any(x and x.lower() in low for x in banned): issues.append('E_MONITORED_BRAND_IN_CATEGORY')\n\
+          \        if intent=='decision' and not re.search(r'\\b(best|best fit|should|choose|select|buy|purchase|worth|right\
+          \ fit|adopt|recommend)\\b',low): warnings.append('W_DECISION_ENDPOINT')\n\
+          \        if intent=='decision' and re.search(r'\\b(how (?:do|can|should)\
+          \ i (?:register|sign up|log in|access|get started)|where (?:do|can) i (?:register|sign\
+          \ up|log in|access))\\b',low): issues.append('E_NAVIGATION_AS_DECISION')\n\
+          \        intents[intent]+=1; pc[persona]+=1\n        first=re.findall(r\"\
+          [A-Za-z]+\",text)\n        if first: openings[first[0].lower()]+=1\n   \
+          \     if expected_type=='brand' and intent=='comparison':\n            for\
+          \ c in comps:\n                if str(c).lower() in low: covered.add(str(c))\n\
+          \        texts.append(text); valid.append(q)\n    if len(valid)!=expected_total:\
+          \ issues.append('E_COUNT')\n    prefix='B' if expected_type=='brand' else\
+          \ 'C'\n    expected_slots={prefix+str(i).zfill(2) for i in range(1,expected_total+1)}\n\
+          \    if set(slots)!=expected_slots or len(slots)!=len(set(slots)): issues.append('E_SLOT_INTEGRITY')\n\
+          \    if dict(intents)!=target: issues.append('E_INTENT_QUOTA')\n    if personas\
+          \ and expected_type=='category':\n        for x in personas:\n         \
+          \   if pc[x]<2: warnings.append('W_PERSONA_UNDERCOVERAGE')\n        if len(personas)>1\
+          \ and any(v>16 for v in pc.values()): warnings.append('W_PERSONA_DOMINANCE')\n\
+          \    if expected_type=='brand' and len(covered)<len(comps): issues.append('E_COMPETITOR_COVERAGE')\n\
+          \    hww=sum(openings[x] for x in ('how','what','which'))\n    if hww>(6\
+          \ if expected_type=='brand' else 28): warnings.append('W_OPENING_HWW')\n\
+          \    for i in range(len(texts)):\n        for j in range(i):\n         \
+          \   if similar(texts[i],texts[j]): warnings.append('W_SEMANTIC_DUP'); break\n\
+          \    hard_errors=sorted(set(issues));all_issues=hard_errors+sorted(set(warnings))\n\
+          \    return {'formatted_results':[json.dumps(x,ensure_ascii=False) for x\
+          \ in valid], 'qa_ok':0 if hard_errors else 1, 'qa_error':json.dumps(all_issues,ensure_ascii=False),\
+          \ 'actual_count':len(valid)}\n"
+        code_language: python3
+        desc: ''
+        outputs:
+          actual_count:
+            children: null
+            type: number
+          formatted_results:
+            children: null
+            type: array[string]
+          qa_error:
+            children: null
+            type: string
+          qa_ok:
+            children: null
+            type: number
+        selected: false
+        title: B3 品类词格式化校验
+        type: code
+        variables:
+        - value_selector:
+          - '1700000000021'
+          - text
+          variable: llm_output
+        - value_selector:
+          - '1700000000001'
+          - brand_name
+          variable: brand_name
+        - value_selector:
+          - '1700000000001'
+          - product_name
+          variable: product_name
+        - value_selector:
+          - '1700000000011'
+          - comps_list
+          variable: comps_json
+        - value_selector:
+          - '1700000000003'
+          - text
+          variable: personas_json
+      height: 53
+      id: '1700000000022'
+      position:
+        x: 1960
+        y: 680
+      positionAbsolute:
+        x: 1960
+        y: 680
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import json\nimport re\nimport time\nimport unicodedata\nfrom collections\
+          \ import Counter\nfrom difflib import SequenceMatcher\n\n\ndef load(items):\n\
+          \    if items is None:\n        return []\n    if isinstance(items, dict):\n\
+          \        return [items]\n    if isinstance(items, str):\n        text =\
+          \ items.strip()\n        if not text:\n            return []\n        try:\n\
+          \            items = json.loads(text)\n        except Exception:\n     \
+          \       return []\n        if isinstance(items, dict):\n            return\
+          \ [items]\n    if not isinstance(items, (list, tuple)):\n        return\
+          \ []\n    out = []\n    for item in items:\n        if isinstance(item,\
+          \ str):\n            try:\n                item = json.loads(item)\n   \
+          \         except Exception:\n                continue\n        if isinstance(item,\
+          \ dict):\n            out.append(item)\n    return out\n\n\ndef load_list(value):\n\
+          \    if isinstance(value, list):\n        return value\n    if not isinstance(value,\
+          \ str) or not value.strip():\n        return []\n    try:\n        parsed\
+          \ = json.loads(value)\n    except Exception:\n        return []\n    return\
+          \ parsed if isinstance(parsed, list) else []\n\n\ndef key(value):\n    value\
+          \ = unicodedata.normalize(\"NFKC\", str(value or \"\")).casefold()\n   \
+          \ return \" \".join(re.findall(r\"[\\w]+\", value, flags=re.UNICODE))\n\n\
+          \ndef entity_in_text(entity, text):\n    entity_key = key(entity)\n    text_key\
+          \ = key(text)\n    if not entity_key:\n        return False\n    return\
+          \ re.search(r\"(?<!\\w)\" + re.escape(entity_key) + r\"(?!\\w)\", text_key)\
+          \ is not None\n\n\ndef exact_entity_in_text(entity, text):\n    return bool(str(entity\
+          \ or \"\")) and str(entity) in str(text or \"\")\n\n\ndef norm(text):\n\
+          \    text = key(text)\n    text = re.sub(r\"\\b(choose|select|pick)\\b\"\
+          , \"choose\", text)\n    text = re.sub(\n        r\"\\b(suitable|appropriate|right\
+          \ fit|best fit|right choice)\\b\",\n        \"fit\",\n        text,\n  \
+          \  )\n    return text\n\n\ndef dup(a, b):\n    a = norm(a)\n    b = norm(b)\n\
+          \    if not a or not b:\n        return False\n    set_a = set(a.split())\n\
+          \    set_b = set(b.split())\n    jaccard = len(set_a & set_b) / max(1, len(set_a\
+          \ | set_b))\n    return (\n        a == b\n        or jaccard >= 0.86\n\
+          \        or (jaccard >= 0.74 and SequenceMatcher(None, a, b).ratio() >=\
+          \ 0.89)\n    )\n\n\ndef validate_batch(items, kind, total, quota):\n   \
+          \ errors = []\n    prefix = \"B\" if kind == \"brand\" else \"C\"\n    slots\
+          \ = []\n    counts = Counter()\n    endpoint_map = {\n        \"awareness\"\
+          : \"criteria_method\",\n        \"comparison\": \"candidate_set_or_comparison\"\
+          ,\n        \"decision\": \"final_recommendation\",\n    }\n\n    for item\
+          \ in items:\n        slots.append(str(item.get(\"slot_id\", \"\")).strip())\n\
+          \        intent = str(item.get(\"intent\", \"\")).strip().lower()\n    \
+          \    counts[intent] += 1\n        question_text = str(item.get(\"question_text\"\
+          , \"\")).strip()\n\n        if not question_text or not str(item.get(\"\
+          question_zh\", \"\")).strip():\n            errors.append(f\"E_{kind.upper()}_REQUIRED_TEXT\"\
+          )\n        if str(item.get(\"question_type\", \"\")).strip().lower() !=\
+          \ kind:\n            errors.append(f\"E_{kind.upper()}_QUESTION_TYPE\")\n\
+          \        if intent not in quota:\n            errors.append(f\"E_{kind.upper()}_INVALID_INTENT\"\
+          )\n            continue\n        if str(item.get(\"endpoint\", \"\")).strip()\
+          \ != endpoint_map[intent]:\n            errors.append(f\"E_{kind.upper()}_ENDPOINT_MISMATCH\"\
+          )\n\n        if intent == \"decision\":\n            navigation_pattern\
+          \ = (\n                r\"\\bhow (?:do|can|should) i \"\n              \
+          \  r\"(?:register|sign up|log in|access|get started)\\b\"\n            \
+          \    r\"|\\bwhere (?:do|can) i \"\n                r\"(?:register|sign up|log\
+          \ in|access)\\b\"\n            )\n            if re.search(navigation_pattern,\
+          \ question_text.casefold()):\n                errors.append(f\"E_{kind.upper()}_NAVIGATION_AS_DECISION\"\
+          )\n\n    expected_slots = {prefix + str(i).zfill(2) for i in range(1, total\
+          \ + 1)}\n    if len(items) != total:\n        errors.append(f\"E_{kind.upper()}_COUNT\"\
+          )\n    if set(slots) != expected_slots or len(slots) != len(set(slots)):\n\
+          \        errors.append(f\"E_{kind.upper()}_SLOT_INTEGRITY\")\n    if any(counts.get(name,\
+          \ 0) != expected for name, expected in quota.items()):\n        errors.append(f\"\
+          E_{kind.upper()}_INTENT_QUOTA\")\n    return errors\n\n\ndef validate_competitor_set(comps,\
+          \ domains):\n    errors = []\n    normalized_comps = [key(item) for item\
+          \ in comps]\n    normalized_domains = [str(item or \"\").strip().casefold()\
+          \ for item in domains]\n\n    if len(comps) != 3 or any(not item for item\
+          \ in normalized_comps):\n        errors.append(\"E_FINAL_COMPETITOR_SET\"\
+          )\n    elif len(set(normalized_comps)) != 3:\n        errors.append(\"E_FINAL_COMPETITOR_SET\"\
+          )\n\n    if len(domains) != 3 or any(not item for item in normalized_domains):\n\
+          \        errors.append(\"E_COMPETITOR_DOMAIN\")\n    elif len(set(normalized_domains))\
+          \ != 3:\n        errors.append(\"E_COMPETITOR_DOMAIN\")\n    return errors\n\
+          \n\ndef coverage(brand, comps, brand_name=\"\", product_name=\"\"):\n  \
+          \  competitor_map = {key(item): item for item in comps}\n    covered = set()\n\
+          \    evidence = {item: [] for item in comps}\n    errors = []\n    client_entities\
+          \ = [item for item in (brand_name, product_name) if item]\n\n    for item\
+          \ in brand:\n        if str(item.get(\"intent\", \"\")).strip().lower()\
+          \ != \"comparison\":\n            continue\n        if str(item.get(\"endpoint\"\
+          , \"\")).strip() != \"candidate_set_or_comparison\":\n            continue\n\
+          \n        text = str(item.get(\"question_text\", \"\"))\n        if client_entities\
+          \ and not any(\n            entity_in_text(entity, text) for entity in client_entities\n\
+          \        ):\n            continue\n\n        mentions = item.get(\"competitors_mentioned\"\
+          , [])\n        if not isinstance(mentions, list):\n            errors.append(\"\
+          E_COMPETITORS_MENTIONED_SCHEMA\")\n            continue\n\n        for mention\
+          \ in mentions:\n            competitor = competitor_map.get(key(mention))\n\
+          \            if not competitor:\n                errors.append(\"E_UNKNOWN_COMPETITOR_MENTION\"\
+          )\n                continue\n            if not entity_in_text(competitor,\
+          \ text):\n                errors.append(\"E_STRUCTURED_MENTION_NOT_IN_QUERY\"\
+          )\n                continue\n            covered.add(competitor)\n     \
+          \       evidence[competitor].append({\n                \"slot_id\": item.get(\"\
+          slot_id\", \"\"),\n                \"question_text\": text,\n          \
+          \  })\n\n    by_slot = {str(item.get(\"slot_id\", \"\")).strip(): item for\
+          \ item in brand}\n    for index, slot in enumerate((\"B03\", \"B04\", \"\
+          B05\")):\n        if index >= len(comps):\n            errors.append(\"\
+          E_BOUND_COMPETITOR_SLOT\")\n            continue\n        item = by_slot.get(slot,\
+          \ {})\n        text = str(item.get(\"question_text\", \"\"))\n        if\
+          \ (str(item.get(\"intent\", \"\")).strip().lower() != \"comparison\" or\
+          \ not exact_entity_in_text(comps[index], text) or (client_entities and not\
+          \ any(entity_in_text(entity, text) for entity in client_entities))):\n \
+          \           errors.append(\"E_BOUND_COMPETITOR_SLOT\")\n\n    missing =\
+          \ [item for item in comps if item not in covered]\n    if missing:\n   \
+          \     errors.append(\"E_COMPETITOR_COVERAGE\")\n    return covered, missing,\
+          \ evidence, errors\n\n\ndef main(\n    brand_results=None,\n    category_results=None,\n\
+          \    task_id=\"\",\n    competitor_domain=\"[]\",\n    brand_qa_ok=0,\n\
+          \    category_qa_ok=0,\n    competitor_qa_ok=0,\n    comps_json=\"[]\",\n\
+          \    comparison_coverage_ok=0,\n    covered_competitors=\"[]\",\n    missing_competitors=\"\
+          []\",\n    comparison_query_evidence=\"{}\",\n    brand_name=\"\",\n   \
+          \ product_name=\"\",\n    competitor_selection_ok=0,\n    competitor_selection_errors=\"\
+          []\",\n    selection_diagnostics=\"{}\",\n):\n    brand = load(brand_results)\n\
+          \    category = load(category_results)\n    all_questions = category + brand\n\
+          \    comps = [str(item).strip() for item in load_list(comps_json)]\n   \
+          \ domains = [str(item).strip() for item in load_list(competitor_domain)]\n\
+          \    errors = []\n    warnings = []\n\n    errors.extend(validate_competitor_set(comps,\
+          \ domains))\n\n    if int(brand_qa_ok or 0) != 1:\n        warnings.append(\"\
+          W_UPSTREAM_BRAND_QA\")\n\n    errors.extend(validate_batch(\n        brand,\n\
+          \        \"brand\",\n        10,\n        {\"awareness\": 2, \"comparison\"\
+          : 5, \"decision\": 3},\n    ))\n    errors.extend(validate_batch(\n    \
+          \    category,\n        \"category\",\n        40,\n        {\"awareness\"\
+          : 10, \"comparison\": 20, \"decision\": 10},\n    ))\n\n    covered, missing,\
+          \ evidence, coverage_errors = coverage(\n        brand,\n        comps,\n\
+          \        brand_name,\n        product_name,\n    )\n    errors.extend(coverage_errors)\n\
+          \n    if int(comparison_coverage_ok or 0) != 1:\n        warnings.append(\"\
+          W_UPSTREAM_COMPETITOR_COVERAGE\")\n\n    if len(brand) != 10 or len(category)\
+          \ != 40:\n        errors.append(\"E_NON_STRICT_COUNT\")\n\n    texts = [str(item.get(\"\
+          question_text\", \"\")).strip() for item in all_questions]\n    for i in\
+          \ range(len(texts)):\n        for j in range(i):\n            if dup(texts[i],\
+          \ texts[j]):\n                warnings.append(\"W_GLOBAL_SEMANTIC_DUP\"\
+          )\n                break\n\n    selection_errors = load_list(competitor_selection_errors)\n\
+          \    if int(competitor_selection_ok or 0) != 1:\n        errors.append(\"\
+          E_COMPETITOR_SELECTION_POLICY\")\n        errors.extend(str(item) for item\
+          \ in selection_errors if str(item).strip())\n    if int(competitor_qa_ok\
+          \ or 0) != 1:\n        errors.append(\"E_COMPETITOR_QA\")\n\n    if int(category_qa_ok\
+          \ or 0) != 1:\n        warnings.append(\"W_UPSTREAM_CATEGORY_QA\")\n\n \
+          \   if not any(str(item.get(\"question_text\", \"\")).strip() for item in\
+          \ all_questions):\n        errors.append(\"E_NO_REAL_QUESTIONS\")\n\n  \
+          \  errors = sorted(set(errors))\n    warnings = sorted(set(warnings))\n\
+          \    passed = not errors\n    questions = []\n\n    if passed:\n       \
+          \ for item in all_questions:\n            if not str(item.get(\"question_text\"\
+          , \"\")).strip():\n                continue\n            questions.append({\n\
+          \                \"question_text\": item.get(\"question_text\", \"\"),\n\
+          \                \"question_zh\": item.get(\"question_zh\", \"\"),\n   \
+          \             \"topic\": item.get(\"topic\", \"\"),\n                \"\
+          scene_name\": item.get(\"scene_name\", \"\"),\n                \"question_type\"\
+          : 2 if item.get(\"question_type\") == \"brand\" else 1,\n              \
+          \  \"purchase_intent\": item.get(\"purchase_intent\", \"\"),\n         \
+          \       \"persona_name\": item.get(\"persona_name\", \"\"),\n          \
+          \  })\n\n    result = {\n        \"task_id\": task_id,\n        \"created_at\"\
+          : int(time.time()),\n        \"question_count\": len(questions),\n     \
+          \   \"competitor_domain\": domains,\n        \"questions\": questions,\n\
+          \    }\n    if not passed:\n        result.update({\n            \"status\"\
+          : \"qa_failed\",\n            \"qa_errors\": errors,\n            \"missing_competitors\"\
+          : missing,\n        })\n\n    stats = {\n        \"qa_ok\": 1 if passed\
+          \ else 0,\n        \"total\": len(questions),\n        \"brand\": len(brand)\
+          \ if passed else 0,\n        \"category\": len(category) if passed else\
+          \ 0,\n        \"errors\": errors,\n        \"warnings\": warnings,\n   \
+          \     \"comparison_coverage_ok\": 1 if not missing and len(comps) == 3 else\
+          \ 0,\n        \"finalized_competitors\": comps,\n        \"covered_competitors\"\
+          : [item for item in comps if item in covered],\n        \"missing_competitors\"\
+          : missing,\n        \"comparison_query_evidence\": evidence,\n        \"\
+          upstream_competitor_qa_ok\": int(competitor_qa_ok or 0),\n        \"competitor_selection_ok\"\
+          : int(competitor_selection_ok or 0),\n        \"competitor_selection_errors\"\
+          : selection_errors,\n        \"selection_diagnostics\": json.loads(selection_diagnostics)\
+          \ if isinstance(selection_diagnostics, str) and selection_diagnostics.strip().startswith(\"\
+          {\") else {},\n        \"upstream_brand_qa_ok\": int(brand_qa_ok or 0),\n\
+          \        \"upstream_category_qa_ok\": int(category_qa_ok or 0),\n    }\n\
+          \    return {\n        \"result\": json.dumps(result, ensure_ascii=False),\n\
+          \        \"stats\": json.dumps(stats, ensure_ascii=False),\n        \"competitor_domain\"\
+          : json.dumps(domains, ensure_ascii=False),\n    }\n"
+        code_language: python3
+        desc: ''
+        outputs:
+          competitor_domain:
+            children: null
+            type: string
+          result:
+            children: null
+            type: string
+          stats:
+            children: null
+            type: string
+        selected: false
+        title: M1 数据合并
+        type: code
+        variables:
+        - value_selector:
+          - '1700000000014'
+          - formatted_results
+          variable: brand_results
+        - value_selector:
+          - '1700000000022'
+          - formatted_results
+          variable: category_results
+        - value_selector:
+          - '1700000000001'
+          - task_id
+          variable: task_id
+        - value_selector:
+          - '1700000000011'
+          - competitor_domain
+          variable: competitor_domain
+        - value_selector:
+          - '1700000000014'
+          - qa_ok
+          variable: brand_qa_ok
+        - value_selector:
+          - '1700000000022'
+          - qa_ok
+          variable: category_qa_ok
+        - value_selector:
+          - '1700000000011'
+          - qa_ok
+          variable: competitor_qa_ok
+        - value_selector:
+          - '1700000000011'
+          - comps_list
+          variable: comps_json
+        - value_selector:
+          - '1700000000014'
+          - comparison_coverage_ok
+          variable: comparison_coverage_ok
+        - value_selector:
+          - '1700000000014'
+          - covered_competitors
+          variable: covered_competitors
+        - value_selector:
+          - '1700000000014'
+          - missing_competitors
+          variable: missing_competitors
+        - value_selector:
+          - '1700000000014'
+          - comparison_query_evidence
+          variable: comparison_query_evidence
+        - value_selector:
+          - '1700000000001'
+          - brand_name
+          variable: brand_name
+        - value_selector:
+          - '1700000000001'
+          - product_name
+          variable: product_name
+        - value_selector:
+          - '1700000000011'
+          - competitor_selection_ok
+          value_type: number
+          variable: competitor_selection_ok
+        - value_selector:
+          - '1700000000011'
+          - competitor_selection_errors
+          value_type: string
+          variable: competitor_selection_errors
+        - value_selector:
+          - '1700000000011'
+          - selection_diagnostics
+          value_type: string
+          variable: selection_diagnostics
+      height: 53
+      id: '1700000000030'
+      position:
+        x: 2080
+        y: 400
+      positionAbsolute:
+        x: 2080
+        y: 400
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import json\nimport re\nimport time\nimport unicodedata\nfrom collections\
+          \ import Counter\nfrom difflib import SequenceMatcher\n\ndef load(items):\n\
+          \    if items is None:\n        return []\n    if isinstance(items, dict):\n\
+          \        return [items]\n    if isinstance(items, str):\n        text =\
+          \ items.strip()\n        if not text:\n            return []\n        try:\n\
+          \            items = json.loads(text)\n        except Exception:\n     \
+          \       return []\n        if isinstance(items, dict):\n            return\
+          \ [items]\n    if not isinstance(items, (list, tuple)):\n        return\
+          \ []\n    out = []\n    for item in items:\n        if isinstance(item,\
+          \ str):\n            try:\n                item = json.loads(item)\n   \
+          \         except Exception:\n                continue\n        if isinstance(item,\
+          \ dict):\n            out.append(item)\n    return out\n\ndef load_list(value):\n\
+          \    if isinstance(value, list):\n        return value\n    if not isinstance(value,\
+          \ str) or not value.strip():\n        return []\n    try:\n        parsed\
+          \ = json.loads(value)\n    except Exception:\n        return []\n    return\
+          \ parsed if isinstance(parsed, list) else []\n\ndef key(value):\n    value\
+          \ = unicodedata.normalize(\"NFKC\", str(value or \"\")).casefold()\n   \
+          \ return \" \".join(re.findall(r\"[\\w]+\", value, flags=re.UNICODE))\n\n\
+          def entity_in_text(entity, text):\n    entity_key = key(entity)\n    text_key\
+          \ = key(text)\n    if not entity_key:\n        return False\n    return\
+          \ re.search(r\"(?<!\\w)\" + re.escape(entity_key) + r\"(?!\\w)\", text_key)\
+          \ is not None\n\ndef exact_entity_in_text(entity, text):\n    return bool(str(entity\
+          \ or \"\")) and str(entity) in str(text or \"\")\n\ndef evidence_aliases(item,\
+          \ allowed_entities):\n    text = str(item.get(\"question_text\", \"\"))\n\
+          \    allowed = {key(entity): entity for entity in allowed_entities if str(entity\
+          \ or \"\").strip()}\n    result = {}\n    clean = []\n    seen = set()\n\
+          \    raw = item.get(\"entity_evidence\", [])\n    raw = raw if isinstance(raw,\
+          \ list) else []\n    for evidence in raw:\n        if not isinstance(evidence,\
+          \ dict):\n            continue\n        canonical = allowed.get(key(evidence.get(\"\
+          canonical_name\", \"\")))\n        surface = str(evidence.get(\"surface_form\"\
+          , \"\")).strip()\n        role = str(evidence.get(\"role\", \"\")).strip().lower()\n\
+          \        if not canonical or not surface or role not in (\"client\", \"\
+          competitor\"):\n            continue\n        if not entity_in_text(surface,\
+          \ text):\n            continue\n        marker = (canonical, key(surface),\
+          \ role)\n        if marker in seen:\n            continue\n        seen.add(marker)\n\
+          \        result.setdefault(canonical, surface)\n        clean.append({\"\
+          canonical_name\": canonical, \"surface_form\": surface, \"role\": role})\n\
+          \    item[\"entity_evidence\"] = clean\n    return result\n\ndef entity_present(entity,\
+          \ item, aliases):\n    text = str(item.get(\"question_text\", \"\"))\n \
+          \   zh_text = str(item.get(\"question_zh\", \"\"))\n    # 英文正文直接命中 > 已校验英文surface_form\
+          \ > 中英问题对齐回退。\n    # 第三种仅解决历史节点未输出entity_evidence时，中文规范名无法在英文题目中字面匹配的问题。\n\
+          \    return entity_in_text(entity, text) or entity in aliases or exact_entity_in_text(entity,\
+          \ zh_text)\n\ndef norm(text):\n    text = key(text)\n    text = re.sub(r\"\
+          \\b(choose|select|pick)\\b\", \"choose\", text)\n    text = re.sub(r\"\\\
+          b(suitable|appropriate|right fit|best fit|right choice)\\b\", \"fit\", text)\n\
+          \    return text\n\ndef dup(a, b):\n    a, b = norm(a), norm(b)\n    if\
+          \ not a or not b:\n        return False\n    set_a, set_b = set(a.split()),\
+          \ set(b.split())\n    jaccard = len(set_a & set_b) / max(1, len(set_a |\
+          \ set_b))\n    return a == b or jaccard >= 0.86 or (jaccard >= 0.74 and\
+          \ SequenceMatcher(None, a, b).ratio() >= 0.89)\n\ndef validate_batch(items,\
+          \ kind, total, quota):\n    errors = []\n    prefix = \"B\" if kind == \"\
+          brand\" else \"C\"\n    slots = []\n    counts = Counter()\n    endpoint_map\
+          \ = {\n        \"awareness\": \"criteria_method\",\n        \"comparison\"\
+          : \"candidate_set_or_comparison\",\n        \"decision\": \"final_recommendation\"\
+          ,\n    }\n    for item in items:\n        slots.append(str(item.get(\"slot_id\"\
+          , \"\")).strip())\n        intent = str(item.get(\"intent\", \"\")).strip().lower()\n\
+          \        counts[intent] += 1\n        question_text = str(item.get(\"question_text\"\
+          , \"\")).strip()\n        if not question_text or not str(item.get(\"question_zh\"\
+          , \"\")).strip():\n            errors.append(f\"E_{kind.upper()}_REQUIRED_TEXT\"\
+          )\n        if str(item.get(\"question_type\", \"\")).strip().lower() !=\
+          \ kind:\n            errors.append(f\"E_{kind.upper()}_QUESTION_TYPE\")\n\
+          \        if intent not in quota:\n            errors.append(f\"E_{kind.upper()}_INVALID_INTENT\"\
+          )\n            continue\n        if str(item.get(\"endpoint\", \"\")).strip()\
+          \ != endpoint_map[intent]:\n            errors.append(f\"E_{kind.upper()}_ENDPOINT_MISMATCH\"\
+          )\n        if intent == \"decision\":\n            navigation_pattern =\
+          \ (\n                r\"\\bhow (?:do|can|should) i (?:register|sign up|log\
+          \ in|access|get started)\\b\"\n                r\"|\\bwhere (?:do|can) i\
+          \ (?:register|sign up|log in|access)\\b\"\n            )\n            if\
+          \ re.search(navigation_pattern, question_text.casefold()):\n           \
+          \     errors.append(f\"E_{kind.upper()}_NAVIGATION_AS_DECISION\")\n    expected_slots\
+          \ = {prefix + str(i).zfill(2) for i in range(1, total + 1)}\n    if len(items)\
+          \ != total:\n        errors.append(f\"E_{kind.upper()}_COUNT\")\n    if\
+          \ set(slots) != expected_slots or len(slots) != len(set(slots)):\n     \
+          \   errors.append(f\"E_{kind.upper()}_SLOT_INTEGRITY\")\n    if any(counts.get(name,\
+          \ 0) != expected for name, expected in quota.items()):\n        errors.append(f\"\
+          E_{kind.upper()}_INTENT_QUOTA\")\n    return errors\n\ndef validate_competitor_set(comps,\
+          \ domains):\n    errors = []\n    normalized_comps = [key(item) for item\
+          \ in comps]\n    normalized_domains = [str(item or \"\").strip().casefold()\
+          \ for item in domains]\n    if len(comps) != 3 or any(not item for item\
+          \ in normalized_comps) or len(set(normalized_comps)) != 3:\n        errors.append(\"\
+          E_FINAL_COMPETITOR_SET\")\n    if len(domains) != 3 or any(not item for\
+          \ item in normalized_domains) or len(set(normalized_domains)) != 3:\n  \
+          \      errors.append(\"E_COMPETITOR_DOMAIN\")\n    return errors\n\ndef\
+          \ coverage(brand, comps, brand_name=\"\", product_name=\"\"):\n    covered\
+          \ = set()\n    evidence = {item: [] for item in comps}\n    errors = []\n\
+          \    warnings = []\n    client_entities = [item for item in (brand_name,\
+          \ product_name) if item]\n    all_entities = client_entities + comps\n \
+          \   by_slot = {str(item.get(\"slot_id\", \"\")).strip(): item for item in\
+          \ brand}\n\n    for item in brand:\n        aliases = evidence_aliases(item,\
+          \ all_entities)\n        if client_entities and not any(entity_present(entity,\
+          \ item, aliases) for entity in client_entities):\n            errors.append(\"\
+          E_BRAND_MISSING\")\n        if str(item.get(\"intent\", \"\")).strip().lower()\
+          \ != \"comparison\":\n            item[\"competitors_mentioned\"] = []\n\
+          \            continue\n        if str(item.get(\"endpoint\", \"\")).strip()\
+          \ != \"candidate_set_or_comparison\":\n            continue\n        recognized\
+          \ = [competitor for competitor in comps if entity_present(competitor, item,\
+          \ aliases)]\n        item[\"competitors_mentioned\"] = recognized\n    \
+          \    if not recognized:\n            errors.append(\"E_COMPARISON_TARGET_MISSING\"\
+          )\n        if len(recognized) != 1:\n            warnings.append(\"W_NON_PAIRWISE_COMPARISON\"\
+          )\n        for competitor in recognized:\n            covered.add(competitor)\n\
+          \            source = \"entity_evidence\" if competitor in aliases else\
+          \ (\"direct_text\" if entity_in_text(competitor, item.get(\"question_text\"\
+          , \"\")) else \"question_zh_alignment\")\n            evidence[competitor].append({\n\
+          \                \"slot_id\": item.get(\"slot_id\", \"\"),\n           \
+          \     \"question_text\": item.get(\"question_text\", \"\"),\n          \
+          \      \"surface_form\": aliases.get(competitor, \"\"),\n              \
+          \  \"validation_source\": source,\n            })\n\n    for index, slot\
+          \ in enumerate((\"B03\", \"B04\", \"B05\")):\n        if index >= len(comps):\n\
+          \            errors.append(\"E_BOUND_COMPETITOR_SLOT\")\n            continue\n\
+          \        item = by_slot.get(slot, {})\n        aliases = evidence_aliases(item,\
+          \ all_entities)\n        target_present = not client_entities or any(entity_present(entity,\
+          \ item, aliases) for entity in client_entities)\n        if (str(item.get(\"\
+          intent\", \"\")).strip().lower() != \"comparison\" or\n            str(item.get(\"\
+          endpoint\", \"\")).strip() != \"candidate_set_or_comparison\" or\n     \
+          \       not target_present or\n            not entity_present(comps[index],\
+          \ item, aliases)):\n            errors.append(\"E_BOUND_COMPETITOR_SLOT\"\
+          )\n\n    missing = [item for item in comps if item not in covered]\n   \
+          \ if missing:\n        errors.append(\"E_COMPETITOR_COVERAGE\")\n    return\
+          \ covered, missing, evidence, errors, warnings\n\ndef main(\n    brand_results=None,\n\
+          \    category_results=None,\n    task_id=\"\",\n    competitor_domain=\"\
+          []\",\n    brand_qa_ok=0,\n    category_qa_ok=0,\n    competitor_qa_ok=0,\n\
+          \    comps_json=\"[]\",\n    comparison_coverage_ok=0,\n    covered_competitors=\"\
+          []\",\n    missing_competitors=\"[]\",\n    comparison_query_evidence=\"\
+          {}\",\n    brand_name=\"\",\n    product_name=\"\",\n    competitor_selection_ok=0,\n\
+          \    competitor_selection_errors=\"[]\",\n    selection_diagnostics=\"{}\"\
+          ,\n):\n    brand = load(brand_results)\n    category = load(category_results)\n\
+          \    all_questions = category + brand\n    comps = [str(item).strip() for\
+          \ item in load_list(comps_json)]\n    domains = [str(item).strip() for item\
+          \ in load_list(competitor_domain)]\n    errors = []\n    warnings = []\n\
+          \n    errors.extend(validate_competitor_set(comps, domains))\n    brand_batch_errors\
+          \ = validate_batch(brand, \"brand\", 10, {\"awareness\": 2, \"comparison\"\
+          : 5, \"decision\": 3})\n    category_batch_errors = validate_batch(category,\
+          \ \"category\", 40, {\"awareness\": 10, \"comparison\": 20, \"decision\"\
+          : 10})\n    errors.extend(brand_batch_errors)\n    errors.extend(category_batch_errors)\n\
+          \n    covered, missing, evidence, coverage_errors, coverage_warnings = coverage(brand,\
+          \ comps, brand_name, product_name)\n    errors.extend(coverage_errors)\n\
+          \    warnings.extend(coverage_warnings)\n\n    corrected_brand_errors =\
+          \ sorted(set(brand_batch_errors + coverage_errors))\n    corrected_brand_qa_ok\
+          \ = 0 if corrected_brand_errors else 1\n    if int(brand_qa_ok or 0) !=\
+          \ 1 and corrected_brand_qa_ok == 1:\n        warnings.append(\"W_UPSTREAM_BRAND_QA_RECOVERED_BY_MULTILINGUAL_VALIDATION\"\
+          )\n    elif int(brand_qa_ok or 0) != 1:\n        warnings.append(\"W_UPSTREAM_BRAND_QA\"\
+          )\n    if int(comparison_coverage_ok or 0) != 1 and not missing:\n     \
+          \   warnings.append(\"W_UPSTREAM_COMPETITOR_COVERAGE_RECOVERED\")\n    elif\
+          \ int(comparison_coverage_ok or 0) != 1:\n        warnings.append(\"W_UPSTREAM_COMPETITOR_COVERAGE\"\
+          )\n\n    if len(brand) != 10 or len(category) != 40:\n        errors.append(\"\
+          E_NON_STRICT_COUNT\")\n    texts = [str(item.get(\"question_text\", \"\"\
+          )).strip() for item in all_questions]\n    for i in range(len(texts)):\n\
+          \        for j in range(i):\n            if dup(texts[i], texts[j]):\n \
+          \               warnings.append(\"W_GLOBAL_SEMANTIC_DUP\")\n           \
+          \     break\n\n    selection_errors = load_list(competitor_selection_errors)\n\
+          \    if int(competitor_selection_ok or 0) != 1:\n        errors.append(\"\
+          E_COMPETITOR_SELECTION_POLICY\")\n        errors.extend(str(item) for item\
+          \ in selection_errors if str(item).strip())\n    if int(competitor_qa_ok\
+          \ or 0) != 1:\n        errors.append(\"E_COMPETITOR_QA\")\n    if int(category_qa_ok\
+          \ or 0) != 1:\n        warnings.append(\"W_UPSTREAM_CATEGORY_QA\")\n   \
+          \ if not any(str(item.get(\"question_text\", \"\")).strip() for item in\
+          \ all_questions):\n        errors.append(\"E_NO_REAL_QUESTIONS\")\n\n  \
+          \  errors = sorted(set(errors))\n    warnings = sorted(set(warnings))\n\
+          \    passed = not errors\n    questions = []\n    if passed:\n        for\
+          \ item in all_questions:\n            if not str(item.get(\"question_text\"\
+          , \"\")).strip():\n                continue\n            questions.append({\n\
+          \                \"question_text\": item.get(\"question_text\", \"\"),\n\
+          \                \"question_zh\": item.get(\"question_zh\", \"\"),\n   \
+          \             \"topic\": item.get(\"topic\", \"\"),\n                \"\
+          scene_name\": item.get(\"scene_name\", \"\"),\n                \"question_type\"\
+          : 2 if item.get(\"question_type\") == \"brand\" else 1,\n              \
+          \  \"purchase_intent\": item.get(\"purchase_intent\", \"\"),\n         \
+          \       \"persona_name\": item.get(\"persona_name\", \"\"),\n          \
+          \  })\n\n    result = {\n        \"task_id\": task_id,\n        \"created_at\"\
+          : int(time.time()),\n        \"question_count\": len(questions),\n     \
+          \   \"competitor_domain\": domains,\n        \"questions\": questions,\n\
+          \    }\n    if not passed:\n        result.update({\"status\": \"qa_failed\"\
+          , \"qa_errors\": errors, \"missing_competitors\": missing})\n\n    try:\n\
+          \        diagnostics = json.loads(selection_diagnostics) if isinstance(selection_diagnostics,\
+          \ str) and selection_diagnostics.strip().startswith(\"{\") else {}\n   \
+          \ except Exception:\n        diagnostics = {}\n    stats = {\n        \"\
+          qa_ok\": 1 if passed else 0,\n        \"total\": len(questions),\n     \
+          \   \"brand\": len(brand) if passed else 0,\n        \"category\": len(category)\
+          \ if passed else 0,\n        \"errors\": errors,\n        \"warnings\":\
+          \ warnings,\n        \"comparison_coverage_ok\": 1 if not missing and len(comps)\
+          \ == 3 else 0,\n        \"finalized_competitors\": comps,\n        \"covered_competitors\"\
+          : [item for item in comps if item in covered],\n        \"missing_competitors\"\
+          : missing,\n        \"comparison_query_evidence\": evidence,\n        \"\
+          upstream_competitor_qa_ok\": int(competitor_qa_ok or 0),\n        \"competitor_selection_ok\"\
+          : int(competitor_selection_ok or 0),\n        \"competitor_selection_errors\"\
+          : selection_errors,\n        \"selection_diagnostics\": diagnostics,\n \
+          \       \"upstream_brand_qa_ok\": int(brand_qa_ok or 0),\n        \"corrected_brand_qa_ok\"\
+          : corrected_brand_qa_ok,\n        \"upstream_category_qa_ok\": int(category_qa_ok\
+          \ or 0),\n    }\n    return {\n        \"result\": json.dumps(result, ensure_ascii=False),\n\
+          \        \"stats\": json.dumps(stats, ensure_ascii=False),\n        \"competitor_domain\"\
+          : json.dumps(domains, ensure_ascii=False),\n        \"brand_qa_ok\": corrected_brand_qa_ok,\n\
+          \        \"brand_qa_error\": json.dumps(corrected_brand_errors + coverage_warnings,\
+          \ ensure_ascii=False),\n        \"comparison_coverage_ok\": 1 if not missing\
+          \ and len(comps) == 3 else 0,\n        \"covered_competitors\": json.dumps([item\
+          \ for item in comps if item in covered], ensure_ascii=False),\n        \"\
+          missing_competitors\": json.dumps(missing, ensure_ascii=False),\n      \
+          \  \"comparison_query_evidence\": json.dumps(evidence, ensure_ascii=False),\n\
+          \    }"
+        code_language: python3
+        desc: 使用规范名、英文surface_form和中英问题对齐三层证据重算品牌及竞品覆盖
+        outputs:
+          brand_qa_error:
+            children: null
+            type: string
+          brand_qa_ok:
+            children: null
+            type: number
+          comparison_coverage_ok:
+            children: null
+            type: number
+          comparison_query_evidence:
+            children: null
+            type: string
+          competitor_domain:
+            children: null
+            type: string
+          covered_competitors:
+            children: null
+            type: string
+          missing_competitors:
+            children: null
+            type: string
+          result:
+            children: null
+            type: string
+          stats:
+            children: null
+            type: string
+        selected: false
+        title: M2 多语言实体覆盖修复合并
+        type: code
+        variables:
+        - value_selector:
+          - '1700000000014'
+          - formatted_results
+          variable: brand_results
+        - value_selector:
+          - '1700000000022'
+          - formatted_results
+          variable: category_results
+        - value_selector:
+          - '1700000000001'
+          - task_id
+          variable: task_id
+        - value_selector:
+          - '1700000000011'
+          - competitor_domain
+          variable: competitor_domain
+        - value_selector:
+          - '1700000000014'
+          - qa_ok
+          variable: brand_qa_ok
+        - value_selector:
+          - '1700000000022'
+          - qa_ok
+          variable: category_qa_ok
+        - value_selector:
+          - '1700000000011'
+          - qa_ok
+          variable: competitor_qa_ok
+        - value_selector:
+          - '1700000000011'
+          - comps_list
+          variable: comps_json
+        - value_selector:
+          - '1700000000014'
+          - comparison_coverage_ok
+          variable: comparison_coverage_ok
+        - value_selector:
+          - '1700000000014'
+          - covered_competitors
+          variable: covered_competitors
+        - value_selector:
+          - '1700000000014'
+          - missing_competitors
+          variable: missing_competitors
+        - value_selector:
+          - '1700000000014'
+          - comparison_query_evidence
+          variable: comparison_query_evidence
+        - value_selector:
+          - '1700000000001'
+          - brand_name
+          variable: brand_name
+        - value_selector:
+          - '1700000000001'
+          - product_name
+          variable: product_name
+        - value_selector:
+          - '1700000000011'
+          - competitor_selection_ok
+          value_type: number
+          variable: competitor_selection_ok
+        - value_selector:
+          - '1700000000011'
+          - competitor_selection_errors
+          value_type: string
+          variable: competitor_selection_errors
+        - value_selector:
+          - '1700000000011'
+          - selection_diagnostics
+          value_type: string
+          variable: selection_diagnostics
+      height: 97
+      id: '1700000000031'
+      position:
+        x: 2396.6666666666665
+        y: 400
+      positionAbsolute:
+        x: 2396.6666666666665
+        y: 400
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        outputs:
+        - value_selector:
+          - '1700000000031'
+          - result
+          variable: result
+        - value_selector:
+          - '1700000000031'
+          - stats
+          variable: stats
+        - value_selector:
+          - '1700000000031'
+          - brand_qa_error
+          variable: brand_qa_error
+        - value_selector:
+          - '1700000000022'
+          - qa_error
+          variable: category_qa_error
+        - value_selector:
+          - '1700000000011'
+          - comps_list
+          variable: comps_list
+        - value_selector:
+          - '1700000000031'
+          - competitor_domain
+          variable: competitor_domain
+        - value_selector:
+          - '1700000000014'
+          - actual_count
+          variable: brand_actual_count
+        - value_selector:
+          - '1700000000022'
+          - actual_count
+          variable: category_actual_count
+        - value_selector:
+          - '1700000000031'
+          - brand_qa_ok
+          variable: brand_qa_ok
+        - value_selector:
+          - '1700000000022'
+          - qa_ok
+          variable: category_qa_ok
+        - value_selector:
+          - '1700000000011'
+          - qa_ok
+          variable: competitor_qa_ok
+        - value_selector:
+          - '1700000000031'
+          - comparison_coverage_ok
+          variable: comparison_coverage_ok
+        - value_selector:
+          - '1700000000031'
+          - covered_competitors
+          variable: covered_competitors
+        - value_selector:
+          - '1700000000031'
+          - missing_competitors
+          variable: missing_competitors
+        - value_selector:
+          - '1700000000031'
+          - comparison_query_evidence
+          variable: comparison_query_evidence
+        - value_selector:
+          - '1700000000011'
+          - competitor_selection_errors
+          variable: competitor_selection_errors
+        - value_selector:
+          - '1700000000011'
+          - selection_diagnostics
+          variable: selection_diagnostics
+        selected: false
+        title: N_End 输出
+        type: end
+      height: 505
+      id: '1700000000040'
+      position:
+        x: 2680
+        y: 405
+      positionAbsolute:
+        x: 2680
+        y: 405
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            max_tokens: 15701
+            temperature: 0.5
+            top_p: 0.8
+          mode: chat
+          name: deepseek/deepseek-v4-flash
+          provider: zhinao
+        prompt_template:
+        - id: 1700000000003-sys
+          role: system
+          text: "【角色】\n你是美国市场 GEO 售前问题的人群建模专家。输出4–6个稳定、可用于搜索问题生成的persona，并保留用户输入人群的原始含义。\n\
+            \n【输入】\n- target_audience: {{#1700000000001.target_audience#}}\n- topic:\
+            \ {{#1700000000001.topic#}}\n- product_name: {{#1700000000001.product_name#}}\n\
+            - brand_name: {{#1700000000001.brand_name#}}\n- target_market: {{#1700000000001.target_market#}}\n\
+            - background_info: {{#1700000000001.background_info#}}\n\n【规则】\n1. 先逐项解析target_audience，建立raw_audience_mapping；不得因为表述相近就擅自删除不同角色。\n\
+            2. 不足4个时，可按真实购买链路补充使用者、创作者、协作者、审核者、管理员、运营者、采购/决策者；不得补与核心任务无关的泛人群。\n3.\
+            \ 超过6个时只合并核心任务、约束和答案边界真正一致的人群，并在mapping中说明。\n4. persona_name必须是稳定、唯一、4–10个英文单词，后续逐字符使用。\n\
+            5. 每个persona输出1–3个core_tasks与2–4个selection_constraints，约束必须会影响产品选择。\n\
+            6. 不得用年龄、城市等人口统计替代真实工作角色，除非输入明确且会改变选择。\n\n【Few-shot：正确拆分】\n输入：filmmakers,\
+            \ independent creators, AI artists, creative teams\n输出应保留Independent Filmmakers、Independent\
+            \ Creators、AI Artists，并可将Creative Teams细分或映射到Creative Team Leads/Reviewers；不能全部合并成Content\
+            \ Creators，因为多镜头叙事、个人产量和艺术控制的选择边界不同。\n\n【Few-shot：错误合并】\n错误：把filmmakers、social\
+            \ media managers、e-commerce marketers全部合并成Marketing Professionals。\n原因：任务与评价因素不同，而且用户可能根本未输入营销人群。\n\
+            \n【Few-shot：合理补充】\n若输入只有“creative teams”，可以补充Creative Team Leads和Content\
+            \ Reviewers，因为多人审核、版本管理和工作流复用会改变平台选择；不能无依据补充Procurement Directors。\n\n\
+            【后续配额约束说明】\n每个已填写受众后续至少进入2条通用题，至少1条是comparison或decision；多persona时单一persona不得超过40条通用题的40%。本节点只提供稳定persona与约束，不生成问题。\n\
+            \n【输出】仅输出JSON：\n{\n  \"raw_audience_mapping\":[{\"raw_audience\":\"...\"\
+            ,\"persona_name\":\"...\",\"mapping_reason\":\"...\"}],\n  \"personas\"\
+            :[\n    {\"persona_name\":\"4-10 English words\",\"description\":\"...\"\
+            ,\"core_tasks\":[\"...\"],\"selection_constraints\":[\"...\"]}\n  ]\n}"
+        - id: 1700000000003-usr
+          role: user
+          text: 请严格按照以上所有要求输出。
+        selected: false
+        title: P0 人群画像生成(4-6)
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 97
+      id: '1700000000003'
+      position:
+        x: 518.3333333333333
+        y: 400
+      positionAbsolute:
+        x: 518.3333333333333
+        y: 400
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "from datetime import datetime, timezone, timedelta\n\ndef main():\n\
+          \    tz = timezone(timedelta(hours=8))\n    now = datetime.now(tz)\n   \
+          \ return {\n        \"current_date\": now.strftime(\"%Y-%m-%d\"),\n    }"
+        code_language: python3
+        desc: ''
+        outputs:
+          current_date:
+            children: null
+            type: string
+        selected: false
+        title: D0 当前日期
+        type: code
+        variables: []
+      height: 53
+      id: '1700000000004'
+      position:
+        x: 118.33333333333337
+        y: 183.33333333333337
+      positionAbsolute:
+        x: 118.33333333333337
+        y: 183.33333333333337
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    viewport:
+      x: 232.15493780947185
+      y: -706.0899153102134
+      zoom: 1.010156695836083
