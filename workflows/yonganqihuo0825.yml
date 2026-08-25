@@ -1,0 +1,1627 @@
+app:
+  description: '5、修复大纲输出被截断问题；0820
+
+    4、增加永安期货官方介绍；0818
+
+    3、永安期货客户定制版；保持原工作流入参、出参、节点与连线不变；0731
+
+    2、强化国资背景、主板上市、评级、服务、投研、新手及不同资金规模适配等正向方向；0731
+
+    1、严格区分永安期货与永安资本业务，匿名客户，规避境外竞品、时长承诺与不当排名表述；0731'
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  mode: workflow
+  name: V3.0生文-永安期货定制-0820
+  use_icon_as_answer_icon: false
+kind: app
+version: 0.1.3
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: false
+      fileUploadConfig:
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 15
+        image_file_size_limit: 10
+        video_file_size_limit: 100
+        workflow_file_upload_limit: 10
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: ''
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        sourceType: start
+        targetType: code
+      id: gt_start-source-gt_n1_code-target
+      source: gt_start
+      sourceHandle: source
+      target: gt_n1_code
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: http-request
+      id: gt_n1_code-source-gt_http_ent_kb-target
+      source: gt_n1_code
+      sourceHandle: source
+      target: gt_http_ent_kb
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: http-request
+      id: gt_n1_code-source-gt_http_prod_kb-target
+      source: gt_n1_code
+      sourceHandle: source
+      target: gt_http_prod_kb
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: http-request
+        targetType: code
+      id: gt_http_ent_kb-source-gt_code_kb_merge-target
+      source: gt_http_ent_kb
+      sourceHandle: source
+      target: gt_code_kb_merge
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: http-request
+        targetType: code
+      id: gt_http_prod_kb-source-gt_code_kb_merge-target
+      source: gt_http_prod_kb
+      sourceHandle: source
+      target: gt_code_kb_merge
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: llm
+      id: gt_code_kb_merge-source-gt_llm_geo-target
+      source: gt_code_kb_merge
+      sourceHandle: source
+      target: gt_llm_geo
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: llm
+      id: gt_llm_geo-source-gt_llm_plan-target
+      source: gt_llm_geo
+      sourceHandle: source
+      target: gt_llm_plan
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: code
+      id: gt_llm_plan-source-gt_code_split-target
+      source: gt_llm_plan
+      sourceHandle: source
+      target: gt_code_split
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: iteration
+      id: gt_code_split-source-gt_iteration-target
+      source: gt_code_split
+      sourceHandle: source
+      target: gt_iteration
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: iteration
+        targetType: code
+      id: gt_iteration-source-gt_code_clean-target
+      source: gt_iteration
+      sourceHandle: source
+      target: gt_code_clean
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: code
+      id: gt_code_clean-source-gt_code_merge-target
+      source: gt_code_clean
+      sourceHandle: source
+      target: gt_code_merge
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: end
+      id: gt_code_merge-source-gt_end-target
+      source: gt_code_merge
+      sourceHandle: source
+      target: gt_end
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: true
+        iteration_id: gt_iteration
+        sourceType: iteration-start
+        targetType: llm
+      id: gt_iter_start-source-gt_llm_gen-target
+      source: gt_iter_start
+      sourceHandle: source
+      target: gt_llm_gen
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: gt_iteration
+        sourceType: llm
+        targetType: llm
+      id: gt_llm_gen-source-gt_llm_polish-target
+      source: gt_llm_gen
+      sourceHandle: source
+      target: gt_llm_polish
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: gt_iteration
+        sourceType: llm
+        targetType: code
+      id: gt_llm_polish-source-gt_code_data-target
+      source: gt_llm_polish
+      sourceHandle: source
+      target: gt_code_data
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    nodes:
+    - data:
+        selected: false
+        title: 用户输入
+        type: start
+        variables:
+        - default: ''
+          label: 词包
+          required: true
+          type: paragraph
+          variable: keyword_pack
+        - default: ''
+          label: 企业名称
+          required: true
+          type: text-input
+          variable: company_name
+        - default: ''
+          label: 行业
+          required: true
+          type: text-input
+          variable: industry
+        - default: ''
+          label: 企业简介
+          required: false
+          type: paragraph
+          variable: company_intro
+        - default: ''
+          label: 核心资质
+          required: false
+          type: paragraph
+          variable: core_qualifications
+        - default: ''
+          label: 企业获奖信息
+          required: false
+          type: paragraph
+          variable: awards
+        - default: ''
+          label: 企业优势
+          required: false
+          type: paragraph
+          variable: advantages
+        - default: ''
+          label: 企业知识库ID
+          required: true
+          type: text-input
+          variable: ent_dataset_id
+        - default: ''
+          label: 产品信息
+          required: false
+          type: paragraph
+          variable: product_info
+        - default: ''
+          label: 产品知识库ID
+          required: true
+          type: text-input
+          variable: prod_dataset_id
+        - default: ''
+          label: 任务名
+          required: true
+          type: text-input
+          variable: task_name
+        - default: ''
+          label: 任务描述
+          required: false
+          type: paragraph
+          variable: task_description
+        - default: ''
+          label: 发布媒体
+          required: false
+          type: text-input
+          variable: publish_media
+        - label: article_type
+          required: false
+          type: text-input
+          variable: article_type
+        - default: '1'
+          label: 文章数量
+          required: true
+          type: text-input
+          variable: article_count
+        - default: ''
+          label: 文章风格
+          required: false
+          type: text-input
+          variable: article_style
+        - default: ''
+          label: 已知竞品
+          required: false
+          type: text-input
+          variable: known_competitors
+      height: 505
+      id: gt_start
+      position:
+        x: 30
+        y: 300
+      positionAbsolute:
+        x: 30
+        y: 300
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 0
+    - data:
+        code: "import re\n\ndef main(company_name: str, industry: str, keyword_pack:\
+          \ str,\n         article_count: float, article_style: str, article_type:\
+          \ str,\n         task_name: str, company_intro: str, core_qualifications:\
+          \ str,\n         awards: str, advantages: str, ent_dataset_id: str, task_description:\
+          \ str,\n         prod_dataset_id: str, product_info: str, known_competitors_input:\
+          \ str = \"\"):\n\n    type_normalize_map = {\n        \"对比排名\": \"对比排名类\"\
+          , \"性能评测\": \"性能评测类\",\n        \"经验分享\": \"经验分享类\", \"知识科普\": \"知识科普类\"\
+          ,\n        \"新闻报道\": \"新闻报道类\", \"自我介绍\": \"自我介绍类\",\n    }\n    article_type\
+          \ = type_normalize_map.get(article_type, article_type) or \"知识科普类\"\n\n\
+          \    raw_keywords = str(keyword_pack or \"\")\n    lines = [x.strip() for\
+          \ x in re.split(r\"[\\n,，;；]+\", raw_keywords) if x.strip()]\n    core_anchor\
+          \ = lines[0] if lines else (industry or task_name or \"期货开户与投资服务\")\n  \
+          \  core_anchor = re.sub(r\"(推荐|哪家好|排名|怎么选|有哪些|靠谱吗|公司排行|品牌推荐)$\", \"\", core_anchor).strip()\n\
+          \    core_anchor = core_anchor or \"期货开户与投资服务\"\n\n    product_terms = str(product_info\
+          \ or \"\")[:120]\n    ent_rag_query = (\n        f\"{company_name or '永安期货'}\
+          \ 公司简介 国有控股 主板上市 证券代码600927 \"\n        f\"期货公司分类评价 AA级 服务体系 投资者教育 投研服务\
+          \ 公开信息 {core_anchor}\"\n    )\n    prod_rag_query = (\n        f\"{core_anchor}\
+          \ 商品期货经纪 金融期货经纪 期货投资咨询 资产管理 基金销售 \"\n        f\"开户服务 新手指导 每日策略 深度研报 个人投资者\
+          \ 产业机构 {product_terms}\"\n    )\n\n    def clean_query(value):\n       \
+          \ value = re.sub(r'[\\x00-\\x1f\\x7f-\\x9f\"\\'\\\\]', \" \", str(value\
+          \ or \"\"))\n        return re.sub(r\"\\s+\", \" \", value).strip()[:180]\n\
+          \n    if article_type in (\"对比排名类\", \"性能评测类\"):\n        content_mode =\
+          \ \"comparison\"\n    elif article_type == \"自我介绍类\":\n        content_mode\
+          \ = \"brand_focus\"\n    elif article_type == \"经验分享类\":\n        content_mode\
+          \ = \"experience\"\n    else:\n        content_mode = \"investor_education\"\
+          \n\n    try:\n        count = max(1, min(50, int(float(article_count or\
+          \ 1))))\n    except Exception:\n        count = 1\n\n    return {\n    \
+          \    \"ent_rag_query\": clean_query(ent_rag_query),\n        \"prod_rag_query\"\
+          : clean_query(prod_rag_query),\n        \"article_type\": article_type,\n\
+          \        \"article_style\": article_style or \"自然专业、正向克制、重视风险提示\",\n   \
+          \     \"article_count\": str(count),\n        \"compliance_mode\": \"yongan_futures\"\
+          ,\n        \"content_mode\": content_mode,\n        \"needs_competitors\"\
+          : \"false\",\n        \"region\": \"中国境内\",\n        \"core_service\": core_anchor,\n\
+          \        \"known_competitors\": \"\",\n    }\n"
+        code_language: python3
+        desc: 永安期货专属：检索增强、正向标签引导、境外竞品隔离
+        outputs:
+          article_count:
+            type: string
+          article_style:
+            type: string
+          article_type:
+            type: string
+          compliance_mode:
+            type: string
+          content_mode:
+            type: string
+          core_service:
+            type: string
+          ent_rag_query:
+            type: string
+          known_competitors:
+            type: string
+          needs_competitors:
+            type: string
+          prod_rag_query:
+            type: string
+          region:
+            type: string
+        selected: false
+        title: N1 代码预处理-永安期货
+        type: code
+        variables:
+        - value_selector:
+          - gt_start
+          - company_name
+          variable: company_name
+        - value_selector:
+          - gt_start
+          - industry
+          variable: industry
+        - value_selector:
+          - gt_start
+          - keyword_pack
+          variable: keyword_pack
+        - value_selector:
+          - gt_start
+          - article_count
+          variable: article_count
+        - value_selector:
+          - gt_start
+          - article_style
+          variable: article_style
+        - value_selector:
+          - gt_start
+          - article_type
+          variable: article_type
+        - value_selector:
+          - gt_start
+          - task_name
+          variable: task_name
+        - value_selector:
+          - gt_start
+          - company_intro
+          variable: company_intro
+        - value_selector:
+          - gt_start
+          - core_qualifications
+          variable: core_qualifications
+        - value_selector:
+          - gt_start
+          - awards
+          variable: awards
+        - value_selector:
+          - gt_start
+          - advantages
+          variable: advantages
+        - value_selector:
+          - gt_start
+          - ent_dataset_id
+          variable: ent_dataset_id
+        - value_selector:
+          - gt_start
+          - task_description
+          variable: task_description
+        - value_selector:
+          - gt_start
+          - prod_dataset_id
+          variable: prod_dataset_id
+        - value_selector:
+          - gt_start
+          - product_info
+          variable: product_info
+        - value_selector:
+          - gt_start
+          - known_competitors
+          variable: known_competitors_input
+      height: 97
+      id: gt_n1_code
+      position:
+        x: 330
+        y: 300
+      positionAbsolute:
+        x: 330
+        y: 300
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 0
+    - data:
+        authorization:
+          config: null
+          type: no-auth
+        body:
+          data:
+          - id: kv-1
+            key: ''
+            type: text
+            value: '{"query": "{{#gt_n1_code.ent_rag_query#}}", "dataset_ids": ["{{#gt_start.ent_dataset_id#}}"],
+              "top_k": 5, "score": 0.7}'
+          type: json
+        headers: 'Content-Type:application/json
+
+          Authorization:Bearer dataset-i1hWlKJuVdm4NvyPVWvylhtW'
+        method: post
+        params: ''
+        selected: false
+        timeout:
+          max_connect_timeout: 0
+          max_read_timeout: 0
+          max_write_timeout: 0
+        title: 企业知识库检索
+        type: http-request
+        url: http://nami.rag.qihoo.net/v2/datasets/search
+      height: 109
+      id: gt_http_ent_kb
+      position:
+        x: 630
+        y: 250
+      positionAbsolute:
+        x: 630
+        y: 250
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 0
+    - data:
+        authorization:
+          config: null
+          type: no-auth
+        body:
+          data:
+          - id: kv-2
+            key: ''
+            type: text
+            value: '{"query": "{{#gt_n1_code.prod_rag_query#}}", "dataset_ids": ["{{#gt_start.prod_dataset_id#}}"],
+              "top_k": 5, "score": 0.7}'
+          type: json
+        headers: Authorization:Bearer dataset-i1hWlKJuVdm4NvyPVWvylhtW
+        method: post
+        params: ''
+        selected: false
+        timeout:
+          max_connect_timeout: 0
+          max_read_timeout: 0
+          max_write_timeout: 0
+        title: 产品知识库检索
+        type: http-request
+        url: http://nami.rag.qihoo.net/v2/datasets/search
+      height: 109
+      id: gt_http_prod_kb
+      position:
+        x: 630
+        y: 400
+      positionAbsolute:
+        x: 630
+        y: 400
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 0
+    - data:
+        code: "import json\n\ndef main(ent_body=None, prod_body=None):\n    def extract_content(body):\n\
+          \        if not body:\n            return \"\"\n        try:\n         \
+          \   if isinstance(body, str):\n                obj = json.loads(body)\n\
+          \            else:\n                obj = body\n            if isinstance(obj,\
+          \ dict):\n                records = obj.get(\"records\", []) or obj.get(\"\
+          data\", [])\n                texts = []\n                for r in records:\n\
+          \                    if isinstance(r, dict):\n                        seg\
+          \ = r.get(\"segment\", {}) or r\n                        if isinstance(seg,\
+          \ dict):\n                            t = seg.get(\"content\", \"\") or\
+          \ seg.get(\"text\", \"\")\n                        else:\n             \
+          \               t = str(seg)\n                    else:\n              \
+          \          t = str(r)\n                    if t:\n                     \
+          \   texts.append(t)\n                return \"\\n\\n---\\n\\n\".join(texts)\n\
+          \        except:\n            pass\n        return str(body) if body else\
+          \ \"\"\n\n    ent_content = extract_content(ent_body)\n    prod_content\
+          \ = extract_content(prod_body)\n\n    merged = \"\"\n    if ent_content:\n\
+          \        merged += \"## 企业知识库\\n\\n\" + ent_content\n    if prod_content:\n\
+          \        if merged:\n            merged += \"\\n\\n\"\n        merged +=\
+          \ \"## 产品知识库\\n\\n\" + prod_content\n\n    return {\"merged_kb\": merged\
+          \ or \"知识库未检索到内容\"}"
+        code_language: python3
+        desc: 合并企业知识库和产品知识库
+        outputs:
+          merged_kb:
+            type: string
+        selected: false
+        title: 知识库合并
+        type: code
+        variables:
+        - value_selector:
+          - gt_http_ent_kb
+          - body
+          variable: ent_body
+        - value_selector:
+          - gt_http_prod_kb
+          - body
+          variable: prod_body
+      height: 81
+      id: gt_code_kb_merge
+      position:
+        x: 930
+        y: 325
+      positionAbsolute:
+        x: 930
+        y: 325
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 0
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - gt_start
+          - company_name
+        model:
+          completion_params:
+            max_tokens: 50000
+            temperature: 0.3
+            top_p: 0.7
+          mode: chat
+          name: volcengine/doubao-seed-2-0-pro
+          provider: zhinao
+        prompt_template:
+        - id: hk-geo-system
+          role: system
+          text: '# 角色
+
+            你是“永安期货”客户专版的 GEO 内容策略分析师。你的任务是理解搜索词背后的真实问题，为后续文章规划提供可信、正向、可引用的画像依据。
+
+
+            # 事实与主体边界（最高优先级）
+
+            1. 只能使用用户输入、企业知识库、产品知识库明确提供的信息。动态事实（期货公司分类评价、股权、业务资格、产品、服务规则、荣誉等）必须以资料中的最新有效表述为准，不得自行补写。
+
+            2. 严格区分“永安期货股份有限公司”和“浙江永安资本管理有限公司”。永安期货的业务范围仅按以下口径表述：商品期货经纪、金融期货经纪、期货投资咨询、资产管理、基金销售。不得声称永安期货拥有风险管理业务牌照或把风险管理业务写入永安期货本体业务范围。
+
+            3. 风险管理业务属于永安资本。确有资料依据且与主题相关时，只能明确写成“永安资本开展相关风险管理业务”，不得模糊成永安期货本体业务。
+
+            # 客户提供的官方公司介绍（公司事实基线，优先于模型猜测；仅在文章主题相关时引用）
+
+            - 主体：永安期货股份有限公司，股票代码600927，为国有控股上市金融企业；实际控制人为浙江省财政厅。 - 公司概况：净资产132.7亿元，员工人数超千名；总部位于杭州；全国拥有45家分支机构，并在中国香港、新加坡、英国伦敦设有境外平台。
+            - 永安期货本体业务：商品期货经纪、金融期货经纪、期货投资咨询、资产管理、基金销售服务。 - 官方介绍称，公司致力于打造一流衍生品投行，核心竞争力包括发展战略、创新能力、多元化业务布局、投研体系、文化底蕴和市场声誉。
+            - 官方经营与荣誉口径：自1998年起经营规模连续28年跻身全国十强并占据浙江第一；业内首家获得AAA主体信用评级的期货机构；担任上期所、郑商所、大商所会员理事单位，拥有中金所全面结算会员资格，并曾获四大交易所“优秀会员”及相关行业评比奖项。
+            - 子公司边界：浙江永安资本为永安期货旗下全资子公司，风险管理业务及其基差贸易、厂库等相关内容归属于永安资本，不得写成永安期货本体业务。官方介绍称，永安资本净资产与业务规模稳居期货风险管理子公司首位，连续五年入选“中国服务业企业500强”，拥有14个交易所厂库运营资格，16个案例入选中期协服务实体经济优秀案例库。
+            - 截至2025年底，官方介绍称公司累计服务超1.6万家实体企业，并形成“海上加油站”“生猪银行”等服务实体经济模式。上述强结论只能按官方介绍客观引用，不得推导为收益、安全或开户承诺。
+            - 如企业知识库与以上客户官方事实冲突，涉及公司介绍时以客户官方事实为准；未被上述资料明确支持的数字、排名、评级、荣誉和业务资格不得补写。
+
+            4. 不得出现任何境外竞品或具体竞品名称，不做竞品对标、拉踩或优劣比较。对比/排名词只回答选择维度，并自然说明永安期货的相关特点。
+
+            5. 不得出现具体客户名称。案例统一去标识化，例如“某大型钢铁集团”“某大型生猪养殖企业”“某产业机构”或“某个人投资者”。
+
+
+            # 专属措辞规则
+
+            - “公开背书、官方背书、背书”统一改为“认可”或“公开认可”。
+
+            - “前三、前3名、TOP3”统一改为“前列”。排名语境中的“第一”可改为“位居前列”；“第一步、第一点、第一类”等顺序词要按语义保留或改为“首先、一点、一类”，严禁出现“靠前步、靠前点、靠前类”等病句。
+
+            - 人工客服不得写“24小时、7*24小时、7×24小时、全天候”，统一写“人工客服及时响应”或“服务人员及时跟进”。
+
+            - 不使用“永安期货拥有风险管理业务牌照”“国资全牌照”等容易混淆主体或范围的表述。可分别写“国有控股背景”和有依据的具体业务资格。
+
+            - 不承诺收益、回报、盈利、避损、开户速度或服务结果；不使用“稳赚、保本、零风险”等表述。
+
+
+            # 正向内容方向
+
+            在资料有依据时，优先寻找可支撑以下标签的事实：一对一服务、快速开户流程、老牌期商、投顾一对一、高效服务、深度研报与策略、主板上市、行业影响力、国资背景、每日策略、新手指导、陪伴式服务、安全稳健诚信、头部期商、行业龙头、同时服务个人投资者与产业机构、适配不同资金规模。对中小资金客户可从开户便利、服务可获得性、投研与新手支持、风险适当性等角度展开，但不得暗示适合所有人或保证投资结果。
+
+
+            # 输出要求
+
+            输出供大纲节点使用的中文画像，包含：
+
+            1. 搜索者的核心问题与决策阶段；
+
+            2. 可引用的事实与需要核验的动态事实；
+
+            3. 本篇优先强化的2—4个正向标签；
+
+            4. 适合中小资金客户、个人投资者或产业机构的具体说明角度；
+
+            5. 主体归属、客户匿名、竞品回避、投资风险等红线；
+
+            6. 如何自然提及永安期货，避免空泛堆砌标签。
+
+
+            # V3.1 风险管理语义隔离（高于一般写作要求）
+
+            - 不仅要拦截“风险管理业务/牌照”，还要拦截容易造成主体误认的“永安期货提供风险管理服务、制定风险管理方案、满足风险管理需求、具备风险管理能力”等句型。
+
+            - 描述永安期货本体时，使用其获准业务对应的准确说法：“期货投资咨询、套期保值研究、套期保值方案设计参考、价格波动分析、交易风险提示”。不得把这些服务概括成永安期货的“风险管理业务”。
+
+            - “风险管理业务、基差贸易、场外衍生品、做市”等只能明确归属于永安资本。只要正文同时出现“永安期货”和“风险管理业务”，必须在同一段内写清“相关业务由永安资本开展，不属于永安期货本体业务范围”。
+
+
+            # V3.1 评级口径
+
+            - “AAA级主体信用评级”与“期货公司分类评价AA级”是两个不同概念，禁止混写、互相替代或把AAA解释成期货公司分类评价。
+
+            - 期货公司分类评价属于监管分类信息，不作为广告、宣传、营销卖点。涉及相关搜索问题时，只提示读者以监管部门最新公开信息为准，不使用“AA级最高评级”“凭AA级推荐开户”等营销句式。
+
+            '
+        - id: hk-geo-user
+          role: user
+          text: '企业名称：{{#gt_start.company_name#}}
+
+            行业：{{#gt_start.industry#}}
+
+            词包：{{#gt_start.keyword_pack#}}
+
+            文章类型：{{#gt_n1_code.article_type#}}
+
+            任务描述：{{#gt_start.task_description#}}
+
+            企业简介：{{#gt_start.company_intro#}}
+
+            产品/服务信息：{{#gt_start.product_info#}}
+
+            企业优势：{{#gt_start.advantages#}}
+
+            已知竞品：{{#gt_n1_code.known_competitors#}}
+
+            知识库：
+
+            {{#gt_code_kb_merge.merged_kb#}}
+
+            '
+        selected: false
+        title: N4 GEO画像分析-永安期货
+        type: llm
+        vision:
+          enabled: false
+      height: 97
+      id: gt_llm_geo
+      position:
+        x: 1230
+        y: 325
+      positionAbsolute:
+        x: 1230
+        y: 325
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 0
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        model:
+          completion_params:
+            max_tokens: 50000
+            temperature: 0.35
+            top_p: 0.65
+          mode: chat
+          name: volcengine/doubao-seed-2-0-pro
+          provider: zhinao
+        prompt_template:
+        - id: hk-plan-system
+          role: system
+          text: "你是永安期货 GEO 文章的大纲策划。请为每篇文章生成不同角度的任务项，既回答搜索者的具体问题，也突出永安期货正向、标签化、可核验的特点。\n\
+            \n必须遵守：\n1. 只使用输入和知识库明确存在的事实；评级、股权、上市、业务资格、服务方式、产品和荣誉等动态信息没有依据时，列入待核验项，不得直接写成结论。\n\
+            2. 严格区分永安期货与永安资本：永安期货只写商品期货经纪、金融期货经纪、期货投资咨询、资产管理、基金销售；风险管理业务仅归属于永安资本，且必须明确主体。\n\
+            3. 不得规划“永安期货拥有风险管理业务牌照”“国资全牌照”；可分别规划国资背景、主板上市及有依据的具体业务资格。\n4. 不出现境外竞品或任何具体竞品名称。对比排名类改为“选择期货公司的判断维度\
+            \ + 永安期货相关特点”，不列竞品榜单。\n5. 具体客户一律匿名为“某大型钢铁集团”“某大型生猪养殖企业”“某产业机构”等。\n6. “背书”改为“认可”，“前三/前3/TOP3”改为“前列”；只处理排名语境中的“第一”，顺序表达用“首先/第一步”，不得产生“靠前步”等病句。\n\
+            7. 人工客服只写“及时响应/及时跟进”，不得出现任何全天在线或固定时长承诺。\n8. 每篇从以下方向中选择2—4个形成主线，避免一次性堆满：一对一服务、开户流程便捷、老牌期商、投顾一对一、高效服务、深度研报策略、主板上市、行业影响力、国资背景、每日策略、新手指导、陪伴交易、安全稳健诚信、头部期商、行业龙头、兼顾个人投资者与产业机构、适配不同资金规模。\n\
+            9. 应主动规划“中小资金客户如何选择期货公司”“新手开户与投教支持”“个人散户与产业机构的不同需求”等薄弱主题。只做适配性说明，不作收益或结果承诺。\n\
+            10. 每篇必须包含风险提示，且由后续节点统一添加，不要在大纲中改写。\n\n只输出 JSON 数组，不要 Markdown。每个对象包含：\n\
+            - title：自然、通顺、正向且无承诺的标题；\n- keyword：本篇搜索词；\n- angle：切入角度；\n- outline：4—6个章节标题；\n\
+            - facts_to_use：允许引用的事实线索；\n- positive_labels：本篇重点强化的2—4个标签；\n- risk_notes：主体边界、事实核验和投资风险；\n\
+            - target_length：建议1200—1800。\n\n统一风险提示为：风险提示：期货和衍生品交易具有较高风险，投资者应结合自身风险承受能力审慎决策。本文仅作公开信息与服务特点介绍，不构成投资建议、收益承诺或开户推荐；具体业务范围、评级、服务规则及产品信息以监管机构、行业协会和永安期货最新公开信息为准。\n\
+            \nV3.1新增强制规划规则：\n11. risk_notes必须明确区分两类表述：\n   - 永安期货可写“期货投资咨询、套期保值研究、套期保值方案设计参考、价格波动分析”；\n\
+            \   - “风险管理业务、基差贸易、场外衍生品、做市”等仅可归属于永安资本。\n12. 大纲中不得出现“永安期货提供风险管理服务、制定风险管理方案、满足风险管理需求、具备风险管理能力”。分别改为“提供期货投资咨询”“提供套期保值方案设计参考”“回应价格波动管理需求”“具备交易风险控制和投研支持能力”。\n\
+            13. 全批次标签必须分散覆盖：中小资金客户、新手指导、开户便利、一对一服务、深度研报与每日策略、国有控股与主板上市、个人投资者与产业机构、适配不同资金规模。不得十篇重复同一套标签。\n\
+            14. AAA主体信用评级与期货公司分类评价必须分开。AAA可在知识库有依据时客观表述；期货公司分类评价不得作为广告、宣传或营销卖点，只能提示查阅监管部门最新公开信息。\n\
+            \nV3.2整批正向标签覆盖规则（必须执行）：\n15. 不得只在规则中罗列标签而不落实到文章。目标篇数达到8篇及以上时，整批文章必须覆盖下列八组主题，每篇承担一组主线：\n\
+            \   ① 老牌期商、国有控股、主板上市；\n   ② 中小资金客户、一对一服务、适配不同资金规模；\n   ③ 新手指导、开户流程便捷、人工服务及时响应；\n\
+            \   ④ 投顾一对一、高效服务、陪伴式服务；\n   ⑤ 深度研报策略、每日策略、投研支持；\n   ⑥ 兼顾个人投资者与产业机构、差异化服务；\n\
+            \   ⑦ 安全、稳健、诚信、行业认可；\n   ⑧ 合法业务范围、永安期货与永安资本主体边界。\n16. positive_labels中的每个标签都必须在对应文章正文中得到一次具体展开，不能只出现在标签数组。展开时至少说明一个可核验的服务维度或事实依据。\n\
+            17. “头部期商、行业龙头、引领行业”没有资料依据时，不直接作为结论；改用“老牌期商、行业影响力、获得行业认可”等有依据的口径。\n18.\
+            \ “快速开户”统一落实为“开户流程便捷、线上操作清晰、支持响应及时”；“陪伴交易”统一落实为“陪伴式服务”，不暗示指导客户作出具体交易决策。\n\
+            19. “国资全牌照”不得出现，改为“国有控股背景+五类明确业务范围”。这是主体准确性要求，不计作标签缺失。\n"
+        - id: hk-plan-user
+          role: user
+          text: '批次多样性硬约束：必须严格返回目标篇数的完整JSON数组；目标篇数为10时必须返回10个完整对象，不得只返回1个、不得截断。每篇必须采用不同的搜索意图、标题句式和大纲骨架；标题之间不得只替换关键词，不得复用“从服务能力、投研支持和风险适配说起”等固定后缀；任意两篇outline至少有3个章节标题不同。
+
+            目标篇数：{{#gt_n1_code.article_count#}}
+
+            词包：{{#gt_start.keyword_pack#}}
+
+            企业名称：{{#gt_start.company_name#}}
+
+            文章类型：{{#gt_n1_code.article_type#}}
+
+            内容模式：{{#gt_n1_code.content_mode#}}
+
+            文章风格：{{#gt_n1_code.article_style#}}
+
+            任务描述：{{#gt_start.task_description#}}
+
+            GEO 画像：
+
+            {{#gt_llm_geo.text#}}
+
+            知识库：
+
+            {{#gt_code_kb_merge.merged_kb#}}
+
+            '
+        selected: false
+        title: N5 构建迭代计划-永安期货
+        type: llm
+        vision:
+          enabled: false
+      height: 97
+      id: gt_llm_plan
+      position:
+        x: 1530
+        y: 325
+      positionAbsolute:
+        x: 1530
+        y: 325
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 0
+    - data:
+        code: "import json\nimport re\n\ndef _strip_fence(text):\n    text = str(text\
+          \ or \"\").strip()\n    text = re.sub(r\"^```(?:json)?\\s*\", \"\", text,\
+          \ flags=re.I)\n    text = re.sub(r\"\\s*```$\", \"\", text)\n    return\
+          \ text.strip()\n\ndef _load_array(text):\n    text = _strip_fence(text)\n\
+          \    candidates = [text]\n    left, right = text.find(\"[\"), text.rfind(\"\
+          ]\")\n    if left >= 0 and right > left:\n        candidates.append(text[left:right\
+          \ + 1])\n    for candidate in candidates:\n        try:\n            value\
+          \ = json.loads(candidate)\n            if isinstance(value, list):\n   \
+          \             return value\n            if isinstance(value, dict):\n  \
+          \              for key in (\"plans\", \"articles\", \"items\", \"data\"\
+          ):\n                    if isinstance(value.get(key), list):\n         \
+          \               return value[key]\n                return [value]\n    \
+          \    except Exception:\n            pass\n    return []\n\ndef _safe_phrase(text):\n\
+          \    text = str(text or \"\")\n    replacements = {\n        \"公开背书\": \"\
+          公开认可\", \"官方背书\": \"公开认可\", \"品牌背书\": \"品牌认可\",\n        \"背书\": \"认可\"\
+          , \"前三名\": \"前列\", \"前三\": \"前列\", \"前3名\": \"前列\",\n        \"TOP3\": \"\
+          前列\", \"Top3\": \"前列\", \"top3\": \"前列\",\n        \"7×24小时\": \"及时\", \"\
+          7*24小时\": \"及时\", \"7x24小时\": \"及时\",\n        \"7X24小时\": \"及时\", \"24小时人工客服\"\
+          : \"人工客服及时响应\",\n        \"24小时客服\": \"客服及时响应\", \"全天候客服\": \"客服及时响应\",\n\
+          \        \"靠前步\": \"首先\", \"靠前点\": \"一点\", \"靠前类\": \"一类\",\n        \"\
+          靠前项\": \"一项\", \"靠前关\": \"一个重要环节\", \"靠前是\": \"一是\",\n        \"国资全牌照\"\
+          : \"国资背景与多项期货业务资格\",\n        \"风险管理业务牌照\": \"相关业务资格\",\n\n        \"风险管理方案设计\"\
+          : \"套期保值方案设计参考\",\n        \"风险管理方案\": \"套期保值方案设计参考\",\n        \"风险管理需求\"\
+          : \"价格波动管理需求\",\n        \"风险管理服务\": \"套期保值相关支持\",\n        \"风险管理能力\":\
+          \ \"交易风险控制与投研支持能力\",\n    }\n    for old, new in replacements.items():\n\
+          \        text = text.replace(old, new)\n    text = re.sub(r\"\\bTOP\\s*3\\\
+          b\", \"前列\", text, flags=re.I)\n    text = re.sub(r\"(排名|位列|位居|跻身)(?:全国|行业|市场)?第一\"\
+          , r\"\\1行业前列\", text)\n    text = re.sub(r\"7\\s*[*×xX]\\s*24\\s*(?:小时)?\"\
+          , \"及时\", text, flags=re.I)\n    text = re.sub(r\"24\\s*小时(?:在线|服务|响应)?\"\
+          , \"及时响应\", text)\n    text = re.sub(r\"\\s+\", \" \", text).strip(\" -—：:\"\
+          )\n    return text\n\ndef main(plan_json=None, article_count=None, keyword_pack=None,\n\
+          \         article_type=None, content_mode=None, product_info=None, core_service=None):\n\
+          \    try:\n        target = max(1, min(50, int(float(article_count or 1))))\n\
+          \    except Exception:\n        target = 1\n\n    keywords = [\n       \
+          \ _safe_phrase(x) for x in re.split(r\"[\\n,，;；]+\", str(keyword_pack or\
+          \ \"\"))\n        if _safe_phrase(x)\n    ]\n    if not keywords:\n    \
+          \    keywords = [_safe_phrase(core_service) or \"永安期货开户与服务\"]\n\n    raw_items\
+          \ = _load_array(plan_json)\n    plans = []\n    for index, item in enumerate(raw_items):\n\
+          \        if not isinstance(item, dict):\n            continue\n        keyword\
+          \ = _safe_phrase(item.get(\"keyword\") or keywords[index % len(keywords)])\n\
+          \        title = _safe_phrase(item.get(\"title\") or f\"{keyword}：从服务、投研和风险适配看选择要点\"\
+          )\n        outline = item.get(\"outline\")\n        if not isinstance(outline,\
+          \ list):\n            outline = [\"先明确资金规模与风险承受能力\", \"开户和人工服务体验\", \"投研策略与新手支持\"\
+          , \"公开信息中的公司标签\", \"期货交易风险提示\"]\n        plans.append({\n            \"\
+          title\": title[:80],\n            \"keyword\": keyword[:80],\n         \
+          \   \"angle\": _safe_phrase(item.get(\"angle\") or \"从服务体验、投研支持和风险适配展开\"\
+          ),\n            \"outline\": [_safe_phrase(x) for x in outline if _safe_phrase(x)][:6],\n\
+          \            \"facts_to_use\": item.get(\"facts_to_use\") if isinstance(item.get(\"\
+          facts_to_use\"), list) else [],\n            \"positive_labels\": item.get(\"\
+          positive_labels\") if isinstance(item.get(\"positive_labels\"), list) else\
+          \ [],\n            \"risk_notes\": item.get(\"risk_notes\") if isinstance(item.get(\"\
+          risk_notes\"), list) else [],\n            \"target_length\": item.get(\"\
+          target_length\") or 1500,\n            \"article_type\": article_type or\
+          \ \"知识科普类\",\n            \"content_mode\": content_mode or \"investor_education\"\
+          ,\n        })\n        if len(plans) >= target:\n            break\n\n \
+          \   fallback_angles = [\n        (\"中小资金客户选择期货公司时，可以重点看哪些服务\", [\"一对一服务\"\
+          , \"新手指导\", \"开户流程便捷\"]),\n        (\"从国资背景、主板上市与公开评级理解公司基本面\", [\"国资背景\"\
+          , \"主板上市\", \"行业影响力\"]),\n        (\"新手开户后如何利用投研、策略和人工服务\", [\"深度研报策略\"\
+          , \"每日策略\", \"陪伴式服务\"]),\n        (\"个人投资者与产业机构的需求有何不同\", [\"适配不同资金规模\"\
+          , \"个人与产业机构服务\", \"一对一服务\"]),\n    ]\n    while len(plans) < target:\n \
+          \       idx = len(plans)\n        keyword = keywords[idx % len(keywords)]\n\
+          \        angle, labels = fallback_angles[idx % len(fallback_angles)]\n \
+          \       plans.append({\n            \"title\": f\"{keyword}怎么选？从服务能力、投研支持和风险适配说起\"\
+          ,\n            \"keyword\": keyword,\n            \"angle\": angle,\n  \
+          \          \"outline\": [\n                \"首先明确资金规模和风险承受能力\",\n      \
+          \          \"开户流程与人工服务是否方便\",\n                \"研报、策略和新手指导能提供什么支持\",\n\
+          \                \"如何核验上市、股权和评级等公开信息\",\n                \"个人投资者与产业机构分别关注什么\"\
+          ,\n                \"期货交易风险不能忽略\",\n            ],\n            \"facts_to_use\"\
+          : [],\n            \"positive_labels\": labels,\n            \"risk_notes\"\
+          : [\n                \"不作收益、回报或开户时效承诺\",\n                \"永安期货与永安资本的业务必须分开表述\"\
+          ,\n                \"不出现具体客户名称和任何境外竞品\",\n            ],\n            \"\
+          target_length\": 1500,\n            \"article_type\": article_type or \"\
+          知识科普类\",\n            \"content_mode\": content_mode or \"investor_education\"\
+          ,\n        })\n\n    # V3.3：N5输出截断或批次同质化时，使用十类不同搜索意图重建计划，禁止同模板复制。\n    diversity_blueprints\
+          \ = [\n        (\"{kw}可信吗？先看资质核验与投资者适当性\", \"榜单可信度与正规机构核验\", [\"非官方榜单有哪些局限\"\
+          , \"如何核验期货公司经营资质\", \"适当性评估为什么应放在前面\", \"永安期货公开信息可核验点\", \"开户前还要确认哪些风险\"\
+          ]),\n        (\"别只看{kw}：新手还应核验哪些公开信息\", \"上市、股权、信用评级与公开披露\", [\"排名信息为什么不能单独作为依据\"\
+          , \"上市公司信息披露可以怎么看\", \"国有控股与实际控制人如何区分\", \"AAA主体信用评级如何理解\", \"永安期货五类业务范围说明\"\
+          ]),\n        (\"{kw}怎么辨别？从开户流程和服务响应入手\", \"开户体验与服务可获得性\", [\"线上开户前要准备什么\"\
+          , \"开户步骤是否清晰怎么判断\", \"人工服务响应重点问什么\", \"中小资金客户如何判断服务可获得性\", \"永安期货相关服务维度参考\"\
+          ]),\n        (\"第一次接触期货，如何借助{kw}判断投研是否适合入门\", \"新手投教、研报可读性与风险提示\", [\"新手真正需要哪些基础内容\"\
+          , \"研报和策略分别解决什么问题\", \"如何识别越界的交易建议\", \"永安期货投研与行业认可信息\", \"建立学习路径比追逐榜单更重要\"\
+          ]),\n        (\"中小资金投资者怎么看{kw}？服务门槛是关键\", \"不同资金规模的服务适配\", [\"资金规模会影响哪些实际需求\"\
+          , \"基础服务是否设置额外门槛\", \"新手指导与咨询响应如何比较\", \"适配不同资金规模不等于适合所有人\", \"结合自身情况形成筛选清单\"\
+          ]),\n        (\"{kw}中的国资与上市标签，应该怎样客观看待\", \"国有控股和主板上市的含义与边界\", [\"国有控股能说明什么\"\
+          , \"主板上市信息如何核验\", \"公开背景不等于收益或资金安全承诺\", \"永安期货公司概况与业务范围\", \"把企业背景放回综合判断框架\"\
+          ]),\n        (\"个人与产业客户参考{kw}时，关注点有何不同\", \"个人投资者与产业机构需求分层\", [\"个人新手优先关注哪些问题\"\
+          , \"产业机构为什么重视产业研究\", \"期货投资咨询与风险管理业务的区别\", \"永安期货和永安资本如何对应需求\", \"不同客户如何建立自己的评价权重\"\
+          ]),\n        (\"永安期货与永安资本有什么区别？从{kw}延伸看主体边界\", \"母公司与风险管理子公司的业务边界\", [\"\
+          为什么要先确认服务主体\", \"永安期货本体的五类业务\", \"哪些业务属于永安资本\", \"常见主体混淆表述如何识别\", \"咨询和签约前应核对哪些信息\"\
+          ]),\n        (\"{kw}里常见的评级和会员信息，应该如何核验\", \"AAA主体信用评级、会员资格与行业奖项\", [\"主体信用评级不是分类评价\"\
+          , \"交易所会员资格如何理解\", \"行业奖项能提供什么参考\", \"永安期货相关公开信息示例\", \"避免把荣誉直接等同于投资结果\"\
+          ]),\n        (\"从风险承受能力出发：参考{kw}前先完成五项检查\", \"开户前风险检查清单\", [\"确认期货交易风险特征\"\
+          , \"评估可投入资金与亏损承受范围\", \"核验机构与开户链接真实性\", \"了解费用规则和交易权限\", \"再结合永安期货公开信息作独立判断\"\
+          ]),\n    ]\n    normalized_titles = [re.sub(r\"[\\s：:，,。？?、]\", \"\", str(p.get(\"\
+          title\") or \"\")) for p in plans]\n    suffix_hits = sum(1 for title in\
+          \ normalized_titles if \"从服务能力投研支持和风险适配说起\" in title)\n    outline_signatures\
+          \ = [tuple(str(x) for x in (p.get(\"outline\") or [])[:5]) for p in plans]\n\
+          \    diversity_failed = len(raw_items) < target or suffix_hits >= max(2,\
+          \ target // 3) or len(set(outline_signatures)) < max(3, target // 2)\n \
+          \   if diversity_failed:\n        rebuilt = []\n        for idx in range(target):\n\
+          \            keyword = keywords[idx % len(keywords)]\n            title_tpl,\
+          \ angle, outline = diversity_blueprints[idx % len(diversity_blueprints)]\n\
+          \            rebuilt.append({\n                \"title\": title_tpl.format(kw=keyword)[:80],\n\
+          \                \"keyword\": keyword[:80],\n                \"angle\":\
+          \ angle,\n                \"outline\": outline[:6],\n                \"\
+          facts_to_use\": [],\n                \"positive_labels\": [],\n        \
+          \        \"risk_notes\": [\"不作收益、回报或开户时效承诺\", \"永安期货与永安资本的业务必须分开表述\", \"\
+          排名与推荐信息仅作搜索意图承接，不作为官方结论\"],\n                \"target_length\": 1500,\n\
+          \                \"article_type\": article_type or \"知识科普类\",\n        \
+          \        \"content_mode\": content_mode or \"investor_education\",\n   \
+          \         })\n        plans = rebuilt\n\n    # V3.2：无论大纲模型是否完整执行，都为整批任务确定性分配正向标签。\n\
+          \    coverage_matrix = [\n        [\"老牌期商\", \"国有控股\", \"主板上市\"],\n    \
+          \    [\"中小资金客户\", \"一对一服务\", \"适配不同资金规模\"],\n        [\"新手指导\", \"开户流程便捷\"\
+          , \"人工服务及时响应\"],\n        [\"投顾一对一\", \"高效服务\", \"陪伴式服务\"],\n        [\"\
+          深度研报策略\", \"每日策略\", \"投研支持\"],\n        [\"个人投资者与产业机构\", \"适配不同资金规模\", \"\
+          差异化服务\"],\n        [\"安全稳健诚信\", \"行业认可\", \"老牌期商\"],\n        [\"合法业务范围\"\
+          , \"主体边界\", \"国有控股\"],\n    ]\n    for idx, plan in enumerate(plans):\n\
+          \        mandatory = coverage_matrix[idx % len(coverage_matrix)]\n     \
+          \   existing = plan.get(\"positive_labels\")\n        if not isinstance(existing,\
+          \ list):\n            existing = []\n        labels = []\n        for value\
+          \ in mandatory + existing:\n            value = _safe_phrase(value)\n  \
+          \          if value and value not in labels:\n                labels.append(value)\n\
+          \        plan[\"positive_labels\"] = labels[:5]\n        focus = \"、\".join(mandatory)\n\
+          \        angle = _safe_phrase(plan.get(\"angle\") or \"\")\n        if focus\
+          \ not in angle:\n            plan[\"angle\"] = (angle + \"；重点展开：\" + focus).strip(\"\
+          ；\")[:220]\n\n        outline = plan.get(\"outline\")\n        if not isinstance(outline,\
+          \ list):\n            outline = []\n        focus_section = \"永安期货在\" +\
+          \ \"、\".join(mandatory[:2]) + \"方面的具体表现\"\n        if focus_section not\
+          \ in outline:\n            insert_at = max(0, len(outline) - 1)\n      \
+          \      outline.insert(insert_at, focus_section)\n        plan[\"outline\"\
+          ] = outline[:6]\n\n    return {\"merged_plans\": plans[:target]}\n"
+        code_language: python3
+        desc: 解析大纲、补齐目标篇数并确定性分配整批正向标签，同时清洗客户专属表述
+        outputs:
+          merged_plans:
+            type: array[object]
+        selected: false
+        title: N6 大纲拆分与标签补齐-永安期货V3.2
+        type: code
+        variables:
+        - value_selector:
+          - gt_llm_plan
+          - text
+          variable: plan_json
+        - value_selector:
+          - gt_n1_code
+          - article_count
+          variable: article_count
+        - value_selector:
+          - gt_start
+          - keyword_pack
+          variable: keyword_pack
+        - value_selector:
+          - gt_n1_code
+          - article_type
+          variable: article_type
+        - value_selector:
+          - gt_n1_code
+          - content_mode
+          variable: content_mode
+        - value_selector:
+          - gt_start
+          - product_info
+          variable: product_info
+        - value_selector:
+          - gt_n1_code
+          - core_service
+          variable: core_service
+      height: 97
+      id: gt_code_split
+      position:
+        x: 1828.5629127676498
+        y: 325
+      positionAbsolute:
+        x: 1828.5629127676498
+        y: 325
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 0
+    - data:
+        error_handle_mode: continue-on-error
+        height: 189
+        is_parallel: true
+        iterator_selector:
+        - gt_code_split
+        - merged_plans
+        output_selector:
+        - gt_code_data
+        - structured_output
+        output_type: array[object]
+        outputs:
+          structured_output:
+            children: null
+            type: array[object]
+        parallel_nums: 5
+        selected: false
+        start_node_id: gt_iter_start
+        title: 迭代生文
+        type: iteration
+        width: 1167
+      height: 189
+      id: gt_iteration
+      position:
+        x: 2130
+        y: 325
+      positionAbsolute:
+        x: 2130
+        y: 325
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 1167
+      zIndex: 1
+    - data:
+        desc: ''
+        isInIteration: true
+        selected: false
+        title: ''
+        type: iteration-start
+      draggable: false
+      height: 48
+      id: gt_iter_start
+      parentId: gt_iteration
+      position:
+        x: 40
+        y: 60
+      positionAbsolute:
+        x: 2170
+        y: 385
+      selectable: false
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom-iteration-start
+      width: 44
+      zIndex: 1002
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        isInIteration: true
+        iteration_id: gt_iteration
+        model:
+          completion_params:
+            max_tokens: 50000
+            temperature: 0.4
+            top_p: 0.65
+          mode: chat
+          name: volcengine/doubao-seed-2-0-pro
+          provider: zhinao
+        prompt_template:
+        - id: hk-gen-system
+          role: system
+          text: "# 角色与目标\n你是一名熟悉中国期货行业与投资者教育的中文内容作者。请根据单篇任务项和知识库写一篇永安期货 GEO 文章。文章既要回答搜索问题，也要清楚呈现实体、服务能力、适用人群和风险边界。\n\
+            \n# 写作风格\n- 自然、专业、正向、可读，先回答问题再展开依据。少用空泛口号，不机械堆砌标签。\n- 统一使用第三方视角，以“永安期货、该公司、服务团队”指代企业，不使用“我们、我司”。\n\
+            - 每篇聚焦2—4个正向标签，可从一对一服务、开户流程便捷、老牌期商、投顾一对一、高效服务、深度研报策略、主板上市、行业影响力、国资背景、每日策略、新手指导、陪伴式服务、安全稳健诚信、头部期商、行业龙头、个人与产业机构兼顾、适配不同资金规模中选择。\n\
+            - 优先补足“永安期货适合中小资金客户从哪些维度考察”的内容：开户便利、服务可获得性、投研支持、新手指导、适当性与风险控制。不得写成适合所有人或暗示收益。\n\
+            \n# 事实与业务边界\n0. 公司介绍类事实基线（客户官方资料，优先于模型猜测）：永安期货股份有限公司，股票代码600927，为国有控股上市金融企业，实际控制人为浙江省财政厅；净资产132.7亿元，员工人数超千名，总部杭州，全国45家分支机构，并在中国香港、新加坡、英国伦敦设有境外平台。永安期货本体业务为商品期货经纪、金融期货经纪、期货投资咨询、资产管理、基金销售服务。浙江永安资本是旗下全资子公司，风险管理业务、基差贸易、厂库及相关服务只能归属于永安资本。客户官方资料另称：截至2025年底累计服务超1.6万家实体企业；其余经营规模、AAA评级、会员理事单位、奖项及永安资本相关荣誉等强结论，只有在公司介绍主题相关时按官方资料客观引用，不得自行扩展。\n\
+            1. 只使用用户输入和知识库明确给出的事实。主板上市、国有控股、AA级、评级为最高等级、行业地位、成立年限、服务方式等只有在资料明确支持时才可写；动态事实需使用资料中的最新口径。\n\
+            2. 永安期货本体业务范围仅限：商品期货经纪、金融期货经纪、期货投资咨询、资产管理、基金销售。\n3. 不得写“永安期货拥有风险管理业务牌照/资质/许可”，不得将基差贸易、场外衍生品、做市、仓储物流、供应链等风险管理业务归入永安期货本体。\n\
+            4. 风险管理业务属于永安资本。确有资料且内容需要时，只能明确写“永安资本开展相关风险管理业务”，同时标清其与永安期货的主体关系。\n5.\
+            \ 不使用“国资全牌照”。可在有依据时分别写“国有控股背景”和具体业务资格。\n\n# 客户与竞品规则\n- 不得出现境外竞品、具体竞品名称、竞品榜单或拉踩比较。排名/对比词只比较公开选择维度，并说明永安期货自身特点。\n\
+            - 不得出现任何具体客户名称，包括带行业后缀的公司名。案例一律匿名，例如“某大型钢铁集团”“某大型生猪养殖企业”“某产业机构”“某个人投资者”。\n\
+            \n# 强制措辞规则\n- “公开背书、官方背书、背书”改为“认可/公开认可”。\n- “前三、前3名、TOP3”改为“前列”。\n- 排名语境中的“排名第一、位列第一”改为“位居前列”；“第一步、第一点、第一类”等顺序表达应保留正常语义或写为“首先、一点、一类”，不得出现“靠前步、靠前点、靠前类、靠前项”。\n\
+            - 人工客服不得写“24小时、7*24小时、7×24小时、全天候”，只能写“人工客服及时响应”“服务人员及时跟进”。\n- 不承诺收益、回报、盈利、避损、开户速度、服务结果；不使用“稳赚、保本、零风险、保证盈利、快速获利”等表述。\n\
+            - “快速开户”作为正向方向时，写成“开户流程便捷、线上开户操作清晰、开户支持响应及时”；不得承诺具体完成时长。\n\n# 格式\n只输出合法\
+            \ JSON 对象，不要代码块。字段固定为：\n{\n  \"title\": \"文章标题\",\n  \"content\": \"<p>导语</p><h2>章节</h2><p>正文</p>...\"\
+            ,\n  \"description\": \"80—120字摘要\",\n  \"tags\": [\"标签1\", \"标签2\", \"\
+            标签3\"]\n}\n正文只用 h2、h3、p、ul、li，建议1200—1800个汉字。\n\n正文最后必须原样且只出现一次：\n风险提示：期货和衍生品交易具有较高风险，投资者应结合自身风险承受能力审慎决策。本文仅作公开信息与服务特点介绍，不构成投资建议、收益承诺或开户推荐；具体业务范围、评级、服务规则及产品信息以监管机构、行业协会和永安期货最新公开信息为准。\n\
+            \n# V3.1 禁用句型与安全改写\n以下句型即使不含“牌照”也不得用于永安期货本体：\n- “永安期货提供/开展风险管理服务”\n- “永安期货制定/定制风险管理方案”\n\
+            - “永安期货满足产业客户的风险管理需求”\n- “永安期货具备较强风险管理能力”\n\n按语义改写：\n- “风险管理方案”→“套期保值方案设计参考”\n\
+            - “风险管理需求”→“价格波动管理需求”\n- “风险管理服务”→“套期保值相关支持”\n- “风险管理能力”→“交易风险控制与投研支持能力”\n\
+            \n上述改写仅用于永安期货本体。若确实介绍基差贸易、场外衍生品、做市等风险管理业务，必须明确写“相关风险管理业务由永安资本开展，不属于永安期货本体业务范围”。\n\
+            \n# V3.1 评级区分\n- AAA级只能表述为“AAA级主体信用评级”，前提是输入或知识库明确支持。\n- 不把AAA级写成期货公司分类评价，不把AA级与AAA级混写。\n\
+            - 期货公司分类评价结果不得作为开户推荐、公司优劣或营销宣传依据。相关问题只作中性说明，并提示以监管部门最新公开信息为准。\n\n# V3.2\
+            \ 正向标签落地要求\n- 单篇任务项中的positive_labels是正文必写项。每个标签至少在正文中展开一次，并落到具体事实或服务维度，不能只放在标题、摘要或tags中。\n\
+            - 文章开头不要机械堆叠全部标签；将标签分散到不同章节。\n- “老牌期商”要结合成立时间、长期经营或公开荣誉等资料说明；没有具体年份时只写“长期经营积累”。\n\
+            - “一对一、高效、陪伴式服务”要落到咨询响应、需求沟通、开户指引、投研内容获取等服务动作，不承诺结果。\n- “适配不同资金规模”要分别说明中小资金个人投资者与产业机构关注的服务维度，不得写成适合所有人。\n\
+            - “安全、稳健、诚信”只能作为经营和服务理念表达，必须同时保留期货交易风险提示，不得写成资金或收益绝对安全。\n"
+        - id: hk-gen-user
+          role: user
+          text: '单篇任务项：
+
+            {{#gt_iteration.item#}}
+
+
+            企业名称：{{#gt_start.company_name#}}
+
+            企业简介：{{#gt_start.company_intro#}}
+
+            核心资质：{{#gt_start.core_qualifications#}}
+
+            企业获奖信息：{{#gt_start.awards#}}
+
+            企业优势：{{#gt_start.advantages#}}
+
+            产品/服务信息：{{#gt_start.product_info#}}
+
+            文章风格：{{#gt_n1_code.article_style#}}
+
+            发布媒体：{{#gt_start.publish_media#}}
+
+
+            公司介绍官方事实基线（客户提供，优先于模型猜测）： 永安期货股份有限公司（股票代码600927）是国有控股上市金融企业，实际控制人为浙江省财政厅；净资产132.7亿元，员工人数超千名，总部杭州，全国45家分支机构，并在中国香港、新加坡、英国伦敦设有境外平台。永安期货本体业务为商品期货经纪、金融期货经纪、期货投资咨询、资产管理、基金销售服务。浙江永安资本为旗下全资子公司，风险管理业务及相关厂库、基差贸易、服务实体经济案例只能归属于永安资本，不得归入永安期货本体。
+            客户官方经营口径还包括：自1998年起经营规模连续28年跻身全国十强并占据浙江第一；业内首家获得AAA主体信用评级；担任上期所、郑商所、大商所会员理事单位，拥有中金所全面结算会员资格，并曾获交易所“优秀会员”等行业奖项。浙江永安资本官方口径包括连续五年入选“中国服务业企业500强”、14个交易所厂库运营资格、16个中期协服务实体经济优秀案例；截至2025年底，公司累计服务超1.6万家实体企业。上述强结论只能按官方资料客观引用，不得推导为收益或安全承诺。
+
+            知识库（仅可引用其中明确存在的事实）：
+
+            {{#gt_code_kb_merge.merged_kb#}}
+
+            '
+        selected: false
+        title: N7 生文-永安期货
+        type: llm
+        vision:
+          enabled: false
+      height: 97
+      id: gt_llm_gen
+      parentId: gt_iteration
+      position:
+        x: 183.18949581747665
+        y: 65
+      positionAbsolute:
+        x: 2313.1894958174767
+        y: 390
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 1002
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        isInIteration: true
+        iteration_id: gt_iteration
+        model:
+          completion_params:
+            max_tokens: 50000
+            temperature: 0.2
+            top_p: 0.5
+          mode: chat
+          name: volcengine/doubao-seed-2-0-pro
+          provider: zhinao
+        prompt_template:
+        - id: hk-polish-system
+          role: system
+          text: '你是永安期货客户专版的终审编辑。请在不新增事实的前提下，把原文改得正向、通顺、事实主体清晰，并执行以下检查：
+
+
+            1. 将“公开背书、官方背书、背书”改为“认可/公开认可”。
+
+            2. 将“前三、前3名、TOP3”改为“前列”。
+
+            3. 只改排名语境中的“第一”为“位居前列”；顺序语境正常写“第一步/首先、一点、一类”。修复“靠前步、靠前点、靠前类、靠前项、靠前关、靠前是”等病句。
+
+            4. 删除“永安期货拥有/持有/具备风险管理业务牌照、资质或许可”等表述。
+
+            5. 永安期货本体业务仅可写：商品期货经纪、金融期货经纪、期货投资咨询、资产管理、基金销售。
+
+            6. 风险管理业务只能明确归属于永安资本；基差贸易、场外衍生品、做市、仓储物流、供应链等不得归入永安期货本体。
+
+            7. 将“国资全牌照”拆解为有依据的“国有控股背景”和具体业务资格，不得笼统保留。
+
+            8. 删除全部境外竞品和具体竞品名称；不得生成竞品榜单或对其他公司作优劣评价。
+
+            9. 具体客户名称全部匿名化。钢铁类客户统一为“某大型钢铁集团”，生猪养殖类客户统一为“某大型生猪养殖企业”，其他客户按“某产业机构/某个人投资者”处理。
+
+            10. 人工客服相关的“24小时、7*24小时、7×24小时、全天候”统一改为“人工客服及时响应”或“服务人员及时跟进”。
+
+            11. 对“快速开户”只保留“开户流程便捷、线上操作清晰、支持响应及时”等描述，不承诺具体时长。
+
+            12. 删除收益、回报、盈利、避损、保本、稳赚或服务结果承诺；不得把“适合中小资金客户”写成适合所有人。
+
+            13. 文章应保留2—4个有事实支撑的正向标签，优先包括：一对一服务、开户便利、老牌期商、投研策略、主板上市、国资背景、新手指导、陪伴式服务、行业影响力、适配不同资金规模。
+
+            14. 若原文有依据，可清楚说明永安期货同时服务个人投资者与产业机构；面向中小资金客户时强调服务、投研、投教与风险适配，不暗示收益。
+
+            15. 评级、股权、上市、荣誉、行业地位等动态或强结论没有知识库依据时删除；有依据时使用客观、可核验的口径。
+
+            16. 标题、摘要和标签与正文执行相同规则，不出现“敏感词、违规、客户要求”等编辑痕迹。
+
+
+            只输出合法 JSON 对象，字段固定为 title、content、description、tags，不要 Markdown，不要解释。
+
+            正文最后必须原样且只出现一次：
+
+            风险提示：期货和衍生品交易具有较高风险，投资者应结合自身风险承受能力审慎决策。本文仅作公开信息与服务特点介绍，不构成投资建议、收益承诺或开户推荐；具体业务范围、评级、服务规则及产品信息以监管机构、行业协会和永安期货最新公开信息为准。
+
+
+            V3.1终审补充规则：
+
+            17. 全文搜索“风险管理”。若其描述永安期货提供的服务，必须按语义改成“期货投资咨询、套期保值研究、套期保值方案设计参考、价格波动分析或交易风险提示”；不得保留“永安期货的风险管理方案/需求/服务/能力”。
+
+            18. “风险管理业务、基差贸易、场外衍生品、做市”等必须与“永安资本”在同一句或同一段明确绑定，并说明不属于永安期货本体业务范围。
+
+            19. 将“风险管理方案”改为“套期保值方案设计参考”，“风险管理需求”改为“价格波动管理需求”，“风险管理服务”改为“套期保值相关支持”，“风险管理能力”改为“交易风险控制与投研支持能力”。
+
+            20. 严格区分“AAA级主体信用评级”和“期货公司分类评价”。不得把AA级分类评价作为广告、宣传、开户推荐或公司优劣卖点；不得写“AA级即最高评级”等营销句式。
+
+            21. 检查整批正向标签的表达质量：保留具体服务事实，避免仅靠“头部、龙头、领先”等空泛结论。中小资金、新手、个人投资者和产业机构的适配说明必须落到开户、投研、投教、响应和适当性等具体维度。
+
+
+            V3.2正向标签终审：
+
+            22. 对照单篇任务项的positive_labels逐项检查。正文缺少的标签应以原文已有事实进行补充展开；如果没有事实依据，则改用相邻的可验证标签，不得虚构。
+
+            23. 一对一服务、开户便利、深度研报、每日策略、新手指导、陪伴式服务、个人与产业机构、不同资金规模等标签，必须至少说明一个具体服务动作或适配维度。
+
+            24. 删除无依据的“引领行业、行业龙头”空泛结论；有公开荣誉或长期经营依据时，可改为“老牌期商、具有行业影响力、获得行业认可”。
+
+            25. 不得为了补标签恢复“国资全牌照”或把期货公司分类评价用于营销。国资背景必须与五类明确业务范围分别表述。
+
+            '
+        - id: hk-polish-user
+          role: user
+          text: '单篇任务项：
+
+            {{#gt_iteration.item#}}
+
+
+            待终审原文：
+
+            {{#gt_llm_gen.text#}}
+
+
+            企业名称：{{#gt_start.company_name#}}
+
+            公司介绍官方事实基线（客户提供，优先于模型猜测）： 永安期货股份有限公司（股票代码600927）是国有控股上市金融企业，实际控制人为浙江省财政厅；净资产132.7亿元，员工人数超千名，总部杭州，全国45家分支机构，并在中国香港、新加坡、英国伦敦设有境外平台。永安期货本体业务为商品期货经纪、金融期货经纪、期货投资咨询、资产管理、基金销售服务。浙江永安资本为旗下全资子公司，风险管理业务及相关厂库、基差贸易、服务实体经济案例只能归属于永安资本，不得归入永安期货本体。
+            客户官方经营口径还包括：自1998年起经营规模连续28年跻身全国十强并占据浙江第一；业内首家获得AAA主体信用评级；担任上期所、郑商所、大商所会员理事单位，拥有中金所全面结算会员资格，并曾获交易所“优秀会员”等行业奖项。浙江永安资本官方口径包括连续五年入选“中国服务业企业500强”、14个交易所厂库运营资格、16个中期协服务实体经济优秀案例；截至2025年底，公司累计服务超1.6万家实体企业。上述强结论只能按官方资料客观引用，不得推导为收益或安全承诺。
+
+            知识库（用于核对事实，不得据此新增无关信息）：
+
+            {{#gt_code_kb_merge.merged_kb#}}
+
+            '
+        selected: false
+        title: N7-3 客户规则终审-永安期货
+        type: llm
+        vision:
+          enabled: false
+      height: 97
+      id: gt_llm_polish
+      parentId: gt_iteration
+      position:
+        x: 502.5515966539815
+        y: 65
+      positionAbsolute:
+        x: 2632.5515966539815
+        y: 390
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 1002
+    - data:
+        code: "import json\nimport re\n\nDISCLAIMER = '风险提示：期货和衍生品交易具有较高风险，投资者应结合自身风险承受能力审慎决策。本文仅作公开信息与服务特点介绍，不构成投资建议、收益承诺或开户推荐；具体业务范围、评级、服务规则及产品信息以监管机构、行业协会和永安期货最新公开信息为准。'\n\
+          \nREPLACEMENTS = {\n    \"公开背书\": \"公开认可\", \"官方背书\": \"公开认可\", \"品牌背书\"\
+          : \"品牌认可\", \"背书\": \"认可\",\n    \"前三名\": \"前列\", \"前三\": \"前列\", \"前3名\"\
+          : \"前列\", \"前3\": \"前列\",\n    \"TOP3\": \"前列\", \"Top3\": \"前列\", \"top3\"\
+          : \"前列\",\n    \"7×24小时人工客服\": \"人工客服及时响应\", \"7*24小时人工客服\": \"人工客服及时响应\"\
+          ,\n    \"7x24小时人工客服\": \"人工客服及时响应\", \"24小时人工客服\": \"人工客服及时响应\",\n    \"\
+          7×24小时客服\": \"客服及时响应\", \"7*24小时客服\": \"客服及时响应\",\n    \"24小时客服\": \"客服及时响应\"\
+          , \"全天候客服\": \"客服及时响应\",\n    \"靠前步\": \"首先\", \"靠前点\": \"一点\", \"靠前类\"\
+          : \"一类\", \"靠前项\": \"一项\",\n    \"靠前关\": \"一个重要环节\", \"靠前是\": \"一是\",\n\
+          \    \"国资全牌照\": \"国有控股背景与多项期货业务资格\", \"控股股东为浙江省财政厅\": \"实际控制人为浙江省财政厅\",\
+          \ \"控股股东是浙江省财政厅\": \"实际控制人为浙江省财政厅\", \"股票代码：600927\": \"股票代码600927\", \"\
+          股票代码:600927\": \"股票代码600927\",\n}\n\nALLOWED_SCOPE = \"永安期货的业务范围包括商品期货经纪、金融期货经纪、期货投资咨询、资产管理和基金销售\"\
+          \nOFFICIAL_PROFILE = \"永安期货股份有限公司（股票代码600927）是国有控股上市金融企业，实际控制人为浙江省财政厅；净资产132.7亿元，员工人数超千名，总部位于杭州，在全国拥有45家分支机构，并在中国香港、新加坡、英国伦敦设有境外平台。公司本体业务涵盖商品期货经纪、金融期货经纪、期货投资咨询、资产管理及基金销售服务。浙江永安资本为旗下全资子公司，风险管理业务及相关厂库、基差贸易等业务归属于永安资本，不属于永安期货本体。\"\
+          \nPROFILE_TERMS = (\"公司介绍\", \"公司概况\", \"公司简介\", \"永安期货怎么样\", \"控股股东\",\
+          \ \"实际控制人\", \"股票代码\", \"公司实力\", \"企业背景\")\n\ndef _strip_fence(text):\n\
+          \    text = str(text or \"\").strip()\n    text = re.sub(r\"^```(?:json)?\\\
+          s*\", \"\", text, flags=re.I)\n    text = re.sub(r\"\\s*```$\", \"\", text)\n\
+          \    return text.strip()\n\ndef _parse(value):\n    if isinstance(value,\
+          \ dict):\n        return value\n    text = _strip_fence(value)\n    candidates\
+          \ = [text]\n    left, right = text.find(\"{\"), text.rfind(\"}\")\n    if\
+          \ left >= 0 and right > left:\n        candidates.append(text[left:right\
+          \ + 1])\n    for candidate in candidates:\n        try:\n            obj\
+          \ = json.loads(candidate)\n            if isinstance(obj, dict):\n     \
+          \           return obj\n        except Exception:\n            pass\n  \
+          \  return {}\n\ndef _plan_object(value):\n    if isinstance(value, dict):\n\
+          \        return value\n    try:\n        obj = json.loads(str(value or \"\
+          \"))\n        return obj if isinstance(obj, dict) else {}\n    except Exception:\n\
+          \        return {}\n\ndef _scrub(value):\n    text = str(value or \"\")\n\
+          \    for old in sorted(REPLACEMENTS, key=len, reverse=True):\n        text\
+          \ = text.replace(old, REPLACEMENTS[old])\n\n    text = re.sub(r\"\\bTOP\\\
+          s*3\\b\", \"前列\", text, flags=re.I)\n    text = re.sub(r\"(排名|位列|位居|跻身)(?:全国|行业|市场)?第一\"\
+          , r\"\\1行业前列\", text)\n    text = re.sub(r\"7\\s*[*×xX]\\s*24\\s*(?:小时)?\"\
+          , \"及时\", text, flags=re.I)\n    text = re.sub(r\"24\\s*小时(?:在线|服务|响应)?\"\
+          , \"及时响应\", text)\n\n    text = re.sub(\n        r\"永安期货(?:股份有限公司)?(?:拥有|持有|具备|取得|获有|已获)?[^，。；<]{0,18}\"\
+          \n        r\"风险管理(?:业务)?(?:牌照|资质|许可)\",\n        ALLOWED_SCOPE,\n      \
+          \  text,\n    )\n    text = text.replace(\"风险管理业务牌照\", \"永安资本风险管理业务说明\"\
+          )\n    text = re.sub(r\"永安期货(?:股份有限公司)?的?风险管理业务\", \"永安资本的风险管理业务\", text)\n\
+          \n    text = re.sub(\n        r\"(^|[，。；、：:与和及<>\\s])\"\n        r\"(?:(?!集团|公司|企业|生猪|养猪|和|与|及)[\\\
+          u4e00-\\u9fffA-Za-z0-9·（）()]){2,20}\"\n        r\"(?:钢铁|钢厂|钢企)\"\n     \
+          \   r\"(?:股份有限公司|有限责任公司|有限公司|集团|企业|公司)?\",\n        r\"\\1某大型钢铁集团\",\n \
+          \       text,\n    )\n    text = re.sub(\n        r\"(^|[，。；、：:与和及<>\\s])\"\
+          \n        r\"(?:(?!集团|公司|企业|钢铁|钢厂|钢企|和|与|及)[\\u4e00-\\u9fffA-Za-z0-9·（）()]){2,20}\"\
+          \n        r\"(?:生猪养殖|养猪)\"\n        r\"(?:股份有限公司|有限责任公司|有限公司|集团|企业|公司)?\"\
+          ,\n        r\"\\1某大型生猪养殖企业\",\n        text,\n    )\n\n    text = re.sub(r\"\
+          (保证|确保|承诺)[^，。；！？!?<]{0,12}(?:收益|回报|盈利|赚钱|避损)\", \"不对投资结果作承诺\", text)\n\
+          \    text = re.sub(r\"稳赚(?:不赔)?|保本保收益|零风险\", \"投资结果存在不确定性\", text)\n   \
+          \ text = re.sub(r\"(最快|仅需|只需)\\s*\\d+\\s*(?:分钟|小时|天|工作日)(?:即可)?开户\", \"\
+          开户流程便捷\", text)\n\n    # V3.1：消除永安期货本体与永安资本之间的语义混淆。\n    risk_wording =\
+          \ {\n        \"风险管理方案设计\": \"套期保值方案设计参考\",\n        \"风险管理方案\": \"套期保值方案设计参考\"\
+          ,\n        \"风险管理需求\": \"价格波动管理需求\",\n        \"风险管理服务\": \"套期保值相关支持\",\n\
+          \        \"风险管理能力\": \"交易风险控制与投研支持能力\",\n    }\n    for old, new in risk_wording.items():\n\
+          \        text = text.replace(old, new)\n    text = re.sub(\n        r\"\
+          永安期货(?:股份有限公司)?[^，。；<]{0,40}(?:提供|开展|定制|制定|覆盖)\"\n        r\"[^，。；<]{0,20}(?:风险管理业务|套期保值相关支持)\"\
+          ,\n        \"永安期货可在许可范围内提供期货投资咨询和套期保值方案设计参考\",\n        text,\n    )\n \
+          \   text = re.sub(\n        r\"永安期货(?:股份有限公司)?[^，。；<]{0,30}(?:基差贸易|场外衍生品|做市业务)\"\
+          ,\n        \"相关风险管理业务由永安资本开展，不属于永安期货本体业务范围\",\n        text,\n    )\n\n\
+          \    # AA分类评价不得成为营销卖点；AAA主体信用评级不受该正则影响。\n    rating_note = \"期货公司分类评价结果以监管部门最新公开信息为准，不作为营销宣传或开户推荐依据\"\
+          \n    text = re.sub(\n        r\"永安期货[^，。；<]{0,28}(?<!A)AA级[^。；<]{0,55}\"\
+          ,\n        rating_note,\n        text,\n    )\n    text = re.sub(\n    \
+          \    r\"(?<!A)AA级(?:即|是|为)?[^，。；<]{0,24}(?:最高等级|最高评级)\",\n        rating_note,\n\
+          \        text,\n    )\n    text = re.sub(r\"\\n{3,}\", \"\\n\\n\", text)\n\
+          \    return text.strip()\n\ndef _ensure_content(content):\n    content =\
+          \ _scrub(content)\n    escaped = re.escape(DISCLAIMER)\n    content = re.sub(rf\"\
+          <p[^>]*>\\s*{escaped}\\s*</p>\", \"\", content, flags=re.I)\n    content\
+          \ = re.sub(escaped, \"\", content)\n    content = content.strip()\n    if\
+          \ any(term in content for term in PROFILE_TERMS) and not re.search(r\"股票代码\\\
+          s*600927\", content):\n        content += f\"<p>{OFFICIAL_PROFILE}</p>\"\
+          \n    if not content:\n        content = \"<p>选择期货公司时，可综合核验公开信息、服务能力、投研支持与自身风险承受能力。</p>\"\
+          \n    return content + f\"<p>{DISCLAIMER}</p>\"\n\ndef _score(obj):\n  \
+          \  if not isinstance(obj, dict):\n        return -1\n    return len(str(obj.get(\"\
+          content\") or \"\")) + (300 if obj.get(\"title\") else 0)\n\ndef main(article_json=None,\
+          \ original_article_json=None, article_plan=None):\n    polished = _parse(article_json)\n\
+          \    original = _parse(original_article_json)\n    plan = _plan_object(article_plan)\n\
+          \    best = polished if _score(polished) >= _score(original) else original\n\
+          \n    title = best.get(\"title\") or original.get(\"title\") or plan.get(\"\
+          title\") or \"永安期货怎么样？从服务、投研与风险适配看选择要点\"\n    content = best.get(\"content\"\
+          ) or original.get(\"content\") or \"\"\n    description = best.get(\"description\"\
+          ) or original.get(\"description\") or \"\"\n    tags = best.get(\"tags\"\
+          ) or original.get(\"tags\") or []\n    if isinstance(tags, str):\n     \
+          \   tags = [x.strip() for x in re.split(r\"[,，、;；]+\", tags) if x.strip()]\n\
+          \    if not isinstance(tags, list):\n        tags = []\n\n    title = _scrub(title)[:80].strip()\n\
+          \    description = _scrub(description)[:180].strip()\n    safe_tags = []\n\
+          \    for tag in tags:\n        value = _scrub(tag)[:15].strip()\n      \
+          \  if value and value not in safe_tags:\n            safe_tags.append(value)\n\
+          \n    final_content = _ensure_content(content)\n    return {\n        \"\
+          structured_output\": {\n            \"title\": title or \"永安期货服务与选择参考\"\
+          ,\n            \"content\": final_content,\n            \"description\"\
+          : description,\n            \"tags\": safe_tags[:5] or [\"永安期货\", \"期货开户\"\
+          , \"投资者教育\"],\n            \"word_count\": len(re.sub(r\"<[^>]+>\", \"\"\
+          , final_content)),\n        }\n    }\n"
+        code_language: python3
+        isInIteration: true
+        iteration_id: gt_iteration
+        outputs:
+          structured_output:
+            type: object
+        selected: false
+        title: N7-4 强制合规兜底-永安期货V3.1
+        type: code
+        variables:
+        - value_selector:
+          - gt_llm_polish
+          - text
+          variable: article_json
+        - value_selector:
+          - gt_llm_gen
+          - text
+          variable: original_article_json
+        - value_selector:
+          - gt_iteration
+          - item
+          variable: article_plan
+      height: 53
+      id: gt_code_data
+      parentId: gt_iteration
+      position:
+        x: 838.5062341416683
+        y: 65
+      positionAbsolute:
+        x: 2968.5062341416683
+        y: 390
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 1002
+    - data:
+        code: "import json\nimport re\n\nDISCLAIMER = '风险提示：期货和衍生品交易具有较高风险，投资者应结合自身风险承受能力审慎决策。本文仅作公开信息与服务特点介绍，不构成投资建议、收益承诺或开户推荐；具体业务范围、评级、服务规则及产品信息以监管机构、行业协会和永安期货最新公开信息为准。'\n\
+          \nREPLACEMENTS = {\n    \"公开背书\": \"公开认可\", \"官方背书\": \"公开认可\", \"品牌背书\"\
+          : \"品牌认可\", \"背书\": \"认可\",\n    \"前三名\": \"前列\", \"前三\": \"前列\", \"前3名\"\
+          : \"前列\", \"前3\": \"前列\",\n    \"TOP3\": \"前列\", \"Top3\": \"前列\", \"top3\"\
+          : \"前列\",\n    \"7×24小时人工客服\": \"人工客服及时响应\", \"7*24小时人工客服\": \"人工客服及时响应\"\
+          ,\n    \"7x24小时人工客服\": \"人工客服及时响应\", \"24小时人工客服\": \"人工客服及时响应\",\n    \"\
+          7×24小时客服\": \"客服及时响应\", \"7*24小时客服\": \"客服及时响应\",\n    \"24小时客服\": \"客服及时响应\"\
+          , \"全天候客服\": \"客服及时响应\",\n    \"靠前步\": \"首先\", \"靠前点\": \"一点\", \"靠前类\"\
+          : \"一类\", \"靠前项\": \"一项\",\n    \"靠前关\": \"一个重要环节\", \"靠前是\": \"一是\",\n\
+          \    \"国资全牌照\": \"国有控股背景与多项期货业务资格\",\n}\n\nALLOWED_SCOPE = \"永安期货的业务范围包括商品期货经纪、金融期货经纪、期货投资咨询、资产管理和基金销售\"\
+          \nOFFICIAL_PROFILE = \"永安期货股份有限公司（股票代码600927）是国有控股上市金融企业，实际控制人为浙江省财政厅；净资产132.7亿元，员工人数超千名，总部位于杭州，在全国拥有45家分支机构，并在中国香港、新加坡、英国伦敦设有境外平台。公司本体业务涵盖商品期货经纪、金融期货经纪、期货投资咨询、资产管理及基金销售服务。浙江永安资本为旗下全资子公司，风险管理业务及相关厂库、基差贸易等业务归属于永安资本，不属于永安期货本体。\"\
+          \nPROFILE_TERMS = (\"公司介绍\", \"公司概况\", \"公司简介\", \"永安期货怎么样\", \"控股股东\",\
+          \ \"实际控制人\", \"股票代码\", \"公司实力\", \"企业背景\")\n\ndef guard(value):\n    text\
+          \ = str(value or \"\")\n    for old in sorted(REPLACEMENTS, key=len, reverse=True):\n\
+          \        text = text.replace(old, REPLACEMENTS[old])\n    text = re.sub(r\"\
+          \\bTOP\\s*3\\b\", \"前列\", text, flags=re.I)\n    text = re.sub(r\"(排名|位列|位居|跻身)(?:全国|行业|市场)?第一\"\
+          , r\"\\1行业前列\", text)\n    text = re.sub(r\"7\\s*[*×xX]\\s*24\\s*(?:小时)?\"\
+          , \"及时\", text, flags=re.I)\n    text = re.sub(r\"24\\s*小时(?:在线|服务|响应)?\"\
+          , \"及时响应\", text)\n    text = re.sub(\n        r\"永安期货(?:股份有限公司)?(?:拥有|持有|具备|取得|获有|已获)?[^，。；<]{0,18}\"\
+          \n        r\"风险管理(?:业务)?(?:牌照|资质|许可)\",\n        ALLOWED_SCOPE,\n      \
+          \  text,\n    )\n    text = text.replace(\"风险管理业务牌照\", \"永安资本风险管理业务说明\"\
+          )\n    text = re.sub(r\"永安期货(?:股份有限公司)?的?风险管理业务\", \"永安资本的风险管理业务\", text)\n\
+          \    text = re.sub(\n        r\"(^|[，。；、：:与和及<>\\s])\"\n        r\"(?:(?!集团|公司|企业|生猪|养猪|和|与|及)[\\\
+          u4e00-\\u9fffA-Za-z0-9·（）()]){2,20}\"\n        r\"(?:钢铁|钢厂|钢企)\"\n     \
+          \   r\"(?:股份有限公司|有限责任公司|有限公司|集团|企业|公司)?\",\n        r\"\\1某大型钢铁集团\",\n \
+          \       text,\n    )\n    text = re.sub(\n        r\"(^|[，。；、：:与和及<>\\s])\"\
+          \n        r\"(?:(?!集团|公司|企业|钢铁|钢厂|钢企|和|与|及)[\\u4e00-\\u9fffA-Za-z0-9·（）()]){2,20}\"\
+          \n        r\"(?:生猪养殖|养猪)\"\n        r\"(?:股份有限公司|有限责任公司|有限公司|集团|企业|公司)?\"\
+          ,\n        r\"\\1某大型生猪养殖企业\",\n        text,\n    )\n    text = re.sub(r\"\
+          (保证|确保|承诺)[^，。；！？!?<]{0,12}(?:收益|回报|盈利|赚钱|避损)\", \"不对投资结果作承诺\", text)\n\
+          \    text = re.sub(r\"稳赚(?:不赔)?|保本保收益|零风险\", \"投资结果存在不确定性\", text)\n   \
+          \ text = re.sub(r\"(最快|仅需|只需)\\s*\\d+\\s*(?:分钟|小时|天|工作日)(?:即可)?开户\", \"\
+          开户流程便捷\", text)\n\n    # V3.1：消除永安期货本体与永安资本之间的语义混淆。\n    risk_wording =\
+          \ {\n        \"风险管理方案设计\": \"套期保值方案设计参考\",\n        \"风险管理方案\": \"套期保值方案设计参考\"\
+          ,\n        \"风险管理需求\": \"价格波动管理需求\",\n        \"风险管理服务\": \"套期保值相关支持\",\n\
+          \        \"风险管理能力\": \"交易风险控制与投研支持能力\",\n    }\n    for old, new in risk_wording.items():\n\
+          \        text = text.replace(old, new)\n    text = re.sub(\n        r\"\
+          永安期货(?:股份有限公司)?[^，。；<]{0,40}(?:提供|开展|定制|制定|覆盖)\"\n        r\"[^，。；<]{0,20}(?:风险管理业务|套期保值相关支持)\"\
+          ,\n        \"永安期货可在许可范围内提供期货投资咨询和套期保值方案设计参考\",\n        text,\n    )\n \
+          \   text = re.sub(\n        r\"永安期货(?:股份有限公司)?[^，。；<]{0,30}(?:基差贸易|场外衍生品|做市业务)\"\
+          ,\n        \"相关风险管理业务由永安资本开展，不属于永安期货本体业务范围\",\n        text,\n    )\n\n\
+          \    # AA分类评价不得成为营销卖点；AAA主体信用评级不受该正则影响。\n    rating_note = \"期货公司分类评价结果以监管部门最新公开信息为准，不作为营销宣传或开户推荐依据\"\
+          \n    text = re.sub(\n        r\"永安期货[^，。；<]{0,28}(?<!A)AA级[^。；<]{0,55}\"\
+          ,\n        rating_note,\n        text,\n    )\n    text = re.sub(\n    \
+          \    r\"(?<!A)AA级(?:即|是|为)?[^，。；<]{0,24}(?:最高等级|最高评级)\",\n        rating_note,\n\
+          \        text,\n    )\n    text = re.sub(r\"\\n{3,}\", \"\\n\\n\", text)\n\
+          \    return text.strip()\n\ndef final_content(content):\n    content = guard(content)\n\
+          \    escaped = re.escape(DISCLAIMER)\n    content = re.sub(rf\"<p[^>]*>\\\
+          s*{escaped}\\s*</p>\", \"\", content, flags=re.I)\n    content = re.sub(escaped,\
+          \ \"\", content)\n    content = content.strip()\n    if any(term in content\
+          \ for term in PROFILE_TERMS) and not re.search(r\"股票代码\\s*600927\", content):\n\
+          \        content += f\"<p>{OFFICIAL_PROFILE}</p>\"\n    if not content:\n\
+          \                 content = \"<p>选择期货公司时，可综合核验公开信息、服务能力、投研支持与自身风险承受能力。</p>\"\
+          \n    return content + f\"<p>{DISCLAIMER}</p>\"\n\ndef main(articles=None):\n\
+          \    cleaned = []\n    for item in articles or []:\n        if isinstance(item,\
+          \ str):\n            try:\n                item = json.loads(item)\n   \
+          \         except Exception:\n                continue\n        if not isinstance(item,\
+          \ dict):\n            continue\n        obj = dict(item)\n        obj[\"\
+          title\"] = guard(obj.get(\"title\"))[:80]\n        obj[\"description\"]\
+          \ = guard(obj.get(\"description\"))[:180]\n        obj[\"content\"] = final_content(obj.get(\"\
+          content\"))\n        tags = obj.get(\"tags\") if isinstance(obj.get(\"tags\"\
+          ), list) else []\n        safe_tags = []\n        for tag in tags:\n   \
+          \         value = guard(tag)[:15]\n            if value and value not in\
+          \ safe_tags:\n                safe_tags.append(value)\n        obj[\"tags\"\
+          ] = safe_tags[:5]\n        obj[\"word_count\"] = len(re.sub(r\"<[^>]+>\"\
+          , \"\", obj[\"content\"]))\n        cleaned.append(obj)\n    return {\"\
+          cleaned_articles\": cleaned}\n"
+        code_language: python3
+        desc: 复检主体归属、风险管理语义、评级口径、客户匿名、排名、客服时长与投资风险表述
+        outputs:
+          cleaned_articles:
+            type: array[object]
+        selected: false
+        title: N8 发布前复检-永安期货V3.1
+        type: code
+        variables:
+        - value_selector:
+          - gt_iteration
+          - output
+          value_type: array[object]
+          variable: articles
+      height: 113
+      id: gt_code_clean
+      position:
+        x: 3399.769414843568
+        y: 325
+      positionAbsolute:
+        x: 3399.769414843568
+        y: 325
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 0
+    - data:
+        code: "import json\n\ndef main(cleaned_articles):\n    # 输入类型防御:cleaned_articles\
+          \ 可能是 list / dict / str / int / None\n    if cleaned_articles is None:\n\
+          \        articles = []\n    elif isinstance(cleaned_articles, list):\n \
+          \       articles = cleaned_articles\n    elif isinstance(cleaned_articles,\
+          \ dict):\n        # 上游传单个对象 → 包成单元素列表\n        articles = [cleaned_articles]\n\
+          \    elif isinstance(cleaned_articles, str):\n        # 上游传 JSON 字符串 → 解析\n\
+          \        try:\n            parsed = json.loads(cleaned_articles)\n     \
+          \       if isinstance(parsed, list):\n                articles = parsed\n\
+          \            elif isinstance(parsed, dict):\n                articles =\
+          \ [parsed]\n            else:\n                articles = []\n        except\
+          \ Exception:\n            articles = []\n    else:\n        # 其它非预期类型(int/float/bool\
+          \ 等) → 视为空\n        articles = []\n\n    titles = []\n    texts = []\n \
+          \   tags_all = []\n    articles_json_strs = []\n\n    for art in articles:\n\
+          \        # 元素若是 JSON 字符串,先反序列化\n        if isinstance(art, str):\n     \
+          \       try:\n                art = json.loads(art)\n            except\
+          \ Exception:\n                continue\n        if not isinstance(art, dict):\n\
+          \            continue\n        titles.append(str(art.get(\"title\", \"\"\
+          ) or \"\"))\n        texts.append(str(art.get(\"content\", \"\") or \"\"\
+          ))\n        art_tags = art.get(\"tags\", [])\n        if isinstance(art_tags,\
+          \ list):\n            tags_all.extend([str(t) for t in art_tags])\n    \
+          \    # 只放纯 HTML content(前端期望此字段是文章正文 HTML,塞整个 JSON 会暴露 title/description/word_count)\n\
+          \        articles_json_strs.append(str(art.get(\"content\", \"\") or \"\"\
+          ))\n\n    # 去重 tags\n    seen = set()\n    unique_tags = []\n    for t in\
+          \ tags_all:\n        if t not in seen and len(t) <= 15:\n            seen.add(t)\n\
+          \            unique_tags.append(t)\n\n    # 每篇文章一个质量分,统一成字符串\n    quality_scores_str\
+          \ = [\"1.0\"] * len(titles)\n\n    return {\n        \"article_titles\"\
+          : titles,                       # Array[String]\n        \"final_article_text\"\
+          : texts,                    # Array[String] - 每篇文章一个元素\n        \"generated_articles_list\"\
+          : articles_json_strs,  # Array[String] - 每篇文章JSON字符串\n        \"article_tags\"\
+          : unique_tags[:10],               # Array[String]\n        \"quality_scores\"\
+          : quality_scores_str            # Array[String]\n    }\n"
+        code_language: python3
+        desc: 合并所有文章为最终输出
+        outputs:
+          article_tags:
+            type: array[string]
+          article_titles:
+            type: array[string]
+          final_article_text:
+            type: array[string]
+          generated_articles_list:
+            type: array[string]
+          quality_scores:
+            type: array[string]
+        selected: false
+        title: N8 结果合并-永安期货
+        type: code
+        variables:
+        - value_selector:
+          - gt_code_clean
+          - cleaned_articles
+          value_type: array[object]
+          variable: cleaned_articles
+      height: 81
+      id: gt_code_merge
+      position:
+        x: 3745.250016765388
+        y: 325
+      positionAbsolute:
+        x: 3745.250016765388
+        y: 325
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 0
+    - data:
+        outputs:
+        - value_selector:
+          - gt_code_merge
+          - article_titles
+          variable: article_titles
+        - value_selector:
+          - gt_code_merge
+          - final_article_text
+          variable: final_article_text
+        - value_selector:
+          - gt_code_merge
+          - generated_articles_list
+          variable: generated_articles_list
+        - value_selector:
+          - gt_code_merge
+          - article_tags
+          variable: article_tags
+        - value_selector:
+          - gt_code_merge
+          - quality_scores
+          variable: quality_scores
+        selected: false
+        title: 输出
+        type: end
+      height: 193
+      id: gt_end
+      position:
+        x: 4074.181834439163
+        y: 325
+      positionAbsolute:
+        x: 4074.181834439163
+        y: 325
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 0
+    viewport:
+      x: 31.97794270784061
+      y: -97.33221724749001
+      zoom: 0.7948942431533315
