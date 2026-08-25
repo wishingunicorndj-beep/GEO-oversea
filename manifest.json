@@ -28,6 +28,13 @@
       "path": "workflows/geo-article.yml",
       "status": "current",
       "updated_at": "2026-08-20"
+    },
+    "yonganqihuo-article": {
+      "display_name": "永安期货定制文章生成工作流",
+      "version": "1.0.0",
+      "path": "workflows/yonganqihuo0825.yml",
+      "status": "current",
+      "updated_at": "2026-08-25"
     }
   }
 }
