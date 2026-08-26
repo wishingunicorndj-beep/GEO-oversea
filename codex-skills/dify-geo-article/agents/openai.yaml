@@ -1,0 +1,4 @@
+interface:
+  display_name: "海外GEO文章生成工作流"
+  short_description: "根据真实业务反馈排查定位并解决海外GEO文章生成问题"
+  default_prompt: "使用 $dify-geo-article 读取Git中的最新geo-overseas-article.yml，追踪首个异常节点并给出最小修复和验收标准。"

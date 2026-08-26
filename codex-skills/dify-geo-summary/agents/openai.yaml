@@ -1,0 +1,4 @@
+interface:
+  display_name: "海外GEO分析总结工作流"
+  short_description: "根据真实业务反馈排查定位并解决海外GEO分析总结问题"
+  default_prompt: "使用 $dify-geo-summary 读取Git中的最新geo-overseas-summary.yml，判断问题来自上游数据还是总结逻辑并给出最小修复。"

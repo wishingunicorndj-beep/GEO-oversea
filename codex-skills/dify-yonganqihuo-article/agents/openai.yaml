@@ -1,0 +1,4 @@
+interface:
+  display_name: "永安期货文章工作流"
+  short_description: "诊断并安全修改永安期货品牌定制的Dify文章生成工作流"
+  default_prompt: "读取Git中的最新永安期货文章工作流，从业务阶段定位问题，追踪首个异常节点并给出最小修复和验收标准。"

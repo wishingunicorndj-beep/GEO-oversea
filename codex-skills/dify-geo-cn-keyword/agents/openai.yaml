@@ -1,0 +1,4 @@
+interface:
+  display_name: "国内GEO关键词词包生成工作流"
+  short_description: "诊断并安全修改国内搜索词、问答词和品牌词生成工作流"
+  default_prompt: "使用 $dify-geo-cn-keyword 读取最新geo-cn-keyword.yml，定位国内关键词词包的首个异常节点并给出可验证的最小修复。"

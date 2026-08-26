@@ -1,0 +1,4 @@
+interface:
+  display_name: "海外GEO回答分析工作流"
+  short_description: "根据真实业务反馈排查定位并解决海外GEO回答分析问题"
+  default_prompt: "使用 $dify-geo-analysis 读取Git中的最新geo-overseas-analysis.yml，沿原文、提取、清洗和合并链路定位首个异常节点。"

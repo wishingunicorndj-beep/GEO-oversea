@@ -1,0 +1,4 @@
+interface:
+  display_name: "海外GEO品牌诊断Query工作流"
+  short_description: "根据业务反馈排查并解决海外GEO Query生成工作流问题"
+  default_prompt: "使用 $dify-geo-query 读取Git中的最新geo-overseas-query.yml，把业务反馈转成证据链并给出最小修复和验证方案。"
