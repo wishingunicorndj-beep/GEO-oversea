@@ -35,6 +35,13 @@
       "path": "workflows/yonganqihuo0825.yml",
       "status": "current",
       "updated_at": "2026-08-25"
+    },
+    "geo-cn-keyword": {
+      "display_name": "国内GEO生词生成工作流",
+      "version": "1.0.0",
+      "path": "workflows/GEO国内生词系统.yml",
+      "status": "current",
+      "updated_at": "2026-08-26"
     }
   }
 }
