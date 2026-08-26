@@ -1088,7 +1088,7 @@ workflow:
       positionAbsolute:
         x: 942
         y: 336
-      selected: false
+      selected: true
       sourcePosition: right
       targetPosition: left
       type: custom
@@ -1713,7 +1713,7 @@ workflow:
           \ %H:%M:%S'),\n                'updated_at': datetime.now().strftime('%Y-%m-%d\
           \ %H:%M:%S')\n            }\n\n            results.append(json.dumps(obj,\
           \ ensure_ascii=False))\n            query_texts.append(query.strip())\n\n\
-          \    # 数量校验\n    expected_count = 45\n    actual_count = len(results)\n\
+          \    # 数量校验\n    expected_count = 33\n    actual_count = len(results)\n\
           \    is_sufficient = \"1\" if actual_count >= expected_count else \"0\"\n\
           \    deficit = max(0, expected_count - actual_count)\n\n    # 已生成query文本列表（供补词LLM去重用）\n\
           \    existing_queries = '\\n'.join(query_texts)\n\n    return {\n      \
@@ -1782,7 +1782,7 @@ workflow:
             temperature: 0.2
             top_p: 0.7
           mode: chat
-          name: qwen/qwen3.7-plus
+          name: deepseek/deepseek-v4-flash
           provider: zhinao
         prompt_template:
         - id: 5ae4b46b-3a4d-440a-8c70-20765f332d82
@@ -1793,7 +1793,7 @@ workflow:
             Air Jordan\" 改为 \"AirJordan\" 或 \"Air  Jordan\"）\n   - 禁止增删标点（如 \"L'Oréal\"\
             \ 改为 \"L Oreal\"）\n   - 禁止繁简转换、全半角转换、中英互译\n   - 必须与输入字符串逐字符完全一致\n3. 竞品必须去重，绝对不能包含客户品牌（brand_name）\n\
             4. 所有竞品必须与客户品牌属于同一行业/品类，禁止跨行业推荐\n5. 补齐的竞品必须使用完整的官方品牌全称（即该品牌在其所属行业中最常被引用的完整名称，如\"\
-            黑系房车\"而非\"黑系\"，\"曼恩商用车\"而非\"曼恩\"），禁止使用可能导致歧义的简称或缩写\n6. 如果对某个竞品品牌的真实存在性存疑（无法提供其主营业务、代表产品等具体信息），宁可跳过不选，绝对不可虚构或猜测品牌名\n\
+            黑系房车\"而非\"黑系\"，\"曼恩商用车\"而非\"曼恩\"），禁止使用可能导致歧义的简称或缩写\n6. 如果对某个竞品品牌的真实性存疑，必须跳过该候选，并继续从同一细分赛道中选择其他真实、公开知名且可验证的品牌补齐；不得因单个候选存疑而减少竞品数量。补选品牌必须能够说明主营业务、代表产品和与客户品牌的相关性，禁止虚构、猜测、跨赛道或使用客户品牌凑数。\n\
             7. comps_list字段的品牌分隔符规则——必须严格遵守，禁止自行判断：\n   - 分隔符仅为：英文逗号\",\"和中文顿号\"、\"\
             \n   - 非分隔符（必须视为同一个品牌名的组成部分）：斜杠\"/\"、空格\" \"、连字符\"-\"、加号\"+\"、点\".\"等所有其他字符\n\
             \   - 解析示例：\n     · \"Nike,Adidas\" → [\"Nike\", \"Adidas\"]（2个品牌）\n \
@@ -1807,7 +1807,9 @@ workflow:
             - 目标受众：{{#1765425297251.target_audience#}}\n\n\n\n【操作流程】\nStep 1：解析并检查comps_list长度：\n\
             - 按【铁律规则7】的分隔符规则解析comps_list为品牌数组（仅按\",\"和\"、\"分隔，其他字符如\"/\"、空格视为品牌名一部分）\n\
             - 解析后每个品牌必须按【铁律规则2】字符级完整保留，禁止任何修改\n- 若解析后品牌数≥3，直接返回前3个，原样输出到comps_list字段，不做任何字符修改\n\
-            \n\n\nStep 2：行业分层定位（必须逐层分析，禁止跳步）：\n- 前置分析：必须首先分析comps_list中已有品牌的行业归属，确定这些品牌所在的细分赛道。如果comps_list中有≥1个品牌被识别为同一细分赛道，则客户品牌默认属于该细分赛道，禁止泛化到更宽赛道\n\
+            - 若解析后品牌数<3，必须继续补充同一细分赛道中真实、公开知名且可验证的品牌，直到去重后恰好3个；不得提前输出少于3个的comps_list。\n\
+            - 输出前必须再次校验：comps_list去重后长度必须等于3，不能包含客户品牌，不能包含重复品牌。\n\n\n\nStep 2：行业分层定位（必须逐层分析，禁止跳步）：\n\
+            - 前置分析：必须首先分析comps_list中已有品牌的行业归属，确定这些品牌所在的细分赛道。如果comps_list中有≥1个品牌被识别为同一细分赛道，则客户品牌默认属于该细分赛道，禁止泛化到更宽赛道\n\
             - 第一层【大类】：客户品牌所属的大行业是什么？（如：游戏、金融、美妆、法律、教育等）\n- 第二层【细分赛道】：在该大类下，客户品牌具体处于哪个细分赛道？（如：游戏大类下→手游分发/游戏社区/游戏发行/游戏直播；金融大类下→股票软件/基金平台/保险经纪）\n\
             - 第三层【核心定位】：客户品牌的核心用户场景和产品形态是什么？（如：4399游戏盒→手游分发+游戏社区，核心是\"找游戏、下游戏、交流攻略\"\
             ）\n- 细分精度要求：细分赛道必须精确到product_name所描述的产品形态级别，层级不得宽于product_name中的产品形态描述（如product_name含\"\
@@ -1873,56 +1875,81 @@ workflow:
       type: custom
       width: 244
     - data:
-        code: "import json\nimport re\n\ndef safe_parse_json(text):\n    \"\"\"安全解析JSON文本，支持多种格式\"\
-          \"\"\n    if not text:\n        return None\n\n    # 优先提取 --- 之后的JSON（推理过程\
-          \ + --- + JSON 格式）\n    if '---' in text:\n        parts = text.split('---',\
-          \ 1)\n        if len(parts) > 1:\n            json_part = parts[1].strip()\n\
-          \            try:\n                return json.loads(json_part)\n      \
-          \      except json.JSONDecodeError:\n                pass  # ---后面不是有效JSON，继续尝试其他方式\n\
-          \n    try:\n        # 尝试直接解析\n        return json.loads(text)\n    except\
-          \ json.JSONDecodeError:\n        try:\n            # 尝试提取最后一个JSON对象（{...}）\n\
-          \            matches = re.findall(r'\\{[^{}]*(?:\\{[^{}]*\\}[^{}]*)*\\}',\
-          \ text, re.DOTALL)\n            if matches:\n                for m in reversed(matches):\n\
-          \                    try:\n                        return json.loads(m)\n\
+        code: "import json\nimport re\n\n\ndef strip_json_wrapper(text):\n    \"\"\
+          \"清理单反引号、三反引号、json标记和BOM\"\"\"\n    if not isinstance(text, str):\n    \
+          \    return \"\"\n\n    cleaned = text.strip().lstrip(\"\\ufeff\")\n\n \
+          \   # 支持：\n    # `json {...} `\n    # ```json {...} ```\n    # ``` {...}\
+          \ ```\n    cleaned = re.sub(\n        r\"^\\s*`{1,3}\\s*(?:json)?\\s*\"\
+          ,\n        \"\",\n        cleaned,\n        flags=re.IGNORECASE\n    )\n\
+          \n    cleaned = re.sub(\n        r\"\\s*`{1,3}\\s*$\",\n        \"\",\n\
+          \        cleaned\n    )\n\n    # 兼容没有反引号、但以 json 开头的情况\n    cleaned = re.sub(\n\
+          \        r\"^\\s*json\\s*(?=[\\{\\[])\",\n        \"\",\n        cleaned,\n\
+          \        flags=re.IGNORECASE\n    )\n\n    return cleaned.strip()\n\n\n\
+          def extract_balanced_json(text):\n    \"\"\"\n    从带有说明文字的文本中提取完整JSON对象或数组。\n\
+          \    支持嵌套对象、数组、字符串和转义字符。\n    \"\"\"\n    if not isinstance(text, str):\n\
+          \        return None\n\n    for start_index, start_char in enumerate(text):\n\
+          \        if start_char not in \"{[\":\n            continue\n\n        stack\
+          \ = []\n        in_string = False\n        escaped = False\n\n        for\
+          \ index in range(start_index, len(text)):\n            char = text[index]\n\
+          \n            if in_string:\n                if escaped:\n             \
+          \       escaped = False\n                elif char == \"\\\\\":\n      \
+          \              escaped = True\n                elif char == '\"':\n    \
+          \                in_string = False\n                continue\n\n       \
+          \     if char == '\"':\n                in_string = True\n             \
+          \   continue\n\n            if char in \"{[\":\n                stack.append(char)\n\
+          \                continue\n\n            if char in \"}]\":\n          \
+          \      if not stack:\n                    break\n\n                expected_open\
+          \ = \"{\" if char == \"}\" else \"[\"\n                if stack[-1] != expected_open:\n\
+          \                    break\n\n                stack.pop()\n\n          \
+          \      if not stack:\n                    candidate = text[start_index:index\
+          \ + 1]\n                    try:\n                        return json.loads(candidate)\n\
           \                    except json.JSONDecodeError:\n                    \
-          \    continue\n        except Exception:\n            pass\n\n        try:\n\
-          \            # 尝试去除可能的markdown代码块标记\n            cleaned = text.strip()\n\
-          \            if cleaned.startswith('```json'):\n                cleaned\
-          \ = cleaned[7:]\n            if cleaned.startswith('```'):\n           \
-          \     cleaned = cleaned[3:]\n            if cleaned.endswith('```'):\n \
-          \               cleaned = cleaned[:-3]\n            cleaned = cleaned.strip()\n\
-          \            return json.loads(cleaned)\n        except json.JSONDecodeError:\n\
-          \            return None\n\n\ndef parse_names(value):\n    \"\"\"将数组、JSON数组字符串或逗号/顿号分隔文本转为品牌名数组。\"\
-          \"\"\n    if isinstance(value, list):\n        values = value\n    elif\
-          \ isinstance(value, str):\n        raw = value.strip()\n        if not raw:\n\
-          \            return []\n        try:\n            decoded = json.loads(raw)\n\
-          \            values = decoded if isinstance(decoded, list) else [raw]\n\
-          \        except (TypeError, ValueError):\n            values = re.split(r'[,，、]',\
-          \ raw)\n    else:\n        return []\n\n    result = []\n    for item in\
-          \ values:\n        if item is None:\n            continue\n        name\
-          \ = str(item).strip()\n        if name and name not in result:\n       \
-          \     result.append(name)\n    return result\n\ndef main(llm_output=None,\
-          \ original_comps_list=None, brand_name=''):\n    \"\"\"\n    Dify Python代码节点\
-          \ - 解析竞品增强LLM节点的JSON输出\n    输入变量作为函数参数传递\n    返回一个包含所有输出变量的字典\n    \"\"\"\
-          \n\n    # 解析LLM输出\n    parsed = safe_parse_json(llm_output)\n\n    # 初始化默认值\n\
-          \    original = parse_names(original_comps_list)\n    model_comps = parse_names(parsed.get('comps_list',\
-          \ [])) if isinstance(parsed, dict) else []\n    industry_leader = None\n\
-          \    if isinstance(parsed, dict):\n        leader = parsed.get('industry_leader')\n\
-          \        if isinstance(leader, str) and leader.strip():\n            industry_leader\
-          \ = leader.strip()\n    brand = str(brand_name or '').strip()\n    merged\
-          \ = []\n    for name in original + model_comps:\n        if name and name\
-          \ != brand and name not in merged:\n            merged.append(name)\n  \
-          \      if len(merged) >= 3:\n            break\n    # 下面旧解析分支不再改变已合并结果。\n\
-          \n    if parsed and isinstance(parsed, dict):\n        comps_list_raw =\
-          \ parsed.get('comps_list', [])\n        if isinstance(comps_list_raw, list):\n\
-          \            comps_list = comps_list_raw\n        else:\n            comps_list\
-          \ = []\n\n        industry_leader_raw = parsed.get('industry_leader')\n\
-          \        if isinstance(industry_leader_raw, str):\n            industry_leader\
-          \ = industry_leader_raw\n        else:\n            industry_leader = None\n\
-          \n    # 以合并后的保真列表作为最终输出，避免旧分支把异常结果清空。\n    comps_list = merged\n\n    #\
-          \ Dify 要求输出变量为 string 类型，因此必须序列化为 JSON 字符串\n    return {\n        'comps_list':\
-          \ json.dumps(comps_list, ensure_ascii=False),\n        'industry_leader':\
-          \ json.dumps(industry_leader, ensure_ascii=False)\n    }\n"
+          \    break\n\n    return None\n\n\ndef safe_parse_json(value):\n    \"\"\
+          \"安全解析LLM返回的JSON文本\"\"\"\n    if value is None:\n        return None\n\n\
+          \    if isinstance(value, (dict, list)):\n        return value\n\n    if\
+          \ not isinstance(value, str):\n        return None\n\n    cleaned = strip_json_wrapper(value)\n\
+          \n    if not cleaned:\n        return None\n\n    # 直接解析\n    try:\n   \
+          \     return json.loads(cleaned)\n    except json.JSONDecodeError:\n   \
+          \     pass\n\n    # 从前后带说明文字的文本中提取JSON\n    return extract_balanced_json(cleaned)\n\
+          \n\ndef parse_names(value):\n    \"\"\"\n    将数组、JSON数组字符串、逗号/顿号分隔文本转换为品牌名数组。\n\
+          \    \"\"\"\n    if isinstance(value, list):\n        values = value\n\n\
+          \    elif isinstance(value, str):\n        raw = value.strip()\n\n     \
+          \   if not raw:\n            return []\n\n        try:\n            decoded\
+          \ = json.loads(raw)\n\n            if isinstance(decoded, list):\n     \
+          \           values = decoded\n            elif isinstance(decoded, str):\n\
+          \                values = re.split(r\"[,，、]\", decoded)\n            else:\n\
+          \                values = [raw]\n\n        except (TypeError, ValueError):\n\
+          \            values = re.split(r\"[,，、]\", raw)\n\n    else:\n        return\
+          \ []\n\n    result = []\n\n    for item in values:\n        if item is None:\n\
+          \            continue\n\n        name = str(item).strip()\n\n        if\
+          \ name and name not in result:\n            result.append(name)\n\n    return\
+          \ result\n\n\ndef main(\n    llm_output=None,\n    original_comps_list=None,\n\
+          \    brand_name=\"\"\n):\n    \"\"\"\n    解析竞品增强LLM输出。\n\n    输入：\n    -\
+          \ llm_output：竞品补齐LLM原始输出\n    - original_comps_list：用户原始竞品列表\n    - brand_name：客户品牌\n\
+          \n    输出：\n    - comps_list：JSON字符串格式的竞品数组\n    - industry_leader：JSON字符串格式的行业领先品牌\n\
+          \    \"\"\"\n\n    parsed = safe_parse_json(llm_output)\n\n    # 兼容传入完整响应对象：\n\
+          \    # {\"text\": \"...\", \"usage\": {...}}\n    if (\n        isinstance(parsed,\
+          \ dict)\n        and \"comps_list\" not in parsed\n        and isinstance(parsed.get(\"\
+          text\"), str)\n    ):\n        nested_parsed = safe_parse_json(parsed.get(\"\
+          text\"))\n        if nested_parsed is not None:\n            parsed = nested_parsed\n\
+          \n    original = parse_names(original_comps_list)\n\n    if isinstance(parsed,\
+          \ dict):\n        model_comps = parse_names(parsed.get(\"comps_list\", []))\n\
+          \        leader_raw = parsed.get(\"industry_leader\")\n    else:\n     \
+          \   model_comps = []\n        leader_raw = None\n\n    # 将字符串形式的 null 视为空值\n\
+          \    if (\n        leader_raw is None\n        or (\n            isinstance(leader_raw,\
+          \ str)\n            and leader_raw.strip().lower() in {\"\", \"null\", \"\
+          none\"}\n        )\n    ):\n        industry_leader = None\n    else:\n\
+          \        industry_leader = str(leader_raw).strip()\n\n    brand = str(brand_name\
+          \ or \"\").strip()\n\n    # 原始竞品优先保留，再合并模型补充竞品\n    merged = []\n\n    for\
+          \ name in original + model_comps:\n        name = str(name).strip()\n\n\
+          \        if not name:\n            continue\n\n        # 不允许把客户品牌作为竞品\n\
+          \        if name == brand:\n            continue\n\n        # 去重\n     \
+          \   if name in merged:\n            continue\n\n        merged.append(name)\n\
+          \n        # 工作流合同：最多保留3个竞品\n        if len(merged) >= 3:\n            break\n\
+          \n    return {\n        \"comps_list\": json.dumps(\n            merged,\n\
+          \            ensure_ascii=False\n        ),\n        \"industry_leader\"\
+          : json.dumps(\n            industry_leader,\n            ensure_ascii=False\n\
+          \        )\n    }"
         code_language: python3
         desc: ''
         outputs:
@@ -2765,6 +2792,7 @@ workflow:
             variable_selector:
             - '17768257560210'
             - is_sufficient
+          id: 'true'
           logical_operator: and
         desc: T4数量检测：is_sufficient==1走达标分支，否则走补词分支
         selected: false
@@ -3019,6 +3047,6 @@ workflow:
       type: custom
       width: 244
     viewport:
-      x: -1184.6304167092546
-      y: -164.32447622914714
-      zoom: 0.6399673697765432
+      x: -186.84263048200836
+      y: 77.20304361729512
+      zoom: 0.38163815243494525
