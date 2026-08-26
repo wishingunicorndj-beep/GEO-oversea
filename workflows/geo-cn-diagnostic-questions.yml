@@ -1,0 +1,2898 @@
+app:
+  description: 'V2.4：优化comps_list输出；0821
+
+    V2.3：更新到v4flash模型；0819
+
+    V2.2：优化输出词的稳定性，扩充生词数量；0814
+
+    V2.1：优化词锚定core_keyword，优化变量聚合逻辑；0710
+
+    V2.0：增加生词数量判定，以及补词逻辑；0625
+
+    V1.8：修改t1画像字数，修复t1生词的Maxtoken上限以及代码兜底；0617
+
+    V1.7：修订竞品逻辑，客户输出的不作修改以及按照,和、区分品牌；0610
+
+    V1.6：修改t4输出逻辑，控制特殊字符和代码兜底；0609
+
+    V1.5：优化竞品生成逻辑，强化行业细分、定位以及参考客户输入的竞品；0525
+
+    V1.4：生词改为并行结构；0522下午
+
+    V1.3：修改竞品生成逻辑，规避行业适配问题；0522
+
+    V1.2：修改T1-2兼容query字段，避免生词被隔断；0521
+
+    V1.1：增加竞品输出，修订输出词的数量，优化生词效果，竞品list节点位置；0508
+
+    V1.0：支持T1-T4多个维度生词；0427'
+  icon: apple
+  icon_background: '#FFEAD5'
+  mode: workflow
+  name: 诊断报告V2.4-生词0821
+  use_icon_as_answer_icon: false
+kind: app
+version: 0.1.3
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: false
+      fileUploadConfig:
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 15
+        image_file_size_limit: 10
+        video_file_size_limit: 100
+        workflow_file_upload_limit: 10
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: ''
+    retriever_resource:
+      enabled: false
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: code
+      id: 17725226028060-source-1776824084015-target
+      selected: false
+      source: '17725226028060'
+      sourceHandle: source
+      target: '1776824084015'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: code
+      id: 1772455683164-source-1776824167905-target
+      selected: false
+      source: '1772455683164'
+      sourceHandle: source
+      target: '1776824167905'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: code
+      id: 17725226062860-source-17768257560210-target
+      selected: false
+      source: '17725226062860'
+      sourceHandle: source
+      target: '17768257560210'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: start
+        targetType: llm
+      id: 1765425297251-source-1776843431240-target
+      source: '1765425297251'
+      sourceHandle: source
+      target: '1776843431240'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: code
+      id: 1776843431240-source-1776912874657-target
+      source: '1776843431240'
+      sourceHandle: source
+      target: '1776912874657'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: llm
+      id: 1776912874657-source-17725226062860-target
+      source: '1776912874657'
+      sourceHandle: source
+      target: '17725226062860'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: start
+        targetType: llm
+      id: 1765425297251-source-1772455683164-target
+      source: '1765425297251'
+      sourceHandle: source
+      target: '1772455683164'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: start
+        targetType: llm
+      id: 1765425297251-source-17767632648380-target
+      source: '1765425297251'
+      sourceHandle: source
+      target: '17767632648380'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: code
+      id: 17767632648380-source-17768257283590-target
+      source: '17767632648380'
+      sourceHandle: source
+      target: '17768257283590'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: variable-aggregator
+        targetType: code
+      id: 1779431976569-source-1772455024262-target
+      source: '1779431976569'
+      sourceHandle: source
+      target: '1772455024262'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: end
+      id: 1772455024262-source-1765444487278-target
+      source: '1772455024262'
+      sourceHandle: source
+      target: '1765444487278'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: variable-aggregator
+        targetType: code
+      id: 1779435472366-source-1772455024262-target
+      source: '1779435472366'
+      sourceHandle: source
+      target: '1772455024262'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: variable-aggregator
+        targetType: code
+      id: 1779435477446-source-1772455024262-target
+      source: '1779435477446'
+      sourceHandle: source
+      target: '1772455024262'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: variable-aggregator
+        targetType: code
+      id: 1779435480475-source-1772455024262-target
+      source: '1779435480475'
+      sourceHandle: source
+      target: '1772455024262'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: start
+        targetType: code
+      id: 1765425297251-source-1781171205832-target
+      source: '1765425297251'
+      sourceHandle: source
+      target: '1781171205832'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: llm
+      id: 1781171205832-source-17725226028060-target
+      source: '1781171205832'
+      sourceHandle: source
+      target: '17725226028060'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: if-else
+      id: 1776824084015-source-19000010301-target
+      selected: false
+      source: '1776824084015'
+      sourceHandle: source
+      target: '19000010301'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: if-else
+        targetType: variable-aggregator
+      id: 19000010301-true-1779431976569-target
+      selected: false
+      source: '19000010301'
+      sourceHandle: 'true'
+      target: '1779431976569'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: if-else
+        targetType: llm
+      id: 19000010301-false-19000010401-target
+      selected: false
+      source: '19000010301'
+      sourceHandle: 'false'
+      target: '19000010401'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: code
+      id: 19000010401-source-19000010501-target
+      selected: false
+      source: '19000010401'
+      sourceHandle: source
+      target: '19000010501'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: code
+      id: 19000010501-source-19000010601-target
+      selected: false
+      source: '19000010501'
+      sourceHandle: source
+      target: '19000010601'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: variable-aggregator
+      id: 19000010601-source-1779431976569-target
+      selected: false
+      source: '19000010601'
+      sourceHandle: source
+      target: '1779431976569'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: if-else
+      id: 1776824167905-source-19000020301-target
+      selected: false
+      source: '1776824167905'
+      sourceHandle: source
+      target: '19000020301'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: if-else
+        targetType: variable-aggregator
+      id: 19000020301-true-1779435472366-target
+      selected: false
+      source: '19000020301'
+      sourceHandle: 'true'
+      target: '1779435472366'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: if-else
+        targetType: llm
+      id: 19000020301-false-19000020401-target
+      selected: false
+      source: '19000020301'
+      sourceHandle: 'false'
+      target: '19000020401'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: code
+      id: 19000020401-source-19000020501-target
+      selected: false
+      source: '19000020401'
+      sourceHandle: source
+      target: '19000020501'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: code
+      id: 19000020501-source-19000020601-target
+      selected: false
+      source: '19000020501'
+      sourceHandle: source
+      target: '19000020601'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: variable-aggregator
+      id: 19000020601-source-1779435472366-target
+      selected: false
+      source: '19000020601'
+      sourceHandle: source
+      target: '1779435472366'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: if-else
+      id: 17768257283590-source-19000030301-target
+      selected: false
+      source: '17768257283590'
+      sourceHandle: source
+      target: '19000030301'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: if-else
+        targetType: variable-aggregator
+      id: 19000030301-true-1779435477446-target
+      selected: false
+      source: '19000030301'
+      sourceHandle: 'true'
+      target: '1779435477446'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: if-else
+        targetType: llm
+      id: 19000030301-false-19000030401-target
+      selected: false
+      source: '19000030301'
+      sourceHandle: 'false'
+      target: '19000030401'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: code
+      id: 19000030401-source-19000030501-target
+      selected: false
+      source: '19000030401'
+      sourceHandle: source
+      target: '19000030501'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: code
+      id: 19000030501-source-19000030601-target
+      selected: false
+      source: '19000030501'
+      sourceHandle: source
+      target: '19000030601'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: variable-aggregator
+      id: 19000030601-source-1779435477446-target
+      selected: false
+      source: '19000030601'
+      sourceHandle: source
+      target: '1779435477446'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: if-else
+      id: 17768257560210-source-19000040301-target
+      selected: false
+      source: '17768257560210'
+      sourceHandle: source
+      target: '19000040301'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: if-else
+        targetType: variable-aggregator
+      id: 19000040301-true-1779435480475-target
+      selected: false
+      source: '19000040301'
+      sourceHandle: 'true'
+      target: '1779435480475'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: if-else
+        targetType: llm
+      id: 19000040301-false-19000040401-target
+      selected: false
+      source: '19000040301'
+      sourceHandle: 'false'
+      target: '19000040401'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: code
+      id: 19000040401-source-19000040501-target
+      selected: false
+      source: '19000040401'
+      sourceHandle: source
+      target: '19000040501'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: code
+      id: 19000040501-source-19000040601-target
+      selected: false
+      source: '19000040501'
+      sourceHandle: source
+      target: '19000040601'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: variable-aggregator
+      id: 19000040601-source-1779435480475-target
+      selected: false
+      source: '19000040601'
+      sourceHandle: source
+      target: '1779435480475'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        desc: ''
+        selected: false
+        title: 1.开始
+        type: start
+        variables:
+        - label: 任务名
+          max_length: 48
+          options: []
+          required: true
+          type: text-input
+          variable: task_name
+        - label: 产品名
+          max_length: 256
+          options: []
+          required: true
+          type: text-input
+          variable: product_name
+        - label: 企业名称
+          max_length: 48
+          options: []
+          required: true
+          type: text-input
+          variable: corp_name
+        - label: 核心关键词
+          max_length: 48
+          options: []
+          required: true
+          type: text-input
+          variable: core_keyword
+        - label: 品牌名称
+          max_length: 256
+          options: []
+          required: true
+          type: text-input
+          variable: brand_name
+        - label: 竞品列表
+          max_length: 500
+          options: []
+          required: false
+          type: paragraph
+          variable: comps_list
+        - label: 目标受众
+          max_length: 500
+          options: []
+          required: false
+          type: paragraph
+          variable: target_audience
+        - label: task_id
+          max_length: 48
+          options: []
+          required: true
+          type: text-input
+          variable: task_id
+      height: 271
+      id: '1765425297251'
+      position:
+        x: 30
+        y: 336
+      positionAbsolute:
+        x: 30
+        y: 336
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: api_response_formatter
+        outputs:
+        - value_selector:
+          - '1772455024262'
+          - final_results
+          variable: result
+        - value_selector:
+          - '1765425297251'
+          - task_id
+          variable: task_id
+        - value_selector:
+          - '1765425297251'
+          - task_name
+          variable: task_name
+        - value_selector:
+          - '1765425297251'
+          - product_name
+          variable: product_name
+        - value_selector:
+          - '1765425297251'
+          - brand_name
+          variable: brand_name
+        - value_selector:
+          - '1765425297251'
+          - core_keyword
+          variable: core_keyword
+        - value_selector:
+          - '1765425297251'
+          - target_audience
+          variable: target_audience
+        - value_selector:
+          - '1776843431240'
+          - text
+          variable: comps_list
+        selected: false
+        title: 结束
+        type: end
+      height: 299
+      id: '1765444487278'
+      position:
+        x: 3374
+        y: 502
+      positionAbsolute:
+        x: 3374
+        y: 502
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import json\n\n\ndef safe_to_list(value):\n    \"\"\"将任意类型的输入安全转换为列表\"\
+          \"\"\n    if value is None:\n        return []\n    if isinstance(value,\
+          \ list):\n        return value\n    if isinstance(value, str):\n       \
+          \ try:\n            parsed = json.loads(value)\n            if isinstance(parsed,\
+          \ list):\n                return parsed\n            return []\n       \
+          \ except (json.JSONDecodeError, TypeError):\n            return []\n   \
+          \ if isinstance(value, (int, float)):\n        return []\n    if isinstance(value,\
+          \ dict):\n        # 兼容：若上游返回的是 {\"t1_formatted_results\": [...]}，提取内层数组\n\
+          \        for key in value:\n            if isinstance(value[key], list):\n\
+          \                return value[key]\n        return []\n    return []\n\n\
+          \ndef main(t1_formatted_results=None, t2_formatted_results=None,\n     \
+          \    t3_formatted_results=None, t4_formatted_results=None):\n    \"\"\"\n\
+          \    并行分支数据合并节点\n    输入: 4个JSON字符串数组（如：[\"{...}\", \"{...}\"]）\n    输出:\
+          \ final_results 为 Array[String]，符合 Dify 类型要求\n\n    支持字段（自动透传所有字段）：\n  \
+          \  - T1/T2/T3: id, task_id, brand_name, query, core_keyword, source_keyword,\n\
+          \                 source_word_type, question_type, scene_name, priority_level,\n\
+          \                 persona_name, decision_intent_level, is_strong_decision,\n\
+          \                 cognition_dimension, evaluation_dimension, is_negative_probe,\n\
+          \                 is_active, created_at, updated_at\n    - T4: brand_comp\
+          \ (数组), is_competitor\n    \"\"\"\n\n    final_results = []\n    stats =\
+          \ {\n        \"t1_count\": 0,\n        \"t2_count\": 0,\n        \"t3_count\"\
+          : 0,\n        \"t4_count\": 0\n    }\n\n    def parse_and_merge(data_list,\
+          \ source_name):\n        \"\"\"安全解析并合并数据，自动透传所有字段\"\"\"\n        # 先用safe_to_list兜底，确保拿到列表\n\
+          \        data_list = safe_to_list(data_list)\n        if not data_list:\n\
+          \            return 0\n\n        count = 0\n        for item_str in data_list:\n\
+          \            if not isinstance(item_str, str):\n                continue\n\
+          \n            try:\n                item_obj = json.loads(item_str)\n\n\
+          \                # 确保 brand_comp 是数组格式（兼容旧数据）\n                if 'brand_comp'\
+          \ in item_obj:\n                    bc = item_obj['brand_comp']\n      \
+          \              if isinstance(bc, str):\n                        item_obj['brand_comp']\
+          \ = [b.strip() for b in bc.split(',') if b.strip()]\n                  \
+          \  elif not isinstance(bc, list):\n                        item_obj['brand_comp']\
+          \ = []\n                    else:\n                        item_obj['brand_comp']\
+          \ = [str(b) for b in bc]\n\n                # 原样保留所有字段，重新序列化确保格式一致\n   \
+          \             final_results.append(json.dumps(item_obj, ensure_ascii=False))\n\
+          \                count += 1\n\n            except json.JSONDecodeError as\
+          \ e:\n                print(f\"[{source_name}] JSON解析失败: {e}\")\n      \
+          \          continue\n\n        return count\n\n    # 依次处理4个输入\n    stats[\"\
+          t1_count\"] = parse_and_merge(t1_formatted_results, \"T1\")\n    stats[\"\
+          t2_count\"] = parse_and_merge(t2_formatted_results, \"T2\")\n    stats[\"\
+          t3_count\"] = parse_and_merge(t3_formatted_results, \"T3\")\n    stats[\"\
+          t4_count\"] = parse_and_merge(t4_formatted_results, \"T4\")\n\n    total_count\
+          \ = sum(stats.values())\n\n    return {\n        \"statistics\": stats,\n\
+          \        \"final_results\": final_results,\n        \"total_count\": total_count\n\
+          \    }\n"
+        code_language: python3
+        desc: ''
+        outputs:
+          final_results:
+            children: null
+            type: array[string]
+          statistics:
+            children: null
+            type: object
+          total_count:
+            children: null
+            type: number
+        selected: false
+        title: 3、数据合并处理
+        type: code
+        variables:
+        - value_selector:
+          - '1779431976569'
+          - Group1
+          variable: t1_formatted_results
+        - value_selector:
+          - '1779435472366'
+          - output
+          variable: t2_formatted_results
+        - value_selector:
+          - '1779435477446'
+          - output
+          variable: t3_formatted_results
+        - value_selector:
+          - '1779435480475'
+          - output
+          variable: t4_formatted_results
+      height: 53
+      id: '1772455024262'
+      position:
+        x: 3070
+        y: 502
+      positionAbsolute:
+        x: 3070
+        y: 502
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            max_tokens: 13001
+            temperature: 0.4
+            top_p: 0.7
+          mode: chat
+          name: qwen/qwen3.7-plus
+          provider: zhinao
+        prompt_template:
+        - id: b8d7ef1e-b888-4eb1-8906-c7f8245fe765
+          role: system
+          text: "你是一名资深的GEO专家，需要基于核心关键词生成品类认知类查询词（T2维度）。\n\n【输入信息】\n核心关键词：{{{{#1765425297251.core_keyword#}}}}\n\
+            产品名称：{{{{#1765425297251.product_name#}}}}\n品牌名称：{{{{#1765425297251.brand_name#}}}}\n\
+            \n【生成规则】\n1. 第一步：核心信息提取与约束识别\n- 核心关键词直接作为问题锚点；\n- 基于产品名和品牌名判定所属行业，再基于产品和行业属性进行需求判断，针对需求进行生词，确保生词的合理性，且符合C端用户真实需求；\n\
+            如“机票酒店预订是什么？”就不合理，没有这方面的需求，也不会这么问，应该改为：“机票酒店通常怎么预订？”或者“机票酒店预订的流程是怎样的？”\n\
+            \n2. query需要按固定以下4个认知需求框架进行分别生词：\n   - 是什么/用途（5个）\n   - 效果/合适性（5个）\n \
+            \  - 区别/对比（5个）\n   - 可靠性/风险（5个）\n3. 每个维度框架下务必输出5个蒸馏词\n4. 每个认知维度生成不同侧重的问法\n\
+            5. 不限定品牌，保持客观中立\n\nQuery生成铁律：\n- 同一批词中务必不能出现重复query\n- 数量必须按照要求足量输出\n\n\
+            示例：\n比如core_keyword=生日送礼香水推荐\nbrand_name=香奈儿\nproduct_name=香奈儿男士香水\n判断所属为化妆品行业，香水产品，再基于行业和产品推导需求进行生词\n\
+            1、是什么/用途：\n- 生日送礼香水都有哪些选择\n- 生日送礼香水一般选什么类型的\n- 生日送礼的香水都有哪些用途\n- ...\n\
+            2、效果/合适性：\n- 送香水作为生日礼物会不会显得不用心\n- 送人香水有什么忌讳吗\n- ...\n3、区别/对比：\n- 送人的香水和自用香水有什么区别\n\
+            - 生日送香水选淡香水还是浓香水\n- 生日送男生香水选花香系还是木质调好\n- ...\n4、可靠性/风险：\n- 网上买香水送礼怕买假货怎么辨别\n\
+            - 买香水送礼在哪里购买比较靠谱\n- ...\n\n【输出格式要求】\n严格按以下JSON格式返回：\n{\n  \"t2_results\"\
+            : [\n    {\n      \"query\": \"蒸馏词1\",\n      \"cognition_dimension\"\
+            : \"是什么/用途/效果/区别/可靠性\"\n    },\n    {\"query\": \"...\", \"cognition_dimension\"\
+            : \"...\"}\n    // 每个维度5条\n  ]\n}\n```\n\n**Output Variables:**\n- `t2_results`\
+            \ - JSON数组，每个元素包含query, cognition_dimension\n\n⚠️ 输出前逐维度计数：如果任何一个维度不足5条，立即补充至5条后再输出。总数必须=20条。\n\
+            \n\n## 自检清单\n1. [ ] 逐维度计数：是什么/用途=5，效果/合适性=5，区别/对比=5，可靠性/风险=5\n2. [ ] 总数=20条\n\
+            3. [ ] 无重复query\n4. [ ] 字段名为 query 和 cognition_dimension\n5. [ ] 每条query都包含核心品类词\n\
+            \n\n如果自检数量不足，必须基于对应维度补充至满足要求后再输出。"
+        - id: c383e4bc-7039-4876-a535-24069cbf1214
+          role: user
+          text: 请严格按照以上所有要求输出
+        selected: false
+        title: T2-1品类认知生词LLM
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 97
+      id: '1772455683164'
+      position:
+        x: 942
+        y: 502
+      positionAbsolute:
+        x: 942
+        y: 502
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            max_tokens: 13001
+            temperature: 0.4
+            top_p: 0.7
+          mode: chat
+          name: qwen/qwen3.7-plus
+          provider: zhinao
+        prompt_template:
+        - id: b8d7ef1e-b888-4eb1-8906-c7f8245fe765
+          role: system
+          text: "# T1-1 场景生词 Prompt v2（深度优化版）\n\n\n## role\n你是一名顶级的GEO（生成式引擎优化）专家和C端用户搜索行为分析师。你深刻理解：GEO生词的本质是覆盖用户在AI引擎中的真实搜索意图，使品牌在AI回答中被自然推荐。\n\
+            \n\n## task\n基于输入信息，定向生成高GEO价值的场景scene_name和query词。生成的每一个query都必须是C端用户真实会搜索的问题，且AI引擎回答时能自然植入品牌推荐。\n\
+            \n\n## 输入信息\n- **核心关键词**：`{{#1765425297251.core_keyword#}}`\n- **产品名称**：`{{#1765425297251.product_name#}}`\n\
+            - **品牌名称**：`{{#1765425297251.brand_name#}}`\n- **目标受众**：`{{#1765425297251.target_audience#}}`\n\
+            - **竞品列表**：`{{#1765425297251.comps_list#}}`\n- **当前日期**：`{{#1781171205832.current_date#}}`\n\
+            \n\n---\n\n\n## 第零步：品类类型判定（⚠️ 前置必做）\n\n\n根据core_keyword和product_name判断品类类型，选择对应的场景生成策略：\n\
+            \n\n### A. 工具/软件/App类\n（如：视频剪辑、修图、办公软件、记账工具、翻译软件、健身App）\n- **场景核心逻辑**：用户要完成什么任务\
+            \ + 用什么工具更合适\n- **Query意图方向**：选工具、比工具、找好用的工具\n- **禁止方向**：具体操作教程、功能细节科普、素材/资源下载\n\
+            \n\n### B. 实体商品类\n（如：香水、护肤品、家电、食品、服饰）\n- **场景核心逻辑**：购买场景 + 送礼/自用决策\n-\
+            \ **Query意图方向**：选品、比价、避坑、送礼推荐\n\n\n### C. 服务类\n（如：装修、教育培训、法律咨询、医美、旅游）\n\
+            - **场景核心逻辑**：决策场景 + 信任建立 + 方案对比\n- **Query意图方向**：找靠谱的、比口碑、看案例、估价格\n\n\n\
+            **⚠️ 后续所有步骤必须在判定的品类类型框架下执行，禁止跨品类套用逻辑。**\n\n\n---\n\n\n## 第一步：核心信息提取与约束识别\n\
+            \n\n从输入信息中提取以下信息并**输出分析结论**（此步骤必须先思考再执行后续步骤）：\n\n\n### 1. 关键词解构\n拆解core_keyword为：核心品类词（如\"\
+            视频剪辑\"）+ 限定词（如\"免费\"、\"手机\"），务必以核心品类词为主提取场景。后续场景和query必须以核心品类词为锚点。\n\n\
+            \n### 2. 时间节点有效性判定（⚠️ CRITICAL）\n\n\n**时间节点来源优先级**：\n- 第一优先：core_keyword中包含的时间节点（如\"\
+            七夕送男友香水\"中的\"七夕\"）是用户搜索意图的真实来源，场景时间节点必须以此为准\n- 第二优先：若core_keyword无时间节点，则参考target_audience中的时间节点\n\
+            - target_audience中的\"覆盖周期是XX\"是业务方的投放执行周期，仅用于理解人群画像，**不能覆盖或替代core_keyword的时间节点**\n\
+            \n\n**时间有效性校验规则**：\n基于current_date，判断时间节点是否有效：\n- ✅ 有效：节日/事件在current_date之后的60天内（如current_date=2026-06-11，则端午节、毕业季、暑假、618、七夕有效）\n\
+            - ❌ 无效：节日/事件已过去，或距今超过60天（如current_date=2026-06-11时，春节、情人节、中秋、双十一无效）\n\
+            - 若core_keyword无时间节点，且当前无临近有效节日，则**全部生成常青场景**\n- 有效时间节点场景**最多占总场景数的1/3**（即6个场景中最多2个带时间节点）\n\
+            \n\n**时间节点互斥规则**：\n- 如果core_keyword=\"情人节送男士香水+推荐\"，则场景时间节点锁定为\"情人节\"\
+            ，**严禁出现\"七夕\"相关场景**\n- 如果core_keyword=\"七夕送男士香水+推荐\"，则场景时间节点锁定为\"七夕\"\
+            ，**严禁出现\"情人节\"相关场景**\n- 如果core_keyword无明确时间节点，才以target_audience中的时间节点为准\n\
+            \n\n### 3. 产品属性限定\n提取product_name和brand_name在行业中的定位、核心卖点、差异化优势，决定场景下钻方向。\n\
+            \n\n### 4. 人群身份识别\n从target_audience中提取核心身份标签和能力水平（如\"自媒体新手\"、\"职场白领\"\
+            、\"宝妈\"、\"大学生\"、\"妻子\"、\"女友\"）。\n\n\n### 5. 场景关系角色识别（商品类/服务类适用）\n送礼场景中，明确买方（gift-giver）和收方（gift-receiver）分别是谁，确保query中的角色关系正确。\n\
+            \n\n### 6. 竞品差异化识别\n分析comps_list中竞品的定位差异，明确product_name相对竞品的差异化优势，用于锚定独特场景。\n\
+            \n\n---\n\n\n## 第二步：场景维度切割（按品类类型分支）\n\n\n### A. 工具/软件/App类 维度体系\n\n\n\
+            **核心维度**（必选）：\n- [D1] **用户任务维度**：用户要用这个工具完成什么具体任务\n  - 示例（视频剪辑）：做短视频、剪vlog、做口播视频、做带货视频、做产品展示\n\
+            \  - 示例（修图）：证件照处理、电商产品图、朋友圈修图、海报设计\n- [D2] **人群×能力维度**：目标人群的身份 + 使用工具的能力水平\n\
+            \  - 示例：自媒体新手、短视频博主进阶、电商卖家、宝妈记录生活、大学生\n- [D3] **产品优势维度**：产品的核心差异化能力，转化为用户感知利益\n\
+            \  - 示例（视频剪辑）：一键成片、AI智能剪辑、模板丰富、免费无水印\n  - 示例（修图）：AI修图、一键美颜、批量处理\n\n\n\
+            **扩展维度**（可选，丰富化）：\n- [D4] **平台/渠道维度**：内容发布的目标平台\n  - 示例：抖音运营、小红书内容、B站投稿、朋友圈\n\
+            - [D5] **决策痛点维度**：用户选择工具时的核心顾虑\n  - 示例：免费vs付费、简单易上手、导出画质、多端同步\n\n\n**场景组合规则（工具类）**：\n\
+            - 每个场景 = [D1用户任务] × [D2人群] 或 [D1用户任务] × [D3产品优势]\n- 6个场景至少覆盖4个不同的D1用户任务\n\
+            - 禁止多个场景仅替换时间节点/平台名而核心任务相同\n\n\n### B. 实体商品类 维度体系\n\n\n**核心维度**（必选）：\n\
+            - [D1] **产品属性维度**：基于产品的核心特性挖掘场景\n  - 示例（香水）：持久留香、木质调、清新淡雅、小众不撞香\n- [D2]\
+            \ **人群维度**：从target_audience提取具体人群身份\n  - 示例：成熟商务男士、文艺女生、职场新人\n- [D3] **时间节点维度**：有效时间节点\
+            \ + 购买动机\n  - 示例：七夕送男友、母亲节送礼、生日礼物\n- [D4] **决策心理维度**：用户购买时的核心顾虑\n  - 示例：怕踩雷、不知道适合什么、预算有限\n\
+            \n\n**场景组合规则（商品类）**：\n- 若core_keyword含有效时间节点：时间场景 = [D3] × [D1/D2]，至少2个；其余场景按[D1]\
+            \ × [D2]或[D1] × [D4]组合\n- 若无时间节点：按[D1] × [D2] + [D2] × [D4]组合\n- 每个场景至少覆盖2个维度\n\
+            \n\n### C. 服务类 维度体系\n\n\n**核心维度**（必选）：\n- [D1] **需求场景维度**：用户在什么情况下需要这个服务\n\
+            \  - 示例（装修）：新房装修、二手房翻新、局部改造\n- [D2] **人群维度**：核心用户身份\n  - 示例：首次装修小白、预算有限的年轻人\n\
+            - [D3] **决策维度**：用户选择服务时的核心关注点\n  - 示例：怕被坑、价格透明、口碑好\n\n\n**场景组合规则（服务类）**：\n\
+            - 每个场景 = [D1需求场景] × [D2人群] 或 [D1需求场景] × [D3决策维度]\n\n\n---\n\n\n## 第三步：场景动态生成\n\
+            \n\n### 场景生成核心原则\n- 字数要求：场景名6-12字\n- 每次生成6个scene_name\n- 同一次生成禁止语义雷同（即两个场景不能只是换了时间节点/平台名而核心任务相同）\n\
+            - 内容正向：不能出现贬低、讨好、媚俗类的内容\n- 禁止生成与上一次运行相同或相似的场景名\n\n\n### scene_name命名模板（按品类）\n\
+            \n\n**工具/App类**：\n- 任务导向：【用户任务+工具选择意图】，如\"短视频剪辑工具选择\"、\"手机修图app对比\"\n\
+            - 人群导向：【人群身份+核心需求】，如\"自媒体人高效剪辑\"、\"电商卖家批量出图\"\n- 优势导向：【产品优势+用户利益】，如\"\
+            AI一键成片剪辑\"、\"免费无水印视频剪辑\"\n\n\n**实体商品类**：\n- 送礼类：【场景×行为意图×用户身份】，如\"送丈夫商务香水\"\
+            \n- 自用类：【场景×用户身份×行为意图】，如\"商务男士通勤自用\"\n- 决策类：【场景×用户身份×决策心理】，如\"情人节送男友选香\"\
+            \n\n\n**服务类**：\n- 需求类：【需求场景×人群】，如\"新房装修设计方案\"\n- 决策类：【决策关注点×需求】，如\"装修公司口碑对比\"\
+            \n\n\n### 时间节点约束\n- 每次生成的6个scene_name，最多2个带有效时间节点\n- 其余4个以上必须是常青场景（全年有搜索量的需求）\n\
+            - 所有时间节点必须通过第一步的有效性校验\n\n\n---\n\n\n## 第四步：Query深度生成\n\n\n### Query生成铁律\n\
+            - 每个场景生成10-15个Query\n- 同一批全部query中不能出现重复或高度相似的query\n- 数量必须按要求足量输出\n-\
+            \ query字数限定在8-15个汉字字符\n\n\n### Query意图锚定测试（⚠️ CRITICAL — 每个query必须通过）\n\
+            \n\n**测试方法**：假设用户把这个query输入AI引擎（如ChatGPT/豆包/Kimi），AI引擎的回答是否会自然推荐/对比具体的产品或品牌？\n\
+            - ✅ 通过：AI回答会推荐具体工具/产品/服务品牌 → 保留\n- ❌ 不通过：AI回答只会输出通用知识/教程/步骤 → 删除并替换\n\n\
+            \n**示例（以\"视频剪辑\"为例）**：\n- ✅ \"手机剪辑短视频哪个app好用\" → AI会推荐剪映/CapCut等\n- ✅\
+            \ \"自媒体人用什么软件剪视频\" → AI会推荐并对比工具\n- ❌ \"视频剪辑怎么加字幕\" → AI只会教操作步骤\n- ❌ \"\
+            视频剪辑有哪些技巧\" → AI只会科普通用知识\n\n\n### Query生成规则\n\n\n1. 每个Query必须包含core_keyword的核心品类词\n\
+            2. 每个Query必须与当前scene_name场景强绑定，禁止生成脱离场景的通用Query\n3. 部分Query可与有效时间节点绑定（前提是时间节点已通过有效性校验）\n\
+            4. Query必须使用不同的句式结构和后缀，禁止重复句式\n5. 禁止在Query中提及任何品牌名（包括客户品牌和竞品）\n6. Query字数要求：8-15个字\n\
+            \n\n### Query场景绑定示例（⚠️ 务必遵循）\n\n\n**工具/App类示例**：\n❌ 错误（场景脱节）：scene_name=\"\
+            自媒体人高效剪辑\" → \"视频剪辑有哪些技巧\"（科普类，AI不会推荐工具）\n❌ 错误（操作细节）：scene_name=\"自媒体人高效剪辑\"\
+            \ → \"视频剪辑怎么加字幕和配乐\"（选定工具后的操作，非获客意图）\n❌ 错误（后缀错配）：scene_name=\"手机视频剪辑工具\"\
+            \ → \"手机视频剪辑哪家专业\"（\"哪家专业\"是服务商后缀）\n✅ 正确：scene_name=\"自媒体人高效剪辑\" → \"\
+            自媒体人用什么软件剪视频好\"（工具选择意图，AI会推荐品牌）\n✅ 正确：scene_name=\"自媒体人高效剪辑\" → \"做自媒体短视频剪辑app推荐\"\
+            （场景绑定+高转化后缀）\n\n\n**实体商品类示例**：\n❌ 错误（场景脱节）：scene_name=\"七夕送男友怕踩雷选香\" →\
+            \ \"商务香水哪个好\"（没有绑定七夕送礼场景）\n✅ 正确：scene_name=\"七夕送男友怕踩雷选香\" → \"七夕送男友香水怎么选不踩雷\"\
+            （场景+角色+决策心理全覆盖）\n\n\n**服务类示例**：\n❌ 错误（后缀错配）：scene_name=\"新房装修设计方案\" →\
+            \ \"新房装修设计哪个好用\"（\"哪个好用\"是工具后缀）\n✅ 正确：scene_name=\"新房装修设计方案\" → \"新房装修设计公司哪家口碑好\"\
+            （服务类信任后缀）\n\n\n### Query生成负面清单（⚠️ 逐条检查，命中即删除替换）\n\n\n**1. ❌ 操作细节类**——涉及具体功能操作的query\n\
+            - 禁止涉及的细节词：字幕、配乐、转场、调色、特效怎么加、滤镜、贴纸、剪辑步骤、裁剪方法、导出设置\n- 原因：这是用户已经选定工具后在工具内搜索的行为，不是GEO获客阶段的搜索意图\n\
+            \n\n**2. ❌ 科普教程类**——教用户怎么做的知识类query\n- 禁止涉及的科普词：步骤、技巧详解、教程详细、基础操作、入门教学、必学技巧、实用方法、快捷键教程、注意什么\n\
+            - 原因：科普类query的AI回答是通用知识输出，品牌无法被自然推荐\n\n\n**3. ❌ 素材/资源类**——找素材、模板下载的query\n\
+            - 禁止涉及的资源词：素材下载、模板免费下载、素材去哪儿找、音乐推荐、BGM推荐\n- 原因：素材/资源需求指向内容库，不指向工具选择\n\n\
+            \n**4. ❌ 灵感/创意类**——寻求创作灵感的query\n- 禁止涉及的灵感词：创意有哪些、灵感推荐、热门效果、流行风格\n- 原因：灵感需求指向内容参考，不指向工具决策\n\
+            \n\n### 后缀词库（按品类类型选用）\n\n\n**工具/软件/App类**：\n- 决策对比类（高转化）：推荐、哪个好用、排行榜、对比、怎么选\n\
+            - 需求导向类：有哪些好用的、有哪些值得推荐的、有哪些免费的、有哪些简单好用的\n- 场景适配类：用什么app、用什么软件、有什么方便的工具、一键搞定的方法\n\
+            - ⚠️ 禁止使用：哪家好、哪家靠谱、哪家专业、哪家口碑好（这些是服务商后缀）\n\n\n**实体商品类**：\n- 高转化类：推荐、哪个好、怎么选、值得买吗\n\
+            - 品类探索类：有哪些好的、有哪些值得推荐的、有哪些热门的、有哪些高性价比的、有哪些值得选的\n- 避坑类：踩雷、避坑、买了后悔\n\n\n\
+            **服务类**：\n- 信任类：哪家好、哪家靠谱、哪家口碑好、哪家专业\n- 决策类：怎么选、多少钱、要注意什么\n- 对比类：有哪些靠谱的、有哪些值得推荐的\n\
+            \n\n---\n\n\n## 第五步：优先级判定（按品类类型分支）\n\n\n### 工具/软件/App类\n- **P1**：常青高频需求——全年搜索稳定\
+            \ + 工具选择意图明确 + 高商业转化\n  - 如：\"短视频剪辑app推荐\"、\"手机剪辑视频哪个好用\"\n- **P2**：细分人群/任务需求——特定人群或细分任务的工具选择\n\
+            \  - 如：\"电商带货视频剪辑用什么\"、\"自媒体人剪辑提效\"\n- **P3**：时效性/长尾需求——与时间节点关联或极细分场景\n\
+            \  - 如：\"毕业季视频用什么app剪\"\n\n\n### 实体商品类\n- **P1**：时间节点强关联（如有有效时间节点）+ 高搜索频次\
+            \ + 高商业转化（送礼决策）\n- **P2**：人群细分 + 中搜索频次\n- **P3**：长尾需求\n\n\n### 服务类\n-\
+            \ **P1**：高频刚需场景 + 强决策意图\n- **P2**：细分场景 + 中搜索频次\n- **P3**：长尾/低频需求\n\n\n\
+            ### 约束\n- P1场景数量 ≥ 3个\n- P2 ≥ 2个\n- P3 ≤ 1个\n- 总场景数 = 6个\n- 每个场景10-15个Query，总Query数60-90个\n\
+            \n\n---\n\n\n## persona_name 硬规则（⚠️ 强约束，违反视为无效输出）\n\n\n1. **本质是标签，不是句子**：persona_name\
+            \ 是一个用户画像短标签，不是完整句子。禁止出现\"渴望/担心/核心诉求是/希望\"等叙述性表达。\n2. **字数硬上限：4-20字**（含标点，超20字必须删减）。这是不可突破的红线，宁可信息不全也不超字数。\n\
+            3. **精炼概括，不必信息齐全**：优先保留最核心的1-2个信息点（如\"身份+核心诉求\"或\"人群+痛点\"），无需堆砌\"身份+能力+诉求\"\
+            全部要素。\n4. **正例**：\"双非考研生\"、\"预算有限的宝妈\"、\"追求性价比的租房党\"、\"怕踩雷的送礼党\"、\"零基础剪辑新手\"\
+            。\n5. **反例**（禁止，均超字数或写成句子）：\"本科双非但专业成绩好的推免边缘人，渴望上岸名校又担心被歧视保底不公，核心诉求是找公平对待双非、复试占比合理的学校\"\
+            、\"预算不多但又想买到品质好的产品的谨慎消费者\"。\n\n\n---\n\n\n## 输出格式要求\n\n\n严格按以下JSON格式返回（不要任何其他内容）：\n\
+            \n\n```json\n{\n  \"category_type\": \"工具类/商品类/服务类\",\n  \"analysis_summary\"\
+            : \"一句话说明品类判定结论和场景策略\",\n  \"t1_results\": [\n    {\n      \"scene_name\"\
+            : \"6-12字场景名\",\n      \"priority_level\": \"P1/P2/P3\",\n      \"persona_name\"\
+            : \"用户画像标签（4-20字，短标签而非句子）\",\n      \"scene_dimensions\": \"使用了哪些维度组合，如D1×D2\"\
+            ,\n      \"queries\": [\n        \"Query1（8-15个字，含核心品类词，融入场景）\",\n   \
+            \     \"Query2（不同句式和后缀）\",\n        \"...\",\n        \"Query10～15\"\n\
+            \      ]\n    }\n  ]\n}\n```\n\n\n---\n\n\n## 自检清单（⚠️ 输出前必须逐项检查，不通过则修正后再输出）\n\
+            \n\n### 格式检查\n- [ ] 1. 所有场景的query列表字段名均为 `queries`（非query）\n- [ ] 2. 数量达标：6个场景，每个场景10-15个query，总计60-90个\n\
+            - [ ] 2.1 **persona_name字数校验**：逐个场景数persona_name字数，必须≤20字且为短标签（非句子），超标或含\"\
+            渴望/担心/核心诉求是\"等叙述词则重写为短标签\n\n\n### 意图质量检查\n- [ ] 3. **意图锚定测试**：逐一检查每个query——如果用户把这个query输入AI引擎，AI回答是否会自然推荐具体工具/产品/品牌？不会则删除替换\n\
+            - [ ] 4. **负面清单扫描**：检查全部query是否命中以下禁止词，命中则删除替换：\n  - 操作细节词：字幕、配乐、转场、调色、特效怎么加、滤镜、贴纸\n\
+            \  - 科普教程词：步骤、技巧详解、教程详细、基础操作、入门教学、必学、快捷键\n  - 素材资源词：素材下载、模板下载、素材去哪找、音乐推荐、BGM\n\
+            \  - 灵感创意词：创意有哪些、灵感推荐、热门效果\n\n\n### 时间检查\n- [ ] 5. **时间有效性**：所有带时间节点的场景/query，其时间节点是否在current_date未来60天内？过期则替换为常青内容\n\
+            - [ ] 6. **时间节点占比**：带时间节点的场景 ≤ 2个\n\n\n### 后缀检查\n- [ ] 7. **后缀适配性**：工具类禁止使用\"\
+            哪家好/哪家靠谱/哪家专业/哪家口碑好\"；服务类禁止使用\"哪个好用\"——检查是否有错用\n\n\n### 去重检查\n- [ ] 8.\
+            \ **跨场景去重**：所有query跨场景比对，语义相似度>80%的只保留一个，删除另一个并补充新query\n- [ ] 9. **场景去重**：6个场景之间不能只是换了时间节点/平台名/人群标签而核心任务相同\n\
+            \n\n### 场景覆盖检查\n- [ ] 10. **维度覆盖**：6个场景至少使用了4个不同的维度组合（查看scene_dimensions字段）\n\
+            \n\n---\n\n\n请输出JSON结果，禁止任何其他内容。\n\n"
+        - id: c0a4893b-7c96-4964-adfe-fab4905fe881
+          role: user
+          text: 请严格按照以上所有要求输出
+        selected: false
+        title: 'T1-1场景触发生词LLM '
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 97
+      id: '17725226028060'
+      position:
+        x: 942
+        y: 336
+      positionAbsolute:
+        x: 942
+        y: 336
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            max_tokens: 13001
+            temperature: 0.3
+            top_p: 0.8
+          mode: chat
+          name: qwen/qwen3.7-plus
+          provider: zhinao
+        prompt_template:
+        - id: b8d7ef1e-b888-4eb1-8906-c7f8245fe765
+          role: system
+          text: "# T4 品牌直询与竞品查询 Prompt\n\n\n#role：\n你是一名GEO专家，需要生成品牌直询类查询词（T4维度），同时支持竞品查询生词。\n\
+            \n\n【Query生词铁律】\n- 生的词中务必要包括客户品牌查询词以及竞品品牌查询词，即既要包括\"is_competitor\":=0的词，也要包括\"\
+            is_competitor\"=1的词\n- 同一批词中务必不能出现重复query\n- 数量必须按照要求足量输出\n\n\n## 输入信息\n\
+            - **品牌名称**：`{{{{#1765425297251.brand_name#}}}}`（当前客户品牌，如：香奈儿）\n- **竞品列表**：`{{{{#1776912874657.comps_list#}}}}`（客户品牌的所有竞品，如：迪奥、爱马仕大地、祖玛珑）\n\
+            - **产品名称**：`{{{{#1765425297251.product_name#}}}}`（如：蔚蓝男士香水）\n- **核心关键词**：{{{{#1765425297251.core_keyword#}}}}\n\
+            \n\n---\n\n\n## 首先基于核心信息提取与判定\n- 核心关键词直接作为问题锚点；\n- 基于品牌名称（brand_name）判定所属行业，并基于产品名判断产品特性，再结合行业属性和产品特性以及核心关键词进行需求判断，针对需求进行生词，确保生词的合理性，且符合C端用户真实需求\n\
+            \n\n## 第一部分：品牌直询生词（基于 brand_name）\n针对客户品牌（如香奈儿），生成4个维度的生词：\n\n\n### 维度1：正向综合评价\n\
+            **评价词库**：怎么样、好不好用、值得买吗、口碑如何\n**生成规则**：品牌名 + 产品品类词 + 评价词 = 生词\n\n\n**示例**：\n\
+            | 品牌 | 产品 | 评价词 | 生词 |\n|------|------|--------|------|\n| 香奈儿 | 香水 |\
+            \ 怎么样 | 香奈儿香水怎么样 |\n| 香奈儿 | 香水 | 好不好用 | 香奈儿香水好不好用 |\n| 香奈儿 | 香水 | 值得买吗\
+            \ | 香奈儿香水值得买吗 |\n| 香奈儿 | 香水 | 口碑如何 | 香奈儿香水口碑如何 |\n\n\n- 基于品牌名称（brand_name）判定所属行业，并基于产品名判断产品特性，再结合行业属性和产品特性以及核心关键词进行需求判断，针对需求进行生词，确保生词的合理性，且符合C端用户真实需求\n\
+            \n\n比如品牌=滴滴租车 ，产品名=滴滴机酒，就不能生词\"滴滴租车值得买吗\"，应该基于租车的实际需求去提问，如改为\"滴滴租车性价比如何\"\
+            \n\n\n\n### 维度2：安全质疑\n\n\n**评价词库**：长期用有副作用吗、成分安全吗、孕期可以用吗、有没有致敏成分\n\n\n\
+            **⚠️ is_negative_probe = 1**\n\n\n**示例**：\n\n\n| 品牌 | 产品 | 评价词 | 生词 |\n\
+            |------|------|--------|------|\n| 香奈儿 | 香水 | 长期用有副作用吗 | 香奈儿香水长期用有副作用吗\
+            \ |\n| 香奈儿 | 香水 | 成分安全吗 | 香奈儿香水成分安全吗 |\n| 香奈儿 | 香水 | 孕期可以用吗 | 怀孕期间可以用香奈儿香水吗\
+            \ |\n| 香奈儿 | 香水 | 有没有致敏成分 | 香奈儿香水里有没有致敏成分 |\n\n\n注意：需要基于品牌的行业属性和产品的属性选择合适的评价词进行生词，生词要深入分析真实C端用户产生需求时的疑问或疑惑或者担心，基于这个分析进行生词；另外也需要符合中文语法和语序，符合日常表达习惯\n\
+            \n\n比如品牌名称=滴滴租车 ，产品名=滴滴机酒，就不能生词\"滴滴租车长期使用安全吗\"，应该基于租车的实际需求去思考用户真实的负面担忧，比如改为\"\
+            滴滴租车会有隐藏消费吗\"或者\"滴滴租车的退款和取消政策如何？\"\n\n\n\n### 维度3：竞品比较\n\n\n**评价词库**：哪个更好、有什么区别、选哪个、持香哪个更久、哪个值得买、性价比哪个高、哪个更适合送礼\n\
+            \n\n**⚠️ 只针对客户品牌与竞品之间生成，brand_comp 填写客户品牌和竞品品牌，用英文逗号分隔**\n\n\n**示例**：\n\
+            \n\n| 品牌 × 竞品 | 评价词 | 生词 |\n|------------|--------|------|\n| 香奈儿 × 迪奥\
+            \ | 哪个更好 | 香奈儿和迪奥香水哪个更好 |\n| 香奈儿 × 迪奥 | 持香哪个更久 | 迪奥和香奈儿香水持香哪个更久 |\n| 香奈儿\
+            \ × 祖玛珑 | 哪个更适合送礼 | 香奈儿和祖玛珑哪个更适合送礼 |\n| 香奈儿 × 娇兰 | 区别是什么 | 祖玛珑和香奈儿香水有什么区别\
+            \ |\n\n\n注意：需要基于品牌名称进行的行业属性判断，以及产品名称进行产品属性判断，再选择合适的评价词进行生词，生词需要对真实C端用户需求进行分析，基于分析选择合适的评价词，再进行对比生词，另外也需要符合中文语法和语序，符合日常表达习惯\n\
+            \n\n比如品牌=滴滴 ，产品名=租车，就不能生词\"滴滴租车和一嗨租车哪个更适合送礼\"，应该基于租车的实际需求去思考用户真实的对比因素或者纠结点，比如改为\"\
+            滴滴租车和一嗨租车哪个服务更好\"\n\n\n\n## 第二部分：竞品查询生词（基于 comps_list 中的每个竞品）\n\n\n针对\
+            \ comps_list 中的每个竞品（如雅诗兰黛、迪奥），生成3个维度的生词：\n\n\n> ⚠️ 竞品查询**不包含竞品比较维度**，只生成：正向综合\
+            \ + 安全质疑两个维度的词\n\n\n### 维度1：正向综合评价（竞品用）\n\n\n**评价词库**：怎么样、口碑如何、值得买吗、效果好吗\n\
+            \n\n**示例**：\n\n\n| 竞品 | 产品 | 评价词 | 生词 |\n|------|------|--------|------|\n\
+            | 雅诗兰黛 | 香水 | 怎么样 | 雅诗兰黛香水怎么样 |\n| 雅诗兰黛 | 香水 | 口碑如何 | 雅诗兰黛香水口碑如何 |\n|\
+            \ 雅诗兰黛 | 香水 | 值得买吗 | 雅诗兰黛香水值得买吗 |\n\n\n### 维度2：安全质疑（竞品用）\n\n\n**评价词库**：长期用有副作用吗、成分安全吗、有没有致敏成分\n\
+            \n\n**⚠️ is_negative_probe = 1**\n\n\n**示例**：\n\n\n| 竞品 | 产品 | 评价词 | 生词\
+            \ |\n|------|------|--------|------|\n| 雅诗兰黛 | 香水 | 成分安全吗 | 雅诗兰黛香水成分安全吗\
+            \ |\n| 雅诗兰黛 | 香水 | 有没有致敏成分 | 雅诗兰黛香水里有没有致敏成分 |\n\n\n注意：竞品查询生词，同样需要基于行业属性和产品特点的判断，对用户真实需求进行分析，基于需求进行生词，切生词需要符合中文语法和语序\n\
+            \n\n---\n\n\n## 生成规则\n\n\n**品牌直询（brand_name）**：\n- 正向评价和安全质疑两个维度下，每维度生成\
+            \ 3个词，合计生词6条\n- is_negative_probe：安全质疑=1，负面舆情=1，正向综合=0，竞品比较=0\n- **is_competitor\
+            \ = 0**（客户品牌直询，属于客户品牌）\n\n\n**竞品比较（品牌 vs 竞品）**：竞品比较维度下需要结合竞品数量分别生成3个词\n\
+            - 每对竞品至少生成 3 条，3个竞品生词数量合计9条\n- is_negative_probe = 0\n- **is_competitor\
+            \ = 0**（竞品比较，以客户品牌为主视角）\n\n\n**竞品查询（comps_list 中的每个竞品）**：\n- 正向评价和安全质疑两个维度下，每维度\
+            \ 3条生词\n- 2个维度*3个竞品，生词数量=2*3*3合计18条\n- is_negative_probe：安全质疑=1，负面舆情=1，正向综合=0\n\
+            - 竞品查询**不包含竞品比较维度**\n- **is_competitor = 1**（竞品查询，属于竞品）\n\n\n\n**通用约束**：\n\
+            - 所有生词必须包含产品品类词（如\"香水\"）\n- 禁止出现未在 brand_name / comps_list 中出现的品牌名\n-\
+            \ 禁止生成非疑问句、陈述句\n- 禁止生成科普类、成分解释类问题\n\n\n---\n\n\n## 输出格式要求\n\n\n严格按以下JSON格式返回（不要任何其他内容）：\n\
+            \n\n```json\n{\n  \"t4_results\": [\n    {\n      \"query\": \"生词，如：香奈儿香水怎么样\"\
+            ,\n      \"query_type\": \"brand_direct / competitor_query / competitor_compare\"\
+            ,\n      \"brand_comp\": \"品牌名或竞品名（注意竞品比较时时两个同时存在），如：香奈儿 / 雅诗兰黛 / 迪奥\"\
+            ,\n      \"evaluation_dimension\": \"正向综合评价 / 安全质疑 / 竞品比较 / 负面舆情\",\n\
+            \      \"target_brand\": \"{{brand_name}}，始终为客户品牌名\",\n      \"is_negative_probe\"\
+            : 0或1,\n      \"is_competitor\": 0或1\n    }\n  ]\n}\n```\n\n\n**⚠️ 字段名严格校验（必须逐条核对，禁止出现以下错误）**：\n\
+            每个对象的字段名必须且只能是以下7个，多一个字、少一个字、多一个数字都不允许：\n| 序号 | 正确字段名 | 常见错误示例 | 错误原因\
+            \ |\n|------|-----------|-------------|---------|\n| 1 | query | - | -\
+            \ |\n| 2 | query_type | query_type1 | 末尾多了数字1 |\n| 3 | brand_comp | brand_comp1\
+            \ | 末尾多了数字1 |\n| 4 | evaluation_dimension | evaluation_dimension1 | 末尾多了数字1\
+            \ |\n| 5 | target_brand | - | - |\n| 6 | is_negative_probe | is_negative_pro1\
+            \ / is_negative_pro | 字母缺失或末尾多了数字 |\n| 7 | is_competitor | - | - |\n\n\
+            \n**校验方法**：输出JSON前，必须对每条记录的7个字段名逐一比对上表，确认完全一致。如果发现字段名与上表不一致，立即修正后再输出。\n\
+            \n\n**⚠️ 字段值严格校验（必须逐条核对，禁止出现以下错误）**：\n| 序号 | 字段名 | 值类型 | 合法值 | 常见错误示例\
+            \ | 错误原因 |\n|------|--------|--------|--------|-------------|---------|\n\
+            | 1 | query | string | 非空字符串 | - | - |\n| 2 | query_type | string | brand_direct\
+            \ / competitor_query / competitor_compare | - | - |\n| 3 | brand_comp\
+            \ | string | 品牌名（竞品比较时用英文逗号分隔两个品牌） | - | - |\n| 4 | evaluation_dimension\
+            \ | string | 正向综合评价 / 安全质疑 / 竞品比较 / 负面舆情 | \"安全质疑1\" / \"正向综合评价2\" | 值末尾多了数字，必须与合法值完全一致\
+            \ |\n| 5 | target_brand | string | 必须等于输入的brand_name原值，禁止篡改、截断、增删字符 |\
+            \ \"泛微京桥1\" | 原值\"泛微京桥通\"被截断 |\n| 6 | is_negative_probe | **整数** | 0 或\
+            \ 1 | — / T / TRUE / \"0\" / \"1\" | 破折号、裸字母T/F均不是合法JSON值；TRUE不是（必须小写true）；字符串不是整数\
+            \ |\n| 7 | is_competitor | **整数** | 0 或 1 | \"0\" / \"1\" / T / F | 字符串不是整数；裸字母T/F不是合法JSON值\
+            \ |\n\n**重点强调**：\n- is_negative_probe 和 is_competitor 的值必须是**纯整数 0 或 1**，禁止使用破折号（—）、裸字母（T/F/TRUE/FALSE）、字符串（\"\
+            0\"/\"1\"）、null等任何非整数值\n- target_brand 的值必须从输入的brand_name原样复制，禁止任何形式的篡改、截断、替换字符\n\
+            \n\n**校验方法**：输出JSON前，必须对每条记录的字段值逐一核对上表。特别检查：①is_negative_probe和is_competitor是否为纯整数0或1；②target_brand是否与输入brand_name完全一致\n\
+            \n\n**query_type 说明**：\n\n\n| query_type | 含义 | brand_comp 取值 | evaluation_dimension\
+            \ | is_competitor |\n|------------|------|-----------------|----------------------|---------------|\n\
+            | brand_direct | 客户品牌直询 | 客户品牌（如：香奈儿） | 正向综合评价 / 安全质疑 / 竞品比较 | **0** |\n\
+            | competitor_query | 竞品查询（单品牌） | comps_list 中的具体竞品名（如：雅诗兰黛、迪奥） | 正向综合评价\
+            \ / 安全质疑（无竞品比较） | **1** |\n| competitor_compare | 客户品牌 vs 竞品比较 | 客户品牌（如：香奈儿）\
+            \ | 竞品比较 | **0** |\n\n\n**is_competitor 说明**：\n\n\n| 值 | 含义 | 触发条件 |\n\
+            |----|------|---------|\n| 0 | 客户品牌 | query_type = brand_direct 或 competitor_compare\
+            \ |\n| 1 | 竞品 | query_type = competitor_query |\n\n\n**is_negative_probe\
+            \ 说明**：\n\n\n| 值 | 触发条件 |\n|----|---------|\n| 1 | evaluation_dimension\
+            \ = 安全质疑  |\n| 0 | evaluation_dimension = 正向综合评价 或 竞品比较 |\n\n\n**完整示例输出**：\n\
+            \n\n```json\n{\n  \"t4_results\": [\n    {\n      \"query\": \"香奈儿香水怎么样\"\
+            ,\n      \"query_type\": \"brand_direct\",\n      \"brand_comp\": \"香奈儿\"\
+            ,\n      \"evaluation_dimension\": \"正向综合评价\",\n      \"target_brand\"\
+            : \"香奈儿\",\n      \"is_negative_probe\": 0,\n      \"is_competitor\":\
+            \ 0\n    },\n    {\n      \"query\": \"香奈儿香水成分安全吗\",\n      \"query_type\"\
+            : \"brand_direct\",\n      \"brand_comp\": \"香奈儿\",\n      \"evaluation_dimension\"\
+            : \"安全质疑\",\n      \"target_brand\": \"香奈儿\",\n      \"is_negative_probe\"\
+            : 1,\n      \"is_competitor\": 0\n    },\n    {\n      \"query\": \"香奈儿和迪奥香水哪个更好\"\
+            ,\n      \"query_type\": \"competitor_compare\",\n      \"brand_comp\"\
+            : \"香奈儿,迪奥\",\n      \"evaluation_dimension\": \"竞品比较\",\n      \"target_brand\"\
+            : \"香奈儿\",\n      \"is_negative_probe\": 0,\n      \"is_competitor\":\
+            \ 0\n    },\n    {\n      \"query\": \"雅诗兰黛香水怎么样\",\n      \"query_type\"\
+            : \"competitor_query\",\n      \"brand_comp\": \"雅诗兰黛\",\n      \"evaluation_dimension\"\
+            : \"正向综合评价\",\n      \"target_brand\": \"香奈儿\",\n      \"is_negative_probe\"\
+            : 0,\n      \"is_competitor\": 1\n    },\n    {\n      \"query\": \"雅诗兰黛香水成分安全吗\"\
+            ,\n      \"query_type\": \"competitor_query\",\n      \"brand_comp\":\
+            \ \"雅诗兰黛\",\n      \"evaluation_dimension\": \"安全质疑\",\n      \"target_brand\"\
+            : \"香奈儿\",\n      \"is_negative_probe\": 1,\n      \"is_competitor\":\
+            \ 1\n    },\n    {\n      \"query\": \"迪奥香水怎么样\",\n      \"query_type\"\
+            : \"competitor_query\",\n      \"brand_comp\": \"迪奥\",\n      \"evaluation_dimension\"\
+            : \"正向综合评价\",\n      \"target_brand\": \"香奈儿\",\n      \"is_negative_probe\"\
+            : 0,\n      \"is_competitor\": 1\n    }\n  ]\n}\n```\n\n\n数量要求：\n务必严格按照一些数量进行生词：\n\
+            **品牌直询（brand_name）**：- 正向评价和安全质疑两个维度下，每维度生成 3个词，合计生词6条\n**竞品比较（品牌 vs 竞品）**：每对竞品至少生成\
+            \ 3 条，3个竞品生词数量合计9条\n**竞品查询（comps_list 中的每个竞品）**：正向评价和安全质疑两个维度下，每维度 3条生词，共3个竞品，生词数量=2*3*3合计18条\n\
+            T4维度生词共计=6+9+18=33条\n\n\n---\n\n\n【自检清单】\n1、客户品牌直询词是否按三个维度生产6个词，数量为6\n\
+            2、竞品比较词是否按照要求生产，3个竞品合计9条，数量为9\n3、竞品词是否按照要求全部生产，两个维度，每个维度3条，3个竞品，合计18条，数量为18\n\
+            4、总共至少需要输出33个词。注意，如果自检数量不足，需要你结合具体的维度进行生词补充，确保输出时足够\n5、⚠️ 字段名校验：逐条检查每条记录的7个字段名是否与字段名校验表完全一致，确认没有多字、少字、多数字、少字母的情况（特别是query_type、brand_comp、evaluation_dimension、is_negative_probe这4个易错字段）\n\
+            6、⚠️ 最终总数校验：逐条计数，确认总输出≥33条。如不足，检查哪个维度缺少并补齐。数量不够=输出无效。\n\n请输出JSON结果，禁止任何其他内容。\n\
+            \n"
+        - id: f8adbb18-63fd-4d46-84f6-46abb5d8b8fc
+          role: user
+          text: 请严格按照以上所有要求输出
+        selected: false
+        title: T4-1品牌直询生词LLM
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 97
+      id: '17725226062860'
+      position:
+        x: 942
+        y: 834
+      positionAbsolute:
+        x: 942
+        y: 834
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            max_tokens: 13001
+            temperature: 0.4
+            top_p: 0.7
+          mode: chat
+          name: qwen/qwen3.7-plus
+          provider: zhinao
+        prompt_template:
+        - id: b8d7ef1e-b888-4eb1-8906-c7f8245fe765
+          role: system
+          text: "你是一名GEO专家，需要生成推荐决策类查询词（T3维度）。\n\n【输入信息】\n核心关键词：{{{{#1765425297251.core_keyword#}}}}\n\
+            产品名称：{{{{#1765425297251.product_name#}}}}\n品牌名称：{{{{#1765425297251.brand_name#}}}}\n\
+            \n\n【\U0001F512 core_keyword 强绑定铁律 - 违反视为无效】\n1. 每一条 query 都必须与 core_keyword\
+            \ 存在\"直接相关\"关系，禁止仅使用行业泛化词而不带 core_keyword 语义\n2. 通过\"锚定测试\"：将 query 中的\
+            \ core_keyword 语义元素（含活动名/品牌名/产品名的核心词）删除后，query 应无法独立表达用户的具体搜索意图\n3. 严禁产出\"\
+            行业百科式\"query（如\"XX是什么/XX有哪些/XX怎么用\"这类不带 core_keyword 语义元素的通用问法）\n4. 严禁跨赛道漂移：不得引入与\
+            \ core_keyword 无关的其它行业/场景/权益/活动名\n\n【核心信息提取与判断】\n- 核心关键词直接作为问题锚点；\n- 基于产品名和品牌名判定所属行业，再基于产品和行业属性进行需求判断，针对需求进行生词，确保生词的合理性，且符合C端用户真实需求\n\
+            \n【Query生成铁律】\n- 同一批词中务必不能出现重复query\n- 数量必须按照要求足量输出\n\n【Query生成公式】\n场景意图词\
+            \ × 决策意图词（固定词库）= 蒸馏词\n\n【场景意图词库】 - 基于核心关键词提取\n- 从\"{{core_keyword}}\"\
+            提取场景意图（如：生日送礼、日常自用等）\n\n【决策意图词库】 - 固定词库\n- 强决策：哪个好/哪款好/买哪个/推荐/值得买吗/入手哪个。说明用户已准备好行动，AI需直接给出品牌名或排名列表。优先级最高，若与其他词共现仍判为强决策\n\
+            - 中决策：推荐什么/有什么推荐/有哪些/选什么好/推荐几款。用户在筛选候选范围，期望 AI 给出候选集合，尚未到选定阶段\n- 弱决策：怎么选/如何选/选购攻略/有什么讲究/注意什么/怎么判断。用户还在建立决策框架，需要的是方法论而非具体品牌。\n\
+            \n【生成规则】\n1. 基于场景意图，与三个层级的决策词都组合\n2. 数量要求：每个决策强度下务必生成5个词，可以使用同一个决策意图词生成不同问法的蒸馏词\n\
+            3. 强决策单独标记，用于计算决策推荐率\n\n【示例】\n1. 强决策：\ncase1:[场景]+[决策词]\n场景意图词=生日送礼香水推荐\n\
+            决策意图词=哪个牌子好\n生成的蒸馏词=生日送礼香水推荐哪个牌子好\ncase2:[用户画像]+[场景]+[决策词]\n场景意图词=生日送礼香水推荐\n\
+            决策意图词=推荐 + 高档\n生成的蒸馏词=女生生日送什么香水比较高档\ncase3:[场景]+[品牌隐含]+[决策词]\n场景意图词=生日送礼香水推荐\n\
+            决策意图词=值得买吗\n生成的蒸馏词=送女朋友生日礼物买香水值得吗\n....\n\n2. 中决策\ncase1:[用户场景]+[推荐词]\n\
+            场景意图词=生日送礼香水推荐\n决策意图词=推荐什么\n生成的蒸馏词=送女友生日礼物推荐什么香水\ncase2:[品类]+[有哪些]\n场景意图词=生日送礼香水推荐\n\
+            决策意图词=有哪些\n生成的蒸馏词=高端送礼香水品牌有哪些\ncase3:[预算]+[场景]+[推荐词]\n场景意图词=生日送礼香水推荐\n\
+            决策意图词=推荐几款\n生成的蒸馏词=500元以内生日送礼香水推荐几款\n....\n\n3.弱决策\ncase1:[场景]+[选购词]\n\
+            场景意图词=生日送礼香水推荐\n决策意图词=怎么选\n生成的蒸馏词=送礼香水怎么选，有什么注意事项\ncase2:[场景]+[方法词]\n\
+            场景意图词=生日送礼香水推荐\n决策意图词=有什么讲究\n生成的蒸馏词=买香水送人有什么忌讳和讲究\ncase3:[场景]+[攻略词]\n\
+            场景意图词=生日送礼香水推荐\n决策意图词=选购攻略\n生成的蒸馏词=女生生日送香水选购攻略，淡香浓香怎么区分\n....\n\n\n【输出格式要求】\n\
+            {\n  \"t3_results\": [\n    {\n      \"query\": \"蒸馏词\",\n      \"decision_intent_level\"\
+            : \"1/2/3\",\n      \"is_strong_decision\": \"1或0\"\n    }\n    // 15条，每类5条\n\
+            \  ]\n}\n```\n\n**Output Variables:**\n- `t3_results` - JSON数组，每个元素包含query,\
+            \ decision_intent_level, is_strong_decision\n\n\n----\n## 数量硬性约束（⚠️ 违反则输出无效）\n\
+            \n\n| 决策层级 | decision_intent_level | 必须数量 |\n|---------|----------------------|---------|\n\
+            | 强决策 | 1 | 5条 |\n| 中决策 | 2 | 5条 |\n| 弱决策 | 3 | 5条 |\n| **合计** | - | **15条**\
+            \ |\n\n\n⚠️ 输出前逐层级计数：如果任何一个层级不足5条，立即补充至5条后再输出。总数必须=15条。\n\n\n## 自检清单\n\
+            1. [ ] 逐层级计数：强决策(level=1)=5条，中决策(level=2)=5条，弱决策(level=3)=5条\n2. [ ] 总数=15条\n\
+            3. [ ] 无重复query\n4. [ ] decision_intent_level值为1/2/3（整数或字符串数字）\n5. [ ]\
+            \ is_strong_decision：强决策=1，中/弱决策=0\n\n\n如果自检数量不足，必须基于对应层级的决策词库补充至满足要求后再输出。\n\
+            \n"
+        - id: f8adbb18-63fd-4d46-84f6-46abb5d8b8fc
+          role: user
+          text: 请严格按照以上所有要求输出
+        selected: false
+        title: T3-1推荐决策生词LLM
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 97
+      id: '17767632648380'
+      position:
+        x: 942
+        y: 668
+      positionAbsolute:
+        x: 942
+        y: 668
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import json\nimport re\nfrom datetime import datetime\n\ndef main(t1_results=None,\
+          \ task_id='', brand_name='', core_keyword=''):\n    \"\"\"\n    Dify Python代码节点\
+          \ T1-2 检测与格式化\n    输入: t1_results (JSON字符串或列表), task_id, brand_name, core_keyword\n\
+          \    输出: formatted_results, actual_count, expected_count, is_sufficient,\
+          \ deficit, existing_queries\n    \"\"\"\n\n    if t1_results is None:\n\
+          \        t1_results = []\n\n    # 如果是字符串，先去除markdown代码块，再解析JSON\n    if\
+          \ isinstance(t1_results, str):\n        _raw = t1_results\n        _m =\
+          \ re.search(r'(\\{[\\s\\S]*\\}|\\[[\\s\\S]*\\])', _raw)\n        t1_results\
+          \ = _m.group(1) if _m else _raw\n        t1_results = re.sub(r'^```(?:json)?\\\
+          s*', '', t1_results.strip())\n        t1_results = re.sub(r'\\s*```$', '',\
+          \ t1_results.strip())\n        try:\n            t1_results = json.loads(t1_results)\n\
+          \        except json.JSONDecodeError:\n            repaired = _try_repair_truncated_json(t1_results)\n\
+          \            if repaired is not None:\n                t1_results = repaired\n\
+          \            else:\n                t1_results = []\n\n    # 如果是dict且有\"\
+          t1_results\"字段，提取它\n    if isinstance(t1_results, dict) and \"t1_results\"\
+          \ in t1_results:\n        t1_results = t1_results.get(\"t1_results\", [])\n\
+          \n    # 确保是列表\n    if not isinstance(t1_results, list):\n        t1_results\
+          \ = []\n\n    # 初始化结果列表\n    results = []\n    query_texts = []\n\n    #\
+          \ 遍历每个scene → 展开queries\n    for scene_index, scene in enumerate(t1_results):\n\
+          \        if isinstance(scene, dict):\n            queries = scene.get('queries')\
+          \ or scene.get('query') or []\n            if isinstance(queries, list):\n\
+          \                for query_index, query in enumerate(queries):\n       \
+          \             if isinstance(query, str) and query.strip():\n           \
+          \             obj = {\n                            'id': f'AUTO_{int(datetime.now().timestamp())}_{scene_index}_{query_index}',\n\
+          \                            'task_id': task_id,\n                     \
+          \       'brand_name': brand_name,\n                            'query':\
+          \ query.strip(),\n                            'core_keyword': core_keyword,\n\
+          \                            'source_keyword': 3,\n                    \
+          \        'source_word_type': 1,\n                            'question_type':\
+          \ 1,\n                            'scene_name': scene.get('scene_name'),\n\
+          \                            'priority_level': scene.get('priority_level'),\n\
+          \                            'persona_name': scene.get('persona_name'),\n\
+          \                            'decision_intent_level': None,\n          \
+          \                  'is_strong_decision': 0,\n                          \
+          \  'cognition_dimension': None,\n                            'evaluation_dimension':\
+          \ None,\n                            'is_negative_probe': 0,\n         \
+          \                   'is_active': 1,\n                            'created_at':\
+          \ datetime.now().strftime('%Y-%m-%d %H:%M:%S'),\n                      \
+          \      'updated_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S')\n    \
+          \                    }\n                        results.append(json.dumps(obj,\
+          \ ensure_ascii=False))\n                        query_texts.append(query.strip())\n\
+          \n    # 数量校验\n    expected_count = 60\n    actual_count = len(results)\n\
+          \    is_sufficient = \"1\" if actual_count >= expected_count else \"0\"\n\
+          \    deficit = max(0, expected_count - actual_count)\n\n    # 已生成query文本列表（供补词LLM去重用）\n\
+          \    existing_queries = '\\n'.join(query_texts)\n\n    return {\n      \
+          \  'formatted_results': results,\n        'actual_count': actual_count,\n\
+          \        'expected_count': expected_count,\n        'is_sufficient': is_sufficient,\n\
+          \        'deficit': deficit,\n        'existing_queries': existing_queries\n\
+          \    }\n\n\ndef _try_repair_truncated_json(text):\n    \"\"\"截断JSON修复：尝试补全未闭合的JSON\"\
+          \"\"\n    if not text or not isinstance(text, str):\n        return None\n\
+          \n    last_scene_end = -1\n    for m in re.finditer(r'\\]\\s*\\}', text):\n\
+          \        last_scene_end = m.end()\n\n    if last_scene_end <= 0:\n     \
+          \   return None\n\n    partial = text[:last_scene_end]\n    for suffix in\
+          \ [']}', '\\n]}', '\\n  ]\\n}']:\n        try:\n            obj = json.loads(partial\
+          \ + suffix)\n            if isinstance(obj, dict):\n                return\
+          \ obj\n        except json.JSONDecodeError:\n            continue\n\n  \
+          \  return None\n"
+        code_language: python3
+        desc: ''
+        outputs:
+          actual_count:
+            children: null
+            type: number
+          deficit:
+            children: null
+            type: number
+          existing_queries:
+            children: null
+            type: string
+          expected_count:
+            children: null
+            type: number
+          formatted_results:
+            children: null
+            type: array[string]
+          is_sufficient:
+            children: null
+            type: string
+        selected: false
+        title: T1-2检测格式化
+        type: code
+        variables:
+        - value_selector:
+          - '17725226028060'
+          - text
+          variable: t1_results
+        - value_selector:
+          - '1765425297251'
+          - task_id
+          variable: task_id
+        - value_selector:
+          - '1765425297251'
+          - brand_name
+          variable: brand_name
+        - value_selector:
+          - '1765425297251'
+          - core_keyword
+          variable: core_keyword
+      height: 53
+      id: '1776824084015'
+      position:
+        x: 1246
+        y: 336
+      positionAbsolute:
+        x: 1246
+        y: 336
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import json\nimport re\nfrom datetime import datetime\n\ndef main(t2_results=None,\
+          \ task_id='', brand_name='', core_keyword=''):\n    \"\"\"\n    Dify Python代码节点\
+          \ T2-2 检测与格式化\n    输入: t2_results (JSON字符串或列表), task_id, brand_name, core_keyword\n\
+          \    输出: formatted_results, actual_count, expected_count, is_sufficient,\
+          \ deficit, existing_queries\n    \"\"\"\n\n    if t2_results is None:\n\
+          \        t2_results = []\n\n    # 如果是字符串，先去除markdown代码块，再解析JSON\n    if\
+          \ isinstance(t2_results, str):\n        _raw = t2_results\n        _m =\
+          \ re.search(r'(\\{[\\s\\S]*\\}|\\[[\\s\\S]*\\])', _raw)\n        t2_results\
+          \ = _m.group(1) if _m else _raw\n        t2_results = re.sub(r'^```(?:json)?\\\
+          s*', '', t2_results.strip())\n        t2_results = re.sub(r'\\s*```$', '',\
+          \ t2_results.strip())\n        try:\n            t2_results = json.loads(t2_results)\n\
+          \        except json.JSONDecodeError:\n            t2_results = []\n\n \
+          \   # 如果是dict且有\"t2_results\"字段，提取它\n    if isinstance(t2_results, dict)\
+          \ and \"t2_results\" in t2_results:\n        t2_results = t2_results.get(\"\
+          t2_results\", [])\n\n    # 确保是列表\n    if not isinstance(t2_results, list):\n\
+          \        t2_results = []\n\n    # 初始化结果列表\n    results = []\n    query_texts\
+          \ = []\n\n    # 遍历每个item\n    for item_index, item in enumerate(t2_results):\n\
+          \        if isinstance(item, dict):\n            query = item.get('query',\
+          \ '')\n            cognition_dimension = item.get('cognition_dimension',\
+          \ '')\n\n            if not isinstance(query, str) or not query.strip():\n\
+          \                continue\n\n            is_negative_probe = 1 if \"副作用\"\
+          \ in query or \"有害\" in query or \"有毒\" in query or \"危险\" in query else\
+          \ 0\n\n            obj = {\n                'id': f'AUTO_{int(datetime.now().timestamp())}_T2_{item_index}',\n\
+          \                'task_id': task_id,\n                'brand_name': brand_name,\n\
+          \                'query': query.strip(),\n                'core_keyword':\
+          \ core_keyword,\n                'source_keyword': 1,\n                'source_word_type':\
+          \ 2,\n                'question_type': 2,\n                'scene_name':\
+          \ None,\n                'priority_level': None,\n                'persona_name':\
+          \ None,\n                'decision_intent_level': None,\n              \
+          \  'is_strong_decision': 0,\n                'cognition_dimension': cognition_dimension,\n\
+          \                'evaluation_dimension': None,\n                'is_negative_probe':\
+          \ is_negative_probe,\n                'is_active': 1,\n                'created_at':\
+          \ datetime.now().strftime('%Y-%m-%d %H:%M:%S'),\n                'updated_at':\
+          \ datetime.now().strftime('%Y-%m-%d %H:%M:%S')\n            }\n\n      \
+          \      results.append(json.dumps(obj, ensure_ascii=False))\n           \
+          \ query_texts.append(query.strip())\n\n    # 数量校验\n    expected_count =\
+          \ 20\n    actual_count = len(results)\n    is_sufficient = \"1\" if actual_count\
+          \ >= expected_count else \"0\"\n    deficit = max(0, expected_count - actual_count)\n\
+          \n    # 已生成query文本列表（供补词LLM去重用）\n    existing_queries = '\\n'.join(query_texts)\n\
+          \n    return {\n        'formatted_results': results,\n        'actual_count':\
+          \ actual_count,\n        'expected_count': expected_count,\n        'is_sufficient':\
+          \ is_sufficient,\n        'deficit': deficit,\n        'existing_queries':\
+          \ existing_queries\n    }\n"
+        code_language: python3
+        desc: ''
+        outputs:
+          actual_count:
+            children: null
+            type: number
+          deficit:
+            children: null
+            type: number
+          existing_queries:
+            children: null
+            type: string
+          expected_count:
+            children: null
+            type: number
+          formatted_results:
+            children: null
+            type: array[string]
+          is_sufficient:
+            children: null
+            type: string
+        selected: false
+        title: T2-2检测格式化
+        type: code
+        variables:
+        - value_selector:
+          - '1772455683164'
+          - text
+          variable: t2_results
+        - value_selector:
+          - '1765425297251'
+          - task_id
+          variable: task_id
+        - value_selector:
+          - '1765425297251'
+          - brand_name
+          variable: brand_name
+        - value_selector:
+          - '1765425297251'
+          - core_keyword
+          variable: core_keyword
+      height: 53
+      id: '1776824167905'
+      position:
+        x: 1246
+        y: 502
+      positionAbsolute:
+        x: 1246
+        y: 502
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import json\nimport re\nfrom datetime import datetime\n\ndef main(t3_results=None,\
+          \ task_id='', brand_name='', core_keyword=''):\n    \"\"\"\n    Dify Python代码节点\
+          \ T3-2 检测与格式化\n    输入: t3_results (JSON字符串或列表), task_id, brand_name, core_keyword\n\
+          \    输出: formatted_results, actual_count, expected_count, is_sufficient,\
+          \ deficit, existing_queries\n    \"\"\"\n\n    if t3_results is None:\n\
+          \        t3_results = []\n\n    # 如果是字符串，先去除markdown代码块，再解析JSON\n    if\
+          \ isinstance(t3_results, str):\n        _raw = t3_results\n        _m =\
+          \ re.search(r'(\\{[\\s\\S]*\\}|\\[[\\s\\S]*\\])', _raw)\n        t3_results\
+          \ = _m.group(1) if _m else _raw\n        t3_results = re.sub(r'^```(?:json)?\\\
+          s*', '', t3_results.strip())\n        t3_results = re.sub(r'\\s*```$', '',\
+          \ t3_results.strip())\n        try:\n            t3_results = json.loads(t3_results)\n\
+          \        except json.JSONDecodeError:\n            t3_results = []\n\n \
+          \   # 如果是dict且有\"t3_results\"字段，提取它\n    if isinstance(t3_results, dict)\
+          \ and \"t3_results\" in t3_results:\n        t3_results = t3_results.get(\"\
+          t3_results\", [])\n\n    # 确保是列表\n    if not isinstance(t3_results, list):\n\
+          \        t3_results = []\n\n    # 初始化结果列表\n    results = []\n    query_texts\
+          \ = []\n\n    # 遍历每个item\n    for item_index, item in enumerate(t3_results):\n\
+          \        if isinstance(item, dict):\n            query = item.get('query',\
+          \ '')\n            decision_intent_level_raw = item.get('decision_intent_level')\n\
+          \            is_strong_decision_raw = item.get('is_strong_decision')\n\n\
+          \            if not isinstance(query, str) or not query.strip():\n     \
+          \           continue\n\n            # 转换为整数（兼容int和str两种类型）\n           \
+          \ decision_intent_level = None\n            if isinstance(decision_intent_level_raw,\
+          \ int):\n                decision_intent_level = decision_intent_level_raw\n\
+          \            elif isinstance(decision_intent_level_raw, str) and decision_intent_level_raw.isdigit():\n\
+          \                decision_intent_level = int(decision_intent_level_raw)\n\
+          \n            is_strong_decision = 0\n            if isinstance(is_strong_decision_raw,\
+          \ int):\n                is_strong_decision = 1 if is_strong_decision_raw\
+          \ == 1 else 0\n            elif isinstance(is_strong_decision_raw, str):\n\
+          \                is_strong_decision = 1 if is_strong_decision_raw == \"\
+          1\" else 0\n\n            obj = {\n                'id': f'AUTO_{int(datetime.now().timestamp())}_T3_{item_index}',\n\
+          \                'task_id': task_id,\n                'brand_name': brand_name,\n\
+          \                'query': query.strip(),\n                'core_keyword':\
+          \ core_keyword,\n                'source_keyword': 1,\n                'source_word_type':\
+          \ 3,\n                'question_type': 3,\n                'scene_name':\
+          \ None,\n                'priority_level': None,\n                'persona_name':\
+          \ None,\n                'decision_intent_level': decision_intent_level,\n\
+          \                'is_strong_decision': is_strong_decision,\n           \
+          \     'cognition_dimension': None,\n                'evaluation_dimension':\
+          \ None,\n                'is_negative_probe': 0,\n                'is_active':\
+          \ 1,\n                'created_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),\n\
+          \                'updated_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S')\n\
+          \            }\n\n            results.append(json.dumps(obj, ensure_ascii=False))\n\
+          \            query_texts.append(query.strip())\n\n    # 数量校验\n    expected_count\
+          \ = 15\n    actual_count = len(results)\n    is_sufficient = \"1\" if actual_count\
+          \ >= expected_count else \"0\"\n    deficit = max(0, expected_count - actual_count)\n\
+          \n    # 已生成query文本列表（供补词LLM去重用）\n    existing_queries = '\\n'.join(query_texts)\n\
+          \n    return {\n        'formatted_results': results,\n        'actual_count':\
+          \ actual_count,\n        'expected_count': expected_count,\n        'is_sufficient':\
+          \ is_sufficient,\n        'deficit': deficit,\n        'existing_queries':\
+          \ existing_queries\n    }\n"
+        code_language: python3
+        desc: ''
+        outputs:
+          actual_count:
+            children: null
+            type: number
+          deficit:
+            children: null
+            type: number
+          existing_queries:
+            children: null
+            type: string
+          expected_count:
+            children: null
+            type: number
+          formatted_results:
+            children: null
+            type: array[string]
+          is_sufficient:
+            children: null
+            type: string
+        selected: false
+        title: T3-2检测格式化
+        type: code
+        variables:
+        - value_selector:
+          - '17767632648380'
+          - text
+          variable: t3_results
+        - value_selector:
+          - '1765425297251'
+          - task_id
+          variable: task_id
+        - value_selector:
+          - '1765425297251'
+          - brand_name
+          variable: brand_name
+        - value_selector:
+          - '1765425297251'
+          - core_keyword
+          variable: core_keyword
+      height: 53
+      id: '17768257283590'
+      position:
+        x: 1246
+        y: 668
+      positionAbsolute:
+        x: 1246
+        y: 668
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import json\nimport re\nfrom datetime import datetime\n\n\ndef fuzzy_get(item,\
+          \ key, default=None):\n    \"\"\"模糊取值：先精确匹配，失败后尝试去除key末尾数字再匹配\"\"\"\n  \
+          \  if key in item:\n        return item[key]\n    for k, v in item.items():\n\
+          \        if re.sub(r'\\d+$', '', k) == key:\n            return v\n    return\
+          \ default\n\n\ndef sanitize_json_string(text):\n    \"\"\"清洗LLM输出中所有非法JSON值\"\
+          \"\"\n    if not text:\n        return text\n\n    int_fields = ['is_negative_probe',\
+          \ 'is_competitor']\n    for field in int_fields:\n        text = re.sub(\n\
+          \            rf'\"{field}\"\\s*:\\s*[^0-9\\[{{\"\\]}}]*?(\\d+)\\s*([,}}\\\
+          ]])',\n            rf'\"{field}\": \\1\\2',\n            text\n        )\n\
+          \        text = re.sub(\n            rf'\"{field}\"\\s*:\\s*[^0-9\"\\'\\\
+          [{{{{\\]}}}},]+\\s*([,}}\\]])',\n            rf'\"{field}\": 0\\1',\n  \
+          \          text\n        )\n\n    def replace_bare_value(match):\n     \
+          \   bare = match.group(1).strip()\n        tail = match.group(2)\n     \
+          \   lower = bare.lower()\n        if lower == 'true':\n            return\
+          \ f': true{tail}'\n        if lower == 'false':\n            return f':\
+          \ false{tail}'\n        if lower in ('null', 'none'):\n            return\
+          \ f': null{tail}'\n        return f': 0{tail}'\n\n    text = re.sub(\n \
+          \       r':\\s*([A-Za-z—–\\-/]+(?:[A-Za-z0-9—–\\-/])*)\\s*([,}\\]])',\n\
+          \        replace_bare_value,\n        text\n    )\n\n    return text\n\n\
+          \ndef safe_int(val, default=0):\n    \"\"\"将各种类型安全转为int\"\"\"\n    if isinstance(val,\
+          \ bool):\n        return 1 if val else 0\n    if isinstance(val, int):\n\
+          \        return val\n    if isinstance(val, str) and val.strip().isdigit():\n\
+          \        return int(val)\n    return default\n\n\ndef main(t4_results=None,\
+          \ task_id='', core_keyword=''):\n    \"\"\"\n    Dify Python代码节点 T4-2 检测与格式化\n\
+          \    输入: t4_results (JSON字符串或列表), task_id, core_keyword\n    输出: formatted_results,\
+          \ actual_count, expected_count, is_sufficient, deficit, existing_queries\n\
+          \    \"\"\"\n\n    if t4_results is None:\n        t4_results = []\n\n \
+          \   # 如果是字符串，先去除markdown代码块，再解析JSON\n    if isinstance(t4_results, str):\n\
+          \        _raw = t4_results\n        _m = re.search(r'(\\{[\\s\\S]*\\}|\\\
+          [[\\s\\S]*\\])', _raw)\n        t4_results = _m.group(1) if _m else _raw\n\
+          \        t4_results = re.sub(r'^```(?:json)?\\s*', '', t4_results.strip())\n\
+          \        t4_results = re.sub(r'\\s*```$', '', t4_results.strip())\n\n  \
+          \      try:\n            t4_results = json.loads(t4_results)\n        except\
+          \ json.JSONDecodeError:\n            try:\n                cleaned = sanitize_json_string(t4_results)\n\
+          \                t4_results = json.loads(cleaned)\n            except json.JSONDecodeError:\n\
+          \                t4_results = []\n\n    # 如果是dict且有\"t4_results\"字段，提取它\n\
+          \    if isinstance(t4_results, dict) and \"t4_results\" in t4_results:\n\
+          \        t4_results = t4_results.get(\"t4_results\", [])\n\n    if not isinstance(t4_results,\
+          \ list):\n        t4_results = []\n\n    results = []\n    query_texts =\
+          \ []\n\n    for item_index, item in enumerate(t4_results):\n        if isinstance(item,\
+          \ dict):\n            query = fuzzy_get(item, 'query', '')\n           \
+          \ query_type = fuzzy_get(item, 'query_type', '')\n            brand_comp_raw\
+          \ = fuzzy_get(item, 'brand_comp', '')\n            evaluation_dimension\
+          \ = fuzzy_get(item, 'evaluation_dimension', '')\n            target_brand\
+          \ = fuzzy_get(item, 'target_brand', '')\n            is_negative_probe =\
+          \ safe_int(fuzzy_get(item, 'is_negative_probe', 0), 0)\n            is_competitor\
+          \ = safe_int(fuzzy_get(item, 'is_competitor', 0), 0)\n\n            if not\
+          \ isinstance(query, str) or not query.strip():\n                continue\n\
+          \n            # brand_comp 转为数组\n            if isinstance(brand_comp_raw,\
+          \ list):\n                brand_comp = [b.strip() for b in brand_comp_raw\
+          \ if isinstance(b, str) and b.strip()]\n            elif isinstance(brand_comp_raw,\
+          \ str):\n                if brand_comp_raw.strip():\n                  \
+          \  parts = [b.strip() for b in brand_comp_raw.split(',') if b.strip()]\n\
+          \                    seen = set()\n                    brand_comp = []\n\
+          \                    for b in parts:\n                        if b not in\
+          \ seen:\n                            seen.add(b)\n                     \
+          \       brand_comp.append(b)\n                else:\n                  \
+          \  brand_comp = []\n            else:\n                brand_comp = []\n\
+          \n            # 判断 source_keyword 和 source_word_type\n            source_keyword\
+          \ = None\n            source_word_type = None\n\n            if is_competitor\
+          \ == 0:\n                if query_type == 'competitor_compare':\n      \
+          \              source_keyword = 3\n                    source_word_type\
+          \ = 4\n                elif query_type == 'brand_direct':\n            \
+          \        source_keyword = 2\n                    source_word_type = 4\n\n\
+          \            # evaluation_dimension 值清洗\n            valid_eval_dims = ['正向综合评价',\
+          \ '安全质疑', '竞品比较', '负面舆情']\n            final_evaluation_dimension = evaluation_dimension\n\
+          \            if isinstance(final_evaluation_dimension, str) and final_evaluation_dimension\
+          \ not in valid_eval_dims:\n                cleaned_dim = re.sub(r'\\d+$',\
+          \ '', final_evaluation_dimension)\n                if cleaned_dim in valid_eval_dims:\n\
+          \                    final_evaluation_dimension = cleaned_dim\n\n      \
+          \      obj = {\n                'id': f'AUTO_{int(datetime.now().timestamp())}_T4_{item_index}',\n\
+          \                'task_id': task_id,\n                'brand_name': target_brand,\n\
+          \                'query': query.strip(),\n                'core_keyword':\
+          \ core_keyword,\n                'source_keyword': source_keyword,\n   \
+          \             'source_word_type': source_word_type,\n                'question_type':\
+          \ 4,\n                'scene_name': None,\n                'priority_level':\
+          \ None,\n                'persona_name': None,\n                'decision_intent_level':\
+          \ None,\n                'is_strong_decision': 0,\n                'cognition_dimension':\
+          \ None,\n                'evaluation_dimension': final_evaluation_dimension,\n\
+          \                'query_type': query_type,\n                'brand_comp':\
+          \ brand_comp,\n                'is_competitor': is_competitor,\n       \
+          \         'is_negative_probe': int(is_negative_probe),\n               \
+          \ 'is_active': 1,\n                'created_at': datetime.now().strftime('%Y-%m-%d\
+          \ %H:%M:%S'),\n                'updated_at': datetime.now().strftime('%Y-%m-%d\
+          \ %H:%M:%S')\n            }\n\n            results.append(json.dumps(obj,\
+          \ ensure_ascii=False))\n            query_texts.append(query.strip())\n\n\
+          \    # 数量校验\n    expected_count = 33\n    actual_count = len(results)\n\
+          \    is_sufficient = \"1\" if actual_count >= expected_count else \"0\"\n\
+          \    deficit = max(0, expected_count - actual_count)\n\n    # 已生成query文本列表（供补词LLM去重用）\n\
+          \    existing_queries = '\\n'.join(query_texts)\n\n    return {\n      \
+          \  'formatted_results': results,\n        'actual_count': actual_count,\n\
+          \        'expected_count': expected_count,\n        'is_sufficient': is_sufficient,\n\
+          \        'deficit': deficit,\n        'existing_queries': existing_queries\n\
+          \    }\n"
+        code_language: python3
+        desc: ''
+        outputs:
+          actual_count:
+            children: null
+            type: number
+          deficit:
+            children: null
+            type: number
+          existing_queries:
+            children: null
+            type: string
+          expected_count:
+            children: null
+            type: number
+          formatted_results:
+            children: null
+            type: array[string]
+          is_sufficient:
+            children: null
+            type: string
+        selected: false
+        title: T4-2检测格式化
+        type: code
+        variables:
+        - value_selector:
+          - '17725226062860'
+          - text
+          variable: t4_results
+        - value_selector:
+          - '1765425297251'
+          - task_id
+          variable: task_id
+        - value_selector:
+          - '1765425297251'
+          - core_keyword
+          variable: core_keyword
+      height: 53
+      id: '17768257560210'
+      position:
+        x: 1246
+        y: 834
+      positionAbsolute:
+        x: 1246
+        y: 834
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            max_tokens: 14801
+            temperature: 0.2
+            top_p: 0.7
+          mode: chat
+          name: qwen/qwen3.7-plus
+          provider: zhinao
+        prompt_template:
+        - id: 5ae4b46b-3a4d-440a-8c70-20765f332d82
+          role: system
+          text: "【角色】\n你是市场竞品分析专家。根据客户品牌信息，评估并补充竞品列表至3个，标记行业第一竞品。\n\n\n\n【铁律规则】\n\
+            1. comps_list必须输出恰好3个竞品，不能多不能少\n2. 原输入的竞品品牌名必须按字符级严格保留——禁止任何形式的修改，包括但不限于：\n\
+            \   - 禁止改大小写（如 \"iPhone\" 改为 \"iphone\" 或 \"IPHONE\"）\n   - 禁止增删空格（如 \"\
+            Air Jordan\" 改为 \"AirJordan\" 或 \"Air  Jordan\"）\n   - 禁止增删标点（如 \"L'Oréal\"\
+            \ 改为 \"L Oreal\"）\n   - 禁止繁简转换、全半角转换、中英互译\n   - 必须与输入字符串逐字符完全一致\n3. 竞品必须去重，绝对不能包含客户品牌（brand_name）\n\
+            4. 所有竞品必须与客户品牌属于同一行业/品类，禁止跨行业推荐\n5. 补齐的竞品必须使用完整的官方品牌全称（即该品牌在其所属行业中最常被引用的完整名称，如\"\
+            黑系房车\"而非\"黑系\"，\"曼恩商用车\"而非\"曼恩\"），禁止使用可能导致歧义的简称或缩写\n6. 如果对某个竞品品牌的真实存在性存疑（无法提供其主营业务、代表产品等具体信息），宁可跳过不选，绝对不可虚构或猜测品牌名\n\
+            7. comps_list字段的品牌分隔符规则——必须严格遵守，禁止自行判断：\n   - 分隔符仅为：英文逗号\",\"和中文顿号\"、\"\
+            \n   - 非分隔符（必须视为同一个品牌名的组成部分）：斜杠\"/\"、空格\" \"、连字符\"-\"、加号\"+\"、点\".\"等所有其他字符\n\
+            \   - 解析示例：\n     · \"Nike,Adidas\" → [\"Nike\", \"Adidas\"]（2个品牌）\n \
+            \    · \"Nike、Adidas\" → [\"Nike\", \"Adidas\"]（2个品牌）\n     · \"Nike/Adidas\"\
+            \ → [\"Nike/Adidas\"]（1个品牌，因为/不是分隔符）\n     · \"Air Jordan\" → [\"Air Jordan\"\
+            ]（1个品牌，空格是品牌名一部分）\n     · \"Coca-Cola\" → [\"Coca-Cola\"]（1个品牌，连字符是品牌名一部分）\n\
+            \     · \"Nike,Air Jordan、Adidas/Yeezy\" → [\"Nike\", \"Air Jordan\",\
+            \ \"Adidas/Yeezy\"]（3个品牌）\n\n\n\n【客户信息】\n- 竞品清单：{{#1765425297251.comps_list#}}\n\
+            - 客户品牌名称：{{#1765425297251.brand_name#}}\n- 公司名称：{{#1765425297251.corp_name#}}\n\
+            - 产品名称：{{#1765425297251.product_name#}}\n- 核心关键词：{{#1765425297251.core_keyword#}}\n\
+            - 目标受众：{{#1765425297251.target_audience#}}\n\n\n\n【操作流程】\nStep 1：解析并检查comps_list长度：\n\
+            - 按【铁律规则7】的分隔符规则解析comps_list为品牌数组（仅按\",\"和\"、\"分隔，其他字符如\"/\"、空格视为品牌名一部分）\n\
+            - 解析后每个品牌必须按【铁律规则2】字符级完整保留，禁止任何修改\n- 若解析后品牌数≥3，直接返回前3个，原样输出到comps_list字段，不做任何字符修改\n\
+            \n\n\nStep 2：行业分层定位（必须逐层分析，禁止跳步）：\n- 前置分析：必须首先分析comps_list中已有品牌的行业归属，确定这些品牌所在的细分赛道。如果comps_list中有≥1个品牌被识别为同一细分赛道，则客户品牌默认属于该细分赛道，禁止泛化到更宽赛道\n\
+            - 第一层【大类】：客户品牌所属的大行业是什么？（如：游戏、金融、美妆、法律、教育等）\n- 第二层【细分赛道】：在该大类下，客户品牌具体处于哪个细分赛道？（如：游戏大类下→手游分发/游戏社区/游戏发行/游戏直播；金融大类下→股票软件/基金平台/保险经纪）\n\
+            - 第三层【核心定位】：客户品牌的核心用户场景和产品形态是什么？（如：4399游戏盒→手游分发+游戏社区，核心是\"找游戏、下游戏、交流攻略\"\
+            ）\n- 细分精度要求：细分赛道必须精确到product_name所描述的产品形态级别，层级不得宽于product_name中的产品形态描述（如product_name含\"\
+            越野房车\"→细分赛道为\"越野房车\"，禁止泛化为\"越野车\"或\"房车\"或\"汽车\"）\n- 判断依据（按优先级从高到低，必须逐级使用）：\n\
+            \  ① comps_list已有品牌：客户提供的竞品清单是赛道定义的最高权威，必须优先识别这些品牌的产品形态和细分赛道，以其共同赛道作为基准\n\
+            \  ② 品牌名称（brand_name）：知名品牌可直接确定行业归属\n  ③ 产品名称（product_name）：与brand_name联合定位细分赛道\n\
+            \  ④ 核心关键词（core_keyword）：直接描述产品功能与定位——当brand_name不明确时，core_keyword是核心判断依据\n\
+            \  ⑤ 目标受众（target_audience）：验证行业定位是否准确\n  ⑥ 公司名称（corp_name）：仅作兜底参考，\"XX科技有限公司\"\
+            等泛化名称不具有行业指向性，禁止仅凭公司名称推断行业\n\n\n\nStep 3：竞品筛选（必须在Step 2定位的细分赛道内选择）：\n\
+            - 参照锚定：comps_list中已有品牌所属的细分赛道是最高优先级的参照基准，补充竞品必须与之在同一细分赛道内，确保相关性一致\n- 锚定兜底：当comps_list中的品牌无法准确识别其细分赛道时，必须以product_name和core_keyword确定的细分赛道为准，target_audience用于验证，不依赖不明确的品牌名称做赛道推断\n\
+            - 候选范围：仅限与客户品牌在同一细分赛道、产品形态相似、目标用户重叠的品牌\n- 排除规则：仅大类相同但细分赛道不同的品牌不算竞品（如：游戏分发\
+            \ vs 游戏直播 ≠ 竞品；应用商店 vs 游戏盒子 ≠ 竞品）\n- 受众排除：目标受众属性必须与客户品牌一致，包含以下维度：\n  ·\
+            \ 专业vs大众：当客户品牌面向专业群体（如开发者、设计师、医生等）时，禁止推荐面向大众消费者的产品；反之亦然\n  · 消费层级：当target_audience为高端/奢华消费群体（如富豪、顶级投资人等）时，禁止推荐大众消费品牌；当target_audience为大众消费者时，禁止推荐奢侈品牌\n\
+            - 选择优先级：\n  ① 高相关性：优先选与客户品牌产品形态最接近的，再选用户群重叠度最高的，确保相关性高\n  ② 行业排名top的品牌：基于细分赛道下品牌排名，优先选取行业排名靠前的\n\
+            - 真实性：所有竞品必须为真实存在且活跃的品牌，禁止虚构\n- 存在性验证：每个补充竞品必须通过存在性验证——必须说明该品牌的主营业务、代表产品及确认其真实存在的依据。无法提供具体验证信息的品牌视为存疑，禁止推荐\n\
+            \n\n\nStep 4：industry_leader评选（从客户品牌及3个竞品中选出综合实力最强的1个）：\n- 评估维度与权重：\n\
+            \  ① 品牌知名度（30%）：大众认知度、品牌搜索热度、社交媒体声量\n  ② 市场占有率（30%）：市场份额、用户规模（MAU/DAU）、行业排名\n\
+            \  ③ 产品影响力（25%）：产品创新力、用户口碑评分、行业奖项或权威认证\n  ④ 商业实力（15%）：营收规模、融资轮次/估值、母公司实力\n\
+            - 评选规则：\n  - 必须逐个候选进行四维评分，得分最高者为industry_leader\n  - 若客户品牌本身综合得分最高，industry_leader填写brand_name\n\
+            \  - 若多个候选得分接近，以市场占有率作为决胜维度\n  - 若无法获取足够数据判断，优先依据品牌知名度和市场占有率排序\n\n\n\n\
+            【输出格式】\n仅输出一个JSON对象，推理过程放在reasoning字段内，禁止输出JSON以外的任何内容：\n\n\n{\n  \"reasoning\"\
+            : {\n    \"comps_list_identification\": \"逐一识别comps_list中每个品牌的行业归属与细分赛道\"\
+            ,\n    \"major_category\": \"大类\",\n    \"sub_track\": \"细分赛道\",\n   \
+            \ \"core_positioning\": \"核心定位\",\n    \"competitor_verification\": [\n\
+            \      {\n        \"official_name\": \"补充竞品的官方全称\",\n        \"product_form\"\
+            : \"产品形态\",\n        \"existence_verification\": \"主营业务、代表产品、确认真实存在的依据\"\
+            ,\n        \"relevance\": \"与客户品牌的相关性说明\"\n      }\n    ]\n  },\n  \"\
+            comps_list\": [\"竞品1官方全称\", \"竞品2官方全称\", \"竞品3官方全称\"],\n  \"industry_leader\"\
+            : \"竞品官方全称\"或\"brand_name\"\n}\n\n\n\n【示例】\n输入：comps_list=[\"竞品B\"], brand_name=\"\
+            品牌A\", corp_name=\"A公司\", product_name=\"A产品线\", core_keyword=\"个人理财工具\"\
+            , target_audience=\"个人投资者\"\n\n\n{\n  \"reasoning\": {\n    \"comps_list_identification\"\
+            : \"竞品B属于个人理财赛道\",\n    \"major_category\": \"金融\",\n    \"sub_track\"\
+            : \"个人理财工具\",\n    \"core_positioning\": \"面向个人投资者的理财工具，核心是'选产品、管资产、看收益'\"\
+            ,\n    \"competitor_verification\": [\n      {\n        \"official_name\"\
+            : \"蚂蚁财富\",\n        \"product_form\": \"个人理财平台\",\n        \"existence_verification\"\
+            : \"蚂蚁集团旗下个人理财平台，提供基金、理财产品选购，支付宝内嵌入口，用户量亿级，公开报道可查\",\n        \"relevance\"\
+            : \"同为个人理财工具，目标用户重叠（个人投资者），产品形态相似（选产品+管资产）\"\n      },\n      {\n    \
+            \    \"official_name\": \"天天基金\",\n        \"product_form\": \"基金交易平台\"\
+            ,\n        \"existence_verification\": \"东方财富旗下基金交易平台，国内最大基金代销平台之一，公开上市企业，行业知名度高\"\
+            ,\n        \"relevance\": \"同属个人理财赛道，基金交易为核心功能，用户群重叠\"\n      }\n    ]\n\
+            \  },\n  \"comps_list\": [\"竞品B\", \"蚂蚁财富\", \"天天基金\"],\n  \"industry_leader\"\
+            : \"蚂蚁财富\"\n}\n\n"
+        - id: 9975a491-9c49-4252-8107-d1c13ede9835
+          role: user
+          text: 请严格按照以上所有要求输出
+        selected: false
+        title: 竞品清单数据补齐
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 97
+      id: '1776843431240'
+      position:
+        x: 334
+        y: 834
+      positionAbsolute:
+        x: 334
+        y: 834
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import json\nimport re\n\ndef safe_parse_json(text):\n    \"\"\"安全解析JSON文本，支持多种格式\"\
+          \"\"\n    if not text:\n        return None\n\n    # 优先提取 --- 之后的JSON（推理过程\
+          \ + --- + JSON 格式）\n    if '---' in text:\n        parts = text.split('---',\
+          \ 1)\n        if len(parts) > 1:\n            json_part = parts[1].strip()\n\
+          \            try:\n                return json.loads(json_part)\n      \
+          \      except json.JSONDecodeError:\n                pass  # ---后面不是有效JSON，继续尝试其他方式\n\
+          \n    try:\n        # 尝试直接解析\n        return json.loads(text)\n    except\
+          \ json.JSONDecodeError:\n        try:\n            # 尝试提取最后一个JSON对象（{...}）\n\
+          \            matches = re.findall(r'\\{[^{}]*(?:\\{[^{}]*\\}[^{}]*)*\\}',\
+          \ text, re.DOTALL)\n            if matches:\n                for m in reversed(matches):\n\
+          \                    try:\n                        return json.loads(m)\n\
+          \                    except json.JSONDecodeError:\n                    \
+          \    continue\n        except Exception:\n            pass\n\n        try:\n\
+          \            # 尝试去除可能的markdown代码块标记\n            cleaned = text.strip()\n\
+          \            if cleaned.startswith('```json'):\n                cleaned\
+          \ = cleaned[7:]\n            if cleaned.startswith('```'):\n           \
+          \     cleaned = cleaned[3:]\n            if cleaned.endswith('```'):\n \
+          \               cleaned = cleaned[:-3]\n            cleaned = cleaned.strip()\n\
+          \            return json.loads(cleaned)\n        except json.JSONDecodeError:\n\
+          \            return None\n\n\ndef parse_names(value):\n    \"\"\"将数组、JSON数组字符串或逗号/顿号分隔文本转为品牌名数组。\"\
+          \"\"\n    if isinstance(value, list):\n        values = value\n    elif\
+          \ isinstance(value, str):\n        raw = value.strip()\n        if not raw:\n\
+          \            return []\n        try:\n            decoded = json.loads(raw)\n\
+          \            values = decoded if isinstance(decoded, list) else [raw]\n\
+          \        except (TypeError, ValueError):\n            values = re.split(r'[,，、]',\
+          \ raw)\n    else:\n        return []\n\n    result = []\n    for item in\
+          \ values:\n        if item is None:\n            continue\n        name\
+          \ = str(item).strip()\n        if name and name not in result:\n       \
+          \     result.append(name)\n    return result\n\ndef main(llm_output=None,\
+          \ original_comps_list=None, brand_name=''):\n    \"\"\"\n    Dify Python代码节点\
+          \ - 解析竞品增强LLM节点的JSON输出\n    输入变量作为函数参数传递\n    返回一个包含所有输出变量的字典\n    \"\"\"\
+          \n\n    # 解析LLM输出\n    parsed = safe_parse_json(llm_output)\n\n    # 初始化默认值\n\
+          \    original = parse_names(original_comps_list)\n    model_comps = parse_names(parsed.get('comps_list',\
+          \ [])) if isinstance(parsed, dict) else []\n    industry_leader = None\n\
+          \    if isinstance(parsed, dict):\n        leader = parsed.get('industry_leader')\n\
+          \        if isinstance(leader, str) and leader.strip():\n            industry_leader\
+          \ = leader.strip()\n    brand = str(brand_name or '').strip()\n    merged\
+          \ = []\n    for name in original + model_comps:\n        if name and name\
+          \ != brand and name not in merged:\n            merged.append(name)\n  \
+          \      if len(merged) >= 3:\n            break\n    # 下面旧解析分支不再改变已合并结果。\n\
+          \n    if parsed and isinstance(parsed, dict):\n        comps_list_raw =\
+          \ parsed.get('comps_list', [])\n        if isinstance(comps_list_raw, list):\n\
+          \            comps_list = comps_list_raw\n        else:\n            comps_list\
+          \ = []\n\n        industry_leader_raw = parsed.get('industry_leader')\n\
+          \        if isinstance(industry_leader_raw, str):\n            industry_leader\
+          \ = industry_leader_raw\n        else:\n            industry_leader = None\n\
+          \n    # 以合并后的保真列表作为最终输出，避免旧分支把异常结果清空。\n    comps_list = merged\n\n    #\
+          \ Dify 要求输出变量为 string 类型，因此必须序列化为 JSON 字符串\n    return {\n        'comps_list':\
+          \ json.dumps(comps_list, ensure_ascii=False),\n        'industry_leader':\
+          \ json.dumps(industry_leader, ensure_ascii=False)\n    }\n"
+        code_language: python3
+        desc: ''
+        outputs:
+          comps_list:
+            children: null
+            type: string
+          industry_leader:
+            children: null
+            type: string
+        selected: false
+        title: 竞品数据拆解
+        type: code
+        variables:
+        - value_selector:
+          - '1776843431240'
+          - text
+          variable: llm_output
+        - value_selector:
+          - '1765425297251'
+          - comps_list
+          variable: original_comps_list
+        - value_selector:
+          - '1765425297251'
+          - brand_name
+          variable: brand_name
+      height: 53
+      id: '1776912874657'
+      position:
+        x: 638
+        y: 834
+      positionAbsolute:
+        x: 638
+        y: 834
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        advanced_settings:
+          group_enabled: true
+          groups:
+          - groupId: 4059679a-cd77-41d8-9762-a2e11d22da67
+            group_name: Group1
+            output_type: array[string]
+            variables:
+            - - '19000010601'
+              - t1_formatted_results
+            - - '1776824084015'
+              - formatted_results
+        desc: ''
+        output_type: array[string]
+        selected: false
+        title: 1-3变量聚合器
+        type: variable-aggregator
+        variables:
+        - - '19000010601'
+          - t1_formatted_results
+        - - '1776824084015'
+          - formatted_results
+      height: 138
+      id: '1779431976569'
+      position:
+        x: 2766
+        y: 336
+      positionAbsolute:
+        x: 2766
+        y: 336
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        output_type: array[string]
+        selected: false
+        title: 2-3变量聚合器
+        type: variable-aggregator
+        variables:
+        - - '19000020601'
+          - t2_formatted_results
+        - - '1776824167905'
+          - formatted_results
+      height: 138
+      id: '1779435472366'
+      position:
+        x: 2766
+        y: 502
+      positionAbsolute:
+        x: 2766
+        y: 502
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        output_type: array[string]
+        selected: false
+        title: 3-3变量聚合器
+        type: variable-aggregator
+        variables:
+        - - '19000030601'
+          - t3_formatted_results
+        - - '17768257283590'
+          - formatted_results
+      height: 138
+      id: '1779435477446'
+      position:
+        x: 2766
+        y: 668
+      positionAbsolute:
+        x: 2766
+        y: 668
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        output_type: array[string]
+        selected: false
+        title: 4-3变量聚合器
+        type: variable-aggregator
+        variables:
+        - - '19000040601'
+          - t4_formatted_results
+        - - '17768257560210'
+          - formatted_results
+      height: 138
+      id: '1779435480475'
+      position:
+        x: 2766
+        y: 834
+      positionAbsolute:
+        x: 2766
+        y: 834
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "from datetime import datetime, timezone, timedelta\n\ndef main():\n\
+          \    tz = timezone(timedelta(hours=8))\n    now = datetime.now(tz)\n   \
+          \ return {\n        \"current_date\": now.strftime(\"%Y-%m-%d\"),\n    }"
+        code_language: python3
+        desc: ''
+        outputs:
+          current_date:
+            children: null
+            type: string
+        selected: false
+        title: 输出日期
+        type: code
+        variables: []
+      height: 53
+      id: '1781171205832'
+      position:
+        x: 638
+        y: 336
+      positionAbsolute:
+        x: 638
+        y: 336
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: is
+            id: T1_sufficient_check
+            value: '1'
+            variable_selector:
+            - '1776824084015'
+            - is_sufficient
+          id: 'true'
+          logical_operator: and
+        desc: T1数量检测：is_sufficient==1走达标分支，否则走补词分支
+        selected: false
+        title: T1-3数量判断
+        type: if-else
+      height: 169
+      id: '19000010301'
+      position:
+        x: 1550
+        y: 307.42857142857144
+      positionAbsolute:
+        x: 1550
+        y: 307.42857142857144
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: T1数量不足时自动补词
+        model:
+          completion_params:
+            max_tokens: 8000
+            temperature: 0.4
+            top_p: 0.7
+          mode: chat
+          name: qwen/qwen3.7-plus
+          provider: zhinao
+        prompt_template:
+        - id: t1-supplement-system
+          role: system
+          text: "你是一名顶级的GEO（生成式引擎优化）专家。之前已生成了一批场景query词，但数量不足，现在需要你补充缺口部分。\n\n## 输入信息\n\
+            - **核心关键词**：`{{#1765425297251.core_keyword#}}`\n- **产品名称**：`{{#1765425297251.product_name#}}`\n\
+            - **品牌名称**：`{{#1765425297251.brand_name#}}`\n- **目标受众**：`{{#1765425297251.target_audience#}}`\n\
+            - **当前日期**：`{{#1781171205832.current_date#}}`\n\n## \U0001F512 core_keyword\
+            \ 强绑定铁律（违反视为无效）\n1. 每一条补充的 query 都必须与 core_keyword 存在\"直接相关\"关系\n2. 通过\"\
+            锚定测试\"：将 query 中的 core_keyword 语义元素（含活动名/品牌名/产品名的核心词）删除后，query 应无法独立表达用户的具体搜索意图\n\
+            3. 严禁产出\"行业百科式\"query（不带 core_keyword 语义元素的通用问法）\n4. 严禁跨赛道漂移：不得引入与 core_keyword\
+            \ 无关的其它行业/场景/权益/活动名\n\n## 补词任务信息\n- **还需补充的query数量**：`{{#1776824084015.deficit#}}`\
+            \ 条\n- **已有query列表（严禁重复）**：\n```\n{{#1776824084015.existing_queries#}}\n\
+            ```\n\n## 补词规则\n1. **数量要求**：必须精确补充上述deficit数量的query，不多不少\n2. **去重铁律**：生成的每一条query都不能与\"\
+            已有query列表\"中的任何一条相同或高度相似（语义相似度>80%视为重复）\n3. **质量标准**：与首次生词完全相同——每个query必须通过\"\
+            意图锚定测试\"，query字数8-15个汉字，禁止操作细节/科普/素材/灵感类\n4. **场景策略**：可以在已有场景下补充query，也可以新增1-2个新场景\n\
+            5. **时间节点**：遵循current_date未来60天内有效的规则\n\n## 输出格式\n严格按以下JSON格式返回（不要任何其他内容）：\n\
+            ```json\n{\n  \"t1_results\": [\n    {\n      \"scene_name\": \"6-12字场景名\"\
+            ,\n      \"priority_level\": \"P1/P2/P3\",\n      \"persona_name\": \"\
+            用户画像短标签（4-20字，短标签而非句子，禁止叙述性表达）\",\n      \"queries\": [\"补充的Query1\",\
+            \ \"补充的Query2\"]\n    }\n  ]\n}\n```\n\n## 自检清单\n- [ ] 补充数量 = deficit值，一条不多一条不少\n\
+            - [ ] persona_name为4-20字短标签（非句子），超20字或含\"渴望/担心/核心诉求是\"等叙述词则重写\n- [ ] 每条query与已有列表无重复\n\
+            - [ ] 每条query通过意图锚定测试（删除core_keyword语义后应无法独立表达搜索意图）\n- [ ] JSON格式正确可解析\n\
+            \n请输出JSON结果，禁止任何其他内容。"
+        - id: t1-supplement-user
+          role: user
+          text: 请严格按照以上所有要求补充生词
+        selected: false
+        title: T1-4补词LLM
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 125
+      id: '19000010401'
+      position:
+        x: 1854
+        y: 423
+      positionAbsolute:
+        x: 1854
+        y: 423
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import json\nimport re\nfrom datetime import datetime\n\ndef main(supplement_raw=None,\
+          \ task_id='', brand_name='', core_keyword=''):\n    \"\"\"\n    Dify Python代码节点\
+          \ T1-5 补词解析\n    输入: supplement_raw (补词LLM的输出), task_id, brand_name, core_keyword\n\
+          \    输出: supplement_results (Array[String]), supplement_count (Number)\n\
+          \    \"\"\"\n\n    if supplement_raw is None:\n        supplement_raw =\
+          \ []\n\n    # 字符串解析\n    if isinstance(supplement_raw, str):\n        _raw\
+          \ = supplement_raw\n        _m = re.search(r'(\\{[\\s\\S]*\\}|\\[[\\s\\\
+          S]*\\])', _raw)\n        supplement_raw = _m.group(1) if _m else _raw\n\
+          \        supplement_raw = re.sub(r'^```(?:json)?\\s*', '', supplement_raw.strip())\n\
+          \        supplement_raw = re.sub(r'\\s*```$', '', supplement_raw.strip())\n\
+          \        try:\n            supplement_raw = json.loads(supplement_raw)\n\
+          \        except json.JSONDecodeError:\n            supplement_raw = []\n\
+          \n    # 提取t1_results\n    if isinstance(supplement_raw, dict) and \"t1_results\"\
+          \ in supplement_raw:\n        supplement_raw = supplement_raw.get(\"t1_results\"\
+          , [])\n\n    if not isinstance(supplement_raw, list):\n        supplement_raw\
+          \ = []\n\n    results = []\n\n    for scene_index, scene in enumerate(supplement_raw):\n\
+          \        if isinstance(scene, dict):\n            queries = scene.get('queries')\
+          \ or scene.get('query') or []\n            if isinstance(queries, list):\n\
+          \                for query_index, query in enumerate(queries):\n       \
+          \             if isinstance(query, str) and query.strip():\n           \
+          \             obj = {\n                            'id': f'AUTO_{int(datetime.now().timestamp())}_T1S_{scene_index}_{query_index}',\n\
+          \                            'task_id': task_id,\n                     \
+          \       'brand_name': brand_name,\n                            'query':\
+          \ query.strip(),\n                            'core_keyword': core_keyword,\n\
+          \                            'source_keyword': 3,\n                    \
+          \        'source_word_type': 1,\n                            'question_type':\
+          \ 1,\n                            'scene_name': scene.get('scene_name'),\n\
+          \                            'priority_level': scene.get('priority_level'),\n\
+          \                            'persona_name': scene.get('persona_name'),\n\
+          \                            'decision_intent_level': None,\n          \
+          \                  'is_strong_decision': 0,\n                          \
+          \  'cognition_dimension': None,\n                            'evaluation_dimension':\
+          \ None,\n                            'is_negative_probe': 0,\n         \
+          \                   'is_active': 1,\n                            'created_at':\
+          \ datetime.now().strftime('%Y-%m-%d %H:%M:%S'),\n                      \
+          \      'updated_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S')\n    \
+          \                    }\n                        results.append(json.dumps(obj,\
+          \ ensure_ascii=False))\n\n    return {\n        'supplement_results': results,\n\
+          \        'supplement_count': len(results)\n    }\n"
+        code_language: python3
+        desc: T1补词结果解析
+        outputs:
+          supplement_count:
+            children: null
+            type: number
+          supplement_results:
+            children: null
+            type: array[string]
+        selected: false
+        title: T1-5补词解析
+        type: code
+        variables:
+        - value_selector:
+          - '19000010401'
+          - text
+          variable: supplement_raw
+        - value_selector:
+          - '1765425297251'
+          - task_id
+          variable: task_id
+        - value_selector:
+          - '1765425297251'
+          - brand_name
+          variable: brand_name
+        - value_selector:
+          - '1765425297251'
+          - core_keyword
+          variable: core_keyword
+      height: 81
+      id: '19000010501'
+      position:
+        x: 2158
+        y: 423
+      positionAbsolute:
+        x: 2158
+        y: 423
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import json\n\ndef main(original_results=None, supplement_results=None):\n\
+          \    \"\"\"\n    Dify Python代码节点 T1-6 合并（首次结果 + 补词结果）\n    输入:\n      -\
+          \ original_results: T1-2检测节点的 formatted_results (Array[String])\n      -\
+          \ supplement_results: T1-5补词解析节点的 supplement_results (Array[String])\n \
+          \   输出:\n      - t1_formatted_results: 合并去重后的最终结果 (Array[String])\n    \
+          \  - final_count: 合并后总数 (Number)\n    \"\"\"\n\n    # 安全转换\n    if not isinstance(original_results,\
+          \ list):\n        original_results = []\n    if not isinstance(supplement_results,\
+          \ list):\n        supplement_results = []\n\n    # 去重合并：以query文本为key去重\n\
+          \    seen_queries = set()\n    merged = []\n\n    for item_str in original_results:\n\
+          \        if not isinstance(item_str, str):\n            continue\n     \
+          \   try:\n            obj = json.loads(item_str)\n            q = obj.get('query',\
+          \ '').strip()\n            if q and q not in seen_queries:\n           \
+          \     seen_queries.add(q)\n                merged.append(item_str)\n   \
+          \     except json.JSONDecodeError:\n            continue\n\n    for item_str\
+          \ in supplement_results:\n        if not isinstance(item_str, str):\n  \
+          \          continue\n        try:\n            obj = json.loads(item_str)\n\
+          \            q = obj.get('query', '').strip()\n            if q and q not\
+          \ in seen_queries:\n                seen_queries.add(q)\n              \
+          \  merged.append(item_str)\n        except json.JSONDecodeError:\n     \
+          \       continue\n\n    return {\n        't1_formatted_results': merged,\n\
+          \        'final_count': len(merged)\n    }\n"
+        code_language: python3
+        desc: T1首次结果+补词结果合并
+        outputs:
+          final_count:
+            children: null
+            type: number
+          t1_formatted_results:
+            children: null
+            type: array[string]
+        selected: false
+        title: T1-6合并
+        type: code
+        variables:
+        - value_selector:
+          - '1776824084015'
+          - formatted_results
+          variable: original_results
+        - value_selector:
+          - '19000010501'
+          - supplement_results
+          variable: supplement_results
+      height: 81
+      id: '19000010601'
+      position:
+        x: 2462
+        y: 423
+      positionAbsolute:
+        x: 2462
+        y: 423
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: is
+            id: T2_sufficient_check
+            value: '1'
+            variable_selector:
+            - '1776824167905'
+            - is_sufficient
+          logical_operator: and
+        desc: T2数量检测：is_sufficient==1走达标分支，否则走补词分支
+        selected: false
+        title: T2-3数量判断
+        type: if-else
+      height: 169
+      id: '19000020301'
+      position:
+        x: 1550
+        y: 476.28571428571433
+      positionAbsolute:
+        x: 1550
+        y: 476.28571428571433
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: T2数量不足时自动补词
+        model:
+          completion_params:
+            max_tokens: 8000
+            temperature: 0.4
+            top_p: 0.7
+          mode: chat
+          name: qwen/qwen3.7-plus
+          provider: zhinao
+        prompt_template:
+        - id: t2-supplement-system
+          role: system
+          text: "你是一名资深的GEO专家。之前已生成了一批品类认知类查询词（T2维度），但数量不足，现在需要你补充缺口部分。\n\n## 输入信息\n\
+            - **核心关键词**：`{{#1765425297251.core_keyword#}}`\n- **产品名称**：`{{#1765425297251.product_name#}}`\n\
+            - **品牌名称**：`{{#1765425297251.brand_name#}}`\n\n## \U0001F512 core_keyword\
+            \ 强绑定铁律（违反视为无效）\n1. 每一条补充的 query 都必须与 core_keyword 存在\"直接相关\"关系\n2. 通过\"\
+            锚定测试\"：将 query 中的 core_keyword 语义元素（含活动名/品牌名/产品名的核心词）删除后，query 应无法独立表达用户的具体搜索意图\n\
+            3. 严禁产出\"行业百科式\"query（不带 core_keyword 语义元素的通用问法）\n4. 严禁跨赛道漂移：不得引入与 core_keyword\
+            \ 无关的其它行业/场景/权益/活动名\n\n## 补词任务信息\n- **还需补充的query数量**：`{{#1776824167905.deficit#}}`\
+            \ 条\n- **已有query列表（严禁重复）**：\n```\n{{#1776824167905.existing_queries#}}\n\
+            ```\n\n## 补词规则\n1. **数量要求**：必须精确补充上述deficit数量的query\n2. **去重铁律**：每条query不能与已有列表重复或高度相似\n\
+            3. **认知维度**：从4个维度选择补充——是什么/用途、效果/合适性、区别/对比、可靠性/风险\n4. **分配策略**：优先补充数量最少的维度，使各维度尽量均匀\n\
+            \n## 输出格式\n```json\n{\n  \"t2_results\": [\n    {\"query\": \"补充的蒸馏词\"\
+            , \"cognition_dimension\": \"是什么/用途/效果/区别/可靠性\"}\n  ]\n}\n```\n\n请输出JSON结果，禁止任何其他内容。"
+        - id: t2-supplement-user
+          role: user
+          text: 请严格按照以上所有要求补充生词
+        selected: false
+        title: T2-4补词LLM
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 125
+      id: '19000020401'
+      position:
+        x: 1854
+        y: 589
+      positionAbsolute:
+        x: 1854
+        y: 589
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import json\nimport re\nfrom datetime import datetime\n\ndef main(supplement_raw=None,\
+          \ task_id='', brand_name='', core_keyword=''):\n    \"\"\"\n    Dify Python代码节点\
+          \ T2-5 补词解析\n    输入: supplement_raw (补词LLM的输出), task_id, brand_name, core_keyword\n\
+          \    输出: supplement_results (Array[String]), supplement_count (Number)\n\
+          \    \"\"\"\n\n    if supplement_raw is None:\n        supplement_raw =\
+          \ []\n\n    # 字符串解析\n    if isinstance(supplement_raw, str):\n        _raw\
+          \ = supplement_raw\n        _m = re.search(r'(\\{[\\s\\S]*\\}|\\[[\\s\\\
+          S]*\\])', _raw)\n        supplement_raw = _m.group(1) if _m else _raw\n\
+          \        supplement_raw = re.sub(r'^```(?:json)?\\s*', '', supplement_raw.strip())\n\
+          \        supplement_raw = re.sub(r'\\s*```$', '', supplement_raw.strip())\n\
+          \        try:\n            supplement_raw = json.loads(supplement_raw)\n\
+          \        except json.JSONDecodeError:\n            supplement_raw = []\n\
+          \n    # 提取t2_results\n    if isinstance(supplement_raw, dict) and \"t2_results\"\
+          \ in supplement_raw:\n        supplement_raw = supplement_raw.get(\"t2_results\"\
+          , [])\n\n    if not isinstance(supplement_raw, list):\n        supplement_raw\
+          \ = []\n\n    results = []\n\n    for item_index, item in enumerate(supplement_raw):\n\
+          \        if isinstance(item, dict):\n            query = item.get('query',\
+          \ '')\n            cognition_dimension = item.get('cognition_dimension',\
+          \ '')\n\n            if not isinstance(query, str) or not query.strip():\n\
+          \                continue\n\n            is_negative_probe = 1 if \"副作用\"\
+          \ in query or \"有害\" in query or \"有毒\" in query or \"危险\" in query else\
+          \ 0\n\n            obj = {\n                'id': f'AUTO_{int(datetime.now().timestamp())}_T2S_{item_index}',\n\
+          \                'task_id': task_id,\n                'brand_name': brand_name,\n\
+          \                'query': query.strip(),\n                'core_keyword':\
+          \ core_keyword,\n                'source_keyword': 1,\n                'source_word_type':\
+          \ 2,\n                'question_type': 2,\n                'scene_name':\
+          \ None,\n                'priority_level': None,\n                'persona_name':\
+          \ None,\n                'decision_intent_level': None,\n              \
+          \  'is_strong_decision': 0,\n                'cognition_dimension': cognition_dimension,\n\
+          \                'evaluation_dimension': None,\n                'is_negative_probe':\
+          \ is_negative_probe,\n                'is_active': 1,\n                'created_at':\
+          \ datetime.now().strftime('%Y-%m-%d %H:%M:%S'),\n                'updated_at':\
+          \ datetime.now().strftime('%Y-%m-%d %H:%M:%S')\n            }\n\n      \
+          \      results.append(json.dumps(obj, ensure_ascii=False))\n\n    return\
+          \ {\n        'supplement_results': results,\n        'supplement_count':\
+          \ len(results)\n    }\n"
+        code_language: python3
+        desc: T2补词结果解析
+        outputs:
+          supplement_count:
+            children: null
+            type: number
+          supplement_results:
+            children: null
+            type: array[string]
+        selected: false
+        title: T2-5补词解析
+        type: code
+        variables:
+        - value_selector:
+          - '19000020401'
+          - text
+          variable: supplement_raw
+        - value_selector:
+          - '1765425297251'
+          - task_id
+          variable: task_id
+        - value_selector:
+          - '1765425297251'
+          - brand_name
+          variable: brand_name
+        - value_selector:
+          - '1765425297251'
+          - core_keyword
+          variable: core_keyword
+      height: 81
+      id: '19000020501'
+      position:
+        x: 2158
+        y: 589
+      positionAbsolute:
+        x: 2158
+        y: 589
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import json\n\ndef main(original_results=None, supplement_results=None):\n\
+          \    \"\"\"\n    Dify Python代码节点 T2-6 合并（首次结果 + 补词结果）\n    输入:\n      -\
+          \ original_results: T2-2检测节点的 formatted_results (Array[String])\n      -\
+          \ supplement_results: T2-5补词解析节点的 supplement_results (Array[String])\n \
+          \   输出:\n      - t2_formatted_results: 合并去重后的最终结果 (Array[String])\n    \
+          \  - final_count: 合并后总数 (Number)\n    \"\"\"\n\n    if not isinstance(original_results,\
+          \ list):\n        original_results = []\n    if not isinstance(supplement_results,\
+          \ list):\n        supplement_results = []\n\n    seen_queries = set()\n\
+          \    merged = []\n\n    for item_str in original_results:\n        if not\
+          \ isinstance(item_str, str):\n            continue\n        try:\n     \
+          \       obj = json.loads(item_str)\n            q = obj.get('query', '').strip()\n\
+          \            if q and q not in seen_queries:\n                seen_queries.add(q)\n\
+          \                merged.append(item_str)\n        except json.JSONDecodeError:\n\
+          \            continue\n\n    for item_str in supplement_results:\n     \
+          \   if not isinstance(item_str, str):\n            continue\n        try:\n\
+          \            obj = json.loads(item_str)\n            q = obj.get('query',\
+          \ '').strip()\n            if q and q not in seen_queries:\n           \
+          \     seen_queries.add(q)\n                merged.append(item_str)\n   \
+          \     except json.JSONDecodeError:\n            continue\n\n    return {\n\
+          \        't2_formatted_results': merged,\n        'final_count': len(merged)\n\
+          \    }\n"
+        code_language: python3
+        desc: T2首次结果+补词结果合并
+        outputs:
+          final_count:
+            children: null
+            type: number
+          t2_formatted_results:
+            children: null
+            type: array[string]
+        selected: false
+        title: T2-6合并
+        type: code
+        variables:
+        - value_selector:
+          - '1776824167905'
+          - formatted_results
+          variable: original_results
+        - value_selector:
+          - '19000020501'
+          - supplement_results
+          variable: supplement_results
+      height: 81
+      id: '19000020601'
+      position:
+        x: 2462
+        y: 589
+      positionAbsolute:
+        x: 2462
+        y: 589
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: is
+            id: T3_sufficient_check
+            value: '1'
+            variable_selector:
+            - '17768257283590'
+            - is_sufficient
+          logical_operator: and
+        desc: T3数量检测：is_sufficient==1走达标分支，否则走补词分支
+        selected: false
+        title: T3-3数量判断
+        type: if-else
+      height: 169
+      id: '19000030301'
+      position:
+        x: 1550
+        y: 645.1428571428571
+      positionAbsolute:
+        x: 1550
+        y: 645.1428571428571
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: T3数量不足时自动补词
+        model:
+          completion_params:
+            max_tokens: 8000
+            temperature: 0.4
+            top_p: 0.7
+          mode: chat
+          name: qwen/qwen3.7-plus
+          provider: zhinao
+        prompt_template:
+        - id: t3-supplement-system
+          role: system
+          text: "你是一名资深的GEO专家。之前已生成了一批决策推荐类查询词（T3维度），但数量不足，现在需要你补充缺口部分。\n\n## 输入信息\n\
+            - **核心关键词**：`{{#1765425297251.core_keyword#}}`\n- **产品名称**：`{{#1765425297251.product_name#}}`\n\
+            - **品牌名称**：`{{#1765425297251.brand_name#}}`\n\n## \U0001F512 core_keyword\
+            \ 强绑定铁律（违反视为无效）\n1. 每一条补充的 query 都必须与 core_keyword 存在\"直接相关\"关系\n2. 通过\"\
+            锚定测试\"：将 query 中的 core_keyword 语义元素（含活动名/品牌名/产品名的核心词）删除后，query 应无法独立表达用户的具体搜索意图\n\
+            3. 严禁产出\"行业百科式\"query（不带 core_keyword 语义元素的通用问法）\n4. 严禁跨赛道漂移：不得引入与 core_keyword\
+            \ 无关的其它行业/场景/权益/活动名\n\n## 补词任务信息\n- **还需补充的query数量**：`{{#17768257283590.deficit#}}`\
+            \ 条\n- **已有query列表（严禁重复）**：\n```\n{{#17768257283590.existing_queries#}}\n\
+            ```\n\n## 补词规则\n1. **数量要求**：必须精确补充上述deficit数量的query\n2. **去重铁律**：每条query不能与已有列表重复或高度相似\n\
+            3. **决策层级**：从3个层级选择——层级1(初步了解,is_strong_decision=0)、层级2(对比评估,is_strong_decision=0)、层级3(强决策,is_strong_decision=1)\n\
+            4. **分配策略**：优先补充数量最少的层级\n\n## 输出格式\n```json\n{\n  \"t3_results\": [\n\
+            \    {\"query\": \"补充的决策query\", \"decision_intent_level\": 1, \"is_strong_decision\"\
+            : 0}\n  ]\n}\n```\n\n请输出JSON结果，禁止任何其他内容。"
+        - id: t3-supplement-user
+          role: user
+          text: 请严格按照以上所有要求补充生词
+        selected: false
+        title: T3-4补词LLM
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 125
+      id: '19000030401'
+      position:
+        x: 1854
+        y: 755
+      positionAbsolute:
+        x: 1854
+        y: 755
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import json\nimport re\nfrom datetime import datetime\n\ndef main(supplement_raw=None,\
+          \ task_id='', brand_name='', core_keyword=''):\n    \"\"\"\n    Dify Python代码节点\
+          \ T3-5 补词解析\n    输入: supplement_raw (补词LLM的输出), task_id, brand_name, core_keyword\n\
+          \    输出: supplement_results (Array[String]), supplement_count (Number)\n\
+          \    \"\"\"\n\n    if supplement_raw is None:\n        supplement_raw =\
+          \ []\n\n    # 字符串解析\n    if isinstance(supplement_raw, str):\n        _raw\
+          \ = supplement_raw\n        _m = re.search(r'(\\{[\\s\\S]*\\}|\\[[\\s\\\
+          S]*\\])', _raw)\n        supplement_raw = _m.group(1) if _m else _raw\n\
+          \        supplement_raw = re.sub(r'^```(?:json)?\\s*', '', supplement_raw.strip())\n\
+          \        supplement_raw = re.sub(r'\\s*```$', '', supplement_raw.strip())\n\
+          \        try:\n            supplement_raw = json.loads(supplement_raw)\n\
+          \        except json.JSONDecodeError:\n            supplement_raw = []\n\
+          \n    # 提取t3_results\n    if isinstance(supplement_raw, dict) and \"t3_results\"\
+          \ in supplement_raw:\n        supplement_raw = supplement_raw.get(\"t3_results\"\
+          , [])\n\n    if not isinstance(supplement_raw, list):\n        supplement_raw\
+          \ = []\n\n    results = []\n\n    for item_index, item in enumerate(supplement_raw):\n\
+          \        if isinstance(item, dict):\n            query = item.get('query',\
+          \ '')\n            decision_intent_level_raw = item.get('decision_intent_level')\n\
+          \            is_strong_decision_raw = item.get('is_strong_decision')\n\n\
+          \            if not isinstance(query, str) or not query.strip():\n     \
+          \           continue\n\n            # 转换为整数\n            decision_intent_level\
+          \ = None\n            if isinstance(decision_intent_level_raw, int):\n \
+          \               decision_intent_level = decision_intent_level_raw\n    \
+          \        elif isinstance(decision_intent_level_raw, str) and decision_intent_level_raw.isdigit():\n\
+          \                decision_intent_level = int(decision_intent_level_raw)\n\
+          \n            is_strong_decision = 0\n            if isinstance(is_strong_decision_raw,\
+          \ int):\n                is_strong_decision = 1 if is_strong_decision_raw\
+          \ == 1 else 0\n            elif isinstance(is_strong_decision_raw, str):\n\
+          \                is_strong_decision = 1 if is_strong_decision_raw == \"\
+          1\" else 0\n\n            obj = {\n                'id': f'AUTO_{int(datetime.now().timestamp())}_T3S_{item_index}',\n\
+          \                'task_id': task_id,\n                'brand_name': brand_name,\n\
+          \                'query': query.strip(),\n                'core_keyword':\
+          \ core_keyword,\n                'source_keyword': 1,\n                'source_word_type':\
+          \ 3,\n                'question_type': 3,\n                'scene_name':\
+          \ None,\n                'priority_level': None,\n                'persona_name':\
+          \ None,\n                'decision_intent_level': decision_intent_level,\n\
+          \                'is_strong_decision': is_strong_decision,\n           \
+          \     'cognition_dimension': None,\n                'evaluation_dimension':\
+          \ None,\n                'is_negative_probe': 0,\n                'is_active':\
+          \ 1,\n                'created_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),\n\
+          \                'updated_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S')\n\
+          \            }\n\n            results.append(json.dumps(obj, ensure_ascii=False))\n\
+          \n    return {\n        'supplement_results': results,\n        'supplement_count':\
+          \ len(results)\n    }\n"
+        code_language: python3
+        desc: T3补词结果解析
+        outputs:
+          supplement_count:
+            children: null
+            type: number
+          supplement_results:
+            children: null
+            type: array[string]
+        selected: false
+        title: T3-5补词解析
+        type: code
+        variables:
+        - value_selector:
+          - '19000030401'
+          - text
+          variable: supplement_raw
+        - value_selector:
+          - '1765425297251'
+          - task_id
+          variable: task_id
+        - value_selector:
+          - '1765425297251'
+          - brand_name
+          variable: brand_name
+        - value_selector:
+          - '1765425297251'
+          - core_keyword
+          variable: core_keyword
+      height: 81
+      id: '19000030501'
+      position:
+        x: 2158
+        y: 755
+      positionAbsolute:
+        x: 2158
+        y: 755
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import json\n\ndef main(original_results=None, supplement_results=None):\n\
+          \    \"\"\"\n    Dify Python代码节点 T3-6 合并（首次结果 + 补词结果）\n    输入:\n      -\
+          \ original_results: T3-2检测节点的 formatted_results (Array[String])\n      -\
+          \ supplement_results: T3-5补词解析节点的 supplement_results (Array[String])\n \
+          \   输出:\n      - t3_formatted_results: 合并去重后的最终结果 (Array[String])\n    \
+          \  - final_count: 合并后总数 (Number)\n    \"\"\"\n\n    if not isinstance(original_results,\
+          \ list):\n        original_results = []\n    if not isinstance(supplement_results,\
+          \ list):\n        supplement_results = []\n\n    seen_queries = set()\n\
+          \    merged = []\n\n    for item_str in original_results:\n        if not\
+          \ isinstance(item_str, str):\n            continue\n        try:\n     \
+          \       obj = json.loads(item_str)\n            q = obj.get('query', '').strip()\n\
+          \            if q and q not in seen_queries:\n                seen_queries.add(q)\n\
+          \                merged.append(item_str)\n        except json.JSONDecodeError:\n\
+          \            continue\n\n    for item_str in supplement_results:\n     \
+          \   if not isinstance(item_str, str):\n            continue\n        try:\n\
+          \            obj = json.loads(item_str)\n            q = obj.get('query',\
+          \ '').strip()\n            if q and q not in seen_queries:\n           \
+          \     seen_queries.add(q)\n                merged.append(item_str)\n   \
+          \     except json.JSONDecodeError:\n            continue\n\n    return {\n\
+          \        't3_formatted_results': merged,\n        'final_count': len(merged)\n\
+          \    }\n"
+        code_language: python3
+        desc: T3首次结果+补词结果合并
+        outputs:
+          final_count:
+            children: null
+            type: number
+          t3_formatted_results:
+            children: null
+            type: array[string]
+        selected: false
+        title: T3-6合并
+        type: code
+        variables:
+        - value_selector:
+          - '17768257283590'
+          - formatted_results
+          variable: original_results
+        - value_selector:
+          - '19000030501'
+          - supplement_results
+          variable: supplement_results
+      height: 81
+      id: '19000030601'
+      position:
+        x: 2462
+        y: 755
+      positionAbsolute:
+        x: 2462
+        y: 755
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: is
+            id: T4_sufficient_check
+            value: '1'
+            variable_selector:
+            - '17768257560210'
+            - is_sufficient
+          logical_operator: and
+        desc: T4数量检测：is_sufficient==1走达标分支，否则走补词分支
+        selected: false
+        title: T4-3数量判断
+        type: if-else
+      height: 169
+      id: '19000040301'
+      position:
+        x: 1550
+        y: 814
+      positionAbsolute:
+        x: 1550
+        y: 814
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: T4数量不足时自动补词
+        model:
+          completion_params:
+            max_tokens: 8000
+            temperature: 0.4
+            top_p: 0.7
+          mode: chat
+          name: qwen/qwen3.7-plus
+          provider: zhinao
+        prompt_template:
+        - id: t4-supplement-system
+          role: system
+          text: "你是一名GEO专家。之前已生成了一批品牌直询与竞品查询词（T4维度），但数量不足，现在需要你补充缺口部分。\n\n## 输入信息\n\
+            - **品牌名称**：`{{#1765425297251.brand_name#}}`\n- **竞品列表**：`{{#1776912874657.comps_list#}}`\n\
+            - **产品名称**：`{{#1765425297251.product_name#}}`\n- **核心关键词**：`{{#1765425297251.core_keyword#}}`\n\
+            \n## \U0001F512 core_keyword 强绑定铁律（违反视为无效）\n1. 每一条补充的 query 都必须与 core_keyword\
+            \ 存在\"直接相关\"关系，且必须涉及 brand_name 或竞品列表中的品牌\n2. 通过\"锚定测试\"：将 query 中的 core_keyword\
+            \ 语义元素（含活动名/品牌名/产品名的核心词）删除后，query 应无法独立表达用户的具体搜索意图\n3. 严禁产出\"行业百科式\"query（不带\
+            \ core_keyword 语义元素的通用问法）\n4. 严禁跨赛道漂移：不得引入与 core_keyword 无关的其它行业/场景/权益/活动名\n\
+            \n## 补词任务信息\n- **还需补充的query数量**：`{{#17768257560210.deficit#}}` 条\n- **已有query列表（严禁重复）**：\n\
+            ```\n{{#17768257560210.existing_queries#}}\n```\n\n## 补词规则\n1. **数量要求**：必须精确补充上述deficit数量的query\n\
+            2. **去重铁律**：每条query不能与已有列表重复或高度相似\n3. **生词类型**：brand_direct(品牌直询,is_competitor=0)、competitor_compare(竞品对比,is_competitor=0)、competitor_probe(竞品探查,is_competitor=1)\n\
+            4. **质量标准**：基于行业和产品特性进行真实需求判断，符合C端用户搜索习惯\n\n## 输出格式\n```json\n{\n  \"\
+            t4_results\": [\n    {\n      \"query\": \"补充的品牌query\",\n      \"query_type\"\
+            : \"brand_direct\",\n      \"brand_comp\": \"品牌名\",\n      \"evaluation_dimension\"\
+            : \"正向综合评价\",\n      \"target_brand\": \"目标品牌名\",\n      \"is_negative_probe\"\
+            : 0,\n      \"is_competitor\": 0\n    }\n  ]\n}\n```\n\n请输出JSON结果，禁止任何其他内容。"
+        - id: t4-supplement-user
+          role: user
+          text: 请严格按照以上所有要求补充生词
+        selected: false
+        title: T4-4补词LLM
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 125
+      id: '19000040401'
+      position:
+        x: 1854
+        y: 913
+      positionAbsolute:
+        x: 1854
+        y: 913
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import json\nimport re\nfrom datetime import datetime\n\n\ndef fuzzy_get(item,\
+          \ key, default=None):\n    \"\"\"模糊取值\"\"\"\n    if key in item:\n     \
+          \   return item[key]\n    for k, v in item.items():\n        if re.sub(r'\\\
+          d+$', '', k) == key:\n            return v\n    return default\n\n\ndef\
+          \ sanitize_json_string(text):\n    \"\"\"清洗LLM输出中所有非法JSON值\"\"\"\n    if\
+          \ not text:\n        return text\n\n    int_fields = ['is_negative_probe',\
+          \ 'is_competitor']\n    for field in int_fields:\n        text = re.sub(\n\
+          \            rf'\"{field}\"\\s*:\\s*[^0-9\\[{{\"\\]}}]*?(\\d+)\\s*([,}}\\\
+          ]])',\n            rf'\"{field}\": \\1\\2',\n            text\n        )\n\
+          \        text = re.sub(\n            rf'\"{field}\"\\s*:\\s*[^0-9\"\\'\\\
+          [{{{{\\]}}}},]+\\s*([,}}\\]])',\n            rf'\"{field}\": 0\\1',\n  \
+          \          text\n        )\n\n    def replace_bare_value(match):\n     \
+          \   bare = match.group(1).strip()\n        tail = match.group(2)\n     \
+          \   lower = bare.lower()\n        if lower == 'true':\n            return\
+          \ f': true{tail}'\n        if lower == 'false':\n            return f':\
+          \ false{tail}'\n        if lower in ('null', 'none'):\n            return\
+          \ f': null{tail}'\n        return f': 0{tail}'\n\n    text = re.sub(\n \
+          \       r':\\s*([A-Za-z—–\\-/]+(?:[A-Za-z0-9—–\\-/])*)\\s*([,}\\]])',\n\
+          \        replace_bare_value,\n        text\n    )\n    return text\n\n\n\
+          def safe_int(val, default=0):\n    \"\"\"将各种类型安全转为int\"\"\"\n    if isinstance(val,\
+          \ bool):\n        return 1 if val else 0\n    if isinstance(val, int):\n\
+          \        return val\n    if isinstance(val, str) and val.strip().isdigit():\n\
+          \        return int(val)\n    return default\n\n\ndef main(supplement_raw=None,\
+          \ task_id='', core_keyword=''):\n    \"\"\"\n    Dify Python代码节点 T4-5 补词解析\n\
+          \    输入: supplement_raw (补词LLM的输出), task_id, core_keyword\n    输出: supplement_results\
+          \ (Array[String]), supplement_count (Number)\n    \"\"\"\n\n    if supplement_raw\
+          \ is None:\n        supplement_raw = []\n\n    # 字符串解析\n    if isinstance(supplement_raw,\
+          \ str):\n        _raw = supplement_raw\n        _m = re.search(r'(\\{[\\\
+          s\\S]*\\}|\\[[\\s\\S]*\\])', _raw)\n        supplement_raw = _m.group(1)\
+          \ if _m else _raw\n        supplement_raw = re.sub(r'^```(?:json)?\\s*',\
+          \ '', supplement_raw.strip())\n        supplement_raw = re.sub(r'\\s*```$',\
+          \ '', supplement_raw.strip())\n        try:\n            supplement_raw\
+          \ = json.loads(supplement_raw)\n        except json.JSONDecodeError:\n \
+          \           try:\n                cleaned = sanitize_json_string(supplement_raw)\n\
+          \                supplement_raw = json.loads(cleaned)\n            except\
+          \ json.JSONDecodeError:\n                supplement_raw = []\n\n    # 提取t4_results\n\
+          \    if isinstance(supplement_raw, dict) and \"t4_results\" in supplement_raw:\n\
+          \        supplement_raw = supplement_raw.get(\"t4_results\", [])\n\n   \
+          \ if not isinstance(supplement_raw, list):\n        supplement_raw = []\n\
+          \n    results = []\n\n    for item_index, item in enumerate(supplement_raw):\n\
+          \        if isinstance(item, dict):\n            query = fuzzy_get(item,\
+          \ 'query', '')\n            query_type = fuzzy_get(item, 'query_type', '')\n\
+          \            brand_comp_raw = fuzzy_get(item, 'brand_comp', '')\n      \
+          \      evaluation_dimension = fuzzy_get(item, 'evaluation_dimension', '')\n\
+          \            target_brand = fuzzy_get(item, 'target_brand', '')\n      \
+          \      is_negative_probe = safe_int(fuzzy_get(item, 'is_negative_probe',\
+          \ 0), 0)\n            is_competitor = safe_int(fuzzy_get(item, 'is_competitor',\
+          \ 0), 0)\n\n            if not isinstance(query, str) or not query.strip():\n\
+          \                continue\n\n            # brand_comp 转为数组\n           \
+          \ if isinstance(brand_comp_raw, list):\n                brand_comp = [b.strip()\
+          \ for b in brand_comp_raw if isinstance(b, str) and b.strip()]\n       \
+          \     elif isinstance(brand_comp_raw, str):\n                if brand_comp_raw.strip():\n\
+          \                    parts = [b.strip() for b in brand_comp_raw.split(',')\
+          \ if b.strip()]\n                    seen = set()\n                    brand_comp\
+          \ = []\n                    for b in parts:\n                        if\
+          \ b not in seen:\n                            seen.add(b)\n            \
+          \                brand_comp.append(b)\n                else:\n         \
+          \           brand_comp = []\n            else:\n                brand_comp\
+          \ = []\n\n            # 判断 source_keyword 和 source_word_type\n         \
+          \   source_keyword = None\n            source_word_type = None\n       \
+          \     if is_competitor == 0:\n                if query_type == 'competitor_compare':\n\
+          \                    source_keyword = 3\n                    source_word_type\
+          \ = 4\n                elif query_type == 'brand_direct':\n            \
+          \        source_keyword = 2\n                    source_word_type = 4\n\n\
+          \            # evaluation_dimension 值清洗\n            valid_eval_dims = ['正向综合评价',\
+          \ '安全质疑', '竞品比较', '负面舆情']\n            final_evaluation_dimension = evaluation_dimension\n\
+          \            if isinstance(final_evaluation_dimension, str) and final_evaluation_dimension\
+          \ not in valid_eval_dims:\n                cleaned_dim = re.sub(r'\\d+$',\
+          \ '', final_evaluation_dimension)\n                if cleaned_dim in valid_eval_dims:\n\
+          \                    final_evaluation_dimension = cleaned_dim\n\n      \
+          \      obj = {\n                'id': f'AUTO_{int(datetime.now().timestamp())}_T4S_{item_index}',\n\
+          \                'task_id': task_id,\n                'brand_name': target_brand,\n\
+          \                'query': query.strip(),\n                'core_keyword':\
+          \ core_keyword,\n                'source_keyword': source_keyword,\n   \
+          \             'source_word_type': source_word_type,\n                'question_type':\
+          \ 4,\n                'scene_name': None,\n                'priority_level':\
+          \ None,\n                'persona_name': None,\n                'decision_intent_level':\
+          \ None,\n                'is_strong_decision': 0,\n                'cognition_dimension':\
+          \ None,\n                'evaluation_dimension': final_evaluation_dimension,\n\
+          \                'query_type': query_type,\n                'brand_comp':\
+          \ brand_comp,\n                'is_competitor': is_competitor,\n       \
+          \         'is_negative_probe': int(is_negative_probe),\n               \
+          \ 'is_active': 1,\n                'created_at': datetime.now().strftime('%Y-%m-%d\
+          \ %H:%M:%S'),\n                'updated_at': datetime.now().strftime('%Y-%m-%d\
+          \ %H:%M:%S')\n            }\n\n            results.append(json.dumps(obj,\
+          \ ensure_ascii=False))\n\n    return {\n        'supplement_results': results,\n\
+          \        'supplement_count': len(results)\n    }\n"
+        code_language: python3
+        desc: T4补词结果解析
+        outputs:
+          supplement_count:
+            children: null
+            type: number
+          supplement_results:
+            children: null
+            type: array[string]
+        selected: false
+        title: T4-5补词解析
+        type: code
+        variables:
+        - value_selector:
+          - '19000040401'
+          - text
+          variable: supplement_raw
+        - value_selector:
+          - '1765425297251'
+          - task_id
+          variable: task_id
+        - value_selector:
+          - '1765425297251'
+          - core_keyword
+          variable: core_keyword
+      height: 81
+      id: '19000040501'
+      position:
+        x: 2158
+        y: 913
+      positionAbsolute:
+        x: 2158
+        y: 913
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import json\n\ndef main(original_results=None, supplement_results=None):\n\
+          \    \"\"\"\n    Dify Python代码节点 T4-6 合并（首次结果 + 补词结果）\n    输入:\n      -\
+          \ original_results: T4-2检测节点的 formatted_results (Array[String])\n      -\
+          \ supplement_results: T4-5补词解析节点的 supplement_results (Array[String])\n \
+          \   输出:\n      - t4_formatted_results: 合并去重后的最终结果 (Array[String])\n    \
+          \  - final_count: 合并后总数 (Number)\n    \"\"\"\n\n    if not isinstance(original_results,\
+          \ list):\n        original_results = []\n    if not isinstance(supplement_results,\
+          \ list):\n        supplement_results = []\n\n    seen_queries = set()\n\
+          \    merged = []\n\n    for item_str in original_results:\n        if not\
+          \ isinstance(item_str, str):\n            continue\n        try:\n     \
+          \       obj = json.loads(item_str)\n            q = obj.get('query', '').strip()\n\
+          \            if q and q not in seen_queries:\n                seen_queries.add(q)\n\
+          \                merged.append(item_str)\n        except json.JSONDecodeError:\n\
+          \            continue\n\n    for item_str in supplement_results:\n     \
+          \   if not isinstance(item_str, str):\n            continue\n        try:\n\
+          \            obj = json.loads(item_str)\n            q = obj.get('query',\
+          \ '').strip()\n            if q and q not in seen_queries:\n           \
+          \     seen_queries.add(q)\n                merged.append(item_str)\n   \
+          \     except json.JSONDecodeError:\n            continue\n\n    return {\n\
+          \        't4_formatted_results': merged,\n        'final_count': len(merged)\n\
+          \    }\n"
+        code_language: python3
+        desc: T4首次结果+补词结果合并
+        outputs:
+          final_count:
+            children: null
+            type: number
+          t4_formatted_results:
+            children: null
+            type: array[string]
+        selected: false
+        title: T4-6合并
+        type: code
+        variables:
+        - value_selector:
+          - '17768257560210'
+          - formatted_results
+          variable: original_results
+        - value_selector:
+          - '19000040501'
+          - supplement_results
+          variable: supplement_results
+      height: 81
+      id: '19000040601'
+      position:
+        x: 2462
+        y: 913
+      positionAbsolute:
+        x: 2462
+        y: 913
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    viewport:
+      x: -6.937455823980997
+      y: -46.45438235897507
+      zoom: 0.4344942785654908

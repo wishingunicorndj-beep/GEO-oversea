@@ -1,33 +1,33 @@
 {
   "schema_version": 1,
   "workflows": {
-    "geo-query": {
-      "display_name": "Query生成工作流",
+    "geo-overseas-query": {
+      "display_name": "海外GEO品牌诊断Query生成工作流",
       "version": "1.0.0",
-      "path": "workflows/geo-query.yml",
+      "path": "workflows/geo-overseas-query.yml",
       "status": "current",
-      "updated_at": "2026-08-20"
+      "updated_at": "2026-08-26"
     },
-    "geo-analysis": {
-      "display_name": "回答分析工作流",
+    "geo-overseas-analysis": {
+      "display_name": "海外GEO回答分析工作流",
       "version": "1.0.0",
-      "path": "workflows/geo-analysis.yml",
+      "path": "workflows/geo-overseas-analysis.yml",
       "status": "current",
-      "updated_at": "2026-08-20"
+      "updated_at": "2026-08-26"
     },
-    "geo-summary": {
-      "display_name": "分析总结工作流",
+    "geo-overseas-summary": {
+      "display_name": "海外GEO分析总结工作流",
       "version": "1.0.0",
-      "path": "workflows/geo-summary.yml",
+      "path": "workflows/geo-overseas-summary.yml",
       "status": "current",
-      "updated_at": "2026-08-20"
+      "updated_at": "2026-08-26"
     },
-    "geo-article": {
-      "display_name": "文章生成工作流",
+    "geo-overseas-article": {
+      "display_name": "海外GEO文章生成工作流",
       "version": "1.0.0",
-      "path": "workflows/geo-article.yml",
+      "path": "workflows/geo-overseas-article.yml",
       "status": "current",
-      "updated_at": "2026-08-20"
+      "updated_at": "2026-08-26"
     },
     "yonganqihuo-article": {
       "display_name": "永安期货定制文章生成工作流",
@@ -37,9 +37,16 @@
       "updated_at": "2026-08-25"
     },
     "geo-cn-keyword": {
-      "display_name": "国内GEO生词生成工作流",
+      "display_name": "国内GEO关键词词包生成工作流",
       "version": "1.0.0",
-      "path": "workflows/GEO国内生词系统.yml",
+      "path": "workflows/geo-cn-keyword.yml",
+      "status": "current",
+      "updated_at": "2026-08-26"
+    },
+    "geo-cn-diagnostic-questions": {
+      "display_name": "国内GEO品牌诊断测试问题生成工作流",
+      "version": "1.0.0",
+      "path": "workflows/geo-cn-diagnostic-questions.yml",
       "status": "current",
       "updated_at": "2026-08-26"
     }
