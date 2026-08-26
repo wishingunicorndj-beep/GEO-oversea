@@ -1,0 +1,1105 @@
+app:
+  description: 'V1.6修改模型到v4flash，更新为qwen3.7plus；0819
+
+    V1.5修改模型问题；0810
+
+    V1.4放宽了企业简介信息到5000字；0514
+
+    V1.3增加搜索风险过滤节点；0512
+
+    V1.2按照线上的进行更新和优化prompt和代码,0317；
+
+    V1.1对标竞品按照搜索词、问答词和品牌词进行行业pattern式优化0303；
+
+    V1.0兼容知识库调大模型以及搜索接口两种模式生成三种词；'
+  icon: u7981
+  icon_background: '#FFEAD5'
+  mode: workflow
+  name: GEO生词系统V1.6-0819
+  use_icon_as_answer_icon: false
+kind: app
+version: 0.1.3
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: false
+      fileUploadConfig:
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 15
+        image_file_size_limit: 10
+        video_file_size_limit: 100
+        workflow_file_upload_limit: 10
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: ''
+    retriever_resource:
+      enabled: false
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: end
+      id: 1772455024262-source-1765444487278-target
+      selected: false
+      source: '1772455024262'
+      sourceHandle: source
+      target: '1765444487278'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: http-request
+        targetType: code
+      id: 1772455582154-source-1772455648555-target
+      selected: false
+      source: '1772455582154'
+      sourceHandle: source
+      target: '1772455648555'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: start
+        targetType: http-request
+      id: 1765425297251-source-17725038564410-target
+      selected: false
+      source: '1765425297251'
+      sourceHandle: source
+      target: '17725038564410'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: start
+        targetType: http-request
+      id: 1765425297251-source-1772455582154-target
+      selected: false
+      source: '1765425297251'
+      sourceHandle: source
+      target: '1772455582154'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: if-else
+      id: 1772455648555-source-1772522432310-target
+      selected: false
+      source: '1772455648555'
+      sourceHandle: source
+      target: '1772522432310'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: if-else
+        targetType: llm
+      id: 1772522432310-true-1772455683164-target
+      selected: false
+      source: '1772522432310'
+      sourceHandle: 'true'
+      target: '1772455683164'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: if-else
+        targetType: llm
+      id: 1772522432310-84e4c127-2bcb-4d9d-a2c0-d0c10236f6df-17725226028060-target
+      selected: false
+      source: '1772522432310'
+      sourceHandle: 84e4c127-2bcb-4d9d-a2c0-d0c10236f6df
+      target: '17725226028060'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: if-else
+        targetType: llm
+      id: 1772522432310-11cfa511-e81e-4897-871e-1bb84c7ad60d-17725226062860-target
+      selected: false
+      source: '1772522432310'
+      sourceHandle: 11cfa511-e81e-4897-871e-1bb84c7ad60d
+      target: '17725226062860'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: variable-aggregator
+      id: 1772455683164-source-1772525403789-target
+      selected: false
+      source: '1772455683164'
+      sourceHandle: source
+      target: '1772525403789'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: variable-aggregator
+      id: 17725226028060-source-1772525403789-target
+      selected: false
+      source: '17725226028060'
+      sourceHandle: source
+      target: '1772525403789'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: variable-aggregator
+      id: 17725226062860-source-1772525403789-target
+      selected: false
+      source: '17725226062860'
+      sourceHandle: source
+      target: '1772525403789'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: variable-aggregator
+        targetType: code
+      id: 1772525403789-source-1772455024262-target
+      selected: false
+      source: '1772525403789'
+      sourceHandle: source
+      target: '1772455024262'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: http-request
+        targetType: llm
+      id: 17725038564410-source-1778558946620-target
+      source: '17725038564410'
+      sourceHandle: source
+      target: '1778558946620'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: code
+      id: 1778558946620-source-1772455024262-target
+      source: '1778558946620'
+      sourceHandle: source
+      target: '1772455024262'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        desc: ''
+        selected: false
+        title: 1.开始
+        type: start
+        variables:
+        - label: 词包名称，如'2024Q1品牌营销词包'
+          max_length: 48
+          options: []
+          required: true
+          type: text-input
+          variable: word_pack_name
+        - label: 词包用途描述
+          max_length: 500
+          options: []
+          required: true
+          type: paragraph
+          variable: word_pack_desc
+        - label: 企业名称
+          max_length: 48
+          options: []
+          required: true
+          type: text-input
+          variable: company_name
+        - label: 行业名称
+          max_length: 48
+          options: []
+          required: true
+          type: text-input
+          variable: industry
+        - label: 企业简介
+          max_length: 5000
+          options: []
+          required: false
+          type: paragraph
+          variable: company_intro
+        - label: 核心资质
+          max_length: 5000
+          options: []
+          required: false
+          type: paragraph
+          variable: core_qualifications
+        - label: 获奖信息
+          max_length: 5000
+          options: []
+          required: false
+          type: paragraph
+          variable: awards
+        - label: 主要优势
+          max_length: 5000
+          options: []
+          required: false
+          type: paragraph
+          variable: advantages
+        - label: 企业知识库ID
+          max_length: 48
+          options: []
+          required: true
+          type: text-input
+          variable: ent_dataset_id
+        - label: 关键词类型
+          max_length: 48
+          options:
+          - 搜索词
+          - 问答词
+          - 品牌词
+          required: true
+          type: select
+          variable: keyword_type
+        - label: 种子关键词
+          max_length: 500
+          options: []
+          required: true
+          type: paragraph
+          variable: seed_keywords
+        - label: company_info
+          max_length: 500
+          options: []
+          required: false
+          type: paragraph
+          variable: company_info
+      height: 375
+      id: '1765425297251'
+      position:
+        x: 629.4610526922891
+        y: 209.97349121062916
+      positionAbsolute:
+        x: 629.4610526922891
+        y: 209.97349121062916
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: api_response_formatter
+        outputs:
+        - value_selector:
+          - '1772455024262'
+          - final_keywords
+          variable: result
+        selected: false
+        title: 8.结束
+        type: end
+      height: 117
+      id: '1765444487278'
+      position:
+        x: 3267.5252065549303
+        y: 209.97349121062916
+      positionAbsolute:
+        x: 3267.5252065549303
+        y: 209.97349121062916
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import json\nimport re\n\ndef main(res_llm=\"\", search_recommend=\"\
+          \", company_name=\"\", keyword_type=\"\"):\n    active_type = str(keyword_type\
+          \ or \"\").strip()\n    full_company = str(company_name or \"\").strip()\n\
+          \    \n    # 提取公司核心简称\n    brand_core = full_company.replace(\"有限公司\", \"\
+          \").replace(\"网络科技\", \"\").replace(\"上海\", \"\")\n    \n    # ── Step 1:\
+          \ 解析 LLM 原始数据 ──\n    def parse_raw(raw):\n        if not raw: return []\n\
+          \        match = re.search(r'\\[.*\\]', str(raw), re.DOTALL)\n        if\
+          \ match:\n            try:\n                data = json.loads(match.group())\n\
+          \                if isinstance(data, list): return [str(w).strip() for w\
+          \ in data if w]\n            except: pass\n        return [re.sub(r'^[\\\
+          d\\.\\-、\\s]+', '', l).strip() for l in re.split(r'[\\n，,]', str(raw)) if\
+          \ len(l.strip()) >= 4]\n\n    # ── Step 2: 深度解析 API 结构 ──\n    def parse_api_deep(api_raw):\n\
+          \        if not api_raw: return []\n        try:\n            data = json.loads(api_raw)\
+          \ if isinstance(api_raw, str) else api_raw\n            results = []\n \
+          \           def extract_titles(obj):\n                if isinstance(obj,\
+          \ dict):\n                    for k, v in obj.items():\n               \
+          \         if k == 'title' and isinstance(v, str): results.append(v)\n  \
+          \                      else: extract_titles(v)\n                elif isinstance(obj,\
+          \ list):\n                    for item in obj: extract_titles(item)\n  \
+          \          extract_titles(data)\n            return results\n        except:\
+          \ return []\n\n    # ── Step 3: 解析 LLM 过滤结果 ──\n    # 假设LLM过滤节点输出格式：{\"\
+          filtered_keywords\": [...], \"rejected_keywords\": [...]}\n    def parse_llm_filter_output(llm_filter_output):\n\
+          \        if not llm_filter_output: return [], []\n        try:\n       \
+          \     parsed = json.loads(llm_filter_output)\n            return parsed.get(\"\
+          filtered_keywords\", []), parsed.get(\"rejected_keywords\", [])\n      \
+          \  except:\n            return [], []\n\n    # ── Step 4: 解析原始输入数据 ──\n\
+          \    llm_source = parse_raw(res_llm)\n    api_source = parse_api_deep(search_recommend)\n\
+          \    \n    # 从LLM过滤节点获取安全词\n    filtered_keywords, _ = parse_llm_filter_output(res_llm)\n\
+          \    \n    # ── Step 5: 优化后的质检逻辑 ──\n    def is_qualified(w, seen_sets):\n\
+          \        # 1. 长度校验\n        if not (4 <= len(w) <= 50): \n            return\
+          \ False\n        \n        # 2. 排除促销词\n        forbidden = [\"最好\", \"最专业\"\
+          , \"了解一下\", \"第一\", \"顶尖\"]\n        if any(f in w for f in forbidden):\n\
+          \            return False\n        \n        # 3. 语义重复度\n        norm_w\
+          \ = re.sub(r'[^\\w]', '', w)\n        if norm_w in seen_sets:\n        \
+          \    return False\n        \n        # 4. 专项业务规则修正\n        if active_type\
+          \ == \"品牌词\":\n            # 品牌词：包含公司名或品牌核心词即通过\n            if len(full_company)\
+          \ > 10 and (brand_core in w or \"明日方舟\" in w):\n                return True\n\
+          \            if full_company and full_company in w:\n                return\
+          \ True\n            # LLM来源放宽：只要字数≥6，视为品牌相关\n            if len(w) >= 6:\n\
+          \                return True\n            return False\n            \n \
+          \       elif active_type == \"搜索词\":\n            # 搜索词：包含公司名且过短 = 不是关键词\n\
+          \            if full_company and full_company in w and len(w) < 10:\n  \
+          \              return False\n            if len(w) < 5:\n              \
+          \  return False \n        return True\n\n    # ── Step 6: 执行分层排序 ──\n  \
+          \  final_keywords = []\n    seen_norm = set()\n    \n    # 优先级1：LLM过滤后的关键词（最高优先级）\n\
+          \    for word in filtered_keywords:\n        clean_w = word.replace('\"\
+          ', '').replace(\"'\", \"\").strip()\n        if is_qualified(clean_w, seen_norm):\n\
+          \            final_keywords.append(clean_w)\n            seen_norm.add(re.sub(r'[^\\\
+          w]', '', clean_w))\n    \n    # 优先级2：原始LLM生成词（次高优先级）\n    for word in llm_source:\n\
+          \        clean_w = word.replace('\"', '').replace(\"'\", \"\").strip()\n\
+          \        if is_qualified(clean_w, seen_norm):\n            final_keywords.append(clean_w)\n\
+          \            seen_norm.add(re.sub(r'[^\\w]', '', clean_w))\n    \n    #\
+          \ 优先级3：API原始词（最低优先级，仅作为补充）\n    for word in api_source:\n        clean_w\
+          \ = word.replace('\"', '').replace(\"'\", \"\").strip()\n        if is_qualified(clean_w,\
+          \ seen_norm):\n            final_keywords.append(clean_w)\n            seen_norm.add(re.sub(r'[^\\\
+          w]', '', clean_w))\n\n    return {\n        \"final_keywords\": final_keywords[:80],\n\
+          \        \"total_count\": len(final_keywords[:80]),\n        \"intent_coverage\"\
+          : f\"类型:{active_type} | LLM输入:{len(llm_source)} | API输入:{len(api_source)}\
+          \ | LLM过滤安全词:{len(filtered_keywords)} | 最终产出:{len(final_keywords[:80])}\"\
+          \n    }"
+        code_language: python3
+        desc: ''
+        outputs:
+          final_keywords:
+            children: null
+            type: array[string]
+          intent_coverage:
+            children: null
+            type: string
+          total_count:
+            children: null
+            type: number
+        selected: false
+        title: 7、排序代码
+        type: code
+        variables:
+        - value_selector:
+          - '1772525403789'
+          - output
+          variable: res_llm
+        - value_selector:
+          - '1765425297251'
+          - company_name
+          variable: company_name
+        - value_selector:
+          - '1765425297251'
+          - keyword_type
+          variable: keyword_type
+        - value_selector:
+          - '1778558946620'
+          - text
+          variable: search_recommend
+      height: 53
+      id: '1772455024262'
+      position:
+        x: 2972.566574177763
+        y: 209.97349121062916
+      positionAbsolute:
+        x: 2972.566574177763
+        y: 209.97349121062916
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        authorization:
+          config: null
+          type: no-auth
+        body:
+          data:
+          - id: key-value-5212
+            key: ''
+            type: text
+            value: "{\n  \"query\": \"{{{{#1765425297251.seed_keywords#}}}}\", \n\
+              \  \"dataset_ids\": [\"{{{{#1765425297251.ent_dataset_id#}}}}\"],\n\
+              \  \"top_k\": 15,\n  \"score\": 0.3,\n  \"only_retrieval\": true,\n\
+              \  \"auto_doc_expansion\": false\n}"
+          type: raw-text
+        desc: ''
+        headers: 'Content-Type:application/json
+
+          Authorization:Bearer dataset-KSGJNXQOfHWlGdnbHwFsv9B7'
+        method: post
+        params: ''
+        selected: false
+        timeout:
+          max_connect_timeout: 0
+          max_read_timeout: 0
+          max_write_timeout: 0
+        title: 2-A.调企业知识库
+        type: http-request
+        url: http://nami.rag.qihoo.net/v2/datasets/search
+        variables: []
+      height: 109
+      id: '1772455582154'
+      position:
+        x: 1016.2250912550885
+        y: 209.97349121062916
+      positionAbsolute:
+        x: 1016.2250912550885
+        y: 209.97349121062916
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import json\nimport re\n\ndef main(http_res):\n    \"\"\"\n    节点 3：知识库清洗与语义兜底（修复路径嵌套问题）\n\
+          \    \"\"\"\n    try:\n        # 1. 基础解析\n        if not http_res:\n   \
+          \         return {\"result\": \"知识库返回内容为空。建议检查 dataset_ids 配置。\"}\n    \
+          \        \n        data = json.loads(http_res) if isinstance(http_res, str)\
+          \ else http_res\n        \n        # 2. 状态码与异常识别\n        status_code =\
+          \ data.get(\"status\")\n        if status_code in [401, 404, 415]:\n   \
+          \         msg = {401: \"鉴权失败\", 404: \"dataset_ids 不存在\", 415: \"格式错误\"\
+          }.get(status_code)\n            return {\"result\": f\"【接口报错】{msg} (Status:\
+          \ {status_code})\"}\n\n        # 3. 灵活提取 Records\n        records = data.get(\"\
+          records\") or []\n        if not records and isinstance(data.get(\"data\"\
+          ), dict):\n            records = data.get(\"data\", {}).get(\"list\", [])\n\
+          \n        # 4. 深度提取内容 (针对 segment -> content 结构优化)\n        context_list\
+          \ = []\n        for i, item in enumerate(records[:10]):\n            # 尝试路径\
+          \ A: 嵌套在 segment 中 (你当前的数据结构)\n            segment = item.get(\"segment\"\
+          )\n            if isinstance(segment, dict):\n                content =\
+          \ segment.get(\"content\") or segment.get(\"text\")\n            else:\n\
+          \                # 尝试路径 B: 直接在 item 中\n                content = item.get(\"\
+          content\") or item.get(\"text\")\n            \n            if content:\n\
+          \                # 清洗残留的 unicode 或 变量占位符\n                clean_content\
+          \ = str(content).strip()\n                clean_content = re.sub(r'\\{\\\
+          {.*?\\}\\}', '', clean_content)\n                context_list.append(f\"\
+          资料{i+1}：{clean_content}\")\n\n        # 5. 判空与语义兜底\n        if not context_list:\n\
+          \            # 提取 query 用于合成兜底文案\n            query_info = data.get(\"query\"\
+          , {})\n            query_val = query_info.get(\"content\", \"当前词条\") if\
+          \ isinstance(query_info, dict) else \"当前词条\"\n            \n           \
+          \ strategy = data.get(\"strategy\", \"无可查询文档\")\n            return {\n\
+          \                \"result\": (\n                    f\"知识库未直接匹配到【{query_val}】的相关文档（策略：{strategy}）。\\\
+          n\"\n                    \"请 LLM 基于通用行业知识生成：侧重修护屏障、敏感肌适用场景及海蓝之谜‘核心活性精萃’的品牌调性词。\"\
+          \n                )\n            }\n\n        # 6. 正确输出合并后的内容\n        return\
+          \ {\"result\": \"\\n\".join(context_list)}\n\n    except Exception as e:\n\
+          \        return {\"result\": f\"解析异常: {str(e)}。请检查响应体格式。\"}"
+        code_language: python3
+        desc: ''
+        outputs:
+          result:
+            children: null
+            type: string
+        selected: false
+        title: 3清洗知识库内容
+        type: code
+        variables:
+        - value_selector:
+          - '1772455582154'
+          - body
+          variable: http_res
+      height: 53
+      id: '1772455648555'
+      position:
+        x: 1354.2644605898745
+        y: 209.97349121062916
+      positionAbsolute:
+        x: 1354.2644605898745
+        y: 209.97349121062916
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1772455648555'
+          - result
+        desc: ''
+        model:
+          completion_params:
+            max_tokens: 14201
+            temperature: 0.4
+            top_p: 0.7
+          mode: chat
+          name: qwen/qwen3.7-plus
+          provider: zhinao
+        prompt_template:
+        - id: b8d7ef1e-b888-4eb1-8906-c7f8245fe765
+          role: system
+          text: "# 角色\n你是GEO搜索词生成专家，生成C端用户在AI搜索引擎中\n主动检索机构/服务商时使用的关键词短语。\n\n# 输入\n\
+            - 种子词：{{{{#1765425297251.seed_keywords#}}}}\n- 行业：{{{{#1765425297251.industry#}}}}\n\
+            - 关联实体（品牌/公司名）：{{{{#1765425297251.company_name#}}}}\n- 知识库内容：{{{{#1772455648555.result#}}}}\n\
+            - 当前年份：2026\n\n# 预处理（内部执行不输出）\n从输入中提取：\n① 种子词核心名词（去除推荐/怎么样等动词）\n② 行业专属实体词（见下方规则）\n\
+            ③ 行业典型场景/人群（2-3个）\n\n# 实体词选取规则（按{{{{#1765425297251.company_name#}}}}、{{industry}}进行限定和匹配）\n\
+            - 医疗/口腔：医院/诊所/口腔中心/门诊部 + 机构/公司\n- 教育/培训：学校/培训机构/课程中心 + 机构\n- 装修/家居：设计公司/工作室/服务商\
+            \ + 公司\n- 金融/咨询：平台/服务商/顾问团队 + 机构\n- 餐饮/食品：品牌/门店/供应商 + 厂家\n- 科技/软件：厂商/平台/解决方案商\
+            \ + 公司\n- 消费电子/手机：品牌 / 旗舰店 / 厂商 / 官方渠道 / 经销商 \n- 游戏行业： 游戏平台 / 游戏厂商 / 手游平台\
+            \ / 游戏工作室 / 官方渠道 / 代练平台 / 电竞俱乐部 / 战队/ 账号交易平台\n- 其他行业：机构/公司/企业/品牌/平台\n\
+            → 选取4-6个最匹配的实体词\n\n# 生成规则：50个词，按以下配比\n\n## 排行/榜单词（30%，约15个）\n公式：{{seed_keywords}}\
+            \ + [实体词] + 排行榜/排名/推荐榜/前几名/口碑排行\n示例：和田玉购买平台排行榜\n\n## 推荐/选购词（20%，约10个）\n\
+            公式：[修饰词] + {{seed_keywords}} + [实体词]\n修饰词选：不错的/比较好的/推荐/值得推荐的/求推荐\n示例：比较好的和田玉购买平台\n\
+            \n## 信任背书词（15%，约8个）\n公式：[修饰词] + {{seed_keywords}} + [实体词]\n修饰词选：靠谱的/口碑好的/正规的/有保障的/值得信赖的\n\
+            示例：靠谱的和田玉购买机构\n\n## 专业能力词（15%，约8个）\n公式：[修饰词] + {{seed_keywords}} + [实体词]\n\
+            修饰词选：专业的/有实力的/资质齐全的/经验丰富的\n示例：专业的和田玉鉴定购买机构\n\n## 场景/价格词（10%，约5个）\n公式：[场景修饰]\
+            \ + {{seed_keywords}} + [实体词]\n或：[价格修饰] + {{seed_keywords}} + [实体词]\n\
+            场景修饰：结合{{industry}}提取的真实场景\n价格修饰：高性价比的/实惠的/价格合理的\n示例：高性价比和田玉购买平台\n\n##\
+            \ 行动触发词（10%，约5个）\n公式：预约/咨询 + {{seed_keywords}} + [实体词]\n或：{{seed_keywords}}\
+            \ + [实体词] + 免费咨询/在线预约\n示例：咨询和田玉购买机构\n注意：一定是线下等有实际预约或咨询需求的才可以，如果没有相关需求可以忽略这个维度，比如线上游戏不需要预约和咨询\n\
+            \n# 语序规则\n语序A（前置）：[修饰词] + 种子词 + 实体词 → 靠谱的和田玉购买平台\n语序B（后置）：种子词 + [属性词]\
+            \ + 实体词 → 和田玉购买靠谱平台\n两种语序均需出现，以更自然的为优先\n\n# 质检（逐词自检，不合格直接替换）\n❌ 含公司名/品牌名/竞品名\n\
+            ❌ 含疑问语气词（吗/呢/如何/怎么/？）\n❌ 含过时年份（2025/2024）\n❌ B端/企业视角（研发能力/市场地位）\n❌ 语义重复超60%（保留最自然的1个）\n\
+            ❌ 字数超过20字或少于5字\n❌ 机械复制（仅替换实体词、含义完全相同的词）\n\n## C端真实性过滤（逐词判断：真实C端用户会在搜索框输入这个词吗？）\
+            \ \n❌ B端采购语言：资质齐全的/有实力的/行业领先的 + 厂商/供应商\n❌ 非预约行业的预约类词：游戏平台在线预约 / 手机厂商免费咨询\
+            \ \n❌ 过度正式的书面语：提供专业服务的 / 具有丰富经验的 \n❌ 无实际搜索场景：游戏工作室2026 / 手游平台企业\n\n✅ 必须包含行业专属实体词（不能全是机构/公司/企业）\n\
+            ✅ 语言自然，真实用户会在搜索框中输入\n\n# 输出格式\n直接输出JSON数组，不含任何说明文字和Markdown：\n[\"词1\"\
+            , \"词2\", ..., \"词50\"]\n```\n注意：\n**排序**：生的词务必按照prompt列的生词维度的顺序进行排列\n\
+            **C端需求**：务必要注意符合c端用户需求，如“折叠屏手机公司在线预约”、\"资质齐全的折叠屏手机厂商2026“等就不符合，需要删除\n"
+        - id: c383e4bc-7039-4876-a535-24069cbf1214
+          role: user
+          text: 请严格按照以上所有要求，生成 50个类型为搜索词的关键词。
+        selected: false
+        title: 5-A搜索词挖掘和生成LLM
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 97
+      id: '1772455683164'
+      position:
+        x: 2024.6746010662564
+        y: 209.97349121062916
+      positionAbsolute:
+        x: 2024.6746010662564
+        y: 209.97349121062916
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        authorization:
+          config: null
+          type: no-auth
+        body:
+          data:
+          - id: key-value-3026
+            key: ''
+            type: text
+            value: "{\n  \"query\": \"{{{{#1765425297251.seed_keywords#}}}}\"\n}"
+          type: json
+        desc: ''
+        headers: 'Content-Type:application/json
+
+          apikey:34346663bG3434xiceKRZ4UEkBJVDn7wZoBgV03333s'
+        method: post
+        params: ''
+        selected: false
+        timeout:
+          max_connect_timeout: 0
+          max_read_timeout: 0
+          max_write_timeout: 0
+        title: 2-B.调搜索词接口
+        type: http-request
+        url: http://sc-gateway.so.qihoo.net/recommend_rec/rprec/search?query={{{{#1765425297251.seed_keywords#}}}}
+        variables: []
+      height: 144
+      id: '17725038564410'
+      position:
+        x: 2024.6746010662564
+        y: 569.465364002322
+      positionAbsolute:
+        x: 2024.6746010662564
+        y: 569.465364002322
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: contains
+            id: 6d73b709-e6d5-48ed-889b-d6433ac52376
+            value: 搜索词
+            varType: string
+            variable_selector:
+            - '1765425297251'
+            - keyword_type
+          id: 'true'
+          logical_operator: and
+        - case_id: 84e4c127-2bcb-4d9d-a2c0-d0c10236f6df
+          conditions:
+          - comparison_operator: contains
+            id: 2da0a60f-3dd7-4a47-ad07-e0066d86bbbc
+            value: 问答词
+            varType: string
+            variable_selector:
+            - '1765425297251'
+            - keyword_type
+          id: 84e4c127-2bcb-4d9d-a2c0-d0c10236f6df
+          logical_operator: and
+        - case_id: 11cfa511-e81e-4897-871e-1bb84c7ad60d
+          conditions:
+          - comparison_operator: contains
+            id: c424b87a-1620-4b8d-9a26-c0febac690bc
+            value: 品牌词
+            varType: string
+            variable_selector:
+            - '1765425297251'
+            - keyword_type
+          id: 11cfa511-e81e-4897-871e-1bb84c7ad60d
+          logical_operator: and
+        desc: ''
+        selected: false
+        title: 4.条件分支
+        type: if-else
+      height: 221
+      id: '1772522432310'
+      position:
+        x: 1654.7227788928894
+        y: 209.97349121062916
+      positionAbsolute:
+        x: 1654.7227788928894
+        y: 209.97349121062916
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1772455648555'
+          - result
+        desc: ''
+        model:
+          completion_params:
+            max_tokens: 15701
+            temperature: 0.4
+            top_p: 0.7
+          mode: chat
+          name: qwen/qwen3.7-plus
+          provider: zhinao
+        prompt_template:
+        - id: b8d7ef1e-b888-4eb1-8906-c7f8245fe765
+          role: system
+          text: '# 角色
+
+            你是GEO问答词生成专家，生成C端用户在AI搜索引擎中
+
+            提出的决策相关问题，覆盖从认知到购买的完整旅程。
+
+
+            # 输入
+
+            - 种子词：{{{{#1765425297251.seed_keywords#}}}}
+
+            - 行业：{{{{#1765425297251.industry#}}}}
+
+            - 关联实体（品牌/公司名）：{{{{#1765425297251.company_name#}}}}
+
+            - 知识库内容：{{{{#1772455648555.result#}}}}
+
+            - 当前年份：2026
+
+
+            # 预处理（内部执行不输出）
+
+            从输入中提取：
+
+            ① 种子词核心名词（去除推荐/怎么样等动词）
+
+            ② 从{{industry}}行业主要替代方案/竞品（2-3个，用于横向对比词），注意不能是当前的{{company_name}}
+
+            ③ 用户核心决策痛点（3-5个）
+
+
+            # 生成规则：50个词，从以下维度中选1-3个维度进行生词
+
+            **生词铁律**：要求维度必须和{{seed_keywords}}高匹配，生出的词务必是指向购买决策或者购买过程中的服务
+
+            注意：不使用公司名{{company_name}}进行生词
+
+
+            ## 维度1：询问供应商/型号推荐（必选，至少占比50%约20-30个）
+
+            格式：{{seed_keywords}} +[实体词] 哪家好？、哪家强？、找哪家？、选哪家？、推荐哪家？、哪家靠谱？、哪家专业？、哪家正规？、哪家有资质？、哪家值得选？、哪个好？、求推荐、谁有名、谁靠谱、谁更牛、谁可靠、谁拔尖、谁过硬、谁突出、谁更强、哪个行、哪些牛、谁领先、该选谁、值得选、该用谁、选谁家
+
+            有哪几家？哪个放心？咨询哪家？、联系哪家？、怎么找？、怎么选？、如何选择？、哪家信得过？、哪家不坑？、哪家服务好？、哪家口碑好？、哪家靠谱推荐？
+
+            怎么选？、哪个靠谱？、哪个值得选？
+
+            哪家案例多/哪家技术强/哪里选/哪里购买/推荐哪个型号/哪个型号更火/哪个型号质量更高/哪个型号性价比更高
+
+
+            ## 维度2：供应商排名（约5个）
+
+            格式：{{seed_keywords}} + 排名靠前/排名top1/型号排名
+
+
+            ## 维度3：价格决策（约5个）
+
+            格式：{{seed_keywords}} +多少钱/费用/贵不贵/值不值得/性价比
+
+            要求：覆盖"总体价格"和"细分价格"两个层次
+
+            注意：比如游戏类等不强调价格的，可以给体验怎么样？而不是费用怎么样？价格怎么样？贵不贵？性价比怎么样？
+
+
+            ## 维度4：功能、材料、效果评估（约5个）
+
+            需要结合{{seed_keywords}}的特征来定义，可以涉及其功能、材料、能力等进行询问
+
+            格式：{{seed_keywords}} +效果怎么样/真实效果/能维持多久/自然吗
+
+
+            ## 维度5：横向对比（约3个，高价值）
+
+            格式：{{seed_keywords}} + 和[替代方案] + 对比/哪个好/区别/选哪个
+
+            要求：
+
+            - 从预处理②中选2-3个替代方案
+
+            - 每个替代方案生成"对比"和"哪个好"两种问法
+
+
+            ## 维度6：风险顾虑（约8个，重点）
+
+            主要是一些产品的负面影响，务必需要符合当前关键词的特点才能使用
+
+            ① 安全：{{seed_keywords}}会不会[伤害/副作用]
+
+            ② 不适：{{seed_keywords}}会不会痛/不舒服
+
+            ③ 失败：{{seed_keywords}}效果不好怎么办/失败了怎么办
+
+            ④ 长期：{{seed_keywords}}可以[摘掉/恢复]吗/影响[日常行为]吗
+
+            ⑤ 动摇：{{seed_keywords}}真的值得做吗/有人后悔了吗
+
+
+
+            ## 维度7：执行流程（必须，约5个）
+
+            主要针对购买或使用情况的询问
+
+            格式：{{seed_keywords}} + 教程/攻略/使用流程/需要几次/怎么护理/需要注意什么/购买都注意哪些问题
+
+
+            # 问法规则（四种句式交替出现）
+
+            ① 疑问句：XX会/能/是/有 + 问题
+
+            ② 选择句：XX还是XX，哪个更好
+
+            ③ 口语追问：做了XX真的会.../ 到底值不值
+
+            ④ 场景代入：[人群]做XX + 问题
+
+
+            # 质检
+
+            ❌ 纯名词堆砌（无疑问意图）
+
+            ❌ B端/企业视角（研发能力/市场地位）
+
+            ❌ 同阶段内问法完全相同
+
+            ❌ 游戏类没有价格概念的，去掉价格怎么样、性价比怎么样、值不值等词
+
+            ❌ 字数超过20字或少于5字
+
+            ❌ 含过时年份（2025/2024）
+
+            ✅ 每个词对应真实用户决策问题
+
+            ✅ 必须含{{seed_keywords}}核心词根
+
+            ✅ 语言自然，符合中文口语/搜索习惯？
+
+            ✅ 无语病、无残句、无歧义？
+
+            ✅ 语序别扭或明显机械拼接？
+
+
+            ## 语言风格要求
+
+            ✅ 口语化自然：符合真实用户在AI对话框的输入习惯
+
+            ✅ 去推广感：所有词必须伪装成真实用户的中立提问/搜索
+
+            ✅ LSI嵌入：适当嵌入行业专业术语词、具体场景/人群的词等；
+
+            ❌ 禁止空洞形容词堆叠（如：最好/最专业/最权威）
+
+
+            ## 语义去重规则
+
+            - 相似度 > 60% 的词：只保留表达最自然的1个
+
+
+            ## 输出前自检清单（必须通过才能输出）
+
+            □ 真实C端用户会在AI搜索框中输入这个词？——无法通过则务必删除
+
+            □ 是否语言自然，符合中文口语/搜索习惯？——不符合需要删除
+
+            □ 有无语病、残句或歧义？——有则删除
+
+            □ 语序是否别扭或明显机械拼接？——有则删除
+
+            □ 字数硬约束在5-20字之间？——超出则删除
+
+            □ 是否有语义重复超过80%的词对？——有则删除
+
+            □ 是否包含硬广感词汇？——有则改写
+
+            □ 是否含过时年份（2024/2023）？——有则需要删除
+
+            □ 是否有语义重复的？——需要删除
+
+
+            # 输出格式
+
+            直接输出JSON数组，不含任何说明文字和Markdown：
+
+            ["词1", "词2", ..., "词50"]
+
+            ```
+
+
+            注意：
+
+            **排序**：生的词务必按照prompt列的生词维度的顺序进行排列
+
+            '
+        - id: c0a4893b-7c96-4964-adfe-fab4905fe881
+          role: user
+          text: 请严格按照以上所有要求，生成 50个类型为问答词的关键词。
+        selected: false
+        title: '5-B问答词挖掘和生成LLM '
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 97
+      id: '17725226028060'
+      position:
+        x: 2024.6746010662564
+        y: 318.5744543723235
+      positionAbsolute:
+        x: 2024.6746010662564
+        y: 318.5744543723235
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1772455648555'
+          - result
+        desc: ''
+        model:
+          completion_params:
+            max_tokens: 10301
+            temperature: 0.4
+            top_p: 0.7
+          mode: chat
+          name: qwen/qwen3.7-plus
+          provider: zhinao
+        prompt_template:
+        - id: b8d7ef1e-b888-4eb1-8906-c7f8245fe765
+          role: system
+          text: "# 角色\n你是GEO品牌词生成专家，帮助AI搜索引擎建立\n\"{{company_name}} = 可信权威\"的认知锚点。\n\
+            \n# 输入\n- 种子词：{{{{#1765425297251.seed_keywords#}}}}\n- 行业：{{{{#1765425297251.industry#}}}}\n\
+            - 关联实体（品牌/公司名）：{{{{#1765425297251.company_name#}}}}\n- 知识库内容：{{{{#1772455648555.result#}}}}\n\
+            - 当前年份：2026\n\n# 预处理（内部执行不输出）\n从{{result}}中提取：\n① {{company_name}}的差异化优势标签（5-10个）\n\
+            ② {{company_name}}的资质/认证/案例关键词（5-10个）\n③ 行业竞品（2-3个，用于对比词）\n④ {{industry}}行业特有产品属性词（5-10个）\n\
+            \     如牙科→材质/贴合度/工艺；游戏行业->创新玩法/ 游戏口碑/上手体验/最新版本/游戏口碑/代练服务/陪练平台\n\n# 核心规则\n\
+            - 禁止在品牌名后直接跟\"机构/公司/平台\"等实体词\n- 一定要结合{{seed_keywords}}的产品特性和{{industry}}行业特点来选择维度和后缀词进行生词，务必确保生成词的合理性，如手机产品务必不能出现“成分表”、“能力”，化妆品不出现“参数”、“性能”等后缀\n\
+            \n# 生成规则：50个词，按配比生成\n\n## 维度1：品牌认知（约5个）\n格式：{{seed_keywords}} + 特色能力有哪些/产品亮点介绍/核心卖点是什么/正确使用方法/费用怎么样/成分表\n\
+            覆盖：从\"是什么\"到\"值不值\"的完整认知链\n\n## 维度2：口碑评价（约10个）\n格式：{{seed_keywords}}+\
+            \ 体验/口碑/评价/反馈/满意度/性价比/效果/能力+如何/怎么样/好不好/好吗\n强制：同一语义需要覆盖多种问法（怎么样/如何/好不好/好吗）\n\
+            \n## 维度3：信任背书（约5个）\n格式：{{seed_keywords}} + 靠谱/可信/有保障/值得信赖 + 吗\n要求：嵌入从{{result}}提取的资质/认证词\n\
+            \n## 维度4：技术实力（约5-10个）\n格式：{{seed_keywords}} + 专业/技术/实力/创新/新的玩法 + 怎么样/如何\n\
+            要求：嵌入预处理①的差异化优势标签\n\n## 维度5：产品特性（约5-10个）\n格式：{{seed_keywords}} + 具体属性词\n\
+            要求：从预处理④提取行业特有属性词\n覆盖：外观/功能/安全/耐久/价格/服务六大轴\n\n## 维度6：价格性价比（约5个）\n格式：{{seed_keywords}}\
+            \ + 价格/性价比/贵不贵/值不值\n覆盖：价格贵吗/性价比/费用多少 多种变体\n注意：比如游戏类等不强调价格的，可以”体验怎么样“而不能生成“费用怎么样”、“价格怎么样”、“贵不贵”、“性价比怎么样”\n\
+            \n## 维度7：服务体验（约4个）\n格式：{{seed_keywords}} + 服务/售后/流程/团队 + 怎么样/好不好\n覆盖：售前/售中/售后完整链条\n\
+            注意：比如游戏类等不强调购买的，可以不问售后怎么样？而是问“试玩”或者“陪练”、“代练”平台怎么样\n\n## 维度8：竞品对比（约4个）\n\
+            格式：{{seed_keywords}}和[竞品] + 对比/哪个好/区别\n要求：至少3个对比词，不贬低竞品，嵌入差异化优势；符合对等对比原则：品牌属于同一梯队，且同一类型产品之间对比，如折叠屏对折叠屏，旗舰机对旗舰机。\n\
+            注意：如果获取不到竞品，不出这个维度的；\n\n## 维度9：市场地位（约4个）\n格式：{{seed_keywords}} + 知名度/行业排名/市场口碑/影响力\n\
+            \n## 维度10：案例结果（约3个）\n格式：{{seed_keywords}} + 核心名词 + 案例/成功案例/用户反馈/适用人群\n\
+            要求：嵌入从{{result}}提取的真实场景词\n\n# 质检\n❌ 品牌词后跟机构/公司/服务商等实体词的，需要删除\n❌ 不符合逻辑和行业属性的，如“三星折叠手机推荐成分表”，“海蓝之谜修护精华的核心功能”、“明日方舟终末地费用怎么样”、“明日方舟终末地售后怎么样”\n\
+            ❌ 纯品牌名重复堆叠，无有效修饰，需要删除\n❌ 字数超过20字或少于5字，需要删除\n❌ 含过时年份（2025/2024），需要删除\n\
+            ❌ 含“竞品”词的需要删除，如“明日方舟终末地和竞品A对比哪个好”等\n\n# 输出格式\n直接输出JSON数组，不含任何说明文字和Markdown：\n\
+            [\"词1\", \"词2\", ..., \"词50\"]\n\n注意：\n**排序**：生的词务必按照prompt列的生词维度的顺序进行排列"
+        - id: f8adbb18-63fd-4d46-84f6-46abb5d8b8fc
+          role: user
+          text: 请严格按照以上所有要求，生成 50个类型为品牌词的关键词。
+        selected: false
+        title: 5-C品牌词挖掘和生成LLM
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 97
+      id: '17725226062860'
+      position:
+        x: 2024.6746010662564
+        y: 428.75063869459245
+      positionAbsolute:
+        x: 2024.6746010662564
+        y: 428.75063869459245
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        advanced_settings:
+          group_enabled: false
+          groups:
+          - groupId: 3f4cdd97-a71d-4de0-b38b-2c1b6bf3e739
+            group_name: Group1
+            output_type: string
+            variables:
+            - - '1772455683164'
+              - text
+            - - '17725226028060'
+              - text
+            - - '17725226062860'
+              - text
+        desc: ''
+        output_type: string
+        selected: false
+        title: 6.变量聚合器
+        type: variable-aggregator
+        variables:
+        - - '1772455683164'
+          - text
+        - - '17725226028060'
+          - text
+        - - '17725226062860'
+          - text
+      height: 164
+      id: '1772525403789'
+      position:
+        x: 2368.582495500129
+        y: 209.97349121062916
+      positionAbsolute:
+        x: 2368.582495500129
+        y: 209.97349121062916
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            max_tokens: 8301
+            temperature: 0.4
+            top_p: 0.7
+          mode: chat
+          name: qwen/qwen3.7-plus
+          provider: zhinao
+        prompt_template:
+        - id: 82bfe35c-6bab-4f96-8d59-cda105131a8f
+          role: system
+          text: "【角色】你是中国互联网内容安全领域的资深监管专家，拥有15年互联网违法信息识别经验。\n\n\n【任务】\n你必须判断以下搜索词是否构成违法或低俗内容诱导。\n\
+            \n\n【判断标准】\n\n\n1. 涉黄/非法服务（高危）：\n   - 含有以下关键词组合：\n     • \"小姐\" + \"足疗/洗浴/按摩/养生/会所\"\
+            \n     • \"红灯区\" + \"一条街/哪条街/在哪/在哪里\"\n     • \"上门\" + \"服务/足疗/按摩/技师\"\
+            \n     • \"有服务\" + \"足疗/洗浴/按摩\"\n     • \"哪里找\" + \"小姐/技师\"\n     • \"\
+            叫小姐\" + \"潍坊/临朐/寿光\"\n   - 包含暗示性用语：\"不爽记\"、\"包夜\"、\"全套\"、\"半套\"、\"一条龙\"\
+            、\"特殊服务\"\n   - 任何明确指向线下非法交易的表述\n\n\n2. 涉政/暴力/违法（高危）：\n   - 含国家领导人、政治事件、分裂势力、恐怖主义、武器、毒品、赌博、诈骗、非法集资等关键词\n\
+            \n\n3. 正常服务（安全）：\n   - 仅含\"足疗/按摩/洗浴/养生\" + 地域词（如\"潍坊\"、\"临朐\"）\n   - 仅含\"\
+            哪家好\"、\"哪个好\"、\"推荐\"等中性咨询词\n   - 无明确非法指向的组合\n\n\n【输出要求】\n- 仅输出合法JSON，禁止任何Markdown、注释、解释\n\
+            - 严格区分\"filtered_keywords\"（安全）和\"rejected_keywords\"（高危），且最终仅输出\"filtered_keywords\"\
+            安全词\n- \"reasoning\"必须简明扼要，引用判断依据\n- 不要修改原始词，原样输出\n- 如果没有拒绝项，\"rejected_keywords\"\
+            为空数组\n\n\n【示例】\n输入：{\"raw_search_term\": \"潍坊足疗推荐\", \"api_recommendations\"\
+            : [\"潍坊红灯区一条街\", \"潍坊足疗不爽记\", \"潍坊小姐都在哪条街\", \"潍坊足疗哪个好\"]}\n输出：{\"filtered_keywords\"\
+            : [\"潍坊足疗推荐\", \"潍坊足疗哪个好\"]\"}\n\n\n【当前输入】\n{{{#17725038564410.body#}}}"
+        selected: false
+        title: 风险词过滤
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 97
+      id: '1778558946620'
+      position:
+        x: 2340.678251881068
+        y: 569.465364002322
+      positionAbsolute:
+        x: 2340.678251881068
+        y: 569.465364002322
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    viewport:
+      x: -349.79646412561533
+      y: -64.8776523628714
+      zoom: 0.751483482388887
