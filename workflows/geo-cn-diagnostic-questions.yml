@@ -669,27 +669,31 @@ workflow:
       width: 244
     - data:
         code: "import json\nimport re\n\n\nBASE_TARGETS = {\n    \"t1\": 60,\n   \
-          \ \"t2\": 20,\n    \"t3\": 15\n}\n\nT4_TARGETS = {\n    \"brand_direct\"\
-          : 6,\n    \"competitor_compare\": 9,\n    \"competitor_query\": 18\n}\n\n\
-          EXPECTED_COMPETITOR_COUNT = 3\nCOMPARE_PER_COMPETITOR = 3\nQUERY_PER_COMPETITOR\
-          \ = 6\n\n\ndef safe_to_list(value):\n    if value is None:\n        return\
-          \ []\n\n    if isinstance(value, list):\n        return value\n\n    if\
-          \ isinstance(value, str):\n        try:\n            parsed = json.loads(value)\n\
-          \            return parsed if isinstance(parsed, list) else []\n       \
-          \ except Exception:\n            return []\n\n    if isinstance(value, dict):\n\
-          \        for inner_value in value.values():\n            if isinstance(inner_value,\
-          \ list):\n                return inner_value\n\n    return []\n\n\ndef parse_record(item):\n\
-          \    if isinstance(item, dict):\n        return item.copy()\n\n    if isinstance(item,\
-          \ str):\n        try:\n            parsed = json.loads(item)\n         \
-          \   return parsed.copy() if isinstance(parsed, dict) else None\n       \
-          \ except Exception:\n            return None\n\n    return None\n\n\ndef\
-          \ normalize_query(query):\n    if not isinstance(query, str):\n        return\
-          \ \"\"\n\n    value = query.strip().lower()\n    value = re.sub(r\"\\s+\"\
-          , \"\", value)\n    value = re.sub(\n        r\"[，。！？；：、,.!?;:（）()【】\\[\\\
-          ]《》<>“”\\\"'‘’\\-—_·]\",\n        \"\",\n        value\n    )\n\n    return\
-          \ value\n\n\ndef normalize_brand_name(name):\n    if not isinstance(name,\
-          \ str):\n        return \"\"\n\n    value = name.strip().lower()\n    value\
-          \ = re.sub(r\"\\s+\", \"\", value)\n    value = re.sub(\n        r\"[，。！？；：、,.!?;:（）()【】\\\
+          \ \"t2\": 20,\n    \"t3\": 15\n}\n\nVALID_T4_TYPES = {\n    \"brand_direct\"\
+          ,\n    \"competitor_compare\",\n    \"competitor_query\"\n}\n\nT4_TYPE_TARGETS\
+          \ = {\n    \"brand_direct\": 0,\n    \"competitor_compare\": 9,\n    \"\
+          competitor_query\": 24\n}\n\nT4_DIMENSION_TARGETS = {\n    \"正向综合评价\": 12,\n\
+          \    \"安全质疑\": 12,\n    \"竞品比较\": 9\n}\n\nEXPECTED_COMPETITOR_COUNT = 3\n\
+          POSITIVE_PER_COMPETITOR = 4\nSAFETY_PER_COMPETITOR = 4\nCOMPARE_PER_COMPETITOR\
+          \ = 3\nEXPECTED_T4_COUNT = 33\nEXPECTED_TOTAL_COUNT = 128\n\n\ndef safe_to_list(value):\n\
+          \    if value is None:\n        return []\n\n    if isinstance(value, list):\n\
+          \        return value\n\n    if isinstance(value, str):\n        try:\n\
+          \            parsed = json.loads(value)\n            return parsed if isinstance(parsed,\
+          \ list) else []\n        except Exception:\n            return []\n\n  \
+          \  if isinstance(value, dict):\n        for inner_value in value.values():\n\
+          \            if isinstance(inner_value, list):\n                return inner_value\n\
+          \n    return []\n\n\ndef parse_record(item):\n    if isinstance(item, dict):\n\
+          \        return item.copy()\n\n    if isinstance(item, str):\n        try:\n\
+          \            parsed = json.loads(item)\n            return parsed.copy()\
+          \ if isinstance(parsed, dict) else None\n        except Exception:\n   \
+          \         return None\n\n    return None\n\n\ndef normalize_query(query):\n\
+          \    if not isinstance(query, str):\n        return \"\"\n\n    value =\
+          \ query.strip().lower()\n    value = re.sub(r\"\\s+\", \"\", value)\n  \
+          \  value = re.sub(\n        r\"[，。！？；：、,.!?;:（）()【】\\[\\]《》<>“”\\\"'‘’\\\
+          -—_·]\",\n        \"\",\n        value\n    )\n\n    return value\n\n\n\
+          def normalize_brand_name(name):\n    if not isinstance(name, str):\n   \
+          \     return \"\"\n\n    value = name.strip().lower()\n    value = re.sub(r\"\
+          \\s+\", \"\", value)\n    value = re.sub(\n        r\"[，。！？；：、,.!?;:（）()【】\\\
           [\\]《》<>“”\\\"'‘’\\-—_·]\",\n        \"\",\n        value\n    )\n\n   \
           \ return value\n\n\ndef normalize_brand_comp(record):\n    value = record.get(\"\
           brand_comp\", [])\n\n    if isinstance(value, str):\n        values = [\n\
@@ -705,19 +709,25 @@ workflow:
           \    if not isinstance(query_type, str):\n        return \"\"\n\n    query_type\
           \ = query_type.strip()\n\n    # 兼容旧补词节点名称\n    if query_type == \"competitor_probe\"\
           :\n        return \"competitor_query\"\n\n    return query_type\n\n\ndef\
-          \ extract_competitor(record):\n    \"\"\"\n    从T4记录中提取竞品名。\n\n    competitor_query：\n\
-          \    brand_comp通常只有竞品。\n\n    competitor_compare：\n    brand_comp通常包含客户品牌和竞品，\n\
-          \    需要排除客户品牌。\n    \"\"\"\n    brand_comp = record.get(\"brand_comp\",\
-          \ [])\n    client_brand = str(record.get(\"brand_name\", \"\")).strip()\n\
-          \    client_normalized = normalize_brand_name(client_brand)\n\n    if not\
-          \ isinstance(brand_comp, list):\n        return \"\"\n\n    for brand in\
-          \ brand_comp:\n        brand = str(brand).strip()\n        normalized =\
-          \ normalize_brand_name(brand)\n\n        if normalized and normalized !=\
-          \ client_normalized:\n            return brand\n\n    # 竞品直询记录中，brand_comp可能只有竞品\n\
-          \    if record.get(\"query_type\") == \"competitor_query\":\n        for\
-          \ brand in brand_comp:\n            brand = str(brand).strip()\n\n     \
-          \       if brand:\n                return brand\n\n    return \"\"\n\n\n\
-          def main(\n    t1_formatted_results=None,\n    t2_formatted_results=None,\n\
+          \ normalize_evaluation_dimension(value):\n    if not isinstance(value, str):\n\
+          \        return \"\"\n\n    value = value.strip()\n\n    # 兼容模型在维度名称末尾添加数字\n\
+          \    value = re.sub(r\"\\d+$\", \"\", value)\n\n    aliases = {\n      \
+          \  \"正向评价\": \"正向综合评价\",\n        \"综合评价\": \"正向综合评价\",\n        \"正向综合\"\
+          : \"正向综合评价\",\n        \"安全问题\": \"安全质疑\",\n        \"安全风险\": \"安全质疑\",\n\
+          \        \"竞品对比\": \"竞品比较\"\n    }\n\n    return aliases.get(value, value)\n\
+          \n\ndef extract_competitor(record):\n    \"\"\"\n    从T4记录中提取竞品名。\n\n  \
+          \  competitor_query：\n    brand_comp通常只有竞品。\n\n    competitor_compare：\n\
+          \    brand_comp通常包含客户品牌和竞品，\n    需要排除客户品牌。\n    \"\"\"\n    brand_comp =\
+          \ record.get(\"brand_comp\", [])\n    client_brand = str(record.get(\"brand_name\"\
+          , \"\")).strip()\n    client_normalized = normalize_brand_name(client_brand)\n\
+          \n    if not isinstance(brand_comp, list):\n        return \"\"\n\n    if\
+          \ record.get(\"query_type\") == \"competitor_query\":\n        for brand\
+          \ in brand_comp:\n            brand = str(brand).strip()\n\n           \
+          \ if brand:\n                return brand\n\n        return \"\"\n\n   \
+          \ for brand in brand_comp:\n        brand = str(brand).strip()\n       \
+          \ normalized = normalize_brand_name(brand)\n\n        if normalized and\
+          \ normalized != client_normalized:\n            return brand\n\n    return\
+          \ \"\"\n\n\ndef main(\n    t1_formatted_results=None,\n    t2_formatted_results=None,\n\
           \    t3_formatted_results=None,\n    t4_formatted_results=None\n):\n   \
           \ final_results = []\n    seen_queries = set()\n\n    statistics = {\n \
           \       \"t1_count\": 0,\n        \"t2_count\": 0,\n        \"t3_count\"\
@@ -727,55 +737,72 @@ workflow:
           \    \"competitor_compare\": 0,\n            \"competitor_query\": 0\n \
           \       },\n        \"t4_type_deficits\": {\n            \"brand_direct\"\
           : 0,\n            \"competitor_compare\": 0,\n            \"competitor_query\"\
-          : 0\n        },\n        \"competitor_distribution\": {},\n        \"qa_status\"\
-          : \"passed\",\n        \"qa_errors\": []\n    }\n\n    def append_base_results(data,\
-          \ source_name):\n        \"\"\"\n        T1/T2/T3按目标数量截取。\n        有无效记录时继续向后寻找有效记录。\n\
-          \        \"\"\"\n        target = BASE_TARGETS[source_name]\n        count\
-          \ = 0\n        local_seen = set()\n\n        for item in safe_to_list(data):\n\
-          \            if count >= target:\n                break\n\n            record\
+          : 0\n        },\n        \"t4_dimension_counts\": {\n            \"正向综合评价\"\
+          : 0,\n            \"安全质疑\": 0,\n            \"竞品比较\": 0\n        },\n  \
+          \      \"t4_dimension_deficits\": {\n            \"正向综合评价\": 0,\n      \
+          \      \"安全质疑\": 0,\n            \"竞品比较\": 0\n        },\n        \"competitor_distribution\"\
+          : {},\n        \"qa_status\": \"passed\",\n        \"qa_errors\": []\n \
+          \   }\n\n    def append_base_results(data, source_name):\n        \"\"\"\
+          \n        T1/T2/T3按目标数量截取。\n        遇到无效记录时继续向后寻找有效记录。\n        \"\"\"\n\
+          \        target = BASE_TARGETS[source_name]\n        count = 0\n       \
+          \ local_seen = set()\n\n        for item in safe_to_list(data):\n      \
+          \      if count >= target:\n                break\n\n            record\
           \ = parse_record(item)\n\n            if not record:\n                continue\n\
           \n            query = str(record.get(\"query\", \"\")).strip()\n       \
           \     normalized = normalize_query(query)\n\n            if not normalized:\n\
-          \                continue\n\n            # 当前类型内部去重\n            if normalized\
-          \ in local_seen:\n                continue\n\n            record = normalize_brand_comp(record)\n\
+          \                continue\n\n            if normalized in local_seen:\n\
+          \                continue\n\n            record = normalize_brand_comp(record)\n\
           \n            final_results.append(\n                json.dumps(record,\
           \ ensure_ascii=False)\n            )\n\n            local_seen.add(normalized)\n\
           \            seen_queries.add(normalized)\n            count += 1\n\n  \
           \      statistics[source_name + \"_count\"] = count\n\n        if count\
           \ < target:\n            statistics[\"qa_errors\"].append(\n           \
           \     \"E_{}_COUNT_{}\".format(\n                    source_name.upper(),\n\
-          \                    count\n                )\n            )\n\n    # 先保留T1、T2、T3\n\
+          \                    count\n                )\n            )\n\n    # 保留T1、T2、T3\n\
           \    append_base_results(t1_formatted_results, \"t1\")\n    append_base_results(t2_formatted_results,\
           \ \"t2\")\n    append_base_results(t3_formatted_results, \"t3\")\n\n   \
-          \ # 解析T4候选\n    raw_t4_candidates = safe_to_list(t4_formatted_results)\n\
+          \ # 解析T4候选池\n    raw_t4_candidates = safe_to_list(t4_formatted_results)\n\
           \    statistics[\"t4_candidate_count\"] = len(raw_t4_candidates)\n\n   \
           \ valid_t4_candidates = []\n    candidate_seen = set()\n\n    for item in\
           \ raw_t4_candidates:\n        record = parse_record(item)\n\n        if\
           \ not record:\n            statistics[\"t4_invalid_count\"] += 1\n     \
           \       continue\n\n        query = str(record.get(\"query\", \"\")).strip()\n\
           \        normalized = normalize_query(query)\n        query_type = normalize_t4_type(\n\
-          \            record.get(\"query_type\", \"\")\n        )\n\n        if not\
-          \ normalized:\n            statistics[\"t4_invalid_count\"] += 1\n     \
-          \       continue\n\n        if query_type not in T4_TARGETS:\n         \
-          \   statistics[\"t4_invalid_count\"] += 1\n            continue\n\n    \
-          \    # 与T1/T2/T3重复\n        if normalized in seen_queries:\n           \
-          \ statistics[\"t4_duplicate_count\"] += 1\n            continue\n\n    \
-          \    # T4候选内部重复\n        if normalized in candidate_seen:\n            statistics[\"\
-          t4_duplicate_count\"] += 1\n            continue\n\n        record[\"query_type\"\
-          ] = query_type\n        record = normalize_brand_comp(record)\n\n      \
-          \  candidate_seen.add(normalized)\n        valid_t4_candidates.append(record)\n\
-          \n    # 识别竞品，优先从竞品直询中获取\n    competitors = []\n    competitor_seen = set()\n\
-          \n    for preferred_type in [\n        \"competitor_query\",\n        \"\
-          competitor_compare\"\n    ]:\n        for record in valid_t4_candidates:\n\
-          \            if record.get(\"query_type\") != preferred_type:\n        \
-          \        continue\n\n            competitor = extract_competitor(record)\n\
-          \            normalized = normalize_brand_name(competitor)\n\n         \
-          \   if normalized and normalized not in competitor_seen:\n             \
-          \   competitor_seen.add(normalized)\n                competitors.append(competitor)\n\
-          \n    # 按工作流合同只保留3个竞品\n    competitors = competitors[:EXPECTED_COMPETITOR_COUNT]\n\
-          \n    if len(competitors) < EXPECTED_COMPETITOR_COUNT:\n        statistics[\"\
-          qa_errors\"].append(\n            \"E_COMPETITOR_COUNT_{}\".format(len(competitors))\n\
-          \        )\n\n    competitor_lookup = {\n        normalize_brand_name(competitor):\
+          \            record.get(\"query_type\", \"\")\n        )\n        evaluation_dimension\
+          \ = normalize_evaluation_dimension(\n            record.get(\"evaluation_dimension\"\
+          , \"\")\n        )\n\n        if not normalized:\n            statistics[\"\
+          t4_invalid_count\"] += 1\n            continue\n\n        if query_type\
+          \ not in VALID_T4_TYPES:\n            statistics[\"t4_invalid_count\"] +=\
+          \ 1\n            continue\n\n        valid_combination = (\n           \
+          \ (\n                query_type == \"competitor_query\"\n              \
+          \  and evaluation_dimension in {\n                    \"正向综合评价\",\n    \
+          \                \"安全质疑\"\n                }\n            )\n          \
+          \  or (\n                query_type == \"competitor_compare\"\n        \
+          \        and evaluation_dimension == \"竞品比较\"\n            )\n         \
+          \   or (\n                query_type == \"brand_direct\"\n             \
+          \   and evaluation_dimension in {\n                    \"正向综合评价\",\n   \
+          \                 \"安全质疑\"\n                }\n            )\n        )\n\
+          \n        if not valid_combination:\n            statistics[\"t4_invalid_count\"\
+          ] += 1\n            continue\n\n        # 与T1/T2/T3重复\n        if normalized\
+          \ in seen_queries:\n            statistics[\"t4_duplicate_count\"] += 1\n\
+          \            continue\n\n        # T4候选内部重复\n        if normalized in candidate_seen:\n\
+          \            statistics[\"t4_duplicate_count\"] += 1\n            continue\n\
+          \n        record[\"query_type\"] = query_type\n        record[\"evaluation_dimension\"\
+          ] = evaluation_dimension\n        record[\"is_negative_probe\"] = (\n  \
+          \          1 if evaluation_dimension == \"安全质疑\" else 0\n        )\n   \
+          \     record = normalize_brand_comp(record)\n\n        candidate_seen.add(normalized)\n\
+          \        valid_t4_candidates.append(record)\n\n    # 识别三个竞品，优先从竞品直询记录中获取\n\
+          \    competitors = []\n    competitor_seen = set()\n\n    for preferred_type\
+          \ in [\n        \"competitor_query\",\n        \"competitor_compare\"\n\
+          \    ]:\n        for record in valid_t4_candidates:\n            if record.get(\"\
+          query_type\") != preferred_type:\n                continue\n\n         \
+          \   competitor = extract_competitor(record)\n            normalized = normalize_brand_name(competitor)\n\
+          \n            if normalized and normalized not in competitor_seen:\n   \
+          \             competitor_seen.add(normalized)\n                competitors.append(competitor)\n\
+          \n    competitors = competitors[:EXPECTED_COMPETITOR_COUNT]\n\n    if len(competitors)\
+          \ < EXPECTED_COMPETITOR_COUNT:\n        statistics[\"qa_errors\"].append(\n\
+          \            \"E_COMPETITOR_COUNT_{}\".format(\n                len(competitors)\n\
+          \            )\n        )\n\n    competitor_lookup = {\n        normalize_brand_name(competitor):\
           \ competitor\n        for competitor in competitors\n    }\n\n    selected_t4\
           \ = []\n    selected_seen = set()\n\n    def append_t4(record):\n      \
           \  query = str(record.get(\"query\", \"\")).strip()\n        normalized\
@@ -784,61 +811,86 @@ workflow:
           \n        if normalized in selected_seen:\n            return False\n\n\
           \        selected_t4.append(\n            json.dumps(record, ensure_ascii=False)\n\
           \        )\n\n        selected_seen.add(normalized)\n        seen_queries.add(normalized)\n\
-          \        return True\n\n    # 1. 品牌直询：保留6条\n    brand_direct_count = 0\n\
-          \n    for record in valid_t4_candidates:\n        if brand_direct_count\
-          \ >= T4_TARGETS[\"brand_direct\"]:\n            break\n\n        if record.get(\"\
-          query_type\") != \"brand_direct\":\n            continue\n\n        if append_t4(record):\n\
-          \            brand_direct_count += 1\n\n    statistics[\"t4_type_counts\"\
-          ][\"brand_direct\"] = (\n        brand_direct_count\n    )\n\n    # 2. 竞品比较：每个竞品保留3条\n\
-          \    compare_counts = {\n        normalize_brand_name(competitor): 0\n \
-          \       for competitor in competitors\n    }\n\n    for record in valid_t4_candidates:\n\
-          \        if record.get(\"query_type\") != \"competitor_compare\":\n    \
-          \        continue\n\n        competitor = extract_competitor(record)\n \
-          \       normalized_competitor = normalize_brand_name(competitor)\n\n   \
-          \     if normalized_competitor not in competitor_lookup:\n            continue\n\
-          \n        if (\n            compare_counts[normalized_competitor]\n    \
-          \        >= COMPARE_PER_COMPETITOR\n        ):\n            continue\n\n\
-          \        if append_t4(record):\n            compare_counts[normalized_competitor]\
-          \ += 1\n\n    compare_total = sum(compare_counts.values())\n\n    statistics[\"\
-          t4_type_counts\"][\"competitor_compare\"] = (\n        compare_total\n \
-          \   )\n\n    # 3. 竞品直询：每个竞品保留6条\n    query_counts = {\n        normalize_brand_name(competitor):\
-          \ 0\n        for competitor in competitors\n    }\n\n    for record in valid_t4_candidates:\n\
-          \        if record.get(\"query_type\") != \"competitor_query\":\n      \
-          \      continue\n\n        competitor = extract_competitor(record)\n   \
-          \     normalized_competitor = normalize_brand_name(competitor)\n\n     \
-          \   if normalized_competitor not in competitor_lookup:\n            continue\n\
-          \n        if (\n            query_counts[normalized_competitor]\n      \
-          \      >= QUERY_PER_COMPETITOR\n        ):\n            continue\n\n   \
-          \     if append_t4(record):\n            query_counts[normalized_competitor]\
-          \ += 1\n\n    query_total = sum(query_counts.values())\n\n    statistics[\"\
-          t4_type_counts\"][\"competitor_query\"] = (\n        query_total\n    )\n\
-          \n    # 输出每个竞品实际覆盖情况\n    for competitor in competitors:\n        normalized\
-          \ = normalize_brand_name(competitor)\n\n        statistics[\"competitor_distribution\"\
-          ][competitor] = {\n            \"competitor_compare\": compare_counts.get(\n\
-          \                normalized, 0\n            ),\n            \"competitor_query\"\
-          : query_counts.get(\n                normalized, 0\n            )\n    \
-          \    }\n\n        if compare_counts.get(normalized, 0) < COMPARE_PER_COMPETITOR:\n\
-          \            statistics[\"qa_errors\"].append(\n                \"E_COMPETITOR_COMPARE_COVERAGE_{}\"\
-          .format(\n                    competitor\n                )\n          \
-          \  )\n\n        if query_counts.get(normalized, 0) < QUERY_PER_COMPETITOR:\n\
-          \            statistics[\"qa_errors\"].append(\n                \"E_COMPETITOR_QUERY_COVERAGE_{}\"\
-          .format(\n                    competitor\n                )\n          \
-          \  )\n\n    final_results.extend(selected_t4)\n    statistics[\"t4_count\"\
-          ] = len(selected_t4)\n\n    # 计算T4类型缺口\n    for query_type, target in T4_TARGETS.items():\n\
+          \        return True\n\n    distribution = {\n        normalize_brand_name(competitor):\
+          \ {\n            \"正向综合评价\": 0,\n            \"安全质疑\": 0,\n            \"\
+          竞品比较\": 0\n        }\n        for competitor in competitors\n    }\n\n \
+          \   def select_competitor_records(\n        query_type,\n        evaluation_dimension,\n\
+          \        per_competitor_target\n    ):\n        \"\"\"\n        针对每个竞品，按指定类型和评价维度选择固定数量。\n\
+          \        \"\"\"\n        for competitor in competitors:\n            normalized_competitor\
+          \ = normalize_brand_name(competitor)\n\n            for record in valid_t4_candidates:\n\
+          \                current_count = distribution[\n                    normalized_competitor\n\
+          \                ][evaluation_dimension]\n\n                if current_count\
+          \ >= per_competitor_target:\n                    break\n\n             \
+          \   if record.get(\"query_type\") != query_type:\n                    continue\n\
+          \n                if (\n                    record.get(\"evaluation_dimension\"\
+          )\n                    != evaluation_dimension\n                ):\n   \
+          \                 continue\n\n                record_competitor = extract_competitor(record)\n\
+          \n                if (\n                    normalize_brand_name(record_competitor)\n\
+          \                    != normalized_competitor\n                ):\n    \
+          \                continue\n\n                if append_t4(record):\n   \
+          \                 distribution[\n                        normalized_competitor\n\
+          \                    ][evaluation_dimension] += 1\n\n    # 业务合同：\n    #\
+          \ 3个竞品 × 每个竞品4条正向综合评价 = 12\n    select_competitor_records(\n        \"competitor_query\"\
+          ,\n        \"正向综合评价\",\n        POSITIVE_PER_COMPETITOR\n    )\n\n    #\
+          \ 3个竞品 × 每个竞品4条安全质疑 = 12\n    select_competitor_records(\n        \"competitor_query\"\
+          ,\n        \"安全质疑\",\n        SAFETY_PER_COMPETITOR\n    )\n\n    # 3个竞品\
+          \ × 每个竞品3条竞品比较 = 9\n    select_competitor_records(\n        \"competitor_compare\"\
+          ,\n        \"竞品比较\",\n        COMPARE_PER_COMPETITOR\n    )\n\n    # 汇总每个竞品的分布\n\
+          \    for competitor in competitors:\n        normalized = normalize_brand_name(competitor)\n\
+          \        counts = distribution[normalized]\n\n        statistics[\"competitor_distribution\"\
+          ][competitor] = {\n            \"正向综合评价\": counts[\"正向综合评价\"],\n       \
+          \     \"安全质疑\": counts[\"安全质疑\"],\n            \"竞品比较\": counts[\"竞品比较\"\
+          ],\n            \"competitor_query\": (\n                counts[\"正向综合评价\"\
+          ]\n                + counts[\"安全质疑\"]\n            ),\n            \"competitor_compare\"\
+          : counts[\"竞品比较\"]\n        }\n\n        if (\n            counts[\"正向综合评价\"\
+          ]\n            != POSITIVE_PER_COMPETITOR\n        ):\n            statistics[\"\
+          qa_errors\"].append(\n                \"E_COMPETITOR_POSITIVE_COVERAGE_{}_{}\"\
+          .format(\n                    competitor,\n                    counts[\"\
+          正向综合评价\"]\n                )\n            )\n\n        if (\n          \
+          \  counts[\"安全质疑\"]\n            != SAFETY_PER_COMPETITOR\n        ):\n\
+          \            statistics[\"qa_errors\"].append(\n                \"E_COMPETITOR_SAFETY_COVERAGE_{}_{}\"\
+          .format(\n                    competitor,\n                    counts[\"\
+          安全质疑\"]\n                )\n            )\n\n        if (\n            counts[\"\
+          竞品比较\"]\n            != COMPARE_PER_COMPETITOR\n        ):\n           \
+          \ statistics[\"qa_errors\"].append(\n                \"E_COMPETITOR_COMPARE_COVERAGE_{}_{}\"\
+          .format(\n                    competitor,\n                    counts[\"\
+          竞品比较\"]\n                )\n            )\n\n    positive_total = sum(\n\
+          \        counts[\"正向综合评价\"]\n        for counts in distribution.values()\n\
+          \    )\n    safety_total = sum(\n        counts[\"安全质疑\"]\n        for counts\
+          \ in distribution.values()\n    )\n    compare_total = sum(\n        counts[\"\
+          竞品比较\"]\n        for counts in distribution.values()\n    )\n    competitor_query_total\
+          \ = positive_total + safety_total\n\n    statistics[\"t4_type_counts\"]\
+          \ = {\n        \"brand_direct\": 0,\n        \"competitor_compare\": compare_total,\n\
+          \        \"competitor_query\": competitor_query_total\n    }\n\n    statistics[\"\
+          t4_dimension_counts\"] = {\n        \"正向综合评价\": positive_total,\n      \
+          \  \"安全质疑\": safety_total,\n        \"竞品比较\": compare_total\n    }\n\n \
+          \   # 计算T4类型缺口\n    for query_type, target in T4_TYPE_TARGETS.items():\n\
           \        actual = statistics[\"t4_type_counts\"][query_type]\n        deficit\
           \ = max(0, target - actual)\n\n        statistics[\"t4_type_deficits\"][query_type]\
           \ = deficit\n\n        if deficit > 0:\n            statistics[\"qa_errors\"\
           ].append(\n                \"E_T4_{}_DEFICIT_{}\".format(\n            \
           \        query_type.upper(),\n                    deficit\n            \
-          \    )\n            )\n\n    if statistics[\"t4_count\"] != 33:\n      \
-          \  statistics[\"qa_errors\"].append(\n            \"E_T4_POST_DEDUP_COUNT\"\
-          \n        )\n\n    total_count = len(final_results)\n\n    if total_count\
-          \ != 128:\n        statistics[\"qa_errors\"].append(\n            \"E_FINAL_TOTAL_COUNT\"\
-          \n        )\n\n    # 错误码去重\n    statistics[\"qa_errors\"] = list(\n    \
-          \    dict.fromkeys(statistics[\"qa_errors\"])\n    )\n\n    if statistics[\"\
-          qa_errors\"]:\n        statistics[\"qa_status\"] = \"failed\"\n\n    return\
-          \ {\n        \"statistics\": statistics,\n        \"final_results\": final_results,\n\
-          \        \"total_count\": total_count\n    }"
+          \    )\n            )\n\n    # 计算T4评价维度缺口\n    for dimension, target in\
+          \ T4_DIMENSION_TARGETS.items():\n        actual = statistics[\"t4_dimension_counts\"\
+          ][dimension]\n        deficit = max(0, target - actual)\n\n        statistics[\"\
+          t4_dimension_deficits\"][dimension] = deficit\n\n        if deficit > 0:\n\
+          \            if dimension == \"正向综合评价\":\n                error_name = \"\
+          POSITIVE\"\n            elif dimension == \"安全质疑\":\n                error_name\
+          \ = \"SAFETY\"\n            else:\n                error_name = \"COMPARE\"\
+          \n\n            statistics[\"qa_errors\"].append(\n                \"E_T4_{}_DEFICIT_{}\"\
+          .format(\n                    error_name,\n                    deficit\n\
+          \                )\n            )\n\n    final_results.extend(selected_t4)\n\
+          \    statistics[\"t4_count\"] = len(selected_t4)\n\n    if statistics[\"\
+          t4_count\"] != EXPECTED_T4_COUNT:\n        statistics[\"qa_errors\"].append(\n\
+          \            \"E_T4_POST_DEDUP_COUNT_{}\".format(\n                statistics[\"\
+          t4_count\"]\n            )\n        )\n\n    total_count = len(final_results)\n\
+          \n    if total_count != EXPECTED_TOTAL_COUNT:\n        statistics[\"qa_errors\"\
+          ].append(\n            \"E_FINAL_TOTAL_COUNT_{}\".format(total_count)\n\
+          \        )\n\n    statistics[\"qa_errors\"] = list(\n        dict.fromkeys(statistics[\"\
+          qa_errors\"])\n    )\n\n    if statistics[\"qa_errors\"]:\n        statistics[\"\
+          qa_status\"] = \"failed\"\n\n    return {\n        \"statistics\": statistics,\n\
+          \        \"final_results\": final_results,\n        \"total_count\": total_count\n\
+          \    }"
         code_language: python3
         desc: ''
         outputs:
@@ -879,7 +931,7 @@ workflow:
       positionAbsolute:
         x: 3070
         y: 502
-      selected: false
+      selected: true
       sourcePosition: right
       targetPosition: left
       type: custom
@@ -1088,7 +1140,7 @@ workflow:
       positionAbsolute:
         x: 942
         y: 336
-      selected: true
+      selected: false
       sourcePosition: right
       targetPosition: left
       type: custom
@@ -1787,71 +1839,69 @@ workflow:
         prompt_template:
         - id: 5ae4b46b-3a4d-440a-8c70-20765f332d82
           role: system
-          text: "【角色】\n你是市场竞品分析专家。根据客户品牌信息，评估并补充竞品列表至3个，标记行业第一竞品。\n\n\n\n【铁律规则】\n\
-            1. comps_list必须输出恰好3个竞品，不能多不能少\n2. 原输入的竞品品牌名必须按字符级严格保留——禁止任何形式的修改，包括但不限于：\n\
-            \   - 禁止改大小写（如 \"iPhone\" 改为 \"iphone\" 或 \"IPHONE\"）\n   - 禁止增删空格（如 \"\
-            Air Jordan\" 改为 \"AirJordan\" 或 \"Air  Jordan\"）\n   - 禁止增删标点（如 \"L'Oréal\"\
-            \ 改为 \"L Oreal\"）\n   - 禁止繁简转换、全半角转换、中英互译\n   - 必须与输入字符串逐字符完全一致\n3. 竞品必须去重，绝对不能包含客户品牌（brand_name）\n\
-            4. 所有竞品必须与客户品牌属于同一行业/品类，禁止跨行业推荐\n5. 补齐的竞品必须使用完整的官方品牌全称（即该品牌在其所属行业中最常被引用的完整名称，如\"\
-            黑系房车\"而非\"黑系\"，\"曼恩商用车\"而非\"曼恩\"），禁止使用可能导致歧义的简称或缩写\n6. 如果对某个竞品品牌的真实性存疑，必须跳过该候选，并继续从同一细分赛道中选择其他真实、公开知名且可验证的品牌补齐；不得因单个候选存疑而减少竞品数量。补选品牌必须能够说明主营业务、代表产品和与客户品牌的相关性，禁止虚构、猜测、跨赛道或使用客户品牌凑数。\n\
-            7. comps_list字段的品牌分隔符规则——必须严格遵守，禁止自行判断：\n   - 分隔符仅为：英文逗号\",\"和中文顿号\"、\"\
-            \n   - 非分隔符（必须视为同一个品牌名的组成部分）：斜杠\"/\"、空格\" \"、连字符\"-\"、加号\"+\"、点\".\"等所有其他字符\n\
-            \   - 解析示例：\n     · \"Nike,Adidas\" → [\"Nike\", \"Adidas\"]（2个品牌）\n \
-            \    · \"Nike、Adidas\" → [\"Nike\", \"Adidas\"]（2个品牌）\n     · \"Nike/Adidas\"\
-            \ → [\"Nike/Adidas\"]（1个品牌，因为/不是分隔符）\n     · \"Air Jordan\" → [\"Air Jordan\"\
-            ]（1个品牌，空格是品牌名一部分）\n     · \"Coca-Cola\" → [\"Coca-Cola\"]（1个品牌，连字符是品牌名一部分）\n\
-            \     · \"Nike,Air Jordan、Adidas/Yeezy\" → [\"Nike\", \"Air Jordan\",\
-            \ \"Adidas/Yeezy\"]（3个品牌）\n\n\n\n【客户信息】\n- 竞品清单：{{#1765425297251.comps_list#}}\n\
+          text: "# 竞品清单数据补齐 Prompt V2.1（安全澄清版）\n\n【角色】\n\n你是市场竞品分析专家。根据客户品牌信息，评估并补充竞品列表至3个，并标记行业第一竞品。\n\
+            \n\n【任务性质与边界】\n\n本任务仅用于合法的市场竞品识别、产品分类和结构化品牌数据整理。\n\n输入中可能包含电子游戏产品、游戏品牌、游戏系列或游戏IP名称。这些名称仅作为公开市场实体进行识别和比较，不要求生成或复刻任何角色、剧情、美术、音乐、程序代码或游戏素材。\n\
+            \n“捉宠”“宠物收集”“宠物养成”等表述仅指虚构电子游戏中的产品玩法分类，不涉及现实动物、现实捕捉行为、暴力行为、未成年人引导或其他敏感内容。\n\
+            \n整个任务只分析公开可验证的品牌名称、产品形态、细分赛道、目标用户和市场竞争关系。\n\n\n【铁律规则】\n\n1. comps_list必须输出恰好3个竞品，不能多也不能少。\n\
+            \n2. 原输入中的竞品品牌名必须按字符级严格保留，禁止任何形式的修改，包括但不限于：\n\n   - 禁止修改大小写，例如“iPhone”不得改为“iphone”或“IPHONE”；\n\
+            \   - 禁止增删空格，例如“Air Jordan”不得改为“AirJordan”或“Air  Jordan”；\n   - 禁止增删标点，例如“L'Oréal”不得改为“L\
+            \ Oreal”；\n   - 禁止繁简转换、全半角转换或中英互译；\n   - 最终输出必须与原输入字符串逐字符完全一致。\n\n3. 竞品必须去重，绝对不能包含客户品牌brand_name。\n\
+            \n4. 所有竞品必须与客户品牌属于同一行业和细分品类，禁止跨行业或跨赛道推荐。\n\n5. 补充的竞品必须使用完整、真实、公开使用的官方品牌或产品名称，禁止使用可能产生歧义的简称或缩写。\n\
+            \n6. 如果对某个候选竞品的真实性存疑，必须跳过该候选，并继续从同一细分赛道中选择其他真实、公开知名且可验证的品牌补齐。\n\n   -\
+            \ 不得因单个候选存疑而减少竞品数量；\n   - 补选品牌必须能够说明主营业务、代表产品及其与客户品牌的相关性；\n   - 禁止虚构、猜测、跨赛道或使用客户品牌凑数。\n\
+            \n7. comps_list字段的品牌分隔符必须严格按以下规则解析：\n\n   - 分隔符仅包括英文逗号“,”和中文顿号“、”；\n \
+            \  - 斜杠“/”、空格、连字符“-”、加号“+”、点“.”等其他字符均属于品牌名称的一部分；\n   - 禁止自行增加其他分隔符。\n\n\
+            解析示例：\n\n- “Nike,Adidas” → [\"Nike\", \"Adidas\"]\n- “Nike、Adidas” → [\"\
+            Nike\", \"Adidas\"]\n- “Nike/Adidas” → [\"Nike/Adidas\"]\n- “Air Jordan”\
+            \ → [\"Air Jordan\"]\n- “Coca-Cola” → [\"Coca-Cola\"]\n- “Nike,Air Jordan、Adidas/Yeezy”\
+            \ → [\"Nike\", \"Air Jordan\", \"Adidas/Yeezy\"]\n\n\n【客户信息】\n\n- 竞品清单：{{#1765425297251.comps_list#}}\n\
             - 客户品牌名称：{{#1765425297251.brand_name#}}\n- 公司名称：{{#1765425297251.corp_name#}}\n\
             - 产品名称：{{#1765425297251.product_name#}}\n- 核心关键词：{{#1765425297251.core_keyword#}}\n\
-            - 目标受众：{{#1765425297251.target_audience#}}\n\n\n\n【操作流程】\nStep 1：解析并检查comps_list长度：\n\
-            - 按【铁律规则7】的分隔符规则解析comps_list为品牌数组（仅按\",\"和\"、\"分隔，其他字符如\"/\"、空格视为品牌名一部分）\n\
-            - 解析后每个品牌必须按【铁律规则2】字符级完整保留，禁止任何修改\n- 若解析后品牌数≥3，直接返回前3个，原样输出到comps_list字段，不做任何字符修改\n\
-            - 若解析后品牌数<3，必须继续补充同一细分赛道中真实、公开知名且可验证的品牌，直到去重后恰好3个；不得提前输出少于3个的comps_list。\n\
-            - 输出前必须再次校验：comps_list去重后长度必须等于3，不能包含客户品牌，不能包含重复品牌。\n\n\n\nStep 2：行业分层定位（必须逐层分析，禁止跳步）：\n\
-            - 前置分析：必须首先分析comps_list中已有品牌的行业归属，确定这些品牌所在的细分赛道。如果comps_list中有≥1个品牌被识别为同一细分赛道，则客户品牌默认属于该细分赛道，禁止泛化到更宽赛道\n\
-            - 第一层【大类】：客户品牌所属的大行业是什么？（如：游戏、金融、美妆、法律、教育等）\n- 第二层【细分赛道】：在该大类下，客户品牌具体处于哪个细分赛道？（如：游戏大类下→手游分发/游戏社区/游戏发行/游戏直播；金融大类下→股票软件/基金平台/保险经纪）\n\
-            - 第三层【核心定位】：客户品牌的核心用户场景和产品形态是什么？（如：4399游戏盒→手游分发+游戏社区，核心是\"找游戏、下游戏、交流攻略\"\
-            ）\n- 细分精度要求：细分赛道必须精确到product_name所描述的产品形态级别，层级不得宽于product_name中的产品形态描述（如product_name含\"\
-            越野房车\"→细分赛道为\"越野房车\"，禁止泛化为\"越野车\"或\"房车\"或\"汽车\"）\n- 判断依据（按优先级从高到低，必须逐级使用）：\n\
-            \  ① comps_list已有品牌：客户提供的竞品清单是赛道定义的最高权威，必须优先识别这些品牌的产品形态和细分赛道，以其共同赛道作为基准\n\
-            \  ② 品牌名称（brand_name）：知名品牌可直接确定行业归属\n  ③ 产品名称（product_name）：与brand_name联合定位细分赛道\n\
-            \  ④ 核心关键词（core_keyword）：直接描述产品功能与定位——当brand_name不明确时，core_keyword是核心判断依据\n\
-            \  ⑤ 目标受众（target_audience）：验证行业定位是否准确\n  ⑥ 公司名称（corp_name）：仅作兜底参考，\"XX科技有限公司\"\
-            等泛化名称不具有行业指向性，禁止仅凭公司名称推断行业\n\n\n\nStep 3：竞品筛选（必须在Step 2定位的细分赛道内选择）：\n\
-            - 参照锚定：comps_list中已有品牌所属的细分赛道是最高优先级的参照基准，补充竞品必须与之在同一细分赛道内，确保相关性一致\n- 锚定兜底：当comps_list中的品牌无法准确识别其细分赛道时，必须以product_name和core_keyword确定的细分赛道为准，target_audience用于验证，不依赖不明确的品牌名称做赛道推断\n\
-            - 候选范围：仅限与客户品牌在同一细分赛道、产品形态相似、目标用户重叠的品牌\n- 排除规则：仅大类相同但细分赛道不同的品牌不算竞品（如：游戏分发\
-            \ vs 游戏直播 ≠ 竞品；应用商店 vs 游戏盒子 ≠ 竞品）\n- 受众排除：目标受众属性必须与客户品牌一致，包含以下维度：\n  ·\
-            \ 专业vs大众：当客户品牌面向专业群体（如开发者、设计师、医生等）时，禁止推荐面向大众消费者的产品；反之亦然\n  · 消费层级：当target_audience为高端/奢华消费群体（如富豪、顶级投资人等）时，禁止推荐大众消费品牌；当target_audience为大众消费者时，禁止推荐奢侈品牌\n\
-            - 选择优先级：\n  ① 高相关性：优先选与客户品牌产品形态最接近的，再选用户群重叠度最高的，确保相关性高\n  ② 行业排名top的品牌：基于细分赛道下品牌排名，优先选取行业排名靠前的\n\
-            - 真实性：所有竞品必须为真实存在且活跃的品牌，禁止虚构\n- 存在性验证：每个补充竞品必须通过存在性验证——必须说明该品牌的主营业务、代表产品及确认其真实存在的依据。无法提供具体验证信息的品牌视为存疑，禁止推荐\n\
-            \n\n\nStep 4：industry_leader评选（从客户品牌及3个竞品中选出综合实力最强的1个）：\n- 评估维度与权重：\n\
-            \  ① 品牌知名度（30%）：大众认知度、品牌搜索热度、社交媒体声量\n  ② 市场占有率（30%）：市场份额、用户规模（MAU/DAU）、行业排名\n\
-            \  ③ 产品影响力（25%）：产品创新力、用户口碑评分、行业奖项或权威认证\n  ④ 商业实力（15%）：营收规模、融资轮次/估值、母公司实力\n\
-            - 评选规则：\n  - 必须逐个候选进行四维评分，得分最高者为industry_leader\n  - 若客户品牌本身综合得分最高，industry_leader填写brand_name\n\
-            \  - 若多个候选得分接近，以市场占有率作为决胜维度\n  - 若无法获取足够数据判断，优先依据品牌知名度和市场占有率排序\n\n\n\n\
-            【输出格式】\n仅输出一个JSON对象，推理过程放在reasoning字段内，禁止输出JSON以外的任何内容：\n\n\n{\n  \"reasoning\"\
-            : {\n    \"comps_list_identification\": \"逐一识别comps_list中每个品牌的行业归属与细分赛道\"\
-            ,\n    \"major_category\": \"大类\",\n    \"sub_track\": \"细分赛道\",\n   \
-            \ \"core_positioning\": \"核心定位\",\n    \"competitor_verification\": [\n\
-            \      {\n        \"official_name\": \"补充竞品的官方全称\",\n        \"product_form\"\
-            : \"产品形态\",\n        \"existence_verification\": \"主营业务、代表产品、确认真实存在的依据\"\
-            ,\n        \"relevance\": \"与客户品牌的相关性说明\"\n      }\n    ]\n  },\n  \"\
-            comps_list\": [\"竞品1官方全称\", \"竞品2官方全称\", \"竞品3官方全称\"],\n  \"industry_leader\"\
-            : \"竞品官方全称\"或\"brand_name\"\n}\n\n\n\n【示例】\n输入：comps_list=[\"竞品B\"], brand_name=\"\
-            品牌A\", corp_name=\"A公司\", product_name=\"A产品线\", core_keyword=\"个人理财工具\"\
-            , target_audience=\"个人投资者\"\n\n\n{\n  \"reasoning\": {\n    \"comps_list_identification\"\
-            : \"竞品B属于个人理财赛道\",\n    \"major_category\": \"金融\",\n    \"sub_track\"\
-            : \"个人理财工具\",\n    \"core_positioning\": \"面向个人投资者的理财工具，核心是'选产品、管资产、看收益'\"\
-            ,\n    \"competitor_verification\": [\n      {\n        \"official_name\"\
-            : \"蚂蚁财富\",\n        \"product_form\": \"个人理财平台\",\n        \"existence_verification\"\
-            : \"蚂蚁集团旗下个人理财平台，提供基金、理财产品选购，支付宝内嵌入口，用户量亿级，公开报道可查\",\n        \"relevance\"\
-            : \"同为个人理财工具，目标用户重叠（个人投资者），产品形态相似（选产品+管资产）\"\n      },\n      {\n    \
-            \    \"official_name\": \"天天基金\",\n        \"product_form\": \"基金交易平台\"\
-            ,\n        \"existence_verification\": \"东方财富旗下基金交易平台，国内最大基金代销平台之一，公开上市企业，行业知名度高\"\
-            ,\n        \"relevance\": \"同属个人理财赛道，基金交易为核心功能，用户群重叠\"\n      }\n    ]\n\
-            \  },\n  \"comps_list\": [\"竞品B\", \"蚂蚁财富\", \"天天基金\"],\n  \"industry_leader\"\
-            : \"蚂蚁财富\"\n}\n\n"
+            - 目标受众：{{#1765425297251.target_audience#}}\n\n\n【操作流程】\n\n## Step 1：解析并检查竞品列表\n\
+            \n1. 按照【铁律规则7】解析输入的comps_list。\n2. 原始竞品名称必须按照【铁律规则2】逐字符保留。\n3. 去除重复竞品和客户品牌brand_name。\n\
+            4. 若解析后竞品数量大于或等于3：\n   - 直接保留前3个；\n   - 原样输出；\n   - 不得修改名称。\n5. 若解析后竞品数量少于3：\n\
+            \   - 进入Step 2和Step 3；\n   - 从同一细分赛道补充真实、公开知名且可验证的品牌；\n   - 直到去重后的竞品数量恰好等于3。\n\
+            6. 输出前再次确认：\n   - comps_list长度必须等于3；\n   - 不能包含客户品牌；\n   - 不能包含重复品牌；\n\
+            \   - 原始竞品名称不得被修改。\n\n\n## Step 2：行业分层定位\n\n必须按照以下顺序逐层分析，不得跳步。\n\n###\
+            \ 2.1 前置分析\n\n首先识别comps_list中已有品牌的行业归属和产品形态。\n\n如果已有竞品中至少有一个品牌可以明确定位到某个细分赛道，则应优先以已有竞品所在的共同细分赛道为判断基准，禁止泛化到更宽泛的行业。\n\
+            \n### 2.2 第一层：行业大类\n\n判断客户品牌所属的大行业，例如：\n\n- 游戏\n- 金融\n- 美妆\n- 酒店\n- 教育\n\
+            - 法律\n- 汽车\n\n### 2.3 第二层：细分赛道\n\n判断客户品牌在行业大类中的具体细分赛道。\n\n细分赛道必须精确到product_name和core_keyword所表达的产品形态，不得泛化到更宽层级。\n\
+            \n### 2.4 第三层：核心定位\n\n判断客户品牌的：\n\n- 核心产品形态；\n- 核心使用场景；\n- 主要目标用户；\n- 关键竞争方式。\n\
+            \n### 2.5 判断依据优先级\n\n必须按照以下优先级进行判断：\n\n1. comps_list已有品牌；\n2. brand_name；\n\
+            3. product_name；\n4. core_keyword；\n5. target_audience；\n6. corp_name。\n\
+            \ncorp_name仅作为兜底参考。类似“XX科技有限公司”等泛化名称不能单独作为行业判断依据。\n\n\n【游戏行业专项说明】\n\n\
+            当输入属于游戏行业时：\n\n1. 游戏名称、系列名称和IP名称仅作为公开市场产品实体处理；\n2. 根据游戏平台、产品形态、核心玩法类型和目标用户判断细分赛道；\n\
+            3. “捉宠类RPG端游”应理解为“以虚构生物收集、培养和角色扮演为核心玩法的电脑游戏”；\n4. 不分析或生成游戏剧情、人物设定、战斗过程、美术素材或其他受版权保护内容；\n\
+            5. 竞品判断仅比较：\n   - 是否为真实存在且公开运营的游戏产品；\n   - 是否具有相近的虚构生物收集或培养玩法；\n   - 是否属于RPG或相近产品形态；\n\
+            \   - 是否面向相近玩家群体；\n   - 是否属于相近游戏平台。\n\n\n## Step 3：竞品筛选\n\n补充竞品必须在Step\
+            \ 2确定的细分赛道内选择。\n\n### 3.1 参照锚定\n\ncomps_list中已有品牌所属的细分赛道是最高优先级的参照基准。\n\
+            \n补充竞品必须与已有品牌处于相同或高度相近的：\n\n- 产品形态；\n- 核心功能或玩法；\n- 目标用户；\n- 使用场景；\n- 商业竞争关系。\n\
+            \n### 3.2 锚定兜底\n\n如果现有竞品无法准确识别细分赛道，则使用product_name和core_keyword确定细分赛道，并使用target_audience进行验证。\n\
+            \n不得仅依赖含义不明确的品牌名进行猜测。\n\n### 3.3 候选范围\n\n候选竞品必须同时满足：\n\n1. 与客户品牌属于同一细分赛道；\n\
+            2. 产品形态相似；\n3. 目标用户高度重叠；\n4. 具有实际竞争关系；\n5. 品牌或产品真实存在且仍处于活跃状态。\n\n### 3.4\
+            \ 排除规则\n\n以下对象不能作为竞品：\n\n- 仅行业大类相同但细分赛道不同的品牌；\n- 产品形态明显不同的品牌；\n- 目标用户明显不同的品牌；\n\
+            - 无法确认真实性的品牌；\n- 客户品牌自身；\n- 已经存在于comps_list中的重复品牌。\n\n### 3.5 选择优先级\n\n\
+            1. 优先选择产品形态和核心定位最接近的品牌；\n2. 其次选择目标用户重叠度最高的品牌；\n3. 再选择细分赛道中知名度、市场份额或产品影响力较高的品牌。\n\
+            \n### 3.6 存在性验证\n\n每个新增竞品都必须说明：\n\n- 官方名称；\n- 主营业务或产品形态；\n- 代表产品；\n- 确认其真实存在的依据；\n\
+            - 与客户品牌的相关性。\n\n如果某个候选无法完成上述验证，必须跳过该候选并继续选择其他候选，直到comps_list恰好包含3个竞品。\n\
+            \n\n## Step 4：industry_leader评选\n\n从客户品牌及最终3个竞品中选择综合实力最强的1个，作为industry_leader。\n\
+            \n评估维度及权重：\n\n1. 品牌知名度：30%\n2. 市场占有率：30%\n3. 产品影响力：25%\n4. 商业实力：15%\n\n\
+            评选规则：\n\n- 必须逐个候选进行综合判断；\n- 得分最高者填写到industry_leader；\n- 若客户品牌本身综合实力最高，industry_leader填写brand_name原值；\n\
+            - 若多个候选表现接近，优先比较市场占有率；\n- 若信息不足，优先依据公开知名度、市场覆盖和产品影响力判断；\n- industry_leader不能为null或空字符串。\n\
+            \n\n【输出格式】\n\n仅输出一个合法JSON对象。\n\n禁止输出：\n\n- Markdown标题；\n- 分析过程之外的说明文字；\n\
+            - 拒答模板；\n- 单反引号；\n- 三反引号；\n- ```json代码块；\n- JSON前后的任何文字。\n\n输出必须以字符“{”开头，以字符“}”结尾。\n\
+            \nJSON结构必须严格如下：\n\n{\n  \"reasoning\": {\n    \"comps_list_identification\"\
+            : \"逐一说明输入竞品的行业归属和细分赛道\",\n    \"major_category\": \"行业大类\",\n    \"sub_track\"\
+            : \"细分赛道\",\n    \"core_positioning\": \"客户品牌的核心产品形态、使用场景和目标用户\",\n  \
+            \  \"competitor_verification\": [\n      {\n        \"official_name\"\
+            : \"补充竞品的官方名称\",\n        \"product_form\": \"产品形态\",\n        \"existence_verification\"\
+            : \"主营业务、代表产品及确认其真实存在的依据\",\n        \"relevance\": \"与客户品牌的相关性说明\"\n\
+            \      }\n    ]\n  },\n  \"comps_list\": [\n    \"竞品1\",\n    \"竞品2\"\
+            ,\n    \"竞品3\"\n  ],\n  \"industry_leader\": \"客户品牌或3个竞品中的一个\"\n}\n\n\n\
+            【输出前最终检查】\n\n1. comps_list是否恰好包含3个字符串；\n2. 原始竞品名称是否逐字符保留；\n3. 是否排除了客户品牌；\n\
+            4. 是否不存在重复竞品；\n5. 补充竞品是否真实、公开、可验证；\n6. 3个竞品是否属于同一细分赛道；\n7. industry_leader是否为客户品牌或3个竞品中的一个；\n\
+            8. industry_leader是否为非空字符串；\n9. 输出是否为可直接解析的合法JSON；\n10. 输出是否以“{”开头并以“}”结尾；\n\
+            11. 输出中是否没有任何反引号、Markdown代码块或JSON之外的文字。"
         - id: 9975a491-9c49-4252-8107-d1c13ede9835
           role: user
           text: 请严格按照以上所有要求输出
@@ -3047,6 +3097,6 @@ workflow:
       type: custom
       width: 244
     viewport:
-      x: -186.84263048200836
-      y: 77.20304361729512
-      zoom: 0.38163815243494525
+      x: -1348.8002447184847
+      y: -177.73928669726888
+      zoom: 0.683528517152658
