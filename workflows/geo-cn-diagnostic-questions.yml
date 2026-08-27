@@ -2708,10 +2708,10 @@ workflow:
             \ 无关的其它行业/场景/权益/活动名\n\n## 补词任务信息\n- **还需补充的query数量**：`{{#17768257283590.deficit#}}`\
             \ 条\n- **已有query列表（严禁重复）**：\n```\n{{#17768257283590.existing_queries#}}\n\
             ```\n\n## 补词规则\n1. **数量要求**：必须精确补充上述deficit数量的query\n2. **去重铁律**：每条query不能与已有列表重复或高度相似\n\
-            3. **决策层级**：从3个层级选择——层级1(初步了解,is_strong_decision=0)、层级2(对比评估,is_strong_decision=0)、层级3(强决策,is_strong_decision=1)\n\
+            3. **决策层级**：从3个层级选择——层级1(强决策,is_strong_decision=1)、层级2(中决策,is_strong_decision=0)、层级3(弱决策,is_strong_decision=0)\n\
             4. **分配策略**：优先补充数量最少的层级\n\n## 输出格式\n```json\n{\n  \"t3_results\": [\n\
             \    {\"query\": \"补充的决策query\", \"decision_intent_level\": 1, \"is_strong_decision\"\
-            : 0}\n  ]\n}\n```\n\n请输出JSON结果，禁止任何其他内容。"
+            : 1}\n  ]\n}\n```\n\n请输出JSON结果，禁止任何其他内容。"
         - id: t3-supplement-user
           role: user
           text: 请严格按照以上所有要求补充生词
@@ -2760,11 +2760,7 @@ workflow:
           \               decision_intent_level = decision_intent_level_raw\n    \
           \        elif isinstance(decision_intent_level_raw, str) and decision_intent_level_raw.isdigit():\n\
           \                decision_intent_level = int(decision_intent_level_raw)\n\
-          \n            is_strong_decision = 0\n            if isinstance(is_strong_decision_raw,\
-          \ int):\n                is_strong_decision = 1 if is_strong_decision_raw\
-          \ == 1 else 0\n            elif isinstance(is_strong_decision_raw, str):\n\
-          \                is_strong_decision = 1 if is_strong_decision_raw == \"\
-          1\" else 0\n\n            obj = {\n                'id': f'AUTO_{int(datetime.now().timestamp())}_T3S_{item_index}',\n\
+          \n            # 强决策标记由层级确定，不信任模型返回值。\n            is_strong_decision = 1 if decision_intent_level == 1 else 0\n\n            obj = {\n                'id': f'AUTO_{int(datetime.now().timestamp())}_T3S_{item_index}',\n\
           \                'task_id': task_id,\n                'brand_name': brand_name,\n\
           \                'query': query.strip(),\n                'core_keyword':\
           \ core_keyword,\n                'source_keyword': 1,\n                'source_word_type':\
