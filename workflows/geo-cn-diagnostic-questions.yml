@@ -671,10 +671,10 @@ workflow:
         code: "import json\nimport re\n\n\nBASE_TARGETS = {\n    \"t1\": 60,\n   \
           \ \"t2\": 20,\n    \"t3\": 15\n}\n\nT1_EXPECTED_SCENE_COUNT = 6\nT1_PER_SCENE_TARGET = 10\n\nVALID_T4_TYPES = {\n    \"brand_direct\"\
           ,\n    \"competitor_compare\",\n    \"competitor_query\"\n}\n\nT4_TYPE_TARGETS\
-          \ = {\n    \"brand_direct\": 0,\n    \"competitor_compare\": 9,\n    \"\
-          competitor_query\": 24\n}\n\nT4_DIMENSION_TARGETS = {\n    \"正向综合评价\": 12,\n\
+          \ = {\n    \"brand_direct\": 6,\n    \"competitor_compare\": 9,\n    \"\
+          competitor_query\": 18\n}\n\nT4_DIMENSION_TARGETS = {\n    \"正向综合评价\": 12,\n\
           \    \"安全质疑\": 12,\n    \"竞品比较\": 9\n}\n\nEXPECTED_COMPETITOR_COUNT = 3\n\
-          POSITIVE_PER_COMPETITOR = 4\nSAFETY_PER_COMPETITOR = 4\nCOMPARE_PER_COMPETITOR\
+          SELF_POSITIVE_TARGET = 3\nSELF_SAFETY_TARGET = 3\nPOSITIVE_PER_COMPETITOR = 3\nSAFETY_PER_COMPETITOR = 3\nCOMPARE_PER_COMPETITOR\
           \ = 3\nEXPECTED_T4_COUNT = 33\nEXPECTED_TOTAL_COUNT = 128\n\n\ndef safe_to_list(value):\n\
           \    if value is None:\n        return []\n\n    if isinstance(value, list):\n\
           \        return value\n\n    if isinstance(value, str):\n        try:\n\
@@ -741,7 +741,7 @@ workflow:
           : 0,\n            \"安全质疑\": 0,\n            \"竞品比较\": 0\n        },\n  \
           \      \"t4_dimension_deficits\": {\n            \"正向综合评价\": 0,\n      \
           \      \"安全质疑\": 0,\n            \"竞品比较\": 0\n        },\n        \"competitor_distribution\"\
-          : {},\n        \"qa_status\": \"passed\",\n        \"qa_errors\": []\n \
+          : {},\n        \"self_distribution\": {\n            \"正向综合评价\": 0,\n            \"安全质疑\": 0\n        },\n        \"qa_status\": \"passed\",\n        \"qa_errors\": []\n \
           \   }\n\n    def append_t1_results(data):\n        \"\"\"T1按6个场景、每场景10条截取。\"\"\"\n        scene_order = []\n        scene_records = {}\n        local_seen = set()\n\n        for item in safe_to_list(data):\n            record = parse_record(item)\n            if not record:\n                continue\n\n            query = str(record.get(\"query\", \"\")).strip()\n            normalized = normalize_query(query)\n            scene_name = str(record.get(\"scene_name\", \"\") or \"\").strip()\n\n            if not normalized or not scene_name or normalized in local_seen:\n                continue\n\n            local_seen.add(normalized)\n            record = normalize_brand_comp(record)\n\n            if scene_name not in scene_records:\n                scene_order.append(scene_name)\n                scene_records[scene_name] = []\n            scene_records[scene_name].append(record)\n\n        statistics[\"t1_scene_count\"] = len(scene_order)\n        if len(scene_order) < T1_EXPECTED_SCENE_COUNT:\n            statistics[\"qa_errors\"].append(\n                \"E_T1_SCENE_COUNT_{}\".format(len(scene_order))\n            )\n\n        count = 0\n        for scene_name in scene_order[:T1_EXPECTED_SCENE_COUNT]:\n            selected = scene_records[scene_name][:T1_PER_SCENE_TARGET]\n            scene_count = len(selected)\n            statistics[\"t1_scene_distribution\"][scene_name] = scene_count\n\n            if scene_count < T1_PER_SCENE_TARGET:\n                statistics[\"qa_errors\"].append(\n                    \"E_T1_SCENE_QUERY_COUNT_{}_{}\".format(scene_name, scene_count)\n                )\n\n            for record in selected:\n                normalized = normalize_query(record.get(\"query\", \"\"))\n                final_results.append(json.dumps(record, ensure_ascii=False))\n                seen_queries.add(normalized)\n                count += 1\n\n        statistics[\"t1_count\"] = count\n        if count < BASE_TARGETS[\"t1\"]:\n            statistics[\"qa_errors\"].append(\n                \"E_T1_COUNT_{}\".format(count)\n            )\n\n    def append_base_results(data, source_name):\n        \"\"\"\
           \n        T2/T3按目标数量截取。\n        遇到无效记录时继续向后寻找有效记录。\n        \"\"\"\n\
           \        target = BASE_TARGETS[source_name]\n        count = 0\n       \
@@ -829,10 +829,9 @@ workflow:
           \                    != normalized_competitor\n                ):\n    \
           \                continue\n\n                if append_t4(record):\n   \
           \                 distribution[\n                        normalized_competitor\n\
-          \                    ][evaluation_dimension] += 1\n\n    # 业务合同：\n    #\
-          \ 3个竞品 × 每个竞品4条正向综合评价 = 12\n    select_competitor_records(\n        \"competitor_query\"\
+          \                    ][evaluation_dimension] += 1\n\n    # 本品直询：正向3条、安全3条。\n    self_counts = {\"正向综合评价\": 0, \"安全质疑\": 0}\n\n    def select_self_records(evaluation_dimension, target):\n        for record in valid_t4_candidates:\n            if self_counts[evaluation_dimension] >= target:\n                break\n            if record.get(\"query_type\") != \"brand_direct\":\n                continue\n            if record.get(\"evaluation_dimension\") != evaluation_dimension:\n                continue\n            if append_t4(record):\n                self_counts[evaluation_dimension] += 1\n\n    select_self_records(\"正向综合评价\", SELF_POSITIVE_TARGET)\n    select_self_records(\"安全质疑\", SELF_SAFETY_TARGET)\n    statistics[\"self_distribution\"] = self_counts.copy()\n\n    if self_counts[\"正向综合评价\"] != SELF_POSITIVE_TARGET:\n        statistics[\"qa_errors\"].append(\n            \"E_SELF_POSITIVE_COVERAGE_{}\".format(self_counts[\"正向综合评价\"])\n        )\n    if self_counts[\"安全质疑\"] != SELF_SAFETY_TARGET:\n        statistics[\"qa_errors\"].append(\n            \"E_SELF_SAFETY_COVERAGE_{}\".format(self_counts[\"安全质疑\"])\n        )\n\n    # 业务合同：\n    # 3个竞品 × 每个竞品3条正向综合评价 = 9\n    select_competitor_records(\n        \"competitor_query\"\
           ,\n        \"正向综合评价\",\n        POSITIVE_PER_COMPETITOR\n    )\n\n    #\
-          \ 3个竞品 × 每个竞品4条安全质疑 = 12\n    select_competitor_records(\n        \"competitor_query\"\
+          \ 3个竞品 × 每个竞品3条安全质疑 = 9\n    select_competitor_records(\n        \"competitor_query\"\
           ,\n        \"安全质疑\",\n        SAFETY_PER_COMPETITOR\n    )\n\n    # 3个竞品\
           \ × 每个竞品3条竞品比较 = 9\n    select_competitor_records(\n        \"competitor_compare\"\
           ,\n        \"竞品比较\",\n        COMPARE_PER_COMPETITOR\n    )\n\n    # 汇总每个竞品的分布\n\
@@ -856,14 +855,14 @@ workflow:
           .format(\n                    competitor,\n                    counts[\"\
           竞品比较\"]\n                )\n            )\n\n    positive_total = sum(\n\
           \        counts[\"正向综合评价\"]\n        for counts in distribution.values()\n\
-          \    )\n    safety_total = sum(\n        counts[\"安全质疑\"]\n        for counts\
+          \    )\n    competitor_safety_total = sum(\n        counts[\"安全质疑\"]\n        for counts\
           \ in distribution.values()\n    )\n    compare_total = sum(\n        counts[\"\
           竞品比较\"]\n        for counts in distribution.values()\n    )\n    competitor_query_total\
-          \ = positive_total + safety_total\n\n    statistics[\"t4_type_counts\"]\
-          \ = {\n        \"brand_direct\": 0,\n        \"competitor_compare\": compare_total,\n\
+          \ = positive_total + competitor_safety_total\n    self_total = (\n        self_counts[\"正向综合评价\"]\n        + self_counts[\"安全质疑\"]\n    )\n\n    statistics[\"t4_type_counts\"]\
+          \ = {\n        \"brand_direct\": self_total,\n        \"competitor_compare\": compare_total,\n\
           \        \"competitor_query\": competitor_query_total\n    }\n\n    statistics[\"\
-          t4_dimension_counts\"] = {\n        \"正向综合评价\": positive_total,\n      \
-          \  \"安全质疑\": safety_total,\n        \"竞品比较\": compare_total\n    }\n\n \
+          t4_dimension_counts\"] = {\n        \"正向综合评价\": (\n            positive_total + self_counts[\"正向综合评价\"]\n        ),\n      \
+          \  \"安全质疑\": (\n            competitor_safety_total + self_counts[\"安全质疑\"]\n        ),\n        \"竞品比较\": compare_total\n    }\n\n \
           \   # 计算T4类型缺口\n    for query_type, target in T4_TYPE_TARGETS.items():\n\
           \        actual = statistics[\"t4_type_counts\"][query_type]\n        deficit\
           \ = max(0, target - actual)\n\n        statistics[\"t4_type_deficits\"][query_type]\
@@ -1779,8 +1778,8 @@ workflow:
           \ %H:%M:%S'),\n                'updated_at': datetime.now().strftime('%Y-%m-%d\
           \ %H:%M:%S')\n            }\n\n            results.append(json.dumps(obj,\
           \ ensure_ascii=False))\n            query_texts.append(query.strip())\n\n\
-          \    # 按业务合同校验：3个竞品，每个竞品正向4、安全4、比较3。\n    expected_count = 33\n\
-          \    competitor_order = []\n    distribution = {}\n\n    def normalize_brand(value):\n\
+          \    # 按业务合同校验：本品正向3/安全3；3个竞品各正向3/安全3/比较3。\n    expected_count = 33\n\
+          \    self_counts = {'正向综合评价': 0, '安全质疑': 0}\n    competitor_order = []\n    distribution = {}\n\n    def normalize_brand(value):\n\
           \        return re.sub(r'\\s+', '', str(value or '').strip().lower())\n\n    for item_str in results:\n\
           \        try:\n            item = json.loads(item_str)\n        except Exception:\n\
           \            continue\n\n        query_type = str(item.get('query_type') or '').strip()\n\
@@ -1789,7 +1788,7 @@ workflow:
           \        dimension = re.sub(r'\\d+$', '', dimension)\n        brand_comp = item.get('brand_comp') or []\n\
           \        if isinstance(brand_comp, str):\n            brand_comp = [\n                value.strip()\n\
           \                for value in re.split(r'[,，]', brand_comp)\n                if value.strip()\n\
-          \            ]\n\n        competitor = ''\n        if query_type == 'competitor_query':\n\
+          \            ]\n\n        if query_type == 'brand_direct':\n            if dimension in ('正向综合评价', '安全质疑'):\n                self_counts[dimension] += 1\n            continue\n\n        competitor = ''\n        if query_type == 'competitor_query':\n\
           \            competitor = str(brand_comp[0]).strip() if brand_comp else ''\n\
           \        elif query_type == 'competitor_compare':\n            client_brand = normalize_brand(item.get('brand_name'))\n\
           \            for brand in brand_comp:\n                if normalize_brand(brand) != client_brand:\n\
@@ -1801,15 +1800,15 @@ workflow:
           \            }\n\n        if query_type == 'competitor_query' and dimension in ('正向综合评价', '安全质疑'):\n\
           \            distribution[normalized_competitor][dimension] += 1\n        elif query_type == 'competitor_compare' and dimension == '竞品比较':\n\
           \            distribution[normalized_competitor]['竞品比较'] += 1\n\n    selected_competitors = competitor_order[:3]\n\
-          \    targets = {'正向综合评价': 4, '安全质疑': 4, '竞品比较': 3}\n\
+          \    self_targets = {'正向综合评价': 3, '安全质疑': 3}\n    targets = {'正向综合评价': 3, '安全质疑': 3, '竞品比较': 3}\n\
           \    competitor_deficits = {}\n\n    for competitor in selected_competitors:\n\
           \        counts = distribution[normalize_brand(competitor)]\n        competitor_deficits[competitor] = {\n\
           \            dimension: max(0, target - counts.get(dimension, 0))\n\
           \            for dimension, target in targets.items()\n        }\n\n    missing_competitor_count = max(0, 3 - len(selected_competitors))\n\
-          \    deficit = (\n        sum(\n            sum(dimensions.values())\n            for dimensions in competitor_deficits.values()\n\
-          \        )\n        + missing_competitor_count * 11\n    )\n    actual_count = 33 - deficit\n\
+          \    self_deficits = {\n        dimension: max(0, target - self_counts.get(dimension, 0))\n        for dimension, target in self_targets.items()\n    }\n    deficit = (\n        sum(self_deficits.values())\n        + sum(\n            sum(dimensions.values())\n            for dimensions in competitor_deficits.values()\n\
+          \        )\n        + missing_competitor_count * 9\n    )\n    actual_count = 33 - deficit\n\
           \    is_sufficient = \"1\" if deficit == 0 else \"0\"\n\n    supplement_plan = {\n\
-          \        'required_competitor_count': 3,\n        'targets_per_competitor': targets,\n\
+          \        'self_targets': self_targets,\n        'self_deficits': self_deficits,\n        'required_competitor_count': 3,\n        'targets_per_competitor': targets,\n\
           \        'competitor_deficits': competitor_deficits,\n        'missing_competitor_count': missing_competitor_count\n\
           \    }\n\n    # 在已有问题前附加定向补词计划，不增加节点输出字段和连线。\n\
           \    existing_queries = (\n        '【定向补词计划】\\n'\n        + json.dumps(supplement_plan, ensure_ascii=False)\n\
@@ -2926,10 +2925,10 @@ workflow:
             \ 语义元素（含活动名/品牌名/产品名的核心词）删除后，query 应无法独立表达用户的具体搜索意图\n3. 严禁产出\"行业百科式\"query（不带\
             \ core_keyword 语义元素的通用问法）\n4. 严禁跨赛道漂移：不得引入与 core_keyword 无关的其它行业/场景/权益/活动名\n\
             \n## 补词任务信息\n- **还需补充的query数量**：`{{#17768257560210.deficit#}}` 条\n- **已有query列表（严禁重复）**：\n\
-            ```\n{{#17768257560210.existing_queries#}}\n```\n\n## 补词规则\n1. **定向补齐**：已有query列表开头包含“定向补词计划”；必须严格按照competitor_deficits逐个竞品、逐个评价维度补齐。missing_competitor_count大于0时，从输入竞品列表中识别尚未覆盖的竞品，并为该竞品补正向4条、安全4条、比较3条\n\
+            ```\n{{#17768257560210.existing_queries#}}\n```\n\n## 补词规则\n1. **定向补齐**：已有query列表开头包含“定向补词计划”；先按self_deficits补足本品正向综合评价和安全质疑，再严格按照competitor_deficits逐个竞品、逐个评价维度补齐。missing_competitor_count大于0时，从输入竞品列表中识别尚未覆盖的竞品，并为该竞品补正向3条、安全3条、比较3条\n\
             2. **数量要求**：总补充量必须精确等于上述deficit\n\
-            3. **去重铁律**：每条query不能与已有列表重复或高度相似\n4. **字段映射**：正向综合评价和安全质疑使用competitor_query且is_competitor=1；竞品比较使用competitor_compare且is_competitor=0；target_brand必须逐字符等于输入品牌名称，竞品比较的brand_comp必须同时包含客户品牌和对应竞品\n\
-            5. **禁止错补**：不得生成brand_direct，不得补充计划中缺口为0的竞品维度\n\
+            3. **去重铁律**：每条query不能与已有列表重复或高度相似\n4. **字段映射**：本品正向综合评价和安全质疑使用brand_direct且is_competitor=0；竞品正向综合评价和安全质疑使用competitor_query且is_competitor=1；竞品比较使用competitor_compare且is_competitor=0；target_brand必须逐字符等于输入品牌名称，竞品比较的brand_comp必须同时包含客户品牌和对应竞品\n\
+            5. **禁止错补**：不得补充计划中缺口为0的本品或竞品维度\n\
             6. **质量标准**：基于行业和产品特性进行真实需求判断，符合C端用户搜索习惯\n\n## 输出格式\n```json\n{\n  \"\
             t4_results\": [\n    {\n      \"query\": \"补充的品牌query\",\n      \"query_type\"\
             : \"competitor_query\",\n      \"brand_comp\": \"竞品名\",\n      \"evaluation_dimension\"\
