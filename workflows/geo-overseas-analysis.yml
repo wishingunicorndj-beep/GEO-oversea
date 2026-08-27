@@ -2656,24 +2656,13 @@ workflow:
           \     if config:\n                add_candidate(config[\"display_name\"\
           ], config=config, item=item, hits=hits)\n            elif entity_type in\
           \ ALLOWED_ENTITY_TYPES | {\"\"} and brand_like(fragment):\n            \
-          \    add_candidate(fragment, item=item, hits=hits)\n\n    # 全局统一排名：优先采用\
-          \ answer_raw 条目上真实出现的显式序号；没有\n    # 显式序号时按规范实体第一次提及的物理顺序。最后统一枚举为 1..N，\n\
-          \    # 从机制上保证目标与全部竞品不重复、不缺号。\n    rank_records = []\n    if target_hits:\n\
-          \        target_ranked_hit = next((hit for hit in target_hits if explicit_rank_for_hit(answer,\
-          \ hit[\"start\"]) > 0), target_hits[0])\n        rank_records.append({\n\
-          \            \"key\": \"__target__\",\n            \"explicit_rank\": explicit_rank_for_hit(answer,\
-          \ target_ranked_hit[\"start\"]),\n            \"position\": target_ranked_hit[\"\
-          start\"],\n        })\n    for key, candidate in candidates.items():\n \
-          \       hits = candidate[\"hits\"]\n        ranked_hit = next((hit for hit\
-          \ in hits if explicit_rank_for_hit(answer, hit[\"start\"]) > 0), hits[0])\n\
-          \        raw_rank = explicit_rank_for_hit(answer, ranked_hit[\"start\"])\n\
-          \        rank_records.append({\n            \"key\": key,\n            \"\
-          explicit_rank\": raw_rank,\n            \"position\": ranked_hit[\"start\"\
-          ],\n        })\n    if any(record[\"explicit_rank\"] > 0 for record in rank_records):\n\
-          \        rank_records.sort(key=lambda record: (\n            0 if record[\"\
-          explicit_rank\"] > 0 else 1,\n            record[\"explicit_rank\"] if record[\"\
-          explicit_rank\"] > 0 else 10 ** 9,\n            record[\"position\"],\n\
-          \        ))\n    else:\n        rank_records.sort(key=lambda record: record[\"\
+          \    add_candidate(fragment, item=item, hits=hits)\n\n    # 展示排名只按规范品牌在 answer_raw 中第一次有效提及的位置。\n\
+          \    # 忽略正文自带序号并统一枚举为 1..N，保证顺序稳定且绝不缺号。\n    rank_records = []\n    if target_hits:\n\
+          \        rank_records.append({\n            \"key\": \"__target__\",\n  \
+          \          \"position\": target_hits[0][\"start\"],\n        })\n    for\
+          \ key, candidate in candidates.items():\n        hits = candidate[\"hits\"]\n \
+          \       rank_records.append({\n            \"key\": key,\n            \"position\"\
+          : hits[0][\"start\"],\n        })\n    rank_records.sort(key=lambda record: record[\"\
           position\"])\n    final_rank_by_key = {record[\"key\"]: index + 1 for index,\
           \ record in enumerate(rank_records)}\n    target_rank_final = final_rank_by_key.get(\"\
           __target__\", 0)\n\n    # 旧 4b-2 节点仍保留以兼容现有拓扑，但其历史空行/过滤结果不再作为\n    # 提取或排名依据，避免旧口径污染最终\
@@ -2685,9 +2674,7 @@ workflow:
           \        config, item, hits = candidate[\"config\"], candidate[\"item\"\
           ], candidate[\"hits\"]\n        display = config[\"display_name\"] if config\
           \ else candidate[\"display\"]\n        legacy = legacy_by_key.get(canonical(display),\
-          \ {})\n        brand_value = str(config.get(\"core_brand\") if config else item.get(\"brand\") or \"\").strip()\n        if not brand_value:\n            continue\n\n        explicit_rank = 0\n        for hit in hits:\n\
-          \            explicit_rank = explicit_rank_for_hit(answer, hit[\"start\"\
-          ])\n            if explicit_rank > 0:\n                break\n        rank\
+          \ {})\n        brand_value = str(config.get(\"core_brand\") if config else item.get(\"brand\") or display).strip()\n        if not brand_value:\n            continue\n\n        rank\
           \ = final_rank_by_key.get(key, 0)\n        if rank <= 0:\n            continue\n\
           \        try:\n            sentiment = float(item.get(\"sentiment_score\"\
           , legacy.get(\"sentiment_score\", 0)) or 0)\n        except Exception:\n\
@@ -2728,7 +2715,7 @@ workflow:
           : result,\n        \"target_rank_final\": str(target_rank_final),\n    \
           \    \"ranking_entity_count\": len(rank_records),\n    }"
         code_language: python3
-        desc: answer_raw全量非目标品牌提取；comps_list仅归一；目标与竞品统一唯一连续排名
+        desc: answer_raw全量非目标品牌提取；comps_list仅归一；目标与竞品按首次提及顺序统一连续排名
         outputs:
           comp_brands:
             children: null
@@ -2818,7 +2805,7 @@ workflow:
           \        resolved_rank_num = 0\n    if detected_target and resolved_rank_num\
           \ > 0:\n        target_rank_num = resolved_rank_num\n        rank_pos =\
           \ str(resolved_rank_num)\n        is_top_recommend = \"true\" if 1 <= resolved_rank_num\
-          \ <= 3 else \"false\"\n    ranked_entities = (1 if detected_target else\
+          \ <= 3 else \"false\"\n\n    # 最终展示前统一压缩为连续阿拉伯序号，避免上游过滤实体后出现缺号。\n    display_order = []\n    if detected_target:\n        display_order.append({\"kind\": \"target\", \"index\": -1, \"rank\": target_rank_num})\n    for index, competitor in enumerate(competitor_mentions):\n        try:\n            competitor_rank = int(float(str(competitor.get(\"rank\", 0) or 0)))\n        except Exception:\n            competitor_rank = 0\n        display_order.append({\"kind\": \"competitor\", \"index\": index, \"rank\": competitor_rank})\n    display_order.sort(key=lambda item: (item[\"rank\"] <= 0, item[\"rank\"] if item[\"rank\"] > 0 else 10 ** 9, item[\"index\"]))\n    for display_rank, item in enumerate(display_order, 1):\n        if item[\"kind\"] == \"target\":\n            target_rank_num = display_rank\n            rank_pos = str(display_rank)\n            is_top_recommend = \"true\" if display_rank <= 3 else \"false\"\n        else:\n            competitor_mentions[item[\"index\"]][\"rank\"] = display_rank\n\n    ranked_entities = (1 if detected_target else\
           \ 0) + len(competitor_mentions)\n    has_rank = target_rank_num > 0 or any(isinstance(c.get(\"\
           rank\"), int) and c.get(\"rank\") > 0 for c in competitor_mentions)\n  \
           \  ir = \"true\" if target_rank_num > 0 or len(competitor_mentions) > 0\
