@@ -669,7 +669,7 @@ workflow:
       width: 244
     - data:
         code: "import json\nimport re\n\n\nBASE_TARGETS = {\n    \"t1\": 60,\n   \
-          \ \"t2\": 20,\n    \"t3\": 15\n}\n\nVALID_T4_TYPES = {\n    \"brand_direct\"\
+          \ \"t2\": 20,\n    \"t3\": 15\n}\n\nT1_EXPECTED_SCENE_COUNT = 6\nT1_PER_SCENE_TARGET = 10\n\nVALID_T4_TYPES = {\n    \"brand_direct\"\
           ,\n    \"competitor_compare\",\n    \"competitor_query\"\n}\n\nT4_TYPE_TARGETS\
           \ = {\n    \"brand_direct\": 0,\n    \"competitor_compare\": 9,\n    \"\
           competitor_query\": 24\n}\n\nT4_DIMENSION_TARGETS = {\n    \"正向综合评价\": 12,\n\
@@ -730,7 +730,7 @@ workflow:
           \ \"\"\n\n\ndef main(\n    t1_formatted_results=None,\n    t2_formatted_results=None,\n\
           \    t3_formatted_results=None,\n    t4_formatted_results=None\n):\n   \
           \ final_results = []\n    seen_queries = set()\n\n    statistics = {\n \
-          \       \"t1_count\": 0,\n        \"t2_count\": 0,\n        \"t3_count\"\
+          \       \"t1_count\": 0,\n        \"t1_scene_count\": 0,\n        \"t1_scene_distribution\": {},\n        \"t2_count\": 0,\n        \"t3_count\"\
           : 0,\n        \"t4_count\": 0,\n        \"t4_candidate_count\": 0,\n   \
           \     \"t4_duplicate_count\": 0,\n        \"t4_invalid_count\": 0,\n   \
           \     \"t4_type_counts\": {\n            \"brand_direct\": 0,\n        \
@@ -742,8 +742,8 @@ workflow:
           \      \"t4_dimension_deficits\": {\n            \"正向综合评价\": 0,\n      \
           \      \"安全质疑\": 0,\n            \"竞品比较\": 0\n        },\n        \"competitor_distribution\"\
           : {},\n        \"qa_status\": \"passed\",\n        \"qa_errors\": []\n \
-          \   }\n\n    def append_base_results(data, source_name):\n        \"\"\"\
-          \n        T1/T2/T3按目标数量截取。\n        遇到无效记录时继续向后寻找有效记录。\n        \"\"\"\n\
+          \   }\n\n    def append_t1_results(data):\n        \"\"\"T1按6个场景、每场景10条截取。\"\"\"\n        scene_order = []\n        scene_records = {}\n        local_seen = set()\n\n        for item in safe_to_list(data):\n            record = parse_record(item)\n            if not record:\n                continue\n\n            query = str(record.get(\"query\", \"\")).strip()\n            normalized = normalize_query(query)\n            scene_name = str(record.get(\"scene_name\", \"\") or \"\").strip()\n\n            if not normalized or not scene_name or normalized in local_seen:\n                continue\n\n            local_seen.add(normalized)\n            record = normalize_brand_comp(record)\n\n            if scene_name not in scene_records:\n                scene_order.append(scene_name)\n                scene_records[scene_name] = []\n            scene_records[scene_name].append(record)\n\n        statistics[\"t1_scene_count\"] = len(scene_order)\n        if len(scene_order) < T1_EXPECTED_SCENE_COUNT:\n            statistics[\"qa_errors\"].append(\n                \"E_T1_SCENE_COUNT_{}\".format(len(scene_order))\n            )\n\n        count = 0\n        for scene_name in scene_order[:T1_EXPECTED_SCENE_COUNT]:\n            selected = scene_records[scene_name][:T1_PER_SCENE_TARGET]\n            scene_count = len(selected)\n            statistics[\"t1_scene_distribution\"][scene_name] = scene_count\n\n            if scene_count < T1_PER_SCENE_TARGET:\n                statistics[\"qa_errors\"].append(\n                    \"E_T1_SCENE_QUERY_COUNT_{}_{}\".format(scene_name, scene_count)\n                )\n\n            for record in selected:\n                normalized = normalize_query(record.get(\"query\", \"\"))\n                final_results.append(json.dumps(record, ensure_ascii=False))\n                seen_queries.add(normalized)\n                count += 1\n\n        statistics[\"t1_count\"] = count\n        if count < BASE_TARGETS[\"t1\"]:\n            statistics[\"qa_errors\"].append(\n                \"E_T1_COUNT_{}\".format(count)\n            )\n\n    def append_base_results(data, source_name):\n        \"\"\"\
+          \n        T2/T3按目标数量截取。\n        遇到无效记录时继续向后寻找有效记录。\n        \"\"\"\n\
           \        target = BASE_TARGETS[source_name]\n        count = 0\n       \
           \ local_seen = set()\n\n        for item in safe_to_list(data):\n      \
           \      if count >= target:\n                break\n\n            record\
@@ -758,8 +758,8 @@ workflow:
           \      statistics[source_name + \"_count\"] = count\n\n        if count\
           \ < target:\n            statistics[\"qa_errors\"].append(\n           \
           \     \"E_{}_COUNT_{}\".format(\n                    source_name.upper(),\n\
-          \                    count\n                )\n            )\n\n    # 保留T1、T2、T3\n\
-          \    append_base_results(t1_formatted_results, \"t1\")\n    append_base_results(t2_formatted_results,\
+          \                    count\n                )\n            )\n\n    # T1按场景配额截取；T2/T3保持原逻辑\n\
+          \    append_t1_results(t1_formatted_results)\n    append_base_results(t2_formatted_results,\
           \ \"t2\")\n    append_base_results(t3_formatted_results, \"t3\")\n\n   \
           \ # 解析T4候选池\n    raw_t4_candidates = safe_to_list(t4_formatted_results)\n\
           \    statistics[\"t4_candidate_count\"] = len(raw_t4_candidates)\n\n   \
@@ -1404,10 +1404,24 @@ workflow:
           \      'updated_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S')\n    \
           \                    }\n                        results.append(json.dumps(obj,\
           \ ensure_ascii=False))\n                        query_texts.append(query.strip())\n\
-          \n    # 数量校验\n    expected_count = 60\n    actual_count = len(results)\n\
-          \    is_sufficient = \"1\" if actual_count >= expected_count else \"0\"\n\
-          \    deficit = max(0, expected_count - actual_count)\n\n    # 已生成query文本列表（供补词LLM去重用）\n\
-          \    existing_queries = '\\n'.join(query_texts)\n\n    return {\n      \
+          \n    # 按业务合同校验：6个场景，每个场景至少10条；不能只看总数。\n    expected_count = 60\n\
+          \    scene_order = []\n    scene_counts = {}\n\n    for item_str in results:\n\
+          \        try:\n            item = json.loads(item_str)\n        except Exception:\n\
+          \            continue\n\n        scene_name = str(item.get('scene_name') or '').strip()\n\
+          \        if not scene_name:\n            continue\n\n        if scene_name not in scene_counts:\n\
+          \            scene_order.append(scene_name)\n            scene_counts[scene_name] = 0\n\
+          \        scene_counts[scene_name] += 1\n\n    selected_scenes = scene_order[:6]\n\
+          \    scene_deficits = {\n        scene_name: max(0, 10 - scene_counts.get(scene_name, 0))\n\
+          \        for scene_name in selected_scenes\n    }\n    missing_scene_count = max(0, 6 - len(selected_scenes))\n\
+          \    deficit = (\n        sum(scene_deficits.values())\n        + missing_scene_count * 10\n\
+          \    )\n    actual_count = sum(\n        min(scene_counts.get(scene_name, 0), 10)\n\
+          \        for scene_name in selected_scenes\n    )\n    is_sufficient = \"1\" if deficit == 0 else \"0\"\n\
+          \n    supplement_plan = {\n        'required_scene_count': 6,\n        'queries_per_scene': 10,\n\
+          \        'scene_counts': {\n            scene_name: scene_counts.get(scene_name, 0)\n\
+          \            for scene_name in selected_scenes\n        },\n        'scene_deficits': scene_deficits,\n\
+          \        'missing_scene_count': missing_scene_count\n    }\n\n    # 在已有问题前附加定向补词计划，不增加节点输出字段和连线。\n\
+          \    existing_queries = (\n        '【定向补词计划】\\n'\n        + json.dumps(supplement_plan, ensure_ascii=False)\n\
+          \        + '\\n【已有query列表】\\n'\n        + '\\n'.join(query_texts)\n    )\n\n    return {\n      \
           \  'formatted_results': results,\n        'actual_count': actual_count,\n\
           \        'expected_count': expected_count,\n        'is_sufficient': is_sufficient,\n\
           \        'deficit': deficit,\n        'existing_queries': existing_queries\n\
@@ -1765,10 +1779,41 @@ workflow:
           \ %H:%M:%S'),\n                'updated_at': datetime.now().strftime('%Y-%m-%d\
           \ %H:%M:%S')\n            }\n\n            results.append(json.dumps(obj,\
           \ ensure_ascii=False))\n            query_texts.append(query.strip())\n\n\
-          \    # 数量校验\n    expected_count = 33\n    actual_count = len(results)\n\
-          \    is_sufficient = \"1\" if actual_count >= expected_count else \"0\"\n\
-          \    deficit = max(0, expected_count - actual_count)\n\n    # 已生成query文本列表（供补词LLM去重用）\n\
-          \    existing_queries = '\\n'.join(query_texts)\n\n    return {\n      \
+          \    # 按业务合同校验：3个竞品，每个竞品正向4、安全4、比较3。\n    expected_count = 33\n\
+          \    competitor_order = []\n    distribution = {}\n\n    def normalize_brand(value):\n\
+          \        return re.sub(r'\\s+', '', str(value or '').strip().lower())\n\n    for item_str in results:\n\
+          \        try:\n            item = json.loads(item_str)\n        except Exception:\n\
+          \            continue\n\n        query_type = str(item.get('query_type') or '').strip()\n\
+          \        if query_type == 'competitor_probe':\n            query_type = 'competitor_query'\n\
+          \n        dimension = str(item.get('evaluation_dimension') or '').strip()\n\
+          \        dimension = re.sub(r'\\d+$', '', dimension)\n        brand_comp = item.get('brand_comp') or []\n\
+          \        if isinstance(brand_comp, str):\n            brand_comp = [\n                value.strip()\n\
+          \                for value in re.split(r'[,，]', brand_comp)\n                if value.strip()\n\
+          \            ]\n\n        competitor = ''\n        if query_type == 'competitor_query':\n\
+          \            competitor = str(brand_comp[0]).strip() if brand_comp else ''\n\
+          \        elif query_type == 'competitor_compare':\n            client_brand = normalize_brand(item.get('brand_name'))\n\
+          \            for brand in brand_comp:\n                if normalize_brand(brand) != client_brand:\n\
+          \                    competitor = str(brand).strip()\n                    break\n\n        if not competitor:\n\
+          \            continue\n\n        normalized_competitor = normalize_brand(competitor)\n\
+          \        if normalized_competitor not in distribution:\n            competitor_order.append(competitor)\n\
+          \            distribution[normalized_competitor] = {\n                'competitor': competitor,\n\
+          \                '正向综合评价': 0,\n                '安全质疑': 0,\n                '竞品比较': 0\n\
+          \            }\n\n        if query_type == 'competitor_query' and dimension in ('正向综合评价', '安全质疑'):\n\
+          \            distribution[normalized_competitor][dimension] += 1\n        elif query_type == 'competitor_compare' and dimension == '竞品比较':\n\
+          \            distribution[normalized_competitor]['竞品比较'] += 1\n\n    selected_competitors = competitor_order[:3]\n\
+          \    targets = {'正向综合评价': 4, '安全质疑': 4, '竞品比较': 3}\n\
+          \    competitor_deficits = {}\n\n    for competitor in selected_competitors:\n\
+          \        counts = distribution[normalize_brand(competitor)]\n        competitor_deficits[competitor] = {\n\
+          \            dimension: max(0, target - counts.get(dimension, 0))\n\
+          \            for dimension, target in targets.items()\n        }\n\n    missing_competitor_count = max(0, 3 - len(selected_competitors))\n\
+          \    deficit = (\n        sum(\n            sum(dimensions.values())\n            for dimensions in competitor_deficits.values()\n\
+          \        )\n        + missing_competitor_count * 11\n    )\n    actual_count = 33 - deficit\n\
+          \    is_sufficient = \"1\" if deficit == 0 else \"0\"\n\n    supplement_plan = {\n\
+          \        'required_competitor_count': 3,\n        'targets_per_competitor': targets,\n\
+          \        'competitor_deficits': competitor_deficits,\n        'missing_competitor_count': missing_competitor_count\n\
+          \    }\n\n    # 在已有问题前附加定向补词计划，不增加节点输出字段和连线。\n\
+          \    existing_queries = (\n        '【定向补词计划】\\n'\n        + json.dumps(supplement_plan, ensure_ascii=False)\n\
+          \        + '\\n【已有query列表】\\n'\n        + '\\n'.join(query_texts)\n    )\n\n    return {\n      \
           \  'formatted_results': results,\n        'actual_count': actual_count,\n\
           \        'expected_count': expected_count,\n        'is_sufficient': is_sufficient,\n\
           \        'deficit': deficit,\n        'existing_queries': existing_queries\n\
@@ -2226,10 +2271,10 @@ workflow:
             3. 严禁产出\"行业百科式\"query（不带 core_keyword 语义元素的通用问法）\n4. 严禁跨赛道漂移：不得引入与 core_keyword\
             \ 无关的其它行业/场景/权益/活动名\n\n## 补词任务信息\n- **还需补充的query数量**：`{{#1776824084015.deficit#}}`\
             \ 条\n- **已有query列表（严禁重复）**：\n```\n{{#1776824084015.existing_queries#}}\n\
-            ```\n\n## 补词规则\n1. **数量要求**：必须精确补充上述deficit数量的query，不多不少\n2. **去重铁律**：生成的每一条query都不能与\"\
-            已有query列表\"中的任何一条相同或高度相似（语义相似度>80%视为重复）\n3. **质量标准**：与首次生词完全相同——每个query必须通过\"\
-            意图锚定测试\"，query字数8-15个汉字，禁止操作细节/科普/素材/灵感类\n4. **场景策略**：可以在已有场景下补充query，也可以新增1-2个新场景\n\
-            5. **时间节点**：遵循current_date未来60天内有效的规则\n\n## 输出格式\n严格按以下JSON格式返回（不要任何其他内容）：\n\
+            ```\n\n## 补词规则\n1. **定向补齐**：已有query列表开头包含“定向补词计划”；必须逐个补足scene_deficits，并在missing_scene_count大于0时新增对应数量的不同场景，每个新增场景生成10条。禁止用某个场景的超额问题填补其他场景\n2. **数量要求**：总补充量必须精确等于上述deficit，不多不少\n3. **去重铁律**：生成的每一条query都不能与\"\
+            已有query列表\"中的任何一条相同或高度相似（语义相似度>80%视为重复）\n4. **质量标准**：与首次生词完全相同——每个query必须通过\"\
+            意图锚定测试\"，query字数8-15个汉字，禁止操作细节/科普/素材/灵感类\n5. **场景约束**：已有场景缺词时必须原样复用计划中的scene_name；只有missing_scene_count大于0时才能新增场景\n\
+            6. **时间节点**：遵循current_date未来60天内有效的规则\n\n## 输出格式\n严格按以下JSON格式返回（不要任何其他内容）：\n\
             ```json\n{\n  \"t1_results\": [\n    {\n      \"scene_name\": \"6-12字场景名\"\
             ,\n      \"priority_level\": \"P1/P2/P3\",\n      \"persona_name\": \"\
             用户画像短标签（4-20字，短标签而非句子，禁止叙述性表达）\",\n      \"queries\": [\"补充的Query1\",\
@@ -2885,13 +2930,15 @@ workflow:
             \ 语义元素（含活动名/品牌名/产品名的核心词）删除后，query 应无法独立表达用户的具体搜索意图\n3. 严禁产出\"行业百科式\"query（不带\
             \ core_keyword 语义元素的通用问法）\n4. 严禁跨赛道漂移：不得引入与 core_keyword 无关的其它行业/场景/权益/活动名\n\
             \n## 补词任务信息\n- **还需补充的query数量**：`{{#17768257560210.deficit#}}` 条\n- **已有query列表（严禁重复）**：\n\
-            ```\n{{#17768257560210.existing_queries#}}\n```\n\n## 补词规则\n1. **数量要求**：必须精确补充上述deficit数量的query\n\
-            2. **去重铁律**：每条query不能与已有列表重复或高度相似\n3. **生词类型**：brand_direct(品牌直询,is_competitor=0)、competitor_compare(竞品对比,is_competitor=0)、competitor_query(竞品探查,is_competitor=1)\n\
-            4. **质量标准**：基于行业和产品特性进行真实需求判断，符合C端用户搜索习惯\n\n## 输出格式\n```json\n{\n  \"\
+            ```\n{{#17768257560210.existing_queries#}}\n```\n\n## 补词规则\n1. **定向补齐**：已有query列表开头包含“定向补词计划”；必须严格按照competitor_deficits逐个竞品、逐个评价维度补齐。missing_competitor_count大于0时，从输入竞品列表中识别尚未覆盖的竞品，并为该竞品补正向4条、安全4条、比较3条\n\
+            2. **数量要求**：总补充量必须精确等于上述deficit\n\
+            3. **去重铁律**：每条query不能与已有列表重复或高度相似\n4. **字段映射**：正向综合评价和安全质疑使用competitor_query且is_competitor=1；竞品比较使用competitor_compare且is_competitor=0；target_brand必须逐字符等于输入品牌名称，竞品比较的brand_comp必须同时包含客户品牌和对应竞品\n\
+            5. **禁止错补**：不得生成brand_direct，不得补充计划中缺口为0的竞品维度\n\
+            6. **质量标准**：基于行业和产品特性进行真实需求判断，符合C端用户搜索习惯\n\n## 输出格式\n```json\n{\n  \"\
             t4_results\": [\n    {\n      \"query\": \"补充的品牌query\",\n      \"query_type\"\
-            : \"brand_direct\",\n      \"brand_comp\": \"品牌名\",\n      \"evaluation_dimension\"\
+            : \"competitor_query\",\n      \"brand_comp\": \"竞品名\",\n      \"evaluation_dimension\"\
             : \"正向综合评价\",\n      \"target_brand\": \"目标品牌名\",\n      \"is_negative_probe\"\
-            : 0,\n      \"is_competitor\": 0\n    }\n  ]\n}\n```\n\n请输出JSON结果，禁止任何其他内容。"
+            : 0,\n      \"is_competitor\": 1\n    }\n  ]\n}\n```\n\n请输出JSON结果，禁止任何其他内容。"
         - id: t4-supplement-user
           role: user
           text: 请严格按照以上所有要求补充生词
