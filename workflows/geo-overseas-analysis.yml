@@ -1489,7 +1489,7 @@ workflow:
 
             用户查询：{{#1766746641582.query#}}
 
-            AI 生成回答：{{#1766746641582.answer_raw#}}
+            AI 生成回答：{{#1766746558986.answer_raw#}}
 
             目标 brand_name：{{#1766746558986.brand_name#}}
 
@@ -1504,14 +1504,13 @@ workflow:
 
             # 任务
 
-            1. 从回答正文全量提取所有有逐字证据的非目标品牌实体，包括不在竞品配置中的品牌；无需判断商业可比性。
+            1. 只提取与目标品牌属于同类、处于同一采购层级且能直接替代的非目标品牌；引用来源、认证/检测机构、芯片厂、上下游供应商、零部件和产品/电芯型号不得输出。
 
             2. 不输出配置中未被回答提及的竞品；下游也不得补默认行。
 
             3. 先拆分所有逗号、分号、换行或or连接的品牌串，再为每个候选输出name、brand、entity_type、is_competitor、comparability_reason、rank_pos、rank_type、sentiment_score、sentiment_label、sentiment_reasoning、sentiment_quote、sentiment_emotion_score、weighted_score、matched_alias、evidence_spans。
 
-            4. entity_type 为 brand/company/product/platform、不是目标实体且 answer_raw 有字面证据时，is_competitor
-            必须为 true 并输出。同一规范实体只输出一次并合并 aliases；配置竞品使用 comps_list 中的规范名称。
+            4. 只有同类性和直接可替代性均成立时 is_competitor 才能为 true 并输出；entity_type 合法或有字面证据不等于竞品。同一规范实体只输出一次并合并 aliases；配置竞品使用 comps_list 中的规范名称。
 
             5. 无有证据的竞品时返回 []。
 
@@ -2532,31 +2531,32 @@ workflow:
           \    result = []\n    next_index = 0\n    for item in value:\n        if\
           \ isinstance(item, dict):\n            display = str(item.get(\"canonical_name\"\
           ) or item.get(\"name\") or item.get(\"brand\") or \"\").strip()\n      \
-          \      displays = [display]\n            domain = str(item.get(\"domain\"\
+          \      displays = [display]\n            core_brand = str(item.get(\"brand\"\
+          ) or item.get(\"canonical_brand\") or display).strip()\n            domain = str(item.get(\"domain\"\
           ) or item.get(\"official_domain\") or \"\").strip()\n            aliases\
           \ = [item.get(\"canonical_name\"), item.get(\"name\"), item.get(\"brand\"\
-          ), display]\n            if isinstance(item.get(\"aliases\"), list):\n \
+          ), core_brand, display]\n            if isinstance(item.get(\"aliases\"), list):\n \
           \               aliases += item.get(\"aliases\")\n        else:\n      \
-          \      displays = split_candidate(item)\n            domain = \"\"\n   \
+          \      displays = split_candidate(item)\n            core_brand = \"\"\n            domain = \"\"\n   \
           \         aliases = displays[:]\n        for display in displays:\n    \
           \        if not display:\n                continue\n            local_aliases\
           \ = expand_aliases([str(x).strip() for x in aliases if str(x or \"\").strip()]\
           \ + [display])\n            result.append({\n                \"index\":\
           \ next_index,\n                \"display_name\": display,\n            \
-          \    \"domain\": domain,\n                \"aliases\": local_aliases,\n\
+          \    \"core_brand\": core_brand or display,\n                \"domain\": domain,\n                \"aliases\": local_aliases,\n\
           \            })\n            next_index += 1\n    return result\n\ndef alias_pattern(alias):\n\
           \    parts = re.findall(r\"[^\\W_]+\", unicodedata.normalize(\"NFKC\", str(alias\
           \ or \"\")), flags=re.UNICODE)\n    if not parts:\n        return None\n\
           \    separator = r\"[\\s._'’&+\\-/]+\" if len(parts) > 1 else \"\"\n   \
           \ return re.compile(\n        r\"(?<!\\w)\" + separator.join(map(re.escape,\
-          \ parts)) + r\"(?!\\w)\",\n        re.I | re.UNICODE,\n    )\n\ndef literal_hits(answer,\
-          \ aliases):\n    hits = []\n    occupied = []\n    ordered = sorted(\n \
+          \ parts)) + r\"(?!\\w)\",\n        re.I | re.UNICODE,\n    )\n\ndef citation_ranges(answer):\n    ranges = []\n    for pattern in (\n        r\"\\[!\\[[^\\]]*\\]\\([^)]+\\)[^\\]]*\\]\\([^)]+\\)\",\n        r\"!?\\[[^\\]]*\\]\\([^)]+\\)\",\n    ):\n        ranges.extend((match.start(), match.end()) for match in re.finditer(pattern, answer))\n    return ranges\n\ndef literal_hits(answer,\
+          \ aliases):\n    hits = []\n    occupied = []\n    citations = citation_ranges(answer)\n    ordered = sorted(\n \
           \       {str(x).strip() for x in aliases if str(x or \"\").strip()},\n \
           \       key=lambda x: (-len(norm(x).split()), -len(x))\n    )\n    for alias\
           \ in ordered:\n        if norm(alias) in GENERIC:\n            continue\n\
           \        pattern = alias_pattern(alias)\n        if not pattern:\n     \
           \       continue\n        for match in pattern.finditer(answer):\n     \
-          \       if any(match.start() < end and match.end() > start for start, end\
+          \       if any(match.start() < end and match.end() > start for start, end in citations):\n                continue\n            if any(match.start() < end and match.end() > start for start, end\
           \ in occupied):\n                continue\n            actual = match.group(0)\n\
           \            if len(norm(alias)) <= 2 and actual != actual.upper():\n  \
           \              continue\n            hits.append({\"start\": match.start(),\
@@ -2644,15 +2644,10 @@ workflow:
           \ not existing[\"item\"]:\n                existing[\"item\"] = item\n \
           \           if hits and (not existing[\"hits\"] or hits[0][\"start\"] <\
           \ existing[\"hits\"][0][\"start\"]):\n                existing[\"hits\"\
-          ] = hits\n\n    # comps_list 只提供识别别名与规范显示名。只有 alias 在 answer_raw\n    #\
-          \ 中有完整边界字面命中时才能进入候选；配置本身绝不构成提及证据。\n    for config in configs:\n        hits\
-          \ = literal_hits(answer, config[\"aliases\"] + [config[\"display_name\"\
-          ]])\n        if hits and canonical(config[\"display_name\"]) not in AMBIGUOUS_SINGLE_WORD_BRANDS:\n\
-          \            add_candidate(config[\"display_name\"], config=config, hits=hits)\n\
-          \n    for item in raw_data:\n        if not isinstance(item, dict):\n  \
+          ] = hits\n\n    # comps_list 只用于已由 LLM 判定的竞品归一，不再因字面命中自动补候选。\n    for item in raw_data:\n        if not isinstance(item, dict) or not as_bool(item.get(\"is_competitor\")):\n  \
           \          continue\n        entity_type = str(item.get(\"entity_type\"\
-          , \"\")).strip().casefold()\n        primary = item.get(\"name\") or item.get(\"\
-          brand\") or item.get(\"matched_alias\") or \"\"\n        for fragment in\
+          , \"\")).strip().casefold()\n        primary = item.get(\"brand\") or item.get(\"\
+          name\") or item.get(\"matched_alias\") or \"\"\n        for fragment in\
           \ split_candidate(primary):\n            config = resolve_config(fragment)\n\
           \            aliases = [fragment, item.get(\"brand\"), item.get(\"matched_alias\"\
           )]\n            if config:\n                aliases += config[\"aliases\"\
@@ -2690,8 +2685,7 @@ workflow:
           \        config, item, hits = candidate[\"config\"], candidate[\"item\"\
           ], candidate[\"hits\"]\n        display = config[\"display_name\"] if config\
           \ else candidate[\"display\"]\n        legacy = legacy_by_key.get(canonical(display),\
-          \ {})\n        brand_value = display if config else str(item.get(\"brand\"\
-          ) or display).strip()\n\n        explicit_rank = 0\n        for hit in hits:\n\
+          \ {})\n        brand_value = str(config.get(\"core_brand\") if config else item.get(\"brand\") or \"\").strip()\n        if not brand_value:\n            continue\n\n        explicit_rank = 0\n        for hit in hits:\n\
           \            explicit_rank = explicit_rank_for_hit(answer, hit[\"start\"\
           ])\n            if explicit_rank > 0:\n                break\n        rank\
           \ = final_rank_by_key.get(key, 0)\n        if rank <= 0:\n            continue\n\
@@ -2762,7 +2756,7 @@ workflow:
           - comps_list
           variable: comps_list
         - value_selector:
-          - '1766746641582'
+          - '1766746558986'
           - answer_raw
           variable: answer_raw
         - value_selector:
