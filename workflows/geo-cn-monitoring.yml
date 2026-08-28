@@ -47,7 +47,7 @@ app:
   icon: sos
   icon_background: '#FFEAD5'
   mode: workflow
-  name: GEO数据监控V2.5-0827
+  name: 国内GEO回答数据监控V2.5
   use_icon_as_answer_icon: false
 kind: app
 version: 0.1.3

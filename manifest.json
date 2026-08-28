@@ -49,6 +49,13 @@
       "path": "workflows/geo-cn-diagnostic-questions.yml",
       "status": "current",
       "updated_at": "2026-08-26"
+    },
+    "geo-cn-monitoring": {
+      "display_name": "国内GEO回答数据监控与指标分析工作流",
+      "version": "2.5.0",
+      "path": "workflows/geo-cn-monitoring.yml",
+      "status": "current",
+      "updated_at": "2026-08-27"
     }
   }
 }

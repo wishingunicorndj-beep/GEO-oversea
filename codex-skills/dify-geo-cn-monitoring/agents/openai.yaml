@@ -1,0 +1,4 @@
+interface:
+  display_name: "Dify 国内GEO数据监控"
+  short_description: "诊断国内GEO回答的品牌、排名、情感与竞品监控指标"
+  default_prompt: "Use $dify-geo-cn-monitoring to diagnose this domestic GEO monitoring output and identify the first failing workflow node."
