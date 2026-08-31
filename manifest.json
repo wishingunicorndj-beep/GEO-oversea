@@ -36,6 +36,13 @@
       "status": "current",
       "updated_at": "2026-08-25"
     },
+    "yueniu-article": {
+      "display_name": "约牛定制文章生成工作流",
+      "version": "3.0.0",
+      "path": "workflows/yueniu0831.yml",
+      "status": "current",
+      "updated_at": "2026-08-31"
+    },
     "geo-cn-keyword": {
       "display_name": "国内GEO关键词词包生成工作流",
       "version": "1.0.0",
