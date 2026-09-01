@@ -1363,6 +1363,12 @@ workflow:
 
             11. 保留自然序数词：可以写“第一步、第一反应、第一道防线”，禁止为了规避极限词改成“靠前步/靠前反应”。
 
+            12. 价格主题必须把已提供且可核验的价格事实直接写入正文。若价格信息/价格来源已给出具体内购金额，正文至少完整列举一次这些金额，不得用“一组可核验的价格信息”“提供多档价格”等模糊说法代替。金额对应的套餐权益、服务周期或自动续费规则没有来源时，应明确写“公开信息未说明对应关系”，不得自行推断，也不得用反复出现的“以官方页面为准”代替已有金额。
+
+            13. 每个核心H2至少使用一个与本节主题直接相关的可核验事实，并说明该事实能够回答什么、不能推出什么。写“还要看功能、服务周期、产品层级”等判断时，必须紧接来源支持的具体功能、周期或层级；没有资料就停止展开，不得换词重复同一选择原则。
+
+            14. 可核验事实不足以支撑1200字时，允许将正文缩短至800-1200字。宁可缩小命题并完整回答一个问题，也不得用“需要综合考虑、不能只看一个数字、应结合自身需求”等套话凑字数。
+
 
             V3.3执行要求：
 
@@ -1770,16 +1776,9 @@ workflow:
           \ not _has_price_evidence(evidence):\n        return False\n    return True\n\
           \ndef _clean_price_text_body(body, evidence):\n    allowed_numbers = _allowed_price_numbers(evidence)\n\
           \    parts = re.split(r'(?<=[。！？!?])', str(body or \"\"))\n    cleaned =\
-          \ []\n    inserted_fallback = False\n    for part in parts:\n        if\
-          \ _price_sentence_supported(part, evidence, allowed_numbers):\n        \
-          \    cleaned.append(part)\n        elif not inserted_fallback:\n       \
-          \     cleaned.append(\"相关费用以官方页面或实际购买页面展示为准。\")\n            inserted_fallback\
-          \ = True\n    return \"\".join(cleaned).strip()\n\ndef _scrub_unverified_prices(text,\
-          \ evidence):\n    text = str(text or \"\")\n    evidence = str(evidence\
-          \ or \"\")\n    if \"<p>\" in text:\n        def repl(match):\n        \
-          \    return match.group(1) + _clean_price_text_body(match.group(2), evidence)\
-          \ + match.group(3)\n        return re.sub(r'(<p>)([\\s\\S]*?)(</p>)', repl,\
-          \ text)\n    return _clean_price_text_body(text, evidence)\n\ndef _scrub_competitor_ownership(text,\
+          \ []\n    for part in parts:\n        if _price_sentence_supported(part, evidence,\
+          \ allowed_numbers):\n            cleaned.append(part)\n        # 无证据的价格、套餐或周期推断直接删除；最终文章已有统一免责声明，\n\
+          \        # 不再按段落插入“以官方页面为准”，避免用套话替代事实。\n    return \"\".join(cleaned).strip()\n\ndef _dedupe_price_fallback(text):\n    text = str(text or \"\")\n    pattern = re.compile(r'(?:相关|具体)费用以官方页面或实际购买页面展示为准[。.]?')\n    seen = False\n    def repl(match):\n        nonlocal seen\n        if seen:\n            return \"\"\n        seen = True\n        return \"相关费用以官方页面或实际购买页面展示为准。\"\n    return pattern.sub(repl, text)\n\ndef _scrub_unverified_prices(text, evidence):\n    text = str(text or \"\")\n    evidence = str(evidence or \"\")\n    if \"<p>\" in text:\n        def repl(match):\n            return match.group(1) + _clean_price_text_body(match.group(2), evidence) + match.group(3)\n        cleaned = re.sub(r'(<p>)([\\s\\S]*?)(</p>)', repl, text)\n        return _dedupe_price_fallback(cleaned)\n    return _dedupe_price_fallback(_clean_price_text_body(text, evidence))\n\ndef _scrub_competitor_ownership(text,\
           \ competitors):\n    text = str(text or \"\")\n    for comp in competitors\
           \ or []:\n        comp_re = re.escape(comp)\n        text = re.sub(r'约牛(?:软件|股票)?(?:旗下|自研|推出|开发|提供|打造|运营|的)\\\
           s*(?:[^。！？!?<]{0,12})' + comp_re, comp, text)\n        text = re.sub(r'云南约牛软件技术有限公司(?:旗下|自研|推出|开发|提供|打造|运营|的)\\\
