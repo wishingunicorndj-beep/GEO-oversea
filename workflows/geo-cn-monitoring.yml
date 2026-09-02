@@ -454,8 +454,11 @@ workflow:
           \    # 字段标签即使与前一短语粘连（如“插件缺点：默认推送”）也必须切开；\n    # 否定语境“并不适合”不作为字段标签处理。\n \
           \   for m in re.finditer(r\"(?:✅|⚠️|❌|(?:优点|缺点|香调|气质|优势|劣势)[：:]|(?<!不)适合[：:])\"\
           , line):\n        if m.start()>0:boundaries.add(m.start())\n    # 支持同一物理行中的编号/项目符号；\\\
-          \\. 是 answer_raw 常见的转义写法。\n    for m in re.finditer(r\"(?<![A-Za-z0-9])(?:\\\
+          \\. 是 answer_raw 常见的转义写法。\n    for m in re.finditer(r\"(?<![0-9A-Za-z\\u4e00-\\u9fff])(?:\\\
           d{1,2}\\\\?[.)、：:]|[①②③④⑤⑥⑦⑧⑨⑩])\\s*|(?<!\\S)[*•·▪◦]\\s+\", line):\n   \
+          \     open_paren=max(line.rfind(\"(\",0,m.start()),line.rfind(\"（\",0,m.start()))\n\
+          \        close_paren=max(line.rfind(\")\",0,m.start()),line.rfind(\"）\",0,m.start()))\n\
+          \        if open_paren>close_paren and re.search(r\"[A-Za-z\\u4e00-\\u9fff]\",line[open_paren+1:m.start()]):continue\n\
           \     # “### 1\\\\. 产品”中的1\\\\.属于标题内容，不再额外切出孤立的“###”。\n        prefix=line[max(0,m.start()-8):m.start()]\n\
           \        if re.search(r\"#{1,6}\\s+$\",prefix):continue\n        if m.start()>0:boundaries.add(m.start())\n\
           \    # 转折词归入后一单元，使“但亮度不足”可独立判负；不切“而且”。\n    for m in re.finditer(r\"然而|但是|不过|反而|但|而(?!且)|却\"\
@@ -473,14 +476,14 @@ workflow:
           \        evidence_raw = catalog_text(raw)\n        stripped = evidence_raw.strip()\n\
           \        if not stripped or re.match(r\"^\\s*\\|?[\\-:|\\s]{3,}\\|?\\s*$\"\
           , stripped): continue\n        is_heading = bool(re.match(r\"^\\s{0,3}#{1,6}\\\
-          s+\", evidence_raw))\n        is_table = (stripped.startswith(\"|\") and\
-          \ \"|\" in stripped[1:]) or stripped == \"表格\"\n        is_list = bool(re.match(r\"\
+          s+\", evidence_raw))\n        is_table = (stripped.count(\"|\") >= 2 and\
+          \ len([cell for cell in stripped.split(\"|\") if cell.strip()]) >= 3) or stripped == \"表格\"\n        is_list = bool(re.match(r\"\
           ^\\s*(?:[*•·▪◦]\\s+|\\d+\\\\?[.)、]\\s*|[①②③④⑤⑥⑦⑧⑨⑩]\\s*)\", evidence_raw))\n\
           \        if is_heading: heading = evidence_raw\n        context_before=\"\
           \\n\".join(recent_lines[-4:])\n        for left, right, piece in exact_units(evidence_raw):\n\
           \            # 同一raw行内各单元可能分别是标题、编号项或段落，不能沿用整行block。\n            unit_stripped=piece.strip()\n\
           \            unit_heading=bool(re.match(r\"^#{1,6}\\s+\",unit_stripped))\n\
-          \            unit_table=(unit_stripped.startswith(\"|\") and \"|\" in unit_stripped[1:])\
+          \            unit_table=(unit_stripped.count(\"|\") >= 2 and len([cell for cell in unit_stripped.split(\"|\") if cell.strip()]) >= 3)\
           \ or unit_stripped==\"表格\"\n            unit_list=bool(re.match(r\"^(?:[*•·▪◦]\\\
           s+|\\d+\\\\?[.)、]\\s*|[①②③④⑤⑥⑦⑧⑨⑩]\\s*)\",unit_stripped))\n            unit_block=\"\
           heading\" if unit_heading else (\"table_row\" if unit_table else (\"list_item\"\
@@ -866,10 +869,7 @@ workflow:
           ]={\"all_brands_in_ranking\":rows}\n    try:catalog=json.loads(sentence_catalog\
           \ or \"[]\")\n    except Exception:catalog=[]\n    smap={str(x.get(\"id\"\
           )):x for x in catalog if isinstance(x,dict) and x.get(\"id\")};order={sid:i\
-          \ for i,sid in enumerate(smap)}\n    line_scope_by_no={}\n    for sid,item\
-          \ in smap.items():\n        line_scope_by_no.setdefault(item.get(\"line_no\"\
-          ),\"\")\n        line_scope_by_no[item.get(\"line_no\")]+=str(item.get(\"\
-          text\") or \"\")\n    source_background=set()\n    reference_count=0;reference_intro=-1\n\
+          \ for i,sid in enumerate(smap)}\n    source_background=set()\n    reference_count=0;reference_intro=-1\n\
           \    for sid,item in smap.items():\n        text=str(item.get(\"text\")\
           \ or \"\")\n        m=re.search(r\"搜索.{0,30}参考\\s*([1-9]\\d*)\\s*篇\",text)\n\
           \        if m:\n            reference_count=int(m.group(1));reference_intro=order.get(sid,-1);break\n\
@@ -938,11 +938,9 @@ workflow:
           \        search_names=[surface,canonical] if etype==\"independent_product\"\
           \ else [surface,canonical,parent]\n        recovered=[sid for sid,item in\
           \ smap.items() if sid not in source_background and any(\n            contains(n,item.get(\"\
-          text\",\"\") ) or contains(n,line_scope_by_no.get(item.get(\"line_no\"),\"\
-          \"))\n            for n in search_names if len(norm(n))>=2)]\n        direct=list(dict.fromkeys(ids+recovered))\n\
+          text\",\"\") )\n            for n in search_names if len(norm(n))>=2)]\n        direct=list(dict.fromkeys(ids+recovered))\n\
           \        direct=[sid for sid in direct if sid not in source_background and\
-          \ any(\n            contains(n,smap[sid].get(\"text\",\"\") ) or contains(n,line_scope_by_no.get(smap[sid].get(\"\
-          line_no\"),\"\"))\n            for n in search_names if len(norm(n))>=2)]\n\
+          \ any(\n            contains(n,smap[sid].get(\"text\",\"\") )\n            for n in search_names if len(norm(n))>=2)]\n\
           \        membership=str(e.get(\"rank_membership\") or \"\").strip()\n  \
           \      if not membership and structure!=\"no_ranking\":membership=\"ordered_choice\"\
           \n        relation=str(e.get(\"target_relation\") or \"none\").strip()\n\
@@ -1127,10 +1125,8 @@ workflow:
           \   if not names:return None\n        hits=[]\n        for sid in e.get(\"\
           sentence_ids\",[]):\n            item=smap.get(str(sid),{});unit=str(item.get(\"\
           text\") or \"\")\n            if not unit or str(sid) in source_background:continue\n\
-          \            # 同一物理行可能被双层目录拆成多个最小句（例如“新东方、学而思”被截成两段）。\n            # 用同line_no的正文拼接做实体检索，但仍以当前sid作为结构锚点，避免丢失品牌。\n\
-          \            line_no=item.get(\"line_no\")\n            line_scope=\"\"\
-          .join(str(x.get(\"text\") or \"\") for x in smap.values() if x.get(\"line_no\"\
-          )==line_no)\n            scope_text=line_scope or unit\n            block=str(item.get(\"\
+          \            # 仅在当前最小证据单元内检索实体，避免压缩为单行的answer_raw发生跨项串联。\n\
+          \            scope_text=unit\n            block=str(item.get(\"\
           block_type\") or \"\")\n            structural=block in {\"heading\",\"\
           table_row\",\"list_item\"} or \"|\" in scope_text\n            if not structural:continue\n\
           \            if not any(contains(name,scope_text) for name in names):continue\n\
@@ -1153,8 +1149,7 @@ workflow:
           \ for a in target_aliases if len(norm(a))>=2]\n        existing_target=next((e\
           \ for e in unique if e.get(\"is_target_entity\")),None)\n        for sid,item\
           \ in smap.items():\n            if sid in source_background:continue\n \
-          \           line_no=item.get(\"line_no\");scope_text=line_scope_by_no.get(line_no,str(item.get(\"\
-          text\") or \"\"))\n            context=\" \".join((scope_text,str(item.get(\"\
+          \           scope_text=str(item.get(\"text\") or \"\")\n            context=\" \".join((scope_text,str(item.get(\"\
           context_heading\") or \"\")))\n            if not any(contains(a,scope_text)\
           \ for a in target_alias_candidates):continue\n            if not any(marker\
           \ in context for marker in recommendation_markers):continue\n          \
