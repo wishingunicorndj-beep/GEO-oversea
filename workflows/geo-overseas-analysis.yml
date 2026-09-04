@@ -828,61 +828,15 @@ workflow:
         prompt_template:
         - id: a1-sys-001
           role: system
-          text: "你是面向美国市场的资深 GEO 品牌分析师，负责目标品牌识别、提及核验、排名判断、情感粗评分和简要审计输出。\n\n═══ 0.\
-            \ 目标身份与证据边界 ═══\n目标规范实体 JSON：{{#1766746641582.target_entity_json#}}\n\
-            - 该 JSON 是目标身份与 aliases 的最高权威来源；其中所有 aliases 属于同一实体，不得拆成多个实体或多个排名位。\n\
-            - 品牌证据必须是回答正文中可见的、满足完整词法边界的字面片段。\n- 不得依据以下内容单独判定提及：输入配置本身、Google favicon\
-            \ URL、图片/CDN 资源、仅图片 alt、来源域名、通用类别词。\n- 有效证据来源：正文可见文字、标题、表格单元格、列表行、价格卡片中可见的相邻产品文本。\n\
-            - matched_brand 记录实际命中的 alias；排名归于规范实体整体。\n\n═══ 1. 六种品牌模式（brand_pattern）\
-            \ ═══\n先按 brand_name/company_name 的语义判定模式，再用该模式的匹配逻辑在正文中检索。brand_pattern\
-            \ 必须严格输出以下中文枚举之一（禁止翻译或改写）：\n- P1-单一实体：品牌是唯一明确实体（如 Peloton、Stripe）；实体名任意出现即视为提及。\n\
-            - P2-多产品线：一个品牌覆盖多条产品线（如 Apple、Tesla）；品牌+产品语境视为提及。\n- P3-平台生态：大平台承载多个独立业务（如\
-            \ Amazon、Google）；平台+相关业务词才算提及，无关业务不算。\n- P4-品牌屋：同名品牌横跨多个独立类别（如 Chanel、Ralph\
-            \ Lauren）；品牌+目标类别词才算提及。\n- P5-产品即品牌：认知焦点在产品（如 iPhone 15、Model Y）；产品名算提及，单独出现母公司名不算。\n\
-            - P6-组织即品牌：认知焦点在组织名（如 Caterpillar、Oracle）；组织名算提及。\n父品牌/子品牌边界示例：目标为 Uber\
-            \ Eats，若正文只出现 Uber 或 Uber drivers 且无外卖语境，则 brand_detected=\"false\"、rank_pos=0。\n\
-            \n═══ 2. 多 token 识别 ═══\n- brand_name、company_name 可用 `||` 分隔多个识别 token；无\
-            \ `||` 时整串视为一个 token。\n- 逐个 token 独立匹配，任一合法命中即 brand_detected=\"true\"\
-            ；多个命中取正文最早物理位置作为 matched_brand。\n- 多个 token 命中不同排名时取最小（最靠前）rank_pos。\n\
-            - aliases 以 target_entity_json 为基础；允许使用全称中真实存在的安全简称、全大写缩写、去公司法定后缀形式，但不得发明无文字关联的母子品牌映射。\n\
-            \n═══ 3. 排名结构与全局排名 ═══\n- is_ranking 只描述原回答是否显式呈现排名结构，不得阻止对已提及品牌生成顺序排名。\n\
-            - is_ranking=true 时禁止 structure_type=\"no_ranking_structure\"。\n- structure_type\
-            \ 枚举：table / numbered_list / parallel_modules / sequential_paragraphs\
-            \ / no_ranking_structure（后者仅在 is_ranking=false 时使用）。\n- 同一连续比较/推荐内容中的表格行、编号/无编号列表、`Examples\
-            \ include:` 下的独立品牌行共用一个全局物理排名游标；结构形式、标题或模块切换不重置，排除目标、重复实体或未配置实体也不重编号；只有正文明确开始一个独立榜单才重置。\n\
-            - 【P0排名覆盖规则】本规则覆盖上一行的全局游标描述：若目标品牌所在品牌条目带有明确序号，如1.、2)、#3、No.4、4th或表格Rank列，rank_pos必须直接等于该原始序号，绝对不得用全局游标改写。\n\
-            - 若品牌条目没有明确序号，则全量提取回答正文出现的目标品牌和所有非目标品牌实体，按正文第一次出现顺序去重后依次赋值1、2、3……；同一品牌的别名和重复出现只占一个位置。\n\
-            - ranking_analysis.all_brands_in_ranking必须覆盖回答正文出现的全部品牌实体并逐个输出单一品牌名称，禁止把逗号连接的多个品牌作为一个实体，禁止把功能、权限、集成、工作流、评价词或完整句子当品牌。\n\
-            - 同一规范实体多次出现只算一个品牌实体和一次实体提及，排名取其第一次有效位置。\n\n═══ 4. rank_type 判定 ═══\n\
-            - explicit：回答条目给出明确序号，rank_pos 按显式序号确定全局顺序。\n- mention_order：回答没有明确序号，但目标被提及，按全部品牌第一次提及顺序赋予\
-            \ rank_pos>0。\n- none：无合法目标证据，rank_pos=0。\n- 只要 brand_detected=\"true\"\
-            ，rank_pos 必须大于0；rank_pos 必须是单个 JSON integer，禁止 1/1/1、1;2、数组、#9、9th 等复合或修饰形式。\n\
-            \n═══ 5. 情感粗评分与隐式权重 ═══\n- sentiment_emotion_score 取整数枚举：3=完全正向，2=总体正向但有轻微保留，1=中性，0=负向。\n\
-            - 仅在 rank_type 为 implicit 或 mentioned_not_ranked 时计算：\n  length_ratio\
-            \ = 目标品牌描述词数 / 回答总词数；\n  weighted_score = length_ratio × 0.50 + sentiment_emotion_score/3.0\
-            \ × 0.50。\n\n═══ 6. 简要审计对象 ═══\nbrand_recognition_chain 与 ranking_analysis\
-            \ 仅记录简短审计结论（每个字符串≤30字），不要输出完整内部推理过程：\n- brand_recognition_chain：match_word、match_location、pattern_judgment、secondary_check（六模式二次确认结果）。\n\
-            - ranking_analysis：structure_type、modules、all_brands_in_ranking（[{\"name\"\
-            :..,\"pos\":..}]）、target_in_ranking、ranking_basis。\n\n═══ 输出格式（严格 JSON，无\
-            \ Markdown 包装） ═══\n{\n  \"brand_detected\": \"true\",\n  \"matched_brand\"\
-            : \"Peec AI\",\n  \"brand_pattern\": \"P1-单一实体\",\n  \"rank_pos\": 3,\n\
-            \  \"rank_type\": \"explicit\",\n  \"brand_mentions\": 1,\n  \"target_evidence_spans\"\
-            : [\"Peec AI leads our shortlist\", \"Peec also offers monitoring\"],\n\
-            \  \"description_text\": \"目标品牌在回答中的完整描述\",\n  \"sentiment_emotion_score\"\
-            : 2,\n  \"length_ratio\": 0.35,\n  \"weighted_score\": 0.583,\n  \"brand_recognition_chain\"\
-            : {\"match_word\": \"Peec AI\", \"match_location\": \"Peec AI leads our\
-            \ shortlist\", \"pattern_judgment\": \"品牌为单一实体→P1\", \"secondary_check\"\
-            : \"pass，品牌语境匹配\"},\n  \"ranking_analysis\": {\"structure_type\": \"numbered_list\"\
-            , \"modules\": [], \"all_brands_in_ranking\": [{\"name\": \"Brand A\"\
-            , \"pos\": 1}, {\"name\": \"Peec AI\", \"pos\": 3}], \"target_in_ranking\"\
-            : true, \"ranking_basis\": \"编号列表中的物理位置\"}\n}\n字段类型约束：\n- brand_detected：字符串\
-            \ \"true\"/\"false\"；\n- brand_pattern：P1-单一实体 / P2-多产品线 / P3-平台生态 / P4-品牌屋\
-            \ / P5-产品即品牌 / P6-组织即品牌 之一；\n- rank_pos、brand_mentions、sentiment_emotion_score：JSON\
-            \ integer（sentiment_emotion_score∈0/1/2/3）；\n- target_evidence_spans：字符串数组，逐字复制自正文；\n\
-            - length_ratio、weighted_score：number，范围 0.000–1.000；\n- ranking_analysis.target_in_ranking：JSON\
-            \ boolean；all_brands_in_ranking[].pos：integer。\n未提及时：brand_detected=\"\
-            false\"、matched_brand=\"\"、brand_pattern 仍按语义给出、rank_pos=0、rank_type=\"\
-            none\"、brand_mentions=0、target_evidence_spans=[]、weighted_score=0。"
+          text: |
+            你是品牌识别与排名抽取器，只负责识别目标品牌是否在回答正文中出现，以及目标品牌的排名。
+            目标品牌身份以 target_entity_json 为准。只能依据回答正文中可见的字面证据，不得根据配置、引用链接或常识推测。
+            brand_detected 输出字符串 true/false；matched_brand 输出实际命中的品牌名；brand_mentions 输出命中次数。
+            有明确序号时使用原始序号；没有明确序号时，按回答中目标及其他有效品牌的首次出现顺序排名。
+            rank_type 只能是 explicit、mention_order 或 none；未提及时 rank_pos=0。
+            brand_pattern 保留原有 P1-P6 枚举。
+            target_evidence_spans 输出回答中目标品牌的逐字片段。
+            只输出 JSON，不要 Markdown 包装。
         - id: a1-user-001
           role: user
           text: '# 上下文
@@ -957,139 +911,27 @@ workflow:
         prompt_template:
         - id: a2-sys-001
           role: system
-          text: '你是资深 GEO 情感分析师。上游已完成品牌识别、排名判断和 sentiment_emotion_score 粗评分；你需据此进行连续值情感分析与内容摘要。
-
-
-            ═══ 先分类，再量化 ═══
-
-            第一步，将回答中关于目标品牌的内容归入一类：
-
-            - A 客观信息：官网/下载/安装/采购渠道/规格/价格/使用说明，无评价语言，且不在排名/推荐结构中 → neutral。
-
-            - B 正向评价：推荐、赞扬、优势，或正向推荐/榜单中的入选与正向介绍。
-
-            - C 负向评价：批评、缺点、不推荐、风险警示，或负面/避雷榜单中的贬低。
-
-            - D 仅提及：出现品牌名但无评价、无实质信息，且不在排名/推荐结构中 → neutral。
-
-            - E 未提及 → 固定 0.000。
-
-            说明：当 is_ranking=true 且品牌位于正向推荐结构中，credentials/features/优势描述属于 B，不得当作 A
-            客观信息。
-
-
-            第二步，在对应类别区间内取值。
-
-
-            ═══ sentiment_score 区间（-1.000~1.000，三位小数） ═══
-
-            - 强正向 0.900~1.000：强烈推荐、正向榜单 1–3 名、only pick、top choice、No.1。
-
-            - 中度正向 0.500~0.899：明确优点或正向推荐。
-
-            - 轻度正向 0.100~0.499：轻微正向或普通入选推荐。
-
-            - 完全中性 0.000：非排名场景纯客观信息、仅提及、未提及、无价值判断的纯横向比较。
-
-            - 轻度负向 -0.100~-0.299：轻微批评。
-
-            - 中度负向 -0.300~-0.699：明确缺点、不推荐。
-
-            - 强负向 -0.700~-1.000：严重缺陷、避雷、强烈批评。
-
-
-            ═══ 榜单极性硬规则（重要修正） ═══
-
-            - 参与 ranking 本身不等于正向。必须先判断榜单极性再决定情感方向。
-
-            - 仅当榜单是正向推荐/最佳/优选/背书榜单，且目标位于 1–3 名时，sentiment_score 必须 >= 0.900、label="positive"。
-
-            - 若为避雷榜、最差榜、风险榜、投诉榜或明确批评，即使目标名列前位，也必须按负面语义评分，label="negative"，不得强制为正向。
-
-            - 纯横向比较且无明确价值判断时可为 neutral。
-
-            - 显式负面文案的优先级高于“出现在列表中”这一弱信号。
-
-
-            ═══ 其他硬规则 ═══
-
-            1. sentiment_score 必须保留三位小数（0.900 ✅ / 0.9 ❌）。
-
-            2. A 类且确认 is_ranking=false → 0.000、neutral。
-
-            3. D 类且 is_ranking=false → 0.000、neutral。
-
-            4. E 类未提及 → 0.000、neutral、reasoning="品牌未被提及"、sentiment_quote=""。
-
-            5. sentiment_label：score>0 为 positive，score=0 为 neutral，score<0 为 negative。
-
-            6. sentiment_quote 必须逐字复制自回答，≤120字符，且能支撑该情感方向；无支撑逐字文本时不得给强正/强负分。
-
-            7. 本节点不输出 sentiment_weight_score（该字段由 4a-1 负责）。
-
-            8. 额外输出 sentiment_evidence：只保留回答中对本品形成明确正向或负向判断的原文证据。正向最多10条，负向最多10条；超过上限时按原文出现顺序保留前10条。客观描述、单纯提及和无法明确判断的内容不得生成证据。每条包含 brand、source、sentiment、evidence_text、reason，其中 source 固定为 target。
-
-            9. 找不到足够证据、独立评测、公开文档或透明信息”属于目标品牌的证据不足或透明度风险，应判为负向，不得判为中性。
-
-            10.  “竞品的透明度、证据或评级更强”意味着目标品牌处于相对劣势，应对目标品牌判为负向。“明确选择竞品而不选择目标品牌”均属于明确负向购买结论。排名、比较表或候选名单中的出现，只代表品牌被比较，不代表被推荐。明确的采购拒绝、风险和证据不足信号优先级高于排名位置。
-
-
-            ═══ 典型案例 ═══
-
-            - “Yelp 官网是 xxx，可在 App Store 下载”，is_ranking=false → A，0.000，neutral。
-
-            - 正向 CRM 推荐榜中“Salesforce，覆盖全行业，强烈推荐” → B，>=0.900（若列 1–3），positive。
-
-            - “最应避免的产品 Top 3：Brand X……” → C，负向榜单，negative（即便名列第 1）。
-
-            - 回答仅出现“Apple”而无任何描述，is_ranking=false → D，0.000，neutral。
-
-
-            ═══ 输出格式（严格 JSON） ═══
-
-            {"sentiment_score":0.900,"sentiment_label":"positive","sentiment_reasoning":"≤50字符评分理由","description_text":"原文中目标品牌描述","summary":"50-100字符内容摘要","word_cloud_tags":["tag1","tag2","tag3"],"sentiment_quote":"支撑判断的逐字原文片段","sentiment_evidence":[{"brand":"Profound","source":"target","sentiment":"positive","evidence_text":"The platform is powerful.","reason":"产品能力强"}]}
-
-            字段约束：sentiment_score 为 number；sentiment_label∈positive/neutral/negative；word_cloud_tags
-            为 3–5 个唯一字符串（未提及时可为 []）；description_text 只含目标品牌相关内容，不混入竞品。
-
-            未提及时输出：{"sentiment_score":0.000,"sentiment_label":"neutral","sentiment_reasoning":"品牌未被提及","description_text":"","summary":"","word_cloud_tags":[],"sentiment_quote":""}'
+          text: |
+            你是情感证据抽取器。只分析目标品牌，不判断回答整体情绪。
+            只有回答中明确提到目标品牌，并且该品牌与明确正向或负向评价绑定时，才输出证据。
+            客观事实、功能罗列、单纯提及、无明确好坏判断的内容不输出；不要输出 neutral。
+            每条证据包含 brand、source、sentiment、evidence_text、reason。
+            brand 使用目标品牌规范名，source 固定为 target。
+            positive 最多10条，negative 最多10条；超过上限按原文出现顺序保留前10条。
+            evidence_text 必须逐字来自回答原文，reason 用一句话说明为什么是正向或负向。
+            没有符合条件的证据时返回 []。
+            只输出 JSON array，不要 Markdown 包装。
+            示例：[{"brand":"Profound","source":"target","sentiment":"positive","evidence_text":"The platform is powerful.","reason":"明确称赞产品能力"}]
         - id: a2-user-001
           role: user
-          text: '# 上游已知信息
+          text: |
+            # 上游品牌识别结果
+            {{#17774580798580.text#}}
 
-            4a-1 完整输出：{{#17774580798580.text#}}
+            # AI 回答
+            {{#1766746641582.answer_raw#}}
 
-
-            # 原始上下文
-
-            AI 生成回答：{{#1766746641582.answer_raw#}}
-
-            用户查询：{{#1766746641582.query#}}
-
-            brand_name：{{#1766746558986.brand_name#}}
-
-            company_name：{{#1766746558986.company_name#}}
-
-            is_ranking：{{#1000000000002.is_ranking#}}
-
-
-            # 决策流程
-
-            1. 先读取 4a-1 的品牌识别与排名结果，尊重其目标检测与证据。
-
-            2. 判断所处榜单/结构的极性（正向推荐 / 负面避雷 / 中性比较），再套用与排名相关的情感规则。
-
-            3. 先确定 A/B/C/D/E 类别，再在对应区间取三位小数分值。
-
-            4. 正向推荐榜单 1–3 名 → sentiment_score >= 0.900；负面榜单前位 → 按负面评分，禁止强制正向。
-
-            5. 输出逐字 sentiment_quote；未提及时全部使用未提及默认对象。
-
-
-            必须输出字段：sentiment_score、sentiment_label、sentiment_reasoning、description_text、summary、word_cloud_tags（3–5
-            个）、sentiment_quote、sentiment_evidence。
-
-            只输出纯 JSON，不要 Markdown 包装。'
+            请根据规则抽取目标品牌的正负向情感证据。只输出 JSON array，不要 Markdown 包装。
         selected: false
         title: 4a-2.品牌情感分析LLM
         type: llm
@@ -1110,201 +952,33 @@ workflow:
       type: custom
       width: 244
     - data:
-        code: "import json\nimport re\n\nVALID_PATTERNS = {\n    \"P1-单一实体\", \"P2-多产品线\"\
-          , \"P3-平台生态\", \"P4-品牌屋\", \"P5-产品即品牌\", \"P6-组织即品牌\",\n    \"P-单一实体\",\
-          \ \"P-多产品线\", \"P-平台生态\", \"P-品牌屋\", \"P-产品即品牌\", \"P-组织即品牌\",\n}\n\n\n\
-          def safe_parse(text):\n    text = str(text or \"\")\n    if not text.strip():\n\
-          \        return {}\n\n    clean = re.sub(r\"```json\\s*|\\s*```\", \"\"\
-          , text).strip()\n    if \"---\" in clean:\n        clean = clean.rsplit(\"\
-          ---\", 1)[-1].strip()\n\n    jm = re.search(r\"\\{[\\s\\S]*\\}\", clean)\n\
-          \    if not jm:\n        return {}\n\n    matched = jm.group()\n    candidates\
-          \ = [\n        matched,\n        matched.replace(\"“\", \"'\").replace(\"\
-          ”\", \"'\").replace(\"‘\", \"'\").replace(\"’\", \"'\"),\n        matched.replace(\"\
-          “\", \"\").replace(\"”\", \"\").replace(\"‘\", \"\").replace(\"’\", \"\"\
-          ),\n    ]\n\n    fixed = candidates[1]\n    fixed = fixed.replace(\"\\r\\\
-          n\", \"\\\\n\").replace(\"\\r\", \"\\\\n\")\n    fixed = re.sub(r\"[\\x00-\\\
-          x08\\x0b\\x0c\\x0e-\\x1f]\", \"\", fixed)\n    candidates.append(fixed)\n\
-          \n    for candidate in candidates:\n        try:\n            parsed = json.loads(candidate)\n\
-          \            return parsed if isinstance(parsed, dict) else {}\n       \
-          \ except json.JSONDecodeError:\n            continue\n    return {}\n\n\n\
-          def parse_evidence(value):\n    if isinstance(value, list):\n        return\
-          \ [str(x).strip() for x in value if str(x or \"\").strip()]\n    if isinstance(value,\
-          \ str):\n        value = value.strip()\n        if not value:\n        \
-          \    return []\n        try:\n            parsed = json.loads(value)\n \
-          \           if isinstance(parsed, list):\n                return [str(x).strip()\
-          \ for x in parsed if str(x or \"\").strip()]\n        except Exception:\n\
-          \            pass\n        return [value]\n    return []\n\n\ndef parse_sentiment_evidence(value, answer, default_brand):\n    if isinstance(value, str):\n        try:\n            value = json.loads(value)\n        except Exception:\n            value = []\n    if not isinstance(value, list):\n        return []\n    out = []\n    counts = {\"positive\": 0, \"negative\": 0}\n    for item in value:\n        if not isinstance(item, dict):\n            continue\n        sentiment = str(item.get(\"sentiment\", \"\")).strip().lower()\n        evidence = str(item.get(\"evidence_text\", \"\")).strip()\n        if sentiment not in (\"positive\", \"negative\") or not evidence:\n            continue\n        if answer and evidence not in str(answer):\n            continue\n        if counts[sentiment] >= 10:\n            continue\n        out.append({\"brand\": str(item.get(\"brand\") or default_brand or \"\").strip(), \"source\": \"target\", \"sentiment\": sentiment, \"evidence_text\": evidence, \"reason\": str(item.get(\"reason\", \"\")).strip()})\n        counts[sentiment] += 1\n    return out\n\n\ndef safe_rank(value):\n\
-          \    if isinstance(value, bool):\n        return 0\n    if isinstance(value,\
-          \ (int, float)):\n        return max(0, int(value))\n    text = str(value\
-          \ or \"\").strip()\n    if not text:\n        return 0\n    try:\n     \
-          \   return max(0, int(float(text)))\n    except (ValueError, TypeError):\n\
-          \        match = re.search(r\"(?<!\\d)(\\d+)(?:\\.0+)?(?:st|nd|rd|th)?(?!\\\
-          d)\", text, re.I)\n        return max(0, int(match.group(1))) if match else\
-          \ 0\n\n\nPRODUCT_FAMILY_ALIASES = {\n    \"adobe experience manager sites\"\
-          : \"Adobe\",\n    \"adobe experience manager\": \"Adobe\",\n    \"aem sites\"\
-          : \"Adobe\",\n    \"sitecore xm cloud\": \"Sitecore\",\n    \"kontent ai\"\
-          : \"Kontent\",\n    \"goodie ai\": \"Goodie\",\n    \"peec ai\": \"Peec\"\
-          ,\n    \"otterly ai\": \"Otterly\",\n}\n\n\ndef canonical_family(value):\n\
-          \    key = re.sub(r\"\\s+\", \" \", re.sub(r\"[^a-z0-9]+\", \" \", str(value\
-          \ or \"\").casefold())).strip()\n    return PRODUCT_FAMILY_ALIASES.get(key,\
-          \ str(value or \"\").strip())\n\n\ndef global_rank_occurrences(answer):\n\
-          \    lines = str(answer or \"\").splitlines()\n    occurrences = []\n  \
-          \  cursor = 0\n    consumed = set()\n    header_terms = {\"platform\", \"\
-          brand\", \"competitor\", \"company\", \"tool\", \"product\", \"name\"}\n\
-          \n    def clean_name(value):\n        value = re.sub(r\"!?(?:\\[([^\\]]+)\\\
-          ])\\([^)]+\\)\", r\"\\1\", str(value or \"\"))\n        value = re.sub(r\"\
-          ^[\\-*+•]\\s*\", \"\", value.strip())\n        value = re.sub(r\"[*_`~]+\"\
-          , \"\", value).strip(\" |\\t:-\")\n        if not value or len(value) >\
-          \ 90 or len(value.split()) > 8:\n            return \"\"\n        return\
-          \ value\n\n    i = 0\n    while i < len(lines):\n        raw = lines[i]\n\
-          \        stripped = raw.strip()\n        cells = re.split(r\"\\t+|\\s{2,}\"\
-          , stripped)\n        is_plain_header = len(cells) >= 3 and re.sub(r\"[^a-z0-9]+\"\
-          , \" \", cells[0].casefold()).strip() in header_terms\n        is_md_header\
-          \ = \"|\" in raw and i + 1 < len(lines) and re.match(r\"^\\s*\\|?\\s*:?-{3,}\"\
-          , lines[i + 1])\n        if is_plain_header or is_md_header:\n         \
-          \   if is_md_header:\n                headers = [x.strip() for x in raw.strip().strip(\"\
-          |\").split(\"|\")]\n                name_idx = next((j for j,h in enumerate(headers)\
-          \ if re.sub(r\"[^a-z0-9]+\", \" \", h.casefold()).strip() in header_terms),\
-          \ 0)\n                i += 2\n                while i < len(lines) and \"\
-          |\" in lines[i] and lines[i].strip():\n                    row = [x.strip()\
-          \ for x in lines[i].strip().strip(\"|\").split(\"|\")]\n               \
-          \     name = clean_name(row[name_idx]) if len(row) > name_idx else \"\"\n\
-          \                    if name:\n                        cursor += 1; occurrences.append({\"\
-          name\": name, \"rank\": cursor, \"position\": i, \"evidence\": lines[i].strip()});\
-          \ consumed.add(i)\n                    i += 1\n            else:\n     \
-          \           i += 1\n                while i < len(lines):\n            \
-          \        row_raw = lines[i].strip()\n                    row = re.split(r\"\
-          \\t+|\\s{2,}\", row_raw)\n                    if not row_raw or len(row)\
-          \ < 2:\n                        break\n                    name = clean_name(row[0])\n\
-          \                    if not name:\n                        break\n     \
-          \               cursor += 1; occurrences.append({\"name\": name, \"rank\"\
-          : cursor, \"position\": i, \"evidence\": row_raw}); consumed.add(i)\n  \
-          \                  i += 1\n            continue\n        i += 1\n\n    for\
-          \ i,line in enumerate(lines):\n        if i in consumed:\n            continue\n\
-          \        m = re.match(r\"^\\s*(?:\\((\\d+)\\)|#(\\d+)|(\\d+)(?:st|nd|rd|th)?[.)\\\
-          ]:])\\s+(.+?)\\s*$\", line, re.I)\n        if m:\n            name = clean_name(re.split(r\"\
-          \\s{2,}|\\s+[—–-]\\s+|:\\s+\", m.group(4), maxsplit=1)[0])\n           \
-          \ if name:\n                explicit = int(next(x for x in m.groups()[:3]\
-          \ if x))\n                cursor = max(cursor + 1, explicit)\n         \
-          \       occurrences.append({\"name\": name, \"rank\": cursor, \"position\"\
-          : i, \"evidence\": line.strip()}); consumed.add(i)\n\n    for i,line in\
-          \ enumerate(lines):\n        if not re.match(r\"^\\s*(?:examples include|examples|notable\
-          \ examples include)\\s*:?\\s*$\", line, re.I):\n            continue\n \
-          \       j = i + 1\n        while j < len(lines) and not lines[j].strip():\n\
-          \            j += 1\n        while j < len(lines):\n            stripped\
-          \ = lines[j].strip()\n            if not stripped:\n                j +=\
-          \ 1; continue\n            name = clean_name(stripped)\n            if not\
-          \ name or stripped.endswith(('.', '?', '!')) or len(stripped.split()) >\
-          \ 5:\n                break\n            cursor += 1\n            occurrences.append({\"\
-          name\": name, \"rank\": cursor, \"position\": j, \"evidence\": stripped});\
-          \ consumed.add(j)\n            j += 1\n\n    earliest = {}\n    for occurrence\
-          \ in sorted(occurrences, key=lambda x: x[\"position\"]):\n        canonical\
-          \ = canonical_family(occurrence[\"name\"])\n        key = re.sub(r\"\\s+\"\
-          , \" \", re.sub(r\"[^a-z0-9]+\", \" \", canonical.casefold())).strip()\n\
-          \        occurrence = {**occurrence, \"canonical\": canonical}\n       \
-          \ if key and key not in earliest:\n            earliest[key] = occurrence\n\
-          \    return list(earliest.values())\n\n\ndef main(\n    a1_output: str,\n\
-          \    a2_output: str,\n    brand_pattern_hint: str,\n    answer_total_len,\n\
-          \    target_desc_text: str,\n    answer_raw=\"\",\n    target_entity_json=\"\
-          \",\n) -> dict:\n    d1 = safe_parse(a1_output)\n    d2 = safe_parse(a2_output)\n\
-          \n    sentiment_evidence = parse_sentiment_evidence(d2.get(\"sentiment_evidence\", []), answer_raw, str(d1.get(\"matched_brand\") or \"\"))\n          \n    bd_raw = d1.get(\"brand_detected\", \"false\")\n    brand_detected\
-          \ = \"true\" if bd_raw is True or str(bd_raw).lower() in (\"true\", \"1\"\
-          , \"yes\") else \"false\"\n    matched_brand = str(d1.get(\"matched_brand\"\
-          , \"\")).strip()\n    evidence_list = parse_evidence(d1.get(\"target_evidence_spans\"\
-          , []))\n\n    try:\n        brand_mentions_num = max(0, int(d1.get(\"brand_mentions\"\
-          , 0) or 0))\n    except (ValueError, TypeError):\n        brand_mentions_num\
-          \ = 0\n\n    rp = safe_rank(d1.get(\"rank_pos\", 0))\n\n    rank_type =\
-          \ str(d1.get(\"rank_type\", \"none\")).strip().lower()\n    if rank_type\
-          \ not in (\"explicit\", \"mentioned_not_ranked\", \"implicit\", \"none\"\
-          ):\n        if brand_detected == \"true\" and rp > 0:\n            rank_type\
-          \ = \"explicit\"\n        elif brand_detected == \"true\":\n           \
-          \ rank_type = \"implicit\"\n        else:\n            rank_type = \"none\"\
-          \n\n    bp = str(d1.get(\"brand_pattern\", \"\")).strip()\n    if bp not\
-          \ in VALID_PATTERNS:\n        bp = str(brand_pattern_hint or \"P-单一实体\"\
-          )\n\n    is_top = \"true\" if brand_detected == \"true\" and rank_type ==\
-          \ \"explicit\" and 1 <= rp <= 3 else \"false\"\n\n    try:\n        ss =\
-          \ float(d2.get(\"sentiment_score\", 0.0))\n    except (ValueError, TypeError):\n\
-          \        ss = 0.0\n    ss = max(-1.0, min(1.0, ss))\n    if brand_detected\
-          \ == \"true\" and rank_type == \"explicit\" and 1 <= rp <= 3 and str(d2.get(\"\
-          sentiment_label\", \"neutral\")).strip().lower() == \"positive\" and 0 <\
-          \ ss < 0.900:\n        ss = 0.900\n\n    sl = str(d2.get(\"sentiment_label\"\
-          , \"neutral\")).lower()\n    if sl not in (\"positive\", \"neutral\", \"\
-          negative\"):\n        if ss >= 0.1:\n            sl = \"positive\"\n   \
-          \     elif ss <= -0.1:\n            sl = \"negative\"\n        else:\n \
-          \           sl = \"neutral\"\n\n    sr = str(d2.get(\"sentiment_reasoning\"\
-          , \"\")).strip()[:100]\n    sq = str(d2.get(\"sentiment_quote\", \"\")).strip()[:120]\n\
-          \    if not sr:\n        sr = \"品牌未被提及\" if brand_detected != \"true\" else\
-          \ \"\"\n\n    try:\n        sw = int(d1.get(\"sentiment_emotion_score\"\
-          , 0) or 0)\n    except (ValueError, TypeError):\n        sw = 0\n    if\
-          \ sw not in (0, 1, 2, 3):\n        sw = 0\n    sw_norm = round(sw / 3.0,\
-          \ 3)\n\n    desc_text = str(d2.get(\"description_text\", \"\")).strip()\n\
-          \    if not desc_text:\n        desc_text = str(d1.get(\"description_text\"\
-          , \"\")).strip()\n    if not desc_text:\n        desc_text = str(target_desc_text\
-          \ or \"\")\n    desc_text = desc_text[:500]\n\n    try:\n        total_len\
-          \ = max(int(answer_total_len or 1), 1)\n    except (ValueError, TypeError):\n\
-          \        total_len = 1\n\n    if rank_type in (\"implicit\", \"mentioned_not_ranked\"\
-          ):\n        try:\n            a1_ws = float(d1.get(\"weighted_score\", 0.0))\n\
-          \        except (ValueError, TypeError):\n            a1_ws = 0.0\n\n  \
-          \      if a1_ws > 0:\n            weighted_score = round(a1_ws, 3)\n   \
-          \         try:\n                a1_lr = float(d1.get(\"length_ratio\", 0.0))\n\
-          \            except (ValueError, TypeError):\n                a1_lr = 0.0\n\
-          \            length_score = round(a1_lr, 3) if a1_lr > 0 else round(min(len(desc_text)\
-          \ / total_len, 1.0), 3)\n        else:\n            length_score = round(min(len(desc_text)\
-          \ / total_len, 1.0), 3)\n            weighted_score = round(length_score\
-          \ * 0.5 + sw_norm * 0.5, 3)\n    elif rank_type == \"explicit\":\n     \
-          \   length_score = round(min(len(desc_text) / total_len, 1.0), 3)\n    \
-          \    weighted_score = round(length_score * 0.5 + sw_norm * 0.5, 3)\n   \
-          \ else:\n        length_score = 0.0\n        weighted_score = 0.0\n\n  \
-          \  summary = str(d2.get(\"summary\", \"\")).strip()\n    if len(summary)\
-          \ > 200:\n        summary = summary[:197] + \"...\"\n\n    raw_tags = d2.get(\"\
-          word_cloud_tags\", d2.get(\"key_tags\", []))\n    word_cloud_tags = [str(t)\
-          \ for t in raw_tags if t][:5] if isinstance(raw_tags, list) else []\n\n\
-          \    try:\n        entity = json.loads(target_entity_json) if target_entity_json\
-          \ else {}\n    except Exception:\n        entity = {}\n    aliases = entity.get(\"\
-          matchable_aliases\", []) if isinstance(entity, dict) else []\n\n    def\
-          \ _norm(value):\n        return re.sub(r\"[^a-z0-9]+\", \" \", str(value\
-          \ or \"\").casefold()).strip()\n\n    def _pattern(alias):\n        parts\
-          \ = re.findall(r\"[A-Za-z0-9]+\", str(alias or \"\"))\n        if not parts:\n\
-          \            return None\n        return re.compile(\n            r\"(?<![A-Za-z0-9])\"\
-          \ + r\"[\\s\\W_]*\".join(map(re.escape, parts)) + r\"(?![A-Za-z0-9])\",\n\
-          \            re.I,\n        )\n\n    hits = []\n    occupied = []\n    for\
-          \ alias in sorted(aliases, key=lambda x: (-len(_norm(x).split()), -len(str(x)))):\n\
-          \        if _norm(alias) in {\"ai\", \"artificial intelligence\", \"seo\"\
-          , \"geo\", \"software\", \"platform\", \"tool\", \"app\"}:\n           \
-          \ continue\n        pattern = _pattern(alias)\n        if not pattern:\n\
-          \            continue\n        for match in pattern.finditer(answer_raw\
-          \ or \"\"):\n            if any(match.start() < end and match.end() > start\
-          \ for start, end in occupied):\n                continue\n            actual\
-          \ = match.group(0)\n            if len(_norm(alias)) <= 2 and actual !=\
-          \ actual.upper():\n                continue\n            hits.append((match.start(),\
-          \ alias, actual))\n            occupied.append((match.start(), match.end()))\n\
-          \n    hits.sort()\n    structural_rank = 0\n    alias_keys = {re.sub(r\"\
-          \\s+\", \" \", re.sub(r\"[^a-z0-9]+\", \" \", str(alias or \"\").casefold())).strip()\
-          \ for alias in aliases}\n    for occurrence in global_rank_occurrences(answer_raw):\n\
-          \        occurrence_keys = {\n            re.sub(r\"\\s+\", \" \", re.sub(r\"\
-          [^a-z0-9]+\", \" \", str(occurrence.get(\"name\") or \"\").casefold())).strip(),\n\
-          \            re.sub(r\"\\s+\", \" \", re.sub(r\"[^a-z0-9]+\", \" \", str(occurrence.get(\"\
-          canonical\") or \"\").casefold())).strip(),\n        }\n        if alias_keys\
-          \ & occurrence_keys:\n            structural_rank = occurrence[\"rank\"\
-          ]\n            break\n    if not hits:\n        brand_detected = \"false\"\
-          \n        matched_brand = \"\"\n        rp = 0\n        rank_type = \"none\"\
-          \n        is_top = \"false\"\n        brand_mentions_num = 0\n        evidence_list\
-          \ = []\n        sentiment_evidence = []\n        sr = \"品牌未被提及\"\n    else:\n        brand_detected = \"\
-          true\"\n        matched_brand = str(hits[0][1])\n        brand_mentions_num\
-          \ = len(hits)\n        evidence_list = list(dict.fromkeys(str(hit[2]) for\
-          \ hit in hits))[:10]\n        if structural_rank > 0:\n            rp =\
-          \ structural_rank\n            rank_type = \"explicit\"\n        elif rank_type\
-          \ == \"none\":\n            rank_type = \"mentioned_not_ranked\"\n     \
-          \   if rank_type != \"explicit\":\n            is_top = \"false\"\n    \
-          \    elif rp <= 0:\n            rank_type = \"mentioned_not_ranked\"\n \
-          \           is_top = \"false\"\n        else:\n            is_top = \"true\"\
-          \ if 1 <= rp <= 3 else \"false\"\n\n    return {\n        \"brand_detected\"\
-          : str(brand_detected),\n        \"matched_brand\": str(matched_brand),\n\
-          \        \"rank_pos\": str(rp),\n        \"is_top_recommend\": str(is_top),\n\
-          \        \"rank_type\": str(rank_type),\n        \"brand_pattern\": str(bp),\n\
-          \        \"brand_mentions\": str(brand_mentions_num),\n        \"target_evidence_spans\"\
-          : json.dumps(evidence_list, ensure_ascii=False),\n        \"sentiment_evidence\": sentiment_evidence,\n\
-          \    }\n"
+        code: |
+          import json
+          def parse(value):
+              try:
+                  result = json.loads(str(value or ""))
+                  return result if isinstance(result, dict) else {}
+              except Exception:
+                  return {}
+          def main(a1_output="", a2_output="", brand_pattern_hint="", answer_total_len=0, target_desc_text="", answer_raw="", target_entity_json="") -> dict:
+              first = parse(a1_output); second = parse(a2_output)
+              detected = "true" if str(first.get("brand_detected", "false")).lower() in {"true", "1", "yes"} else "false"
+              matched = str(first.get("matched_brand") or "").strip()
+              try: mentions = max(0, int(first.get("brand_mentions") or 0))
+              except Exception: mentions = 0
+              try: rank = max(0, int(float(str(first.get("rank_pos") or 0))))
+              except Exception: rank = 0
+              rank_type = str(first.get("rank_type") or "none").lower()
+              if rank_type not in {"explicit", "mention_order", "none"}: rank_type = "mention_order" if rank > 0 else "none"
+              evidence = second.get("sentiment_evidence", []) if isinstance(second.get("sentiment_evidence", []), list) else []
+              clean = []; counts = {"positive": 0, "negative": 0}
+              for item in evidence:
+                  if not isinstance(item, dict): continue
+                  sentiment = str(item.get("sentiment") or "").lower().strip(); text = str(item.get("evidence_text") or "").strip()
+                  if sentiment not in counts or not text or (answer_raw and text not in str(answer_raw)) or counts[sentiment] >= 10: continue
+                  clean.append({"brand": matched, "source": "target", "sentiment": sentiment, "evidence_text": text, "reason": str(item.get("reason") or "").strip()}); counts[sentiment] += 1
+              spans = first.get("target_evidence_spans", []); spans = spans if isinstance(spans, list) else ([spans] if spans else [])
+              return {"brand_detected": detected, "brand_mentions": str(mentions), "brand_pattern": str(first.get("brand_pattern") or brand_pattern_hint or "P-单一实体"), "is_top_recommend": "true" if detected == "true" and 1 <= rank <= 3 else "false", "matched_brand": matched, "rank_pos": str(rank), "rank_type": rank_type if detected == "true" else "none", "sentiment_evidence": clean, "target_evidence_spans": json.dumps([str(x) for x in spans if str(x).strip()][:10], ensure_ascii=False)}
         code_language: python3
         desc: 合并4a-1和4a-2，rank_type四值判断+sentiment_weight_score从4a-1取
         outputs:
@@ -1436,16 +1110,7 @@ workflow:
             \ Indexly 同类并具有直接替代关系，不满足则排除。\n- 引用尾标处理：名称后紧跟“+数字”形式的引用或脚注尾标时，如 Keychron+1，其中“+1”不是名称的一部分，应先去除尾标。去除后仍需按竞品口径判断；不得因为去除“+1”后像品牌名称，就自动认定为竞品。\n\
             - “Keychron K5 Max”：name 保留完整型号，brand 规范为 Keychron，brand中不可出现非品牌名之外的其他内容（如型号、产品名等）\n\
             - 配置竞品未在回答出现 → 本节点和下游均不输出。\n- 负面榜单“最不推荐的工具：X 排第 1” → X 输出 negative，rank_pos=1。\n\
-            \n═══ 输出格式（JSON array，无 Markdown；无竞品返回 []） ═══\n[{\"name\":\"Keychron\
-            \ K5 Max\",\"brand\":\"Keychron\",\"entity_type\":\"product\",\"is_competitor\"\
-            :true,\"comparability_reason\":\"与目标进入同一购买集合\",\"rank_pos\":4,\"brand_detected\"\
-            :true,\"sentiment_score\":0.650,\"sentiment_label\":\"positive\",\"sentiment_reasoning\"\
-            :\"≤30字符理由\",\"sentiment_quote\":\"逐字原文片段\",\"sentiment_evidence\":[{\"brand\":\"Keychron\",\"source\":\"configured_competitor\",\"sentiment\":\"positive\",\"evidence_text\":\"逐字原文片段\",\"reason\":\"产品表现较好\"}],\"sentiment_emotion_score\"\
-            :2,\"description_text\":\"该竞品的原文描述\",\"weighted_score\":0.417,\"matched_alias\"\
-            :\"Keychron K5 Max\",\"evidence_spans\":[\"Keychron K5 Max\"],\"rank_type\"\
-            :\"explicit\"}]\n字段类型：rank_pos 为 integer；brand_detected 为 JSON boolean；sentiment_score、weighted_score\
-            \ 为 number；sentiment_emotion_score 为 integer(0/1/2/3)；evidence_spans 为字符串数组；rank_type\
-            \ 为枚举字符串。"
+            \\n输出只包含竞品识别、排名和情感证据字段。"
         - id: b1-user-001
           role: user
           text: '# 上下文
@@ -2732,69 +2397,86 @@ workflow:
       type: custom
       width: 244
     - data:
-        code: "import json\nimport re\ndef main(brand_detected: str, matched_brand:\
-          \ str, is_ranking: str,\n         rank_pos: str, is_top_recommend: str,\
-          \ brand_pattern: str,\n         summary: str, word_cloud_tags: list, target_evidence_spans:\
-          \ str, target_sentiment_evidence: list,\n         sentiment_score: str, sentiment_label: str, sentiment_reasoning:\
-          \ str,\n         sentiment_weight_score: str, sentiment_weight_norm: str,\n\
-          \         length_score: str, weighted_score: str,\n         comp_brands:\
-          \ list, brand_media: list,\n         references: str, answer_raw_original:\
-          \ str, company_name: str,\n         brand_name: str, task_id: str, model_id:\
-          \ str, query: str,\n         search_results: str,\n         latency_ms,\
-          \ tokens_count, comps_list: str, crawler_type: str,\n         job_id: str\
-          \ = \"\", word_id: str = \"\", sentiment_quote: str = \"\", answer_zh: str\
-          \ = \"\", resolved_target_rank=\"0\") -> dict:\n    if not isinstance(comp_brands,\
-          \ list): comp_brands = []\n    if not isinstance(brand_media, list): brand_media\
-          \ = []\n    if not isinstance(word_cloud_tags, list): word_cloud_tags =\
-          \ []\n    competitor_mentions = []\n    for c in comp_brands:\n        if\
-          \ not isinstance(c, dict): continue\n        if (c.get(\"brand_detected\"\
-          ) or c.get(\"is_mentioned\")):\n            competitor_mentions.append({\n\
-          \                \"name\": str(c.get(\"brand_name\", c.get(\"name\",\"\"\
-          ))),\n                \"brand\": str(c.get(\"brand\",\"\")),\n         \
-          \       \"rank\": c.get(\"rank_pos\", 0),\n            })\n    try:\n\
-          \        target_rank_num = int(float(str(rank_pos or \"0\")))\n    except\
-          \ Exception:\n        target_rank_num = 0\n    detected_target = str(brand_detected\
-          \ or \"false\").lower() == \"true\"\n    try:\n        resolved_rank_num\
-          \ = int(float(str(resolved_target_rank or \"0\")))\n    except Exception:\n\
-          \        resolved_rank_num = 0\n    if detected_target and resolved_rank_num\
-          \ > 0:\n        target_rank_num = resolved_rank_num\n        rank_pos =\
-          \ str(resolved_rank_num)\n        is_top_recommend = \"true\" if 1 <= resolved_rank_num\
-          \ <= 3 else \"false\"\n\n    # 最终展示前统一压缩为连续阿拉伯序号，避免上游过滤实体后出现缺号。\n    display_order = []\n    if detected_target:\n        display_order.append({\"kind\": \"target\", \"index\": -1, \"rank\": target_rank_num})\n    for index, competitor in enumerate(competitor_mentions):\n        try:\n            competitor_rank = int(float(str(competitor.get(\"rank\", 0) or 0)))\n        except Exception:\n            competitor_rank = 0\n        display_order.append({\"kind\": \"competitor\", \"index\": index, \"rank\": competitor_rank})\n    display_order.sort(key=lambda item: (item[\"rank\"] <= 0, item[\"rank\"] if item[\"rank\"] > 0 else 10 ** 9, item[\"index\"]))\n    for display_rank, item in enumerate(display_order, 1):\n        if item[\"kind\"] == \"target\":\n            target_rank_num = display_rank\n            rank_pos = str(display_rank)\n            is_top_recommend = \"true\" if display_rank <= 3 else \"false\"\n        else:\n            competitor_mentions[item[\"index\"]][\"rank\"] = display_rank\n\n    ranked_entities = (1 if detected_target else\
-          \ 0) + len(competitor_mentions)\n    has_rank = target_rank_num > 0 or any(isinstance(c.get(\"\
-          rank\"), int) and c.get(\"rank\") > 0 for c in competitor_mentions)\n  \
-          \  ir = \"true\" if target_rank_num > 0 or len(competitor_mentions) > 0\
-          \ else (\"true\" if str(is_ranking or \"false\").lower() == \"true\" else\
-          \ \"false\")\n\n    if ir == \"true\":\n        competitor_mentions.sort(key=lambda\
-          \ x: x.get(\"rank\") if isinstance(x.get(\"rank\"), int) else 999)\n   \
-          \ competitor_pos = \",\".join([f\"{c['name']}({c.get('rank','?')})\" for\
-          \ c in competitor_mentions]) if ir == \"true\" else \"\"\n    competitor_count\
-          \ = str(len(competitor_mentions))\n    safe_refs = []\n    if not safe_refs:\n\
-          \        if isinstance(references, list): safe_refs = references\n     \
-          \   elif isinstance(references, str):\n            try:\n              \
-          \  parsed = json.loads(references)\n                safe_refs = parsed if\
-          \ isinstance(parsed, list) else []\n            except: safe_refs = []\n\
-          \    ref_urls = []\n    for ref in safe_refs:\n        if isinstance(ref,\
-          \ dict) and ref.get('url'): ref_urls.append(ref['url'])\n        elif isinstance(ref,\
-          \ str) and ref.startswith('http'): ref_urls.append(ref)\n    # 以代码级字面证据判定为最终真值，修复提及状态与情感/排名字段互相矛盾。\n\
-          \    if not detected_target:\n        rank_pos = \"0\"\n        is_top_recommend\
-          \ = \"false\"\n        sentiment_score = \"0.000\"\n        sentiment_label\
-          \ = \"neutral\"\n        sentiment_reasoning = \"品牌未被提及\"\n        sentiment_quote\
-          \ = \"\"\n    else:\n        if target_rank_num <= 0:\n            is_top_recommend\
-          \ = \"false\"\n        reason_low = str(sentiment_reasoning or \"\").casefold()\n\
-          \        if \"未被提及\" in reason_low or \"未提及\" in reason_low or \"not mentioned\"\
-          \ in reason_low:\n            sentiment_reasoning = \"品牌已在回答中出现，未识别出明确情感\"\
-          \n            if str(sentiment_label or \"\").lower() not in {\"positive\"\
-          , \"neutral\", \"negative\"}:\n                sentiment_label = \"neutral\"\
-          \n    return {\n        \"brand_detected\": str(brand_detected or \"false\"\
-          ),\n        \"matched_brand\": str(matched_brand or \"\"),\n        \"is_ranking\"\
-          : ir,\n        \"rank_pos\": str(rank_pos or \"0\"),\n        \"is_top_recommend\"\
-          : str(is_top_recommend or \"false\"),\n        \"brand_pattern\": str(brand_pattern\
-          \ or \"P-单一实体\"),\n        \"sentiment_evidence\": (target_sentiment_evidence if isinstance(target_sentiment_evidence, list) else []) + [e for c in comp_brands if isinstance(c, dict) for e in (c.get(\"sentiment_evidence\", []) if isinstance(c.get(\"sentiment_evidence\", []), list) else [])],\n    \
-          \    \"competitor_mentions\": competitor_mentions,\n        \"competitor_results\": [{k: c.get(k) for k in (\"name\", \"brand\", \"entity_type\", \"is_competitor\", \"comparability_reason\", \"rank_pos\", \"brand_detected\", \"is_top_recommend\", \"matched_alias\", \"evidence_spans\", \"rank_type\")} for c in comp_brands if isinstance(c, dict)],\n        \"competitor_pos\"\
-          : competitor_pos,\n        \"competitor_count\": competitor_count,\n   \
-          \     \"referenced_urls\": ref_urls,\n        \"company_name\": str(company_name\
-          \ or \"\"),\n        \"job_id\": str(job_id or \"\"),\n        \"word_id\"\
-          : str(word_id or \"\"),\n        \"answer_zh\": str(answer_zh or \"\"),\n    }\n"
+        code: |
+          import json
+
+          def main(brand_detected="", matched_brand="", is_ranking="false", rank_pos="0", is_top_recommend="false", brand_pattern="P-单一实体", target_sentiment_evidence=None, comp_brands=None, references=None, company_name="", job_id="", word_id="", answer_zh="", resolved_target_rank="0"):
+              if not isinstance(comp_brands, list):
+                  comp_brands = []
+              if not isinstance(target_sentiment_evidence, list):
+                  target_sentiment_evidence = []
+              detected_target = str(brand_detected or "false").lower() == "true"
+              try:
+                  target_rank = int(float(str(resolved_target_rank or rank_pos or "0")))
+              except Exception:
+                  target_rank = 0
+              if target_rank <= 0:
+                  try:
+                      target_rank = int(float(str(rank_pos or "0")))
+                  except Exception:
+                      target_rank = 0
+              if not detected_target:
+                  target_rank = 0
+                  is_top_recommend = "false"
+              elif target_rank > 0:
+                  rank_pos = str(target_rank)
+                  is_top_recommend = "true" if target_rank <= 3 else "false"
+
+              competitor_mentions = []
+              for item in comp_brands:
+                  if not isinstance(item, dict):
+                      continue
+                  if not (item.get("brand_detected") or item.get("is_mentioned")):
+                      continue
+                  competitor_mentions.append({
+                      "name": str(item.get("brand_name") or item.get("name") or ""),
+                      "brand": str(item.get("brand") or ""),
+                      "rank": item.get("rank_pos", 0),
+                  })
+              display_order = []
+              if detected_target:
+                  display_order.append(("target", -1, target_rank))
+              for index, item in enumerate(competitor_mentions):
+                  try:
+                      rank = int(float(str(item.get("rank") or "0")))
+                  except Exception:
+                      rank = 0
+                  display_order.append(("competitor", index, rank))
+              display_order.sort(key=lambda x: (x[2] <= 0, x[2] if x[2] > 0 else 10**9, x[1]))
+              for display_rank, (kind, index, _) in enumerate(display_order, 1):
+                  if kind == "target":
+                      rank_pos = str(display_rank)
+                      is_top_recommend = "true" if display_rank <= 3 else "false"
+                  else:
+                      competitor_mentions[index]["rank"] = display_rank
+              competitor_mentions.sort(key=lambda x: x.get("rank") if isinstance(x.get("rank"), int) else 10**9)
+              competitor_pos = ",".join(f"{x['name']}({x.get('rank', '?')})" for x in competitor_mentions)
+              safe_refs = references if isinstance(references, list) else []
+              if isinstance(references, str):
+                  try:
+                      parsed = json.loads(references)
+                      safe_refs = parsed if isinstance(parsed, list) else []
+                  except Exception:
+                      safe_refs = []
+              ref_urls = [x.get("url") for x in safe_refs if isinstance(x, dict) and x.get("url")]
+              return {
+                  "brand_detected": str(brand_detected or "false"),
+                  "matched_brand": str(matched_brand or ""),
+                  "is_ranking": "true" if is_ranking and (target_rank > 0 or competitor_mentions) else "false",
+                  "rank_pos": str(rank_pos or "0"),
+                  "is_top_recommend": str(is_top_recommend or "false"),
+                  "brand_pattern": str(brand_pattern or "P-单一实体"),
+                  "sentiment_evidence": target_sentiment_evidence + [e for item in comp_brands if isinstance(item, dict) for e in (item.get("sentiment_evidence") if isinstance(item.get("sentiment_evidence"), list) else [])],
+                  "competitor_mentions": competitor_mentions,
+                  "competitor_results": [{k: item.get(k) for k in ("name", "brand", "entity_type", "is_competitor", "comparability_reason", "rank_pos", "brand_detected", "is_top_recommend", "matched_alias", "evidence_spans", "rank_type")} for item in comp_brands if isinstance(item, dict)],
+                  "competitor_pos": competitor_pos,
+                  "competitor_count": str(len(competitor_mentions)),
+                  "referenced_urls": ref_urls,
+                  "company_name": str(company_name or ""),
+                  "job_id": str(job_id or ""),
+                  "word_id": str(word_id or ""),
+                  "answer_zh": str(answer_zh or ""),
+              }
         code_language: python3
         desc: Merge three branches + URL extraction + competitor_mentions construction
         outputs:
@@ -2876,46 +2558,6 @@ workflow:
           variable: brand_pattern
         - value_selector:
           - '17774583588430'
-          - summary
-          variable: summary
-        - value_selector:
-          - '17774583588430'
-          - word_cloud_tags
-          variable: word_cloud_tags
-        - value_selector:
-          - '17774583588430'
-          - target_evidence_spans
-          variable: target_evidence_spans
-        - value_selector:
-          - '17774583588430'
-          - sentiment_score
-          variable: sentiment_score
-        - value_selector:
-          - '17774583588430'
-          - sentiment_label
-          variable: sentiment_label
-        - value_selector:
-          - '17774583588430'
-          - sentiment_reasoning
-          variable: sentiment_reasoning
-        - value_selector:
-          - '17774583588430'
-          - sentiment_weight_score
-          variable: sentiment_weight_score
-        - value_selector:
-          - '17774583588430'
-          - sentiment_weight_norm
-          variable: sentiment_weight_norm
-        - value_selector:
-          - '17774583588430'
-          - length_score
-          variable: length_score
-        - value_selector:
-          - '17774583588430'
-          - weighted_score
-          variable: weighted_score
-        - value_selector:
-          - '17774583588430'
           - sentiment_evidence
           variable: target_sentiment_evidence
         - value_selector:
@@ -2986,10 +2628,6 @@ workflow:
           - '1766746558986'
           - keyword_id
           variable: word_id
-        - value_selector:
-          - '17774583588430'
-          - sentiment_quote
-          variable: sentiment_quote
         - value_selector:
           - '1783000000002'
           - text
