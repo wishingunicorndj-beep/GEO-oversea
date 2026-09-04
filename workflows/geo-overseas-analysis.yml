@@ -1323,13 +1323,7 @@ workflow:
           brand_pattern:
             children: null
             type: string
-          description_text:
-            children: null
-            type: string
           is_top_recommend:
-            children: null
-            type: string
-          length_score:
             children: null
             type: string
           matched_brand:
@@ -1341,39 +1335,12 @@ workflow:
           rank_type:
             children: null
             type: string
-          sentiment_label:
-            children: null
-            type: string
-          sentiment_quote:
-            children: null
-            type: string
-          sentiment_reasoning:
-            children: null
-            type: string
-          sentiment_score:
-            children: null
-            type: string
           sentiment_evidence:
             children: null
             type: array[object]
-          sentiment_weight_norm:
-            children: null
-            type: string
-          sentiment_weight_score:
-            children: null
-            type: string
-          summary:
-            children: null
-            type: string
           target_evidence_spans:
             children: null
             type: string
-          weighted_score:
-            children: null
-            type: string
-          word_cloud_tags:
-            children: null
-            type: array[string]
         selected: false
         title: 4a-3.目标品牌格式处理
         type: code
@@ -1451,7 +1418,7 @@ workflow:
             \ brand/company/product/platform。entity_type 合法、不是目标品牌且存在字面证据，并不代表一定是竞品；还必须判断其与目标品牌是否同类、是否能够直接替代。只有满足同类性和可替代性的候选，is_competitor\
             \ 才能为 true 并进入最终输出；无法确认时保守排除。\n═══ 2. 目标排除 ═══\n- 排除目标品牌及其全部 aliases；目标\
             \ aliases 永不作为竞品单独输出。使用完整词法边界，禁止用子串合并短名或通用名。\n\n═══ 3. 配置竞品 vs 发现竞品 ═══\n\
-            - 只分析 comps_list 中预先配置的竞品；回答中额外出现的其他品牌本期不输出，也不标记为 discovered_competitor。\n\
+            - 回答中出现的有效、与目标品牌同类且可替代的非目标品牌都用于品牌提及和排名；只有 comps_list 中预先配置的竞品才生成 sentiment_evidence，不输出 discovered_competitor。\n\
             - 本节点及下游都不得输出配置中未被 answer_raw 提及的竞品；严禁为缺失配置项补默认行、空对象或 brand_detected=false\
             \ 对象。\n\n═══ 4. 归一 ═══\n需要优先且严格使用{{#1766746558986.comps_list#}}里面的竞品品牌名称进行归一，但该列表只做归一，绝不构成提及或排名证据。\n\
             - name：正文中完整可见的“品牌 + 型号/产品名”，有型号时不得只写核心品牌。\n- brand：规范核心品牌，归一后的品牌名称。\n\
@@ -1466,10 +1433,7 @@ workflow:
             \ rank_pos>0。若回答给出 1.、2)、#3、No.4、4th、Rank 列等显式序号，优先使用这些序号确定顺序；若没有显式序号，则按全部规范品牌在\
             \ answer_raw 第一次提及的物理顺序依次排名。\n- rank_type：有显式序号时为 explicit；无序号但按首次提及顺序赋值时为\
             \ mention_order。禁止输出 mentioned_not_ranked、implicit、none 或 rank_pos=0 的竞品对象。\n\
-            \n═══ 6. 情感 ═══\n- sentiment_score 范围 -1.000~1.000，三位小数。\n- 榜单极性感知：正向推荐榜单前位可给强正分；负面/避雷/风险/最差榜单前位必须为负面，不得强制正向；纯比较无价值判断可为\
-            \ neutral。仅正向推荐榜单 1–3 名要求 sentiment_score >= 0.900。\n- sentiment_emotion_score（整数）：3=完全正向，2=总体正向有轻微保留，1=中性，0=明确负向。\n\
-            - 隐式（非显式排名）时：weighted_score = 该竞品描述词数 / 回答中所有品牌描述词数 × 0.50 + sentiment_emotion_score/3.0\
-            \ × 0.50。\n- sentiment_quote 逐字复制自正文。\n- sentiment_evidence 只保留明确正向或负向评价的原文证据，source 固定为 configured_competitor；每个竞品正向最多10条、负向最多10条，超出时按原文出现顺序保留前10条；客观描述、单纯提及不生成证据。\n\n═══ 7. 判例 ═══\n- “Peec AI leads;\
+            \n═══ 6. 情感证据 ═══\n- 仅对 comps_list 中配置竞品提取 sentiment_evidence；未配置品牌不提取情感证据。\n- 只有品牌与正向或负向评价明确绑定时才生成证据；客观描述、单纯提及不生成。\n- 每个品牌正向最多10条、负向最多10条，超出按原文出现顺序保留前10条。\n- 每条证据包含 brand、source、sentiment、evidence_text、reason；source 固定为 configured_competitor。\n\n═══ 7. 判例 ═══\n- “Peec AI leads;\
             \ Peec has strong analytics”，配置为同一实体 → 一个 Peec 竞品，两条 evidence_spans。\n\
             - “Bluefish AI vs Bluefish”，配置为同一实体 → 一个 Bluefish 实体。\n- 目标为 Profound，回答出现\
             \ ChatGPT、Google、arXiv → ChatGPT 和 Google 属于被监测平台或搜索生态，arXiv 属于学术来源，均不能替代\
@@ -1509,11 +1473,11 @@ workflow:
 
             # 任务
 
-            1. 只分析 comps_list 中预先配置的竞品；回答中额外出现、但未配置的其他品牌一律不输出，也不标记为 discovered_competitor。引用来源、认证/检测机构、芯片厂、上下游供应商、零部件和产品/电芯型号不得输出。
+            1. 提取回答中出现的有效非目标品牌，用于品牌提及和排名；引用来源、认证/检测机构、芯片厂、上下游供应商、零部件和产品/电芯型号不得输出。只有 comps_list 中的配置竞品才进入情感证据分析。
 
             2. 不输出配置中未被回答提及的竞品；下游也不得补默认行。
 
-            3. 先拆分所有逗号、分号、换行或or连接的已配置竞品，再为每个候选输出name、brand、entity_type、is_competitor、comparability_reason、rank_pos、rank_type、sentiment_score、sentiment_label、sentiment_reasoning、sentiment_quote、sentiment_evidence、sentiment_emotion_score、weighted_score、matched_alias、evidence_spans。
+            3. 先拆分所有逗号、分号、换行或or连接的品牌串，再为每个有效品牌输出name、brand、entity_type、is_competitor、comparability_reason、rank_pos、rank_type、matched_alias、evidence_spans；只有配置竞品额外输出sentiment_evidence。
 
             4. 只有同类性和直接可替代性均成立时 is_competitor 才能为 true 并输出；entity_type 合法或有字面证据不等于竞品。同一规范实体只输出一次并合并 aliases；配置竞品使用 comps_list 中的规范名称。
 
@@ -1825,12 +1789,11 @@ workflow:
             :..}，不要解释或 Markdown 围栏）。每个有效引用 URL 对应一个对象，字段如下：\n{\n  \"media_name\":\
             \ \"稳定媒体名\",\n  \"url\": \"原始文章URL\",\n  \"host\": \"归一后的host\",\n  \"\
             title\": \"原始文章标题\",\n  \"media_type\": \"Earned Media\",\n  \"media_level\": \"L2\"\
-            ,\n  \"is_negative_media\": \"false\"\n}\n字段类型（务必精确）：\n- media_name：字符串，来自稳定站点/host\
+}\n字段类型（务必精确）：\n- media_name：字符串，来自稳定站点/host\
             \ 身份，不使用随页面变化的文章标题；\n- url：原始有效文章 URL（保留原样）；\n- host：归一后的 host 字符串；\n\
             - title：原始文章标题，不得包含文章摘要、正文、分析或换行内容。清理连续空白后最长输出 200 个字符；超过 200 个字符时截断至 200 个字符。\n\
             - media_type：字符串枚举 Owned / Competition / Social / Earned Media / PRWire / Institutions / Other；\n- media_level：字符串枚举 \"L1\" |\
-            \ \"L2\" | \"L3\" | \"L4\"（必须是字符串，不能是数字）；\n- is_negative_media：字符串 \"\
-            true\" | \"false\"（必须是字符串，不能是 JSON boolean）。\n无有效引用 URL 时返回 []。\n\n═══\
+            \ \"L2\" | \"L3\" | \"L4\"（必须是字符串，不能是数字）。\n无有效引用 URL 时返回 []。\n\n═══\
             \ media_type 七类枚举 ═══\nOwned=本品官网；Competition=已配置竞品官网；Social=社交/社区/用户评论平台；Earned Media=第三方编辑媒体；PRWire=新闻稿发布平台；Institutions=政府/教育/非营利/公共机构；Other=其他。\n\
             严禁输出旧版数字分类或其他自定义分类字符串。\n\
             \ 等描述性字符串。不确定时输出 8。\n\n═══ media_level 层级（L1–L4） ═══\n- L1：权威通讯社、政府、学术、顶级科研/公共机构（Reuters、AP、.gov、.edu、arxiv、NIH）。\n\
@@ -1839,16 +1802,14 @@ workflow:
             ═══ URL 与 host 归一 ═══\n- 保留原始文章 URL 与标题；忽略 Google favicon URL、图片/CDN 资源、追踪包装\
             \ URL。\n- host 归一：去协议、去路径/查询/fragment、小写、去端口、去 www.，保留有意义子域。\n- 官网匹配：host\
             \ 等于配置域名或是其子域（host == domain 或 host 以 \".\" + domain 结尾）即视为匹配。\n- 同一归一\
-            \ host 在本次输出中必须具有一致的 media_name、media_type、media_level、is_negative_media。\n\
+            \ host 在本次输出中必须具有一致的 media_name、media_type、media_level。\n\
             \n═══ 官网覆盖 ═══\n- host 匹配目标 brand_domain（或其子域）→ media_type=Owned。\n- host\
             \ 匹配 comps_list 中某竞品明确提供的官网域名（或其子域）→ media_type=Competition。\n- 页面仅提及竞品不足以判为竞品官网；不确定时不要臆断\
-            \ Owned 或 Competition；不使用不存在的 is_competitor 字段。\n\n═══ is_negative_media ═══\n- 仅当站点本身主要承载投诉、诈骗曝光、负面维权内容时为\
-            \ \"true\"（如 BBB 投诉页、Ripoff Report、PissedConsumer、ComplaintsBoard、ConsumerAffairs）。\n\
-            - 普通媒体上出现负面文章不代表该站点是负面媒体。\n\n═══ 参考字典与 fallback ═══\n- Reuters/AP → media_type=3,\
+            \ Owned 或 Competition；不使用不存在的 is_competitor 字段。\n\n═══ 参考字典与 fallback ═══\n- Reuters/AP → media_type=3,\
             \ L1；.gov/.edu/arxiv.org/NIH → media_type=7, L1；Search Engine Journal/TechCrunch\
             \ 等行业编辑媒体 → media_type=3, L2；Reddit/YouTube → media_type=4, L3；Wikipedia\
             \ → media_type=6, L3；BBB/Ripoff Report/PissedConsumer/ComplaintsBoard\
-            \ → media_type=4, L4, is_negative_media=\"true\"；非目标/竞品的普通企业官网 → media_type=5。\n\
+            \ → media_type=4, L4；非目标/竞品的普通企业官网 → media_type=5。\n\
             - 未知 host：仅依据可靠的域名/后缀特征分类，不确定则 media_type=8，media_level 保守取 L3 或 L4；禁止仅凭\
             \ host 含 times/post/tech 等子串就机械判为权威媒体。\n\n═══ 判例 ═══\n- brand_domain=youmind.ai\
             \ 时，youmind.ai/overview 恒为 media_type=1，不在 1/2/5 间漂移；若配置为某竞品官网域名则恒为 2。\n\
@@ -1882,7 +1843,7 @@ workflow:
 
             - 每个有效文章 URL 一个对象，包含 url、host、title、media_name；
 
-            - media_type 为七类字符串之一；media_level 为字符串 L1–L4；is_negative_media 为字符串 "true"/"false"；
+            - media_type 为七类字符串之一；media_level 为字符串 L1–L4；
 
             - 不使用不存在的 is_competitor；无有效引用 URL 时返回 []。'
         selected: false
@@ -2083,18 +2044,17 @@ workflow:
           \            continue\n\n        cand = (\n            candidate_by_url.get(url)\n\
           \            or candidate_by_host.get(host)\n            or {}\n       \
           \ )\n\n        supplied_name = candidate_name(cand)\n\n        if host in\
-          \ host_cache:\n            name, media_type, level, negative = host_cache[host]\n\
+          \ host_cache:\n            name, media_type, level = host_cache[host]\n\
           \n        elif brand_host and domain_match(host, brand_host):\n        \
           \    name = supplied_name or stable_fallback(brand_host)\n            media_type\
-          \ = 1\n            level = \"L2\"\n            negative = \"false\"\n\n\
+          \ = 1\n            level = \"L2\"\n\n\
           \        else:\n            competitor = next(\n                (\n    \
           \                (domain, name)\n                    for domain, name in\
           \ comp_hosts.items()\n                    if domain_match(host, domain)\n\
           \                ),\n                None,\n            )\n\n          \
           \  if competitor:\n                name = competitor[1]\n              \
-          \  media_type = 2\n                level = \"L2\"\n                negative\
-          \ = \"false\"\n\n            elif host in KNOWN:\n                name,\
-          \ media_type, level, negative = KNOWN[host]\n\n            elif (\n    \
+          \  media_type = 2\n                level = \"L2\"\n\n            elif host in KNOWN:\n                name,\
+          \ media_type, level = KNOWN[host]\n\n            elif (\n    \
           \            host.endswith(\".gov\")\n                or host.endswith(\"\
           .edu\")\n                or host == \"arxiv.org\"\n                or host.endswith(\"\
           .wikipedia.org\")\n            ):\n                name = supplied_name\
@@ -2102,12 +2062,10 @@ workflow:
           \ host == \"wikipedia.org\"\n                    or host.endswith(\".wikipedia.org\"\
           )\n                ):\n                    media_type = 6\n            \
           \        level = \"L3\"\n                else:\n                    media_type\
-          \ = 7\n                    level = \"L1\"\n\n                negative =\
-          \ \"false\"\n\n            elif any(\n                marker in host\n \
+          \ = 7\n                    level = \"L1\"\n\n            elif any(\n                marker in host\n \
           \               for marker in NEGATIVE_HOST_MARKERS\n            ):\n  \
           \              name = supplied_name or stable_fallback(host)\n         \
-          \       media_type = 4\n                level = \"L4\"\n               \
-          \ negative = \"true\"\n\n            else:\n                name = supplied_name\
+          \       media_type = 4\n                level = \"L4\"\n\n            else:\n                name = supplied_name\
           \ or stable_fallback(host)\n\n                media_type = normalize_media_type(\n\
           \                    cand.get(\"media_type\")\n                )\n\n   \
           \             # 未匹配 brand_domain/comps_list 时，\n                # 不允许直接采信\
@@ -2116,18 +2074,18 @@ workflow:
           \        cand.get(\"media_level\") or \"L3\"\n                ).strip().upper()\n\
           \n                if level not in ALLOWED_LEVELS:\n                    level\
           \ = \"L3\"\n\n                negative_value = str(\n                  \
-          \  cand.get(\"is_negative_media\", \"\")\n                ).strip().lower()\n\
+          \  \"\"\n                ).strip().lower()\n\
           \n                negative = (\n                    \"true\"\n         \
           \           if negative_value in {\"true\", \"1\", \"yes\"}\n          \
           \          else \"false\"\n                )\n\n        media_type = normalize_media_type(media_type)\n        media_type = {1: \"Owned\", 2: \"Competition\", 3: \"Earned Media\", 4: \"Social\", 5: \"Other\", 6: \"Institutions\", 7: \"Institutions\", 8: \"Other\"}.get(media_type, media_type if media_type in {\"Owned\", \"Competition\", \"Social\", \"Earned Media\", \"PRWire\", \"Institutions\", \"Other\"} else \"Other\")\n\
           \n        host_cache[host] = (\n            name,\n            media_type,\n\
-          \            level,\n            negative,\n        )\n\n        title =\
+          \            level,\n        )\n\n        title =\
           \ clean_title(\n            ref.get(\"title\")\n            or title_by_url.get(url)\n\
           \            or candidate_title(cand),\n            fallback=name,\n   \
           \     )\n\n        rows.append({\n            \"media_name\": name,\n  \
           \          \"media_type\": media_type,\n            \"media_level\": level,\n\
           \            \"url\": url,\n            \"host\": host,\n            \"\
-          title\": title,\n            \"is_negative_media\": negative,\n        })\n\
+          title\": title,\n        })\n\
           \n    is_comp = str(\n        question_type or \"\"\n    ).strip().upper()\
           \ in {\"4\", \"4C\", \"4C-2\"}\n\n    # 保留原代码的输出约定：\n    # competitor_media\
           \ 始终返回 rows；\n    # 竞品问题时 brand_media 为空。\n    return {\n        \"brand_media\"\
@@ -2638,7 +2596,7 @@ workflow:
           \ = []\n    candidates = {}\n\n    def add_candidate(display, config=None,\
           \ item=None, hits=None):\n        item = item if isinstance(item, dict)\
           \ else {}\n        hits = hits or []\n        ckey = canonical(config[\"\
-          display_name\"] if config else display)\n        if config is None or not ckey or ckey in\
+          display_name\"] if config else display)\n        if not ckey or ckey in\
           \ target_keys:\n            return\n        key = \"cfg:\" + str(config[\"\
           index\"]) if config else \"new:\" + ckey\n        record = {\n         \
           \   \"display\": config[\"display_name\"] if config else display,\n    \
@@ -2704,7 +2662,7 @@ workflow:
           ) or legacy.get(\"sentiment_label\") or \"neutral\"),\n            \"sentiment_reasoning\"\
           : str(item.get(\"sentiment_reasoning\") or legacy.get(\"sentiment_reasoning\"\
           ) or \"\"),\n            \"sentiment_quote\": str(item.get(\"sentiment_quote\"\
-          ) or (hits[0][\"actual\"] if hits else \"\")),\n            \"sentiment_evidence\": normalize_sentiment_evidence(item.get(\"sentiment_evidence\", []), answer, brand_value),\n            \"sentiment_weight_score\"\
+          ) or (hits[0][\"actual\"] if hits else \"\")),\n            \"sentiment_evidence\": normalize_sentiment_evidence(item.get(\"sentiment_evidence\", []), answer, brand_value) if config else [],\n            \"sentiment_weight_score\"\
           : emotion,\n            \"sentiment_weight_norm\": emotion_norm,\n     \
           \       \"length_score\": length_score, \"weighted_score\": round(weighted,\
           \ 3),\n            \"description_text\": description,\n        })\n\n  \
@@ -2799,9 +2757,7 @@ workflow:
           ) or c.get(\"is_mentioned\")):\n            competitor_mentions.append({\n\
           \                \"name\": str(c.get(\"brand_name\", c.get(\"name\",\"\"\
           ))),\n                \"brand\": str(c.get(\"brand\",\"\")),\n         \
-          \       \"rank\": c.get(\"rank_pos\", 0),\n                \"sentiment_score\"\
-          : str(c.get(\"sentiment_score\",\"0.000\")),\n                \"sentiment_label\"\
-          : str(c.get(\"sentiment_label\",\"neutral\")),\n                \"sentiment_evidence\": c.get(\"sentiment_evidence\", []),\n            })\n    try:\n\
+          \       \"rank\": c.get(\"rank_pos\", 0),\n            })\n    try:\n\
           \        target_rank_num = int(float(str(rank_pos or \"0\")))\n    except\
           \ Exception:\n        target_rank_num = 0\n    detected_target = str(brand_detected\
           \ or \"false\").lower() == \"true\"\n    try:\n        resolved_rank_num\
@@ -2839,20 +2795,12 @@ workflow:
           ),\n        \"matched_brand\": str(matched_brand or \"\"),\n        \"is_ranking\"\
           : ir,\n        \"rank_pos\": str(rank_pos or \"0\"),\n        \"is_top_recommend\"\
           : str(is_top_recommend or \"false\"),\n        \"brand_pattern\": str(brand_pattern\
-          \ or \"P-单一实体\"),\n        \"summary\": str(summary or \"\"),\n        \"\
-          word_cloud_tags\": word_cloud_tags,\n        \"sentiment_score\": str(sentiment_score\
-          \ or \"0.000\"),\n        \"sentiment_label\": str(sentiment_label or \"\
-          neutral\"),\n        \"sentiment_reasoning\": str(sentiment_reasoning or\
-          \ \"品牌未被提及\"),\n        \"sentiment_weight_score\": str(sentiment_weight_score\
-          \ or \"0\"),\n        \"sentiment_weight_norm\": str(sentiment_weight_norm\
-          \ or \"0.000\"),\n        \"length_score\": str(length_score or \"0.000\"\
-          ),\n        \"weighted_score\": str(weighted_score or \"0.000\"),\n        \"sentiment_evidence\": (target_sentiment_evidence if isinstance(target_sentiment_evidence, list) else []) + [e for c in competitor_mentions for e in (c.get(\"sentiment_evidence\", []) if isinstance(c.get(\"sentiment_evidence\", []), list) else [])],\n    \
-          \    \"competitor_mentions\": competitor_mentions,\n        \"competitor_pos\"\
+          \ or \"P-单一实体\"),\n        \"sentiment_evidence\": (target_sentiment_evidence if isinstance(target_sentiment_evidence, list) else []) + [e for c in comp_brands if isinstance(c, dict) for e in (c.get(\"sentiment_evidence\", []) if isinstance(c.get(\"sentiment_evidence\", []), list) else [])],\n    \
+          \    \"competitor_mentions\": competitor_mentions,\n        \"competitor_results\": [{k: c.get(k) for k in (\"name\", \"brand\", \"entity_type\", \"is_competitor\", \"comparability_reason\", \"rank_pos\", \"brand_detected\", \"is_top_recommend\", \"matched_alias\", \"evidence_spans\", \"rank_type\")} for c in comp_brands if isinstance(c, dict)],\n        \"competitor_pos\"\
           : competitor_pos,\n        \"competitor_count\": competitor_count,\n   \
           \     \"referenced_urls\": ref_urls,\n        \"company_name\": str(company_name\
           \ or \"\"),\n        \"job_id\": str(job_id or \"\"),\n        \"word_id\"\
-          : str(word_id or \"\"),\n        \"sentiment_quote\": str(sentiment_quote\
-          \ or \"\"),\n        \"answer_zh\": str(answer_zh or \"\"),\n    }\n"
+          : str(word_id or \"\"),\n        \"answer_zh\": str(answer_zh or \"\"),\n    }\n"
         code_language: python3
         desc: Merge three branches + URL extraction + competitor_mentions construction
         outputs:
@@ -2874,6 +2822,9 @@ workflow:
           competitor_mentions:
             children: null
             type: array[object]
+          competitor_results:
+            children: null
+            type: array[object]
           competitor_pos:
             children: null
             type: string
@@ -2886,9 +2837,6 @@ workflow:
           job_id:
             children: null
             type: string
-          length_score:
-            children: null
-            type: string
           matched_brand:
             children: null
             type: string
@@ -2898,36 +2846,9 @@ workflow:
           referenced_urls:
             children: null
             type: array[string]
-          sentiment_label:
-            children: null
-            type: string
-          sentiment_quote:
-            children: null
-            type: string
-          sentiment_reasoning:
-            children: null
-            type: string
-          sentiment_score:
-            children: null
-            type: string
           sentiment_evidence:
             children: null
             type: array[object]
-          sentiment_weight_norm:
-            children: null
-            type: string
-          sentiment_weight_score:
-            children: null
-            type: string
-          summary:
-            children: null
-            type: string
-          weighted_score:
-            children: null
-            type: string
-          word_cloud_tags:
-            children: null
-            type: array[string]
           word_id:
             children: null
             type: string
@@ -3108,10 +3029,6 @@ workflow:
           - is_top_recommend
           variable: is_top_recommend
         - value_selector:
-          - '17774728161280'
-          - sentiment_score
-          variable: sentiment_score
-        - value_selector:
           - '1766746558986'
           - task_id
           variable: task_id
@@ -3129,16 +3046,8 @@ workflow:
           variable: model_id
         - value_selector:
           - '17774728161280'
-          - sentiment_label
-          variable: sentiment_label
-        - value_selector:
-          - '17774728161280'
           - sentiment_evidence
           variable: sentiment_evidence
-        - value_selector:
-          - '17774728161280'
-          - sentiment_reasoning
-          variable: sentiment_reasoning
         - value_selector:
           - '17774728161280'
           - is_ranking
@@ -3165,14 +3074,6 @@ workflow:
           variable: brand_name
         - value_selector:
           - '17774728161280'
-          - summary
-          variable: summary
-        - value_selector:
-          - '17774728161280'
-          - word_cloud_tags
-          variable: key_tags
-        - value_selector:
-          - '17774728161280'
           - matched_brand
           variable: matched_brand
         - value_selector:
@@ -3184,8 +3085,8 @@ workflow:
           - query
           variable: query
         - value_selector:
-          - '1782000000002'
-          - comp_brands
+          - '17774728161280'
+          - competitor_results
           variable: competitor_results
         - value_selector:
           - '1779438503284'
@@ -3207,10 +3108,6 @@ workflow:
           - '1766746558986'
           - keyword_id
           variable: keyword_id
-        - value_selector:
-          - '17774728161280'
-          - sentiment_quote
-          variable: sentiment_quote
         - value_selector:
           - '17774728161280'
           - answer_zh
