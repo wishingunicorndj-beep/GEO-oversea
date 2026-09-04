@@ -350,7 +350,7 @@ workflow:
           -])\",r\"\\1\",value)\n    return value\n\ndef catalog_text(text: Any) ->\
           \ str:\n    \"\"\"证据目录移除图片、URL与强调符，但保留Markdown标题/编号结构供切分。\"\"\"\n    value=html.unescape(str(text\
           \ or \"\"))\n    value=re.sub(r\"!\\[[^\\]]*\\]\\([^)]*\\)\",\"\",value)\n\
-          \    value=re.sub(r\"\\[([^\\]]+)\\]\\([^)]*\\)\",r\"\\1\",value)\n    value=re.sub(r\"\
+          \    def link_label(match):\n        label=str(match.group(1) or \"\").strip()\n        # 纯数字/短横线引用标签不是正文顺位，排名目录中必须删除；完整answer_text仍保留原文。\n        if re.fullmatch(r\"[\\s\\-–—>]*\\d{1,3}[\\s\\-–—>]*\",label):return \"\"\n        return label\n    value=re.sub(r\"\\[([^\\]]+)\\]\\([^)]*\\)\",link_label,value)\n    value=re.sub(r\"\
           https?://[^\\s)]+\",\"\",value)\n    value=re.sub(r\"<[^>]+>\",\"\",value)\n\
           \    value=value.replace(\"```\",\"\").replace(\"**\",\"\").replace(\"__\"\
           ,\"\").replace(\"`\",\"\")\n    value=re.sub(r\"\\\\([.#*+\\-])\",r\"\\\
@@ -783,7 +783,7 @@ workflow:
           \ str)->bool:\n    s=str(name or \"\").strip();low=s.lower().replace(\"\
           \ \",\"\")\n    if re.fullmatch(r\"p\\s*\\d+(?:\\.\\d+)?(?:\\s*[/、-]\\s*p?\\\
           d+(?:\\.\\d+)?)*\",s,flags=re.I):return True\n    if any(x in low for x\
-          \ in FORBIDDEN_HINTS):return True\n    if norm(s) in {norm(x) for x in (\"\
+          \ in FORBIDDEN_HINTS):return True\n    # 风格、场景、预算分类标题不是品牌或独立产品，不能占据排名名次。\n    scene_only=(\"干净少年\",\"白衬衫感\",\"成熟商务\",\"职场商务\",\"野性痞帅\",\"撩人约会\",\"约会香\",\"小众高级\",\"高性价比\",\"预算有限\",\"学生党\",\"雅致清冷\",\"书卷感\")\n    if any(x in low for x in scene_only):return True\n    if norm(s) in {norm(x) for x in (\"\
           LOGO设计\",\"商标设计\",\"口才培训\",\"专利申报服务\",\"线上自助申请渠道\")}:return True\n    return\
           \ False\ndef safe_tags(value):\n    if isinstance(value,str):value=re.split(r\"\
           [,，、;；|]+\",value)\n    if not isinstance(value,list):return []\n    out=[]\n\
@@ -793,12 +793,11 @@ workflow:
           \ in {\"false\",\"0\",\"no\",\"否\"})\ndef as_bool(value)->bool:\n    if\
           \ isinstance(value,bool):return value\n    if isinstance(value,(int,float)):return\
           \ value!=0\n    return str(value or \"\").strip().lower() in {\"true\",\"\
-          1\",\"yes\",\"是\"}\ndef target_alias_match(alias: str, name: str)->bool:\n\
-          \    \"\"\"目标实体匹配必须是精确或足够完整的产品/品牌别名；拒绝‘360’等歧义短词的子串命中。\"\"\"\n    a=norm(alias);\
+          1\",\"yes\",\"是\"}\nTARGET_VARIANT_SUFFIXES=(\"男士淡香水\",\"女士淡香水\",\"男士淡香精\",\"女士淡香精\",\"淡香水\",\"浓香水\",\"淡香精\",\"香精版\",\"男士\",\"女士\",\"香水\",\"系列\",\"经典\",\"同名\",\"parfum\",\"edt\",\"edp\")\ndef target_core(value: Any)->str:\n    raw=str(value or \"\").lower()\n    cjk=\"\".join(re.findall(r\"[\u4e00-\u9fff]+\",raw))\n    key=cjk or norm(raw)\n    changed=True\n    while changed:\n        changed=False\n        for suffix in sorted(TARGET_VARIANT_SUFFIXES,key=len,reverse=True):\n            token=norm(suffix)\n            if token and key.endswith(token) and len(key)>len(token)+1:\n                key=key[:-len(token)];changed=True;break\n    return key\ndef target_alias_match(alias: str, name: str)->bool:\n\
+          \    \"\"\"完整名称或去除人群、浓度、版本后的同产品核心才算目标；兄弟产品核心不同不会命中。\"\"\"\n    a=norm(alias);\
           \ n=norm(name)\n    if not a or not n:return False\n    if a==n:return True\n\
-          \    if len(a)<4:return False\n    # 允许声明别名与同一产品的常见规格/人群后缀互相命中（如“香奈儿蔚蓝男士”\n\
-          \    # 与“香奈儿蔚蓝”），但不允许把“360安全浏览器”扩成兄弟产品“360安全浏览器X”。\n    qualifiers=(\"男士\"\
-          ,\"女士\",\"香水\",\"系列\",\"经典\",\"同名\",\"edt\",\"edp\")\n    if a in n:\n \
+          \    ac=target_core(alias);nc=target_core(name)\n    if len(ac)>=4 and ac==nc:return True\n\
+          \    if len(a)<4:return False\n    qualifiers=tuple(norm(x) for x in TARGET_VARIANT_SUFFIXES)\n    if a in n:\n \
           \       return n[len(a):] in qualifiers\n    if n in a:\n        return\
           \ a[len(n):] in qualifiers\n    return False\ndef explicit_position(item):\n\
           \    line=str(item.get(\"line_text\") or item.get(\"text\") or \"\")\n \
@@ -811,10 +810,9 @@ workflow:
           \  chinese={\"一\":1,\"二\":2,\"三\":3,\"四\":4,\"五\":5,\"六\":6,\"七\":7,\"八\"\
           :8,\"九\":9,\"十\":10}\n    m=re.match(r\"^([一二三四五六七八九十])[、.．:：]\",prefix)\n\
           \    return chinese.get(m.group(1),0) if m else 0\ndef product_key(value:\
-          \ Any)->str:\n    \"\"\"同一产品的括号说明、英文香名和EDT/EDP后缀不应生成重复竞品。\n    不删除核心中文产品名，避免把兄弟产品合并。\"\
-          \"\"\n    s=str(value or \"\")\n    s=re.sub(r\"[（(][^）)]*[）)]\",\"\",s)\n\
-          \    s=re.sub(r\"(?i)(?:^|\\s)(?:edt|edp)(?:\\s|$)\",\" \",s)\n    return\
-          \ norm(s)\n\nTARGET_QUERY_NOISE=(\"推荐\",\"排行榜\",\"排名\",\"哪个好\",\"哪家\",\"\
+          \ Any,parent: Any=\"\")->str:\n    \"\"\"同一母品牌下按产品核心去重；浓度、版本、人群与括号英文名不生成新排名实体。\"\
+          \"\"\n    key=target_core(value)\n    parent_key=target_core(parent)\n    if parent_key and key and parent_key.endswith(key):key=parent_key\n    elif parent_key and key and not key.startswith(parent_key):key=parent_key+key\n    return\
+          \ key\n\nTARGET_QUERY_NOISE=(\"推荐\",\"排行榜\",\"排名\",\"哪个好\",\"哪家\",\"\
           怎么样\",\"怎么选\",\"价格\",\"多少钱\",\"官网\",\"品牌\",\"公司\",\"厂家\",\"服务商\",\"男士\"\
           ,\"女士\",\"香水\",\"产品\",\"测评\",\"评测\",\"好用吗\",\"值得买吗\",\"选择\",\"分级\",\"哪款\"\
           )\n\ndef derive_target_terms(query: Any, answer_text: Any, aliases: list)->list:\n\
@@ -964,7 +962,7 @@ workflow:
           local_position\",0))\n        except Exception:local=0\n        # 预算参考、送礼公式、快速选型/提醒等后置板块只重复已有产品，\n\
           \        # 不能把其中首次出现的名称升级成新的排名实体（例如“万宝龙传奇”）。\n        anchor_heading=str(smap[sid].get(\"\
           context_heading\") or \"\")\n        supplement_heading=bool(re.search(r\"\
-          预算参考|预算档|送礼小建议|实用小贴士|快速选型|选购快速建议|重要提醒|小提示|避雷|总结|结论\",anchor_heading))\n\
+          预算参考|预算档|送礼.*建议|(?:快速|选购).*(?:选型|选择|速查|口诀|抄作业)|(?:小|实用|选香|挑选).*贴士|提醒|Tips|避雷|总结|结论\",anchor_heading,re.I))\n\
           \        if supplement_heading and membership==\"ordered_choice\":\n   \
           \         membership=\"comparison_only\";role=\"comparison\";explicit=0;local=0\n\
           \        entity_names=[surface,canonical,parent]\n        primary_names=[surface,canonical]\n\
@@ -1073,11 +1071,11 @@ workflow:
           \                                     \"sentence_ids\":[subject_sid],\"\
           _explicit_rank\":0,\"_declared_rank\":0,\n                             \
           \          \"_order\":order.get(subject_sid,99999),\"_offset\":0})\n   \
-          \ # 公司/品牌按主体去重；可独立选择的产品按标准产品名去重，避免P5兄弟产品被母品牌合并。\n    candidates.sort(key=lambda\
+          \ # 公司/品牌按主体去重；可独立选择的产品按标准产品名去重，避免P5兄弟产品被母品牌合并。\n    # 用正文场景标题重建模块骨架，避免LLM把“少年/商务/约会/小众”等平行模块全部写成M1。\n    supplement_re=re.compile(r\"预算参考|预算档|送礼.*建议|(?:快速|选购).*(?:选型|选择|速查|口诀|抄作业)|(?:小|实用|选香|挑选).*贴士|提醒|Tips|避雷|总结|结论\",re.I)\n    module_cues=(\"推荐\",\"大牌\",\"小众\",\"经典\",\"商务\",\"少年\",\"约会\",\"性价比\",\"风格\",\"场景\",\"顶流\",\"高级\",\"稳重\",\"清爽\",\"个性\")\n    candidate_names=[str(n) for e in candidates for n in (e.get(\"surface\",\"\"),e.get(\"canonical_name\",\"\")) if len(norm(n))>=2]\n    module_heads=[]\n    for hs,hitem in smap.items():\n        htext=str(hitem.get(\"text\") or \"\")\n        if str(hitem.get(\"block_type\") or \"\")!=\"heading\" or supplement_re.search(htext):continue\n        hm=re.match(r\"^\\s*(#{1,6})\",htext);level=len(hm.group(1)) if hm else 0\n        if level<2 or not any(cue in htext for cue in module_cues):continue\n        if any(contains(name,htext) for name in candidate_names):continue\n        module_heads.append((order.get(hs,99999),hs,level))\n    if module_heads:\n        for e in candidates:\n            anchor_order=order.get(str(e.get(\"rank_anchor_sentence_id\") or \"\"),99999)\n            prior=[row for row in module_heads if row[0]<=anchor_order]\n            if prior:e[\"module_id\"]=\"AUTO_\"+max(prior,key=lambda row:row[0])[1]\n        if len({e.get(\"module_id\") for e in candidates if str(e.get(\"module_id\") or \"\").startswith(\"AUTO_\")})>=2:structure=\"parallel_modules\"\n    candidates.sort(key=lambda\
           \ x:(x[\"_order\"],x[\"_offset\"]))\n    unique=[];seen=set()\n    for e\
           \ in candidates:\n        module=str(e.get(\"module_id\") or \"M1\")\n \
           \       if e.get(\"entity_type\")==\"independent_product\":key=\"product:\"\
-          +product_key(e.get(\"canonical_name\") or e.get(\"surface\"))+\":\"+module\n\
+          +product_key(e.get(\"canonical_name\") or e.get(\"surface\"),e.get(\"parent_brand\"))+\":\"+module\n\
           \        else:key=\"entity:\"+norm(e.get(\"parent_brand\") or e.get(\"canonical_name\"\
           ))+\":\"+module\n        if not key or key in seen:continue\n        seen.add(key);unique.append(e)\n\
           \    # 非“核心对比”结构中，若产品只在其他实体描述里的比较宾语位置出现，确定性降级为comparison_only。\n    # 例如“360极速X内存优化比老360安全浏览器好”不能把360安全浏览器变成独立推荐项。\n\
@@ -1209,7 +1207,7 @@ workflow:
           ]=0;e[\"rank_position\"]=0\n    # 同一实体跨平行模块出现时合并为一个业务实体，并保留最优有效模块内排名。\n\
           \    merged=[];merged_by_key={}\n    for e in unique:\n        if e.get(\"\
           entity_type\")==\"independent_product\":logical=\"product:\"+product_key(e.get(\"\
-          canonical_name\") or e.get(\"surface\"))\n        else:logical=\"entity:\"\
+          canonical_name\") or e.get(\"surface\"),e.get(\"parent_brand\"))\n        else:logical=\"entity:\"\
           +norm(e.get(\"parent_brand\") or e.get(\"canonical_name\"))\n        old=merged_by_key.get(logical)\n\
           \        if not old:\n            merged_by_key[logical]=e;merged.append(e);continue\n\
           \        old_rank=int(old.get(\"rank_position\",0) or 0);new_rank=int(e.get(\"\
@@ -1555,11 +1553,10 @@ workflow:
           \").lower())\ndef contains(a: str,t: str)->bool:\n    a=str(a or \"\").strip();t=str(t\
           \ or \"\")\n    if not a:return False\n    if re.fullmatch(r\"[A-Za-z0-9\
           \ ._+&-]+\",a):return re.search(r\"(?<![A-Za-z0-9])\"+re.escape(a)+r\"(?![A-Za-z0-9])\"\
-          ,t,flags=re.I) is not None\n    return norm(a) in norm(t)\ndef target_alias_match(alias:\
+          ,t,flags=re.I) is not None\n    return norm(a) in norm(t)\nTARGET_VARIANT_SUFFIXES=(\"男士淡香水\",\"女士淡香水\",\"男士淡香精\",\"女士淡香精\",\"淡香水\",\"浓香水\",\"淡香精\",\"香精版\",\"男士\",\"女士\",\"香水\",\"系列\",\"经典\",\"同名\",\"parfum\",\"edt\",\"edp\")\ndef target_core(v: Any)->str:\n    raw=str(v or \"\").lower();cjk=\"\".join(re.findall(r\"[\\u4e00-\\u9fff]+\",raw));key=cjk or norm(raw)\n    changed=True\n    while changed:\n        changed=False\n        for suffix in sorted(TARGET_VARIANT_SUFFIXES,key=len,reverse=True):\n            token=norm(suffix)\n            if token and key.endswith(token) and len(key)>len(token)+1:key=key[:-len(token)];changed=True;break\n    return key\ndef target_alias_match(alias:\
           \ str,name: str)->bool:\n    a=norm(alias);n=norm(name)\n    if not a or\
-          \ not n:return False\n    if a==n:return True\n    if len(a)<4:return False\n\
-          \    qualifiers=(\"男士\",\"女士\",\"香水\",\"系列\",\"经典\",\"同名\",\"edt\",\"edp\"\
-          )\n    if a in n:return n[len(a):] in qualifiers\n    if n in a:return a[len(n):]\
+          \ not n:return False\n    if a==n:return True\n    ac=target_core(alias);nc=target_core(name)\n    if len(ac)>=4 and ac==nc:return True\n    if len(a)<4:return False\n\
+          \    qualifiers=tuple(norm(x) for x in TARGET_VARIANT_SUFFIXES)\n    if a in n:return n[len(a):] in qualifiers\n    if n in a:return a[len(n):]\
           \ in qualifiers\n    return False\ndef product_norm(v: Any)->str:\n    \"\
           \"\"P5产品同粒度校验：忽略括号英文名及EDT/EDP规格后比较核心名。\"\"\"\n    s=re.sub(r\"[（(][^）)]*[）)]\"\
           , \"\", str(v or \"\"))\n    s=re.sub(r\"(?i)(?:^|\\\\s)(?:edt|edp)(?:\\\
@@ -1714,7 +1711,7 @@ workflow:
           \ for a in alias_names if norm(a))\n            if entity_match:\n     \
           \           try:p=int(e.get(\"rank_position\",0))\n                except\
           \ Exception:p=0\n                if p>0:candidates.append(p)\n        if\
-          \ candidates:rank=min(candidates)\n        # 目标未进入entity_inventory时，按目标证据句所在核心表格/列表的物理位置补排。\n\
+          \ candidates:rank=min(candidates)\n        # 即使3v已给正整数，也按同模块首个有效实体锚点复核；错误正排名不能直接穿透到最终结果。\n        checked=[]\n        for target in entities if isinstance(entities,list) else []:\n            if not isinstance(target,dict) or not target.get(\"is_target_entity\") or target.get(\"rank_membership\")!=\"ordered_choice\":continue\n            target_sid=str(target.get(\"rank_anchor_sentence_id\") or \"\");target_order=order.get(target_sid,99999)\n            if target_order>=99999:continue\n            module=str(target.get(\"module_id\") or \"M1\");anchors=[]\n            for peer in entities:\n                if not isinstance(peer,dict) or peer.get(\"rank_membership\")!=\"ordered_choice\" or str(peer.get(\"module_id\") or \"M1\")!=module:continue\n                peer_sid=str(peer.get(\"rank_anchor_sentence_id\") or \"\")\n                if peer_sid in order and order[peer_sid]<=target_order:anchors.append(order[peer_sid])\n            if anchors:checked.append(len(set(anchors)))\n        if checked:rank=min(checked)\n        # 目标未进入entity_inventory时，按目标证据句所在核心表格/列表的物理位置补排。\n\
           \        if rank<=0:\n            anchor_candidates=[]\n            for\
           \ sid in list(dict.fromkeys(llm_evidence_ids+direct_ids)):\n           \
           \     item=smap.get(sid,{})\n                line=\" \".join(str(item.get(k)\
