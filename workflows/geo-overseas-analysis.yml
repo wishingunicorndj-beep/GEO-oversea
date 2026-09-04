@@ -1303,13 +1303,7 @@ workflow:
           \        \"rank_pos\": str(rp),\n        \"is_top_recommend\": str(is_top),\n\
           \        \"rank_type\": str(rank_type),\n        \"brand_pattern\": str(bp),\n\
           \        \"brand_mentions\": str(brand_mentions_num),\n        \"target_evidence_spans\"\
-          : json.dumps(evidence_list, ensure_ascii=False),\n        \"sentiment_score\"\
-          : f\"{ss:.3f}\",\n        \"sentiment_label\": str(sl),\n        \"sentiment_reasoning\"\
-          : str(sr),\n        \"sentiment_quote\": str(sq),\n        \"sentiment_weight_score\"\
-          : str(sw),\n        \"sentiment_weight_norm\": f\"{sw_norm:.3f}\",\n   \
-          \     \"length_score\": f\"{length_score:.3f}\",\n        \"weighted_score\"\
-          : f\"{weighted_score:.3f}\",\n        \"description_text\": str(desc_text),\n\
-          \        \"summary\": str(summary),\n        \"word_cloud_tags\": word_cloud_tags,\n        \"sentiment_evidence\": sentiment_evidence,\n\
+          : json.dumps(evidence_list, ensure_ascii=False),\n        \"sentiment_evidence\": sentiment_evidence,\n\
           \    }\n"
         code_language: python3
         desc: 合并4a-1和4a-2，rank_type四值判断+sentiment_weight_score从4a-1取
