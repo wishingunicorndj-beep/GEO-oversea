@@ -670,6 +670,8 @@ workflow:
 
             - 其他品牌仅作为背景、来源、客户案例、兼容对象或母公司被提及，未参与比较或推荐——这些实体不计入参与实体数。
 
+            - 品牌仅出现在括号举例、such as/e.g.、产品示例或引用来源中，且没有与其他品牌形成比较/推荐关系时，不算排名结构。
+
 
             【规范实体与词法边界规则】
 
@@ -2426,11 +2428,14 @@ workflow:
               for item in comp_brands:
                   if not isinstance(item, dict):
                       continue
-                  if not (item.get("brand_detected") or item.get("is_mentioned")):
+                  display_name = str(item.get("name") or item.get("brand_name") or item.get("brand") or "").strip()
+                  brand_value = str(item.get("brand") or display_name).strip()
+                  detected = item.get("brand_detected") or item.get("is_mentioned") or item.get("rank_pos") or display_name
+                  if not detected or not display_name or not brand_value:
                       continue
                   competitor_mentions.append({
-                      "name": str(item.get("brand_name") or item.get("name") or ""),
-                      "brand": str(item.get("brand") or ""),
+                      "name": display_name,
+                      "brand": brand_value,
                       "rank": item.get("rank_pos", 0),
                   })
               display_order = []
@@ -2459,6 +2464,29 @@ workflow:
                   except Exception:
                       safe_refs = []
               ref_urls = [x.get("url") for x in safe_refs if isinstance(x, dict) and x.get("url")]
+              def result_row(item):
+                  display_name = str(item.get("name") or item.get("brand_name") or item.get("brand") or "").strip()
+                  brand_value = str(item.get("brand") or display_name).strip()
+                  try:
+                      rank_value = int(float(str(item.get("rank_pos") or 0)))
+                  except Exception:
+                      rank_value = 0
+                  spans = item.get("evidence_spans")
+                  if not isinstance(spans, list):
+                      spans = [spans] if spans else []
+                  return {
+                      "name": display_name,
+                      "brand": brand_value,
+                      "entity_type": item.get("entity_type") or "brand",
+                      "is_competitor": True,
+                      "comparability_reason": item.get("comparability_reason") or "",
+                      "rank_pos": rank_value,
+                      "brand_detected": bool(item.get("brand_detected") or item.get("is_mentioned") or display_name),
+                      "is_top_recommend": bool(item.get("is_top_recommend") or (1 <= rank_value <= 3)),
+                      "matched_alias": item.get("matched_alias") or display_name,
+                      "evidence_spans": spans,
+                      "rank_type": item.get("rank_type") or ("mention_order" if rank_value > 0 else "none"),
+                  }
               return {
                   "brand_detected": str(brand_detected or "false"),
                   "matched_brand": str(matched_brand or ""),
@@ -2468,7 +2496,7 @@ workflow:
                   "brand_pattern": str(brand_pattern or "P-单一实体"),
                   "sentiment_evidence": target_sentiment_evidence + [e for item in comp_brands if isinstance(item, dict) for e in (item.get("sentiment_evidence") if isinstance(item.get("sentiment_evidence"), list) else [])],
                   "competitor_mentions": competitor_mentions,
-                  "competitor_results": [{k: item.get(k) for k in ("name", "brand", "entity_type", "is_competitor", "comparability_reason", "rank_pos", "brand_detected", "is_top_recommend", "matched_alias", "evidence_spans", "rank_type")} for item in comp_brands if isinstance(item, dict)],
+                  "competitor_results": [result_row(item) for item in comp_brands if isinstance(item, dict) and (item.get("brand_detected") or item.get("is_mentioned") or item.get("rank_pos") or item.get("name") or item.get("brand_name") or item.get("brand"))],
                   "competitor_pos": competitor_pos,
                   "competitor_count": str(len(competitor_mentions)),
                   "referenced_urls": ref_urls,
