@@ -2490,7 +2490,7 @@ workflow:
               return {
                   "brand_detected": str(brand_detected or "false"),
                   "matched_brand": str(matched_brand or ""),
-                  "is_ranking": "true" if is_ranking and (target_rank > 0 or competitor_mentions) else "false",
+                  "is_ranking": "true" if str(is_ranking or "false").strip().lower() == "true" else "false",
                   "rank_pos": str(rank_pos or "0"),
                   "is_top_recommend": str(is_top_recommend or "false"),
                   "brand_pattern": str(brand_pattern or "P-单一实体"),
