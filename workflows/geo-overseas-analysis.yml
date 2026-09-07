@@ -1609,7 +1609,7 @@ workflow:
           \ (str, int, float)):\n        return str(value).strip()\n\n    return \"\
           \"\n\n\ndef collect_candidates(value):\n    \"\"\"\n    从 llm_output 中递归收集包含\
           \ URL 的媒体对象。\n\n    支持：\n    - JSON 数组\n    - {\"data\": [...]}\n    - {\"\
-          result\": [...]}\n    - {\"brand_media\": [...], \"\": [...]}\n\
+          result\": [...]}\n    - {\"brand_media\": [...]}\n\
           \    \"\"\"\n    obj = parse_any(value)\n    out = []\n\n    def walk(item):\n\
           \        if isinstance(item, list):\n            for child in item:\n  \
           \              walk(child)\n\n        elif isinstance(item, dict):\n   \
@@ -1690,11 +1690,9 @@ workflow:
           \       host = host_of(url)\n            if host and host not in candidate_by_host:\n\
           \                candidate_by_host[host] = item\n\n    # 3. 收集所有允许的媒体 URL\
           \ 来源\n    #\n    # 关键修复：\n    # llm_output 中的 URL 也必须进入 actual，\n    # 否则\
-          \ references/search_results 为空时 rows 永远为空。\n    #\n    # answer_raw 仍然不作为\
-          \ URL 来源，避免正文链接噪声污染。\n    reference_records = extract_records(references)\n\
+          \ references 为空时 rows 为空；媒体分类只处理 references 中的 URL。\n    reference_records = extract_records(references)\n\
           \    search_records = extract_records(search_results)\n    llm_records =\
-          \ candidate_records(candidates)\n\n    actual = (\n        reference_records\n\
-          \        + search_records\n        + llm_records\n    )\n\n    title_by_url\
+          \ candidate_records(candidates)\n\n    actual = reference_records\n\n    title_by_url\
           \ = {}\n\n    for item in search_records:\n        url = clean_url(item.get(\"\
           url\"))\n        if url and item.get(\"title\"):\n            title_by_url[url]\
           \ = item.get(\"title\")\n\n    brand_host = host_of(brand_domain)\n    comp_hosts\
@@ -1727,11 +1725,8 @@ workflow:
           \               for marker in NEGATIVE_HOST_MARKERS\n            ):\n  \
           \              name = supplied_name or stable_fallback(host)\n         \
           \       media_type = 4\n                level = \"L4\"\n\n            else:\n                name = supplied_name\
-          \ or stable_fallback(host)\n\n                media_type = normalize_media_type(\n\
-          \                    cand.get(\"media_type\")\n                )\n\n   \
-          \             # 未匹配 brand_domain/comps_list 时，\n                # 不允许直接采信\
-          \ LLM 输出的品牌/竞品类型。\n                if media_type in (1, 2):\n          \
-          \          media_type = 8\n\n                level = str(\n            \
+          \ or stable_fallback(host)\n\n                media_type = 8\n\
+          \n                level = str(\n            \
           \        cand.get(\"media_level\") or \"L3\"\n                ).strip().upper()\n\
           \n                if level not in ALLOWED_LEVELS:\n                    level\
           \ = \"L3\"\n\n                negative_value = str(\n                  \
