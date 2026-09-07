@@ -1609,7 +1609,7 @@ workflow:
           \ (str, int, float)):\n        return str(value).strip()\n\n    return \"\
           \"\n\n\ndef collect_candidates(value):\n    \"\"\"\n    从 llm_output 中递归收集包含\
           \ URL 的媒体对象。\n\n    支持：\n    - JSON 数组\n    - {\"data\": [...]}\n    - {\"\
-          result\": [...]}\n    - {\"brand_media\": [...], \"competitor_media\": [...]}\n\
+          result\": [...]}\n    - {\"brand_media\": [...], \"\": [...]}\n\
           \    \"\"\"\n    obj = parse_any(value)\n    out = []\n\n    def walk(item):\n\
           \        if isinstance(item, list):\n            for child in item:\n  \
           \              walk(child)\n\n        elif isinstance(item, dict):\n   \
@@ -1748,16 +1748,11 @@ workflow:
           \            \"url\": url,\n            \"host\": host,\n            \"\
           title\": title,\n        })\n\
           \n    is_comp = str(\n        question_type or \"\"\n    ).strip().upper()\
-          \ in {\"4\", \"4C\", \"4C-2\"}\n\n    # 保留原代码的输出约定：\n    # competitor_media\
-          \ 始终返回 rows；\n    # 竞品问题时 brand_media 为空。\n    return {\n        \"brand_media\"\
-          : [] if is_comp else rows,\n        \"competitor_media\": rows,\n    }\n"
+          \ in {\"4\", \"4C\", \"4C-2\"}\n\n    # 所有问题类型统一返回引用媒体，供 brand_media 使用。\n    return {\n        \"brand_media\": rows,\n    }\n"
         code_language: python3
         desc: 媒体数据解析+路径路由
         outputs:
           brand_media:
-            children: null
-            type: array[object]
-          competitor_media:
             children: null
             type: array[object]
         selected: false
@@ -2314,8 +2309,7 @@ workflow:
           weighted_score\", legacy.get(\"weighted_score\", 0)) or 0)\n        except\
           \ Exception:\n            weighted = 0\n        if weighted <= 0:\n    \
           \        weighted = round(length_score * 0.5 + emotion_norm * 0.5, 3)\n\
-          \        rows.append({\n            \"brand_name\": display, \"brand\":\
-          \ brand_value,\n            \"domain\": config[\"domain\"] if config else\
+          \        rows.append({\n            \"brand_name\": display, \"brand\": brand_value, \"is_competitor\": True,\n            \"domain\": config[\"domain\"] if config else\
           \ str(item.get(\"domain\") or legacy.get(\"domain\") or \"\"),\n       \
           \     \"brand_detected\": True, \"rank_pos\": int(rank),\n            \"\
           is_top_recommend\": 1 <= int(rank) <= 3,\n            \"sentiment_score\"\
@@ -2332,6 +2326,7 @@ workflow:
           \ else \"new:\" + canonical(row.get(\"brand_name\"))\n        if key not\
           \ in deduped or (row.get(\"brand_detected\") and not deduped[key].get(\"\
           brand_detected\")):\n            deduped[key] = row\n    result = list(deduped.values())\n\
+          \    for row in result:\n        for field in (\"sentiment_score\", \"sentiment_label\", \"sentiment_reasoning\", \"sentiment_quote\", \"sentiment_weight_score\", \"sentiment_weight_norm\", \"length_score\", \"weighted_score\", \"description_text\"):\n            row.pop(field, None)\n\
           \    result.sort(key=lambda row: (\n        0 if row.get(\"brand_detected\"\
           ) else 1,\n        row.get(\"rank_pos\") or 999999,\n        str(row.get(\"\
           brand_name\", \"\")).casefold(),\n    ))\n    return {\n        \"comp_brands\"\
@@ -2482,7 +2477,7 @@ workflow:
                       "comparability_reason": item.get("comparability_reason") or "",
                       "rank_pos": rank_value,
                       "brand_detected": bool(item.get("brand_detected") or item.get("is_mentioned") or display_name),
-                      "is_top_recommend": bool(item.get("is_top_recommend") or (1 <= rank_value <= 3)),
+                      "is_top_recommend": str(is_ranking or "false").strip().lower() == "true" and 1 <= rank_value <= 3,
                       "matched_alias": item.get("matched_alias") or display_name,
                       "evidence_spans": spans,
                       "rank_type": item.get("rank_type") or ("mention_order" if rank_value > 0 else "none"),
@@ -2728,10 +2723,6 @@ workflow:
           - '17774728161280'
           - answer_zh
           variable: answer_zh
-        - value_selector:
-          - '1779438503284'
-          - competitor_media
-          variable: competitor_media
         selected: false
         title: 结束
         type: end
