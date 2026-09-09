@@ -2110,6 +2110,7 @@ workflow:
               c=str(company_name or '').replace('有限公司','').replace('公司','').strip()
               ts=[x for x in [c,'中国国航','国航','Air China'] if len(x)>=2]
               return {'text':json.dumps([{'keyword':w,'mode':'brand' if any(t in w for t in ts) else 'category','index':i+1} for i,w in enumerate(ws)],ensure_ascii=False)}
+        code_language: python3
         variables:
         - value_selector:
           - '1776153503356'
