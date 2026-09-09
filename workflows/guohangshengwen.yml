@@ -442,42 +442,6 @@ workflow:
       zIndex: 0
     - data:
         isInIteration: false
-        sourceType: code
-        targetType: code
-      id: 1786100000001-source-1791000000001-target
-      selected: false
-      source: '1786100000001'
-      sourceHandle: source
-      target: '1791000000001'
-      targetHandle: target
-      type: custom
-      zIndex: 0
-    - data:
-        isInIteration: false
-        sourceType: code
-        targetType: if-else
-      id: 1791000000001-source-1791000000002-target
-      selected: false
-      source: '1791000000001'
-      sourceHandle: source
-      target: '1791000000002'
-      targetHandle: target
-      type: custom
-      zIndex: 0
-    - data:
-        isInIteration: false
-        sourceType: code
-        targetType: if-else
-      id: 1791000000001-source-1791000000003-target
-      selected: false
-      source: '1791000000001'
-      sourceHandle: source
-      target: '1791000000003'
-      targetHandle: target
-      type: custom
-      zIndex: 0
-    - data:
-        isInIteration: false
         sourceType: if-else
         targetType: iteration
       id: 1791000000002-true-1777400000006-target
@@ -497,6 +461,28 @@ workflow:
       source: '1791000000003'
       sourceHandle: 'true'
       target: '1776938309919'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: if-else
+      id: 1780900000001-source-1791000000002-target
+      source: '1780900000001'
+      sourceHandle: source
+      target: '1791000000002'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: if-else
+      id: 1780900000001-source-1791000000003-target
+      source: '1780900000001'
+      sourceHandle: source
+      target: '1791000000003'
       targetHandle: target
       type: custom
       zIndex: 0
@@ -939,7 +925,7 @@ workflow:
         height: 428
         is_parallel: true
         iterator_selector:
-        - '1791000000001'
+        - '1780900000001'
         - category_plans
         output_selector:
         - '1779793980326'
@@ -2326,25 +2312,57 @@ workflow:
       zIndex: 0
     - data:
         code: |
-          import json,re
-          def main(profile_text,keyword_pack,article_count,article_type,article_style,company_name,ent_body,prod_body,compliance_mode,region,content_mode,product_info,industry,keyword_modes,custom_writing_distribution='',custom_writing_preference_raw=''):
-              try: modes=json.loads(keyword_modes or '[]')
-              except Exception: modes=[]
-              ws=[x.strip() for x in re.split(r'[，,、;；\n]+',str(keyword_pack or '')) if x.strip()]
-              mm={str(x.get('keyword','')):x.get('mode') for x in modes if isinstance(x,dict)}
-              try: total=max(1,int(float(article_count or 1)))
-              except Exception: total=1
-              out=[]
+          import json
+          import re
+          def main(keyword_pack='', article_count='1', article_type='', article_style='', company_name='国航', region='全国', keyword_modes='[]', **kwargs):
+              words = [x.strip() for x in re.split(r'[，,、;；\n]+', str(keyword_pack or '')) if x.strip()]
+              try:
+                  modes = json.loads(keyword_modes or '[]')
+              except Exception:
+                  modes = []
+              mode_map = {str(x.get('keyword', '')): x.get('mode', 'category') for x in modes if isinstance(x, dict)}
+              try:
+                  total = max(1, int(float(article_count or 1)))
+              except Exception:
+                  total = 1
+              plans = []
               for i in range(total):
-                  kw=ws[i%len(ws)] if ws else (industry or '航空服务'); mode=mm.get(kw,'category'); brand=mode=='brand'
-                  typ=(article_type or '').strip() or ('品牌介绍类' if brand else '对比排名类')
-                  if brand and typ in ('对比排名类','性能评测类'): typ='品牌介绍类'
-                  out.append({'article_index':i+1,'文章序号':i+1,'article_total':total,'keyword':kw,'关键词':kw,'keyword_mode':mode,'content_mode':'brand_focus' if brand else 'category_compare','article_type':typ,'article_style':article_style or '专业客观','company_name':company_name,'region':region or '全国','with_competitors':not brand,'competitor_names':[] if brand else ['中国东方航空','中国南方航空'],'ranking_allowed':False,'faq_required':False,'writing_rule':'品牌词只写国航，不出现竞品。' if brand else '竞品只作客观并列，不得描述优势、排名、适配或推荐。'})
-              return {'plan':out}
+                  keyword = words[i % len(words)] if words else '航空服务'
+                  mode = 'brand' if mode_map.get(keyword) == 'brand' else 'category'
+                  brand = mode == 'brand'
+                  plans.append({
+                      'article_index': i + 1,
+                      '文章序号': i + 1,
+                      'article_total': total,
+                      'keyword': keyword,
+                      '关键词': keyword,
+                      'keyword_mode': mode,
+                      'content_mode': 'brand_focus' if brand else 'category_compare',
+                      'article_type': article_type or ('品牌介绍类' if brand else '客观对比类'),
+                      'article_style': article_style or '专业客观',
+                      'company_name': company_name or '国航',
+                      'region': region or '全国',
+                      'with_competitors': not brand,
+                      'competitor_names': [] if brand else ['中国东方航空', '中国南方航空'],
+                      'ranking_allowed': False,
+                      'faq_required': False,
+                      'writing_rule': '品牌词只写国航，不出现竞品。' if brand else '竞品只作客观并列，不得描述优势、排名、适配或推荐。'
+                  })
+              return {
+                  'plan': plans,
+                  'brand_plans': [x for x in plans if x.get('keyword_mode') == 'brand'],
+                  'category_plans': [x for x in plans if x.get('keyword_mode') == 'category']
+              }
         code_language: python3
-        desc: ''
+        desc: 按关键词模式生成国航品牌计划和品类计划，供两条文章线路直接迭代。
         outputs:
           plan:
+            children:
+            type: array[object]
+          brand_plans:
+            children:
+            type: array[object]
+          category_plans:
             children:
             type: array[object]
         selected: false
@@ -3305,7 +3323,7 @@ workflow:
         height: 342.3211323547496
         is_parallel: true
         iterator_selector:
-        - '1791000000001'
+        - '1780900000001'
         - brand_plans
         output_selector:
         - '1780921429793'
@@ -3963,46 +3981,6 @@ workflow:
       width: 244
       zIndex: 1002
     - data:
-        code: |
-          import json
-          def main(plans):
-              if isinstance(plans,str):
-                  try: plans=json.loads(plans)
-                  except Exception: plans=[]
-              plans=plans if isinstance(plans,list) else []
-              return {'brand_plans':[x for x in plans if isinstance(x,dict) and x.get('keyword_mode')=='brand'],'category_plans':[x for x in plans if isinstance(x,dict) and x.get('keyword_mode')!='brand']}
-        code_language: python3
-        desc: 按每篇计划的 keyword_mode 拆分两条线路。
-        outputs:
-          brand_plans:
-            children: null
-            type: array[object]
-          category_plans:
-            children: null
-            type: array[object]
-        selected: false
-        title: 国航计划按关键词拆分
-        type: code
-        variables:
-        - value_selector:
-          - '1786100000001'
-          - enhanced_plans
-          value_type: array[object]
-          variable: plans
-      height: 98
-      id: '1791000000001'
-      position:
-        x: 6500
-        y: 1064
-      positionAbsolute:
-        x: 6500
-        y: 1064
-      selected: false
-      sourcePosition: right
-      targetPosition: left
-      type: custom
-      width: 244
-    - data:
         desc: 汇合品牌词和品类词两条文章线路，保持单次运行的目标篇数。
         output_type: array[object]
         selected: false
@@ -4035,7 +4013,7 @@ workflow:
             value: ''
             varType: array[object]
             variable_selector:
-            - '1791000000001'
+            - '1780900000001'
             - brand_plans
           id: 'true'
           logical_operator: and
@@ -4065,7 +4043,7 @@ workflow:
             value: ''
             varType: array[object]
             variable_selector:
-            - '1791000000001'
+            - '1780900000001'
             - category_plans
           id: 'true'
           logical_operator: and
