@@ -3975,8 +3975,10 @@ workflow:
         desc: 按每篇计划的 keyword_mode 拆分两条线路。
         outputs:
           brand_plans:
+            children: null
             type: array[object]
           category_plans:
+            children: null
             type: array[object]
         selected: false
         title: 国航计划按关键词拆分
