@@ -745,8 +745,8 @@ workflow:
           def main(company_name, industry, keyword_pack, article_count, article_style, article_type, task_name, company_intro, core_qualifications, awards, advantages, ent_dataset_id, task_description, prod_dataset_id):
               ws=words(keyword_pack)
               core=re.sub(r'(股份有限公司|有限责任公司|有限公司|公司|集团)$','',str(company_name or '').strip())
-              tokens=[x for x in [core,'中国国航','国航','Air China'] if len(x)>=2]
-              modes=[{'keyword':w,'mode':'brand' if any(t in w for t in tokens) else 'category','index':i+1} for i,w in enumerate(ws)]
+              tokens=[x for x in [core,'中国国航','国航','Air China','凤凰知音','PhoenixMiles'] if len(x)>=2]
+              modes=[{'keyword':w,'mode':'brand' if any(t.lower() in w.lower() for t in tokens) else 'category','index':i+1} for i,w in enumerate(ws)]
               anchor=ws[0] if ws else (industry or task_name or '航空服务')
               clean=lambda s: re.sub(r'\s+',' ',re.sub(r'[\x00-\x1f\x7f-\x9f"\\]','',str(s or ''))).strip()[:80]
               return {'ent_rag_query':clean(f'{company_name} 企业简介 业务范围 资质 荣誉'), 'prod_rag_query':clean(f'{anchor} 会员权益 产品服务 适用条件 有效期'), 'article_count':str(int(article_count) if article_count else 1), 'article_style':article_style or '专业客观', 'article_type':article_type or '', 'compliance_mode':'standard', 'content_mode':'comparison', 'region':'全国', 'region_source':'default_national', 'region_confidence':'default', 'core_service':anchor, 'keyword_modes':json.dumps(modes,ensure_ascii=False)}
@@ -1814,8 +1814,8 @@ workflow:
           def main(keyword_pack, company_name, n1_modes=''):
               ws=[x.strip() for x in re.split(r'[，,、;；\n]+',str(keyword_pack or '')) if x.strip()]
               c=str(company_name or '').replace('有限公司','').replace('公司','').strip()
-              ts=[x for x in [c,'中国国航','国航','Air China'] if len(x)>=2]
-              return {'text':json.dumps([{'keyword':w,'mode':'brand' if any(t in w for t in ts) else 'category','index':i+1} for i,w in enumerate(ws)],ensure_ascii=False)}
+              ts=[x for x in [c,'中国国航','国航','Air China','凤凰知音','PhoenixMiles'] if len(x)>=2]
+              return {'text':json.dumps([{'keyword':w,'mode':'brand' if any(t.lower() in w.lower() for t in ts) else 'category','index':i+1} for i,w in enumerate(ws)],ensure_ascii=False)}
         code_language: python3
         variables:
         - value_selector:
@@ -2205,8 +2205,8 @@ workflow:
                       return '占位符'
               if content_plain.endswith('原样'):
                   return '占位符'
-              if len(content_plain) < 2000:
-                  return f'正文过短({len(content_plain)}字,合规合同下限2000/上限2500):疑似截断或展开不足,必须回退改写/重写,不得直接采用'
+              if len(content_plain) < 2500:
+                  return f'正文过短({len(content_plain)}字,最低2500字):疑似截断或展开不足,必须回退改写/重写,不得直接采用'
               return ''
 
 
@@ -2333,18 +2333,7 @@ workflow:
                   tags = n_tags or c_tags
                   self_review = '[守护]clean_out异常(%s),已回退N7原文' % c_reason
               else:
-                  # 两边都异常，尽量保留有内容的一边
-                  if len(c_plain) >= len(n_plain):
-                      title = c_title or n_title
-                      content = c_content
-                      description = c_desc or n_desc
-                      tags = c_tags or n_tags
-                  else:
-                      title = n_title or c_title
-                      content = n_content
-                      description = n_desc or c_desc
-                      tags = n_tags or c_tags
-                  self_review = '[守护]clean_out(%s)和N7(%s)均异常,保留较长一份' % (c_reason, n_reason)
+                  raise ValueError('品类词正文生成失败：修复稿(%s)，初稿(%s)' % (c_reason, n_reason))
 
               if not isinstance(tags, list):
                   tags = []
@@ -2413,7 +2402,7 @@ workflow:
             你是国航品类词文章生成器。只依据当前文章计划和带来源标签的知识库生成文章。可以客观并列中国东方航空、中国南方航空，但不得描述竞品优势、不得说竞品更优、不得推荐竞品、不得输出排名、TOP、首选、适用人群或按预算选择航司。会员及活动权益必须保留资料原文中的条件、期限、数量、单位和适用范围；知识库未提供的事实不得补写。避免绝对化营销表达。
             输出必须是一个完整、合法的 JSON 对象，不得输出 Markdown 代码块、解释、前后缀或第二个对象。字段名和类型固定如下，禁止增删或改名：
             {"title":"20-28字完整标题","content":"完整HTML正文","description":"50-150字摘要","tags":["标签1","标签2","标签3"],"self_review":"事实与格式自检说明"}
-            content 必须是非空完整正文，使用 <h2>、<h3>、<p>、<strong>、<ul>、<li> 等 HTML 标签，不得使用 Markdown，不得包含知识库来源标签、流程说明或占位文字。JSON 必须闭合；HTML 属性如需引号应使用单引号。
+            content 必须是非空完整正文，纯文本长度控制在 2800—3500 个中文字符，至少包含 5 个有实质信息的 <h2> 章节；使用 <h2>、<h3>、<p>、<strong>、<ul>、<li> 等 HTML 标签，不得使用 Markdown，不得包含知识库来源标签、流程说明或占位文字。不得用空话、重复句或大段免责声明凑字数。JSON 必须闭合；HTML 属性如需引号应使用单引号。
         - id: air-final-1779969836326-usr
           role: user
           text: |-
@@ -2461,17 +2450,17 @@ workflow:
         - id: air-final-1779970859223-sys
           role: system
           text: |-
-            你是国航品类词文章定点修复器。仅修复待处理文章中的竞品优势或推荐、绝对化表达、无依据事实、权益限定词缺失及结构问题，其他内容原样保留，不得缩略会员和活动权益。
+            你是国航品类词文章质量修复器。修复待处理文章中的篇幅不足、结构缺失、竞品优势或推荐、绝对化表达、无依据事实及权益限定词缺失。若正文纯文本不足 2500 个中文字符，必须依据文章计划和知识库完整重写至 2800—3500 字；不得只做局部补句，不得用空话、重复句或免责声明凑字数。正文达到长度要求时，仅做必要的定点修复。会员和活动权益不得缩略。
             输出必须是一个完整、合法的 JSON 对象，不得输出 Markdown 代码块、解释、前后缀或第二个对象。字段名和类型固定如下，禁止增删或改名：
             {"title":"20-28字完整标题","content":"完整HTML正文","description":"50-150字摘要","tags":["标签1","标签2","标签3"],"self_review":"事实与格式自检说明"}
-            content 必须是非空完整正文，使用 <h2>、<h3>、<p>、<strong>、<ul>、<li> 等 HTML 标签，不得使用 Markdown，不得包含知识库来源标签、流程说明或占位文字。JSON 必须闭合；HTML 属性如需引号应使用单引号。
+            content 必须是非空完整正文，纯文本长度为 2800—3500 个中文字符，至少包含 5 个有实质信息的 <h2> 章节；使用 <h2>、<h3>、<p>、<strong>、<ul>、<li> 等 HTML 标签，不得使用 Markdown，不得包含知识库来源标签、流程说明或占位文字。JSON 必须闭合；HTML 属性如需引号应使用单引号。
         - id: air-final-1779970859223-usr
           role: user
           text: |-
             待修复文章：{{#1779969836326.text#}}
             文章计划：{{#1776938309919.item#}}
             来源标签知识库：{{#1780900000002.source_labeled_kb#}}
-            只修复竞品推荐/优势、绝对化、无依据事实、权益限定词缺失和结构问题，其他内容原样保留。
+            检查篇幅并完成质量修复；不足 2500 字时必须整篇重写，达到要求时只修复竞品推荐/优势、绝对化、无依据事实、权益限定词缺失和结构问题。
         selected: false
         title: N7 品类词定点修复
         type: llm
@@ -2696,25 +2685,71 @@ workflow:
       zIndex: 0
     - data:
         code: |
-          import re,json
+          import re
+          import json
+
+          def _plain(value):
+              return re.sub(r'\s+', '', re.sub(r'<[^>]+>', '', str(value or '')))
+
           def main(articles,industry='',product_info='',keyword_pack='',custom_writing_preference=''):
-              articles=articles if isinstance(articles,list) else []
-              banned=['独有','唯一','终身','全网第一','行业第一','最佳','最优','最好','首选','综合第一','TOP1','TOP2']
-              comp=re.compile(r'(东航|东方航空|南航|南方航空).{0,24}(优势|更优|更好|第一|最佳|首选|推荐|适合)',re.I)
-              out=[]; issues=[]
-              for i,a in enumerate(articles):
-                  a=dict(a) if isinstance(a,dict) else {'content':str(a)}
-                  t=str(a.get('title',''))+'\n'+str(a.get('content',''))
-                  hit=[x for x in banned if x in t]
-                  cur=[]
-                  if hit: cur.append('含禁用表述：'+','.join(hit))
-                  if comp.search(t): cur.append('含竞品推荐或优势表达')
-                  if not str(a.get('content','')).strip(): cur.append('正文为空')
-                  a['_final_validation_status']='blocked' if cur else 'passed'; a['_final_validation_issues']=cur; out.append(a)
-                  if cur: issues.append('第{}篇：{}'.format(i+1,'；'.join(cur)))
-              return {'validated_articles':out,'final_validation_report':json.dumps({'article_count':len(out),'issues':issues},ensure_ascii=False)}
+              articles = articles if isinstance(articles, list) else []
+              if not articles:
+                  raise ValueError('终稿硬校验未通过：没有可校验的文章')
+
+              banned = ['独有','唯一','终身','全网第一','行业第一','最佳','最优','最好','首选','综合第一','TOP1','TOP2']
+              competitor_advantage = re.compile(
+                  r'(东航|东方航空|南航|南方航空).{0,40}'
+                  r'(优势|更优|更好|优于|胜过|领先|第一|最佳|首选|推荐|适合|值得选择|值得推荐)',
+                  re.I,
+              )
+              competitor_name = re.compile(r'(东航|东方航空|南航|南方航空)', re.I)
+              out = []
+              issues = []
+              for i, article in enumerate(articles):
+                  article = dict(article) if isinstance(article, dict) else {'content': str(article or '')}
+                  title = str(article.get('title', '') or '').strip()
+                  content = str(article.get('content', '') or '').strip()
+                  text = title + '\n' + content
+                  plain_len = len(_plain(content))
+                  title_len = len(title)
+                  mode = str(article.get('_keyword_mode', '') or '')
+                  current = []
+
+                  hit = [word for word in banned if word in text]
+                  if hit:
+                      current.append('含禁用表述：' + ','.join(hit))
+                  if competitor_advantage.search(text):
+                      current.append('含竞品推荐或优势表达')
+                  if mode == 'brand' and competitor_name.search(text):
+                      current.append('品牌词文章出现竞品')
+                  if not content:
+                      current.append('正文为空')
+                  elif plain_len < 2500:
+                      current.append('正文过短：{}字，最低2500字'.format(plain_len))
+                  elif plain_len > 4200:
+                      current.append('正文过长：{}字，上限4200字'.format(plain_len))
+                  if title_len < 20 or title_len > 28:
+                      current.append('标题长度异常：{}字，要求20—28字'.format(title_len))
+                  if len(re.findall(r'<h2\b', content, re.I)) < 5:
+                      current.append('正文结构不足：至少需要5个h2章节')
+                  if not re.search(r'<p\b', content, re.I):
+                      current.append('正文缺少p段落')
+
+                  article['_final_validation_status'] = 'blocked' if current else 'passed'
+                  article['_final_validation_issues'] = current
+                  out.append(article)
+                  if current:
+                      issues.append('第{}篇：{}'.format(i + 1, '；'.join(current)))
+
+              report = {'article_count': len(out), 'issues': issues}
+              if issues:
+                  raise ValueError('终稿硬校验未通过：' + ' | '.join(issues))
+              return {
+                  'validated_articles': out,
+                  'final_validation_report': json.dumps(report, ensure_ascii=False),
+              }
         code_language: python3
-        desc: 发布前终稿硬校验：检查禁用表达、竞品优势/推荐表达和正文空值。
+        desc: 发布前终稿硬校验：短文、结构异常、品牌词竞品泄漏及其他硬伤直接终止流程，禁止废稿成功输出。
         outputs:
           final_validation_report:
             children:
@@ -2893,7 +2928,7 @@ workflow:
             你是国航品牌词文章生成器。只依据当前文章计划和带来源标签的企业知识库、产品知识库生成文章。文章只围绕国航，不出现东航、南航或其他竞品，不做排名、对比和推荐。会员及活动权益必须保留资料原文中的条件、期限、数量、单位和适用范围；知识库未提供的事实不得补写。避免“独有、唯一、第一、最佳、最好、最优、终身”等绝对化营销表达。
             输出必须是一个完整、合法的 JSON 对象，不得输出 Markdown 代码块、解释、前后缀或第二个对象。字段名和类型固定如下，禁止增删或改名：
             {"title":"20-28字完整标题","content":"完整HTML正文","description":"50-150字摘要","tags":["标签1","标签2","标签3"],"self_review":"事实与格式自检说明"}
-            content 必须是非空完整正文，使用 <h2>、<h3>、<p>、<strong>、<ul>、<li> 等 HTML 标签，不得使用 Markdown，不得包含知识库来源标签、流程说明或占位文字。JSON 必须闭合；HTML 属性如需引号应使用单引号。
+            content 必须是非空完整正文，纯文本长度控制在 2800—3500 个中文字符，至少包含 5 个有实质信息的 <h2> 章节；使用 <h2>、<h3>、<p>、<strong>、<ul>、<li> 等 HTML 标签，不得使用 Markdown，不得包含知识库来源标签、流程说明或占位文字。不得用空话、重复句或大段免责声明凑字数。JSON 必须闭合；HTML 属性如需引号应使用单引号。
         - id: air-final-17769383496063-usr
           role: user
           text: |-
@@ -2944,17 +2979,19 @@ workflow:
         - id: air-final-17769383496066-sys
           role: system
           text: |-
-            你是国航品牌词文章定点修复器。仅修复待处理文章中的竞品泄漏、绝对化表达、无依据事实、权益限定词缺失及结构问题，其他内容原样保留，不得缩略会员和活动权益。
+            你是国航品牌词文章质量修复器。根据预检问题修复篇幅不足、结构缺失、竞品泄漏、绝对化表达、无依据事实及权益限定词缺失。若正文纯文本不足 2500 个中文字符，必须依据文章计划、大纲和知识库完整重写至 2800—3500 字；不得只做局部补句，不得用空话、重复句或免责声明凑字数。正文达到长度要求时，仅做必要的定点修复。会员和活动权益不得缩略。
             输出必须是一个完整、合法的 JSON 对象，不得输出 Markdown 代码块、解释、前后缀或第二个对象。字段名和类型固定如下，禁止增删或改名：
             {"title":"20-28字完整标题","content":"完整HTML正文","description":"50-150字摘要","tags":["标签1","标签2","标签3"],"self_review":"事实与格式自检说明"}
-            content 必须是非空完整正文，使用 <h2>、<h3>、<p>、<strong>、<ul>、<li> 等 HTML 标签，不得使用 Markdown，不得包含知识库来源标签、流程说明或占位文字。JSON 必须闭合；HTML 属性如需引号应使用单引号。
+            content 必须是非空完整正文，纯文本长度为 2800—3500 个中文字符，至少包含 5 个有实质信息的 <h2> 章节；使用 <h2>、<h3>、<p>、<strong>、<ul>、<li> 等 HTML 标签，不得使用 Markdown，不得包含知识库来源标签、流程说明或占位文字。JSON 必须闭合；HTML 属性如需引号应使用单引号。
         - id: air-final-17769383496066-usr
           role: user
           text: |-
             待修复文章：{{#17769383496063.text#}}
+            预检问题：{{#17769383496072.issues#}}
             文章计划：{{#1777400000006.item#}}
+            文章大纲：{{#1778000000003.text#}}
             来源标签知识库：{{#1780900000002.source_labeled_kb#}}
-            只修复竞品泄漏、绝对化、无依据事实、权益限定词缺失和结构问题，其他内容原样保留。
+            检查篇幅并完成质量修复；不足 2500 字时必须整篇重写，达到要求时只修复竞品泄漏、绝对化、无依据事实、权益限定词缺失和结构问题。
         selected: false
         title: N7 品牌词定点修复
         type: llm
@@ -3028,11 +3065,11 @@ workflow:
 
               markers = ['（原样）', '(原样)', '内容不变', '同上', '此处省略', '保持原文', '其余略', '(略)', '（略）']
               has_ph = any(m in content for m in markers) or content.strip().endswith('原样')
-              too_short = len(plain) < 800
+              too_short = len(plain) < 2500
               has_think = '<think>' in content or '</think>' in content
               broken = too_short or has_ph or has_think
 
-              if broken and len(n7_plain) > max(len(plain), 800):
+              if broken and len(n7_plain) > max(len(plain), 2500):
                   _n7j = {}
                   try:
                       _mj = re.search(r'\{.*\}', _strip_think(n7_text or ''), re.S)
@@ -3068,6 +3105,10 @@ workflow:
               else:
                   if has_think:
                       content = _extract_html(_strip_think(content))
+
+              final_plain = re.sub(r'<[^>]+>', '', content).strip()
+              if len(final_plain) < 2500:
+                  raise ValueError('品牌词正文生成失败：修复后正文仅{}字，最低2500字'.format(len(final_plain)))
 
               return {'structured_output': {
                   'title': title, 'content': content, 'description': description,
