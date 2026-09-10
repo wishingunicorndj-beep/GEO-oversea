@@ -477,8 +477,8 @@ workflow:
         isInIteration: false
         sourceType: iteration
         targetType: iteration
-      id: 1776938309919-source-1777400000006-target
-      source: '1776938309919'
+      id: 1780900000001-source-1777400000006-target
+      source: '1780900000001'
       sourceHandle: source
       target: '1777400000006'
       targetHandle: target
@@ -632,10 +632,7 @@ workflow:
                                   official_matches.append(match)
                               else:
                                   normal_matches.append(match)
-                          if official_matches:
-                              contexts = ' / '.join(_snippet(value, m.start(), m.end()) for m in official_matches[:2])
-                              issues.append('{}含正式会员名称，需按文章主题处理“终身白金卡”({}处)：{}'.format(
-                                  field, len(official_matches), contexts))
+                          # 正式会员名称属于材料事实，不作为禁用词阻断；仅拦截普通语境中的绝对化表达。
                           if normal_matches:
                               contexts = ' / '.join(_snippet(value, m.start(), m.end()) for m in normal_matches[:2])
                               issues.append('{}含禁用词“{}”({}处)：{}'.format(field, word, len(normal_matches), contexts))
@@ -2511,10 +2508,7 @@ workflow:
                                   official_matches.append(match)
                               else:
                                   normal_matches.append(match)
-                          if official_matches:
-                              contexts = ' / '.join(_snippet(value, m.start(), m.end()) for m in official_matches[:2])
-                              issues.append('{}含正式会员名称，需按文章主题处理“终身白金卡”({}处)：{}'.format(
-                                  field, len(official_matches), contexts))
+                          # 正式会员名称属于材料事实，不作为禁用词阻断；仅拦截普通语境中的绝对化表达。
                           if normal_matches:
                               contexts = ' / '.join(_snippet(value, m.start(), m.end()) for m in normal_matches[:2])
                               issues.append('{}含禁用词“{}”({}处)：{}'.format(field, word, len(normal_matches), contexts))
@@ -2663,7 +2657,7 @@ workflow:
         - id: air-final-1779969836326-sys
           role: system
           text: |-
-            你是国航品类词文章生成器。只依据当前文章计划和带来源标签的知识库生成文章。可以客观并列中国东方航空、中国南方航空，但不得描述竞品优势、不得说竞品更优、不得推荐竞品、不得输出排名、TOP、首选、适用人群或按预算选择航司。会员及活动权益必须保留资料原文中的条件、期限、数量、单位和适用范围；知识库未提供的事实不得补写。避免绝对化营销表达。品类词标题必须围绕原始品类关键词生成，不得把国航、凤凰知音等目标品牌或产品名称追加为第二主题；目标品牌和产品信息在正文中按材料客观呈现。标题可以保留三大航等品类背景，但不得用选择参考、哪家、哪个好、推荐或对比等表述承诺正文未覆盖的比较内容。
+            你是国航品类词文章生成器。只依据当前文章计划和带来源标签的知识库生成文章。只选取与当前关键词、article_angle和本篇标题直接相关的材料，忽略知识库中无关的会员等级、活动和旁支规则，不要把整份知识库全部改写进文章。可以客观并列中国东方航空、中国南方航空，但不得描述竞品优势、不得说竞品更优、不得推荐竞品、不得输出排名、TOP、首选、适用人群或按预算选择航司。会员及活动权益必须保留资料原文中的条件、期限、数量、单位和适用范围；知识库未提供的事实不得补写。避免绝对化营销表达。品类词标题必须围绕原始品类关键词生成，不得把国航、凤凰知音等目标品牌或产品名称追加为第二主题；目标品牌和产品信息在正文中按材料客观呈现。标题可以保留三大航等品类背景，但不得用选择参考、哪家、哪个好、推荐或对比等表述承诺正文未覆盖的比较内容。
             输出必须是一个完整、合法的 JSON 对象，不得输出 Markdown 代码块、解释、前后缀或第二个对象。字段名和类型固定如下，禁止增删或改名：
             {"title":"20-28字完整标题","content":"完整HTML正文","description":"50-150字摘要","tags":["标签1","标签2","标签3"],"self_review":"事实与格式自检说明"}
             content 必须是非空完整正文，纯文本长度控制在 2800—3500 个中文字符，至少包含 5 个有实质信息的 <h2> 章节；使用 <h2>、<h3>、<p>、<strong>、<ul>、<li> 等 HTML 标签，不得使用 Markdown，不得包含知识库来源标签、流程说明或占位文字。不得用空话、重复句或大段免责声明凑字数。JSON 必须闭合；HTML 属性如需引号应使用单引号。
@@ -2718,7 +2712,7 @@ workflow:
         - id: air-final-1779970859223-sys
           role: system
           text: |-
-            你是国航品类词文章质量修复器。依据预检的实际字数和问题所在句，修复篇幅不足或超长、结构缺失、竞品优势或推荐、禁用词、无依据事实及权益限定词缺失。正文不足2500字时，依据文章计划和知识库重写至2800—3500字；超过4200字时，删除重复说明和旁支内容，精简至2800—3500字。不得用空话凑字数，不得按字符截断，不得缩略会员及活动权益的主体、条件、期限、数量、单位和适用范围。
+            你是国航品类词文章质量修复器。依据预检的实际字数和问题所在句，修复篇幅不足或超长、结构缺失、竞品优势或推荐、禁用词、无依据事实及权益限定词缺失。正文不足2500字时，依据文章计划和知识库重写至2800—3500字；超过4200字时，必须删除重复说明、无关等级和旁支内容，目标控制在3000—3600字；只保留与当前关键词和 article_angle 直接相关的规则，不得把整段知识库重新搬回正文。正式会员名称可以按材料原文保留，但不相关的会员等级不得为了“完整”反复列出。不得用空话凑字数，不得按字符截断，不得缩略会员及活动权益的主体、条件、期限、数量、单位和适用范围。输出前必须重新计算可见文字长度，确认不超过4200字。
             输出必须是一个完整、合法的 JSON 对象，不得输出 Markdown 代码块、解释、前后缀或第二个对象。字段名和类型固定如下，禁止增删或改名：
             {"title":"20-28字完整标题","content":"完整HTML正文","description":"50-150字摘要","tags":["标签1","标签2","标签3"],"self_review":"事实与格式自检说明"}
             content 必须是非空完整正文，纯文本长度为 2800—3500 个中文字符，至少包含 5 个有实质信息的 <h2> 章节；使用 <h2>、<h3>、<p>、<strong>、<ul>、<li> 等 HTML 标签，不得使用 Markdown，不得包含知识库来源标签、流程说明或占位文字。JSON 必须闭合；HTML 属性如需引号应使用单引号。
@@ -3092,10 +3086,7 @@ workflow:
                                   official_matches.append(match)
                               else:
                                   normal_matches.append(match)
-                          if official_matches:
-                              contexts = ' / '.join(_snippet(value, m.start(), m.end()) for m in official_matches[:2])
-                              issues.append('{}含正式会员名称，需按文章主题处理“终身白金卡”({}处)：{}'.format(
-                                  field, len(official_matches), contexts))
+                          # 正式会员名称属于材料事实，不作为禁用词阻断；仅拦截普通语境中的绝对化表达。
                           if normal_matches:
                               contexts = ' / '.join(_snippet(value, m.start(), m.end()) for m in normal_matches[:2])
                               issues.append('{}含禁用词“{}”({}处)：{}'.format(field, word, len(normal_matches), contexts))
@@ -3367,7 +3358,7 @@ workflow:
         - id: air-final-17769383496063-sys
           role: system
           text: |-
-            你是国航品牌词文章生成器。只依据当前文章计划和带来源标签的企业知识库、产品知识库生成文章。文章只围绕国航，不出现东航、南航或其他竞品，不做排名、对比和推荐。会员及活动权益必须保留资料原文中的条件、期限、数量、单位和适用范围；知识库未提供的事实不得补写。避免“独有、唯一、第一、最佳、最好、最优、终身”等绝对化营销表达。
+            你是国航品牌词文章生成器。只依据当前文章计划和带来源标签的企业知识库、产品知识库生成文章。只选取与当前关键词、article_angle和本篇标题直接相关的材料，忽略知识库中无关的会员等级、活动和旁支规则，不要把整份知识库全部改写进文章。文章只围绕国航，不出现东航、南航或其他竞品，不做排名、对比和推荐。会员及活动权益必须保留资料原文中的条件、期限、数量、单位和适用范围；知识库未提供的事实不得补写。避免“独有、唯一、第一、最佳、最好、最优、终身”等绝对化营销表达。
             输出必须是一个完整、合法的 JSON 对象，不得输出 Markdown 代码块、解释、前后缀或第二个对象。字段名和类型固定如下，禁止增删或改名：
             {"title":"20-28字完整标题","content":"完整HTML正文","description":"50-150字摘要","tags":["标签1","标签2","标签3"],"self_review":"事实与格式自检说明"}
             content 必须是非空完整正文，纯文本长度控制在 2800—3500 个中文字符，至少包含 5 个有实质信息的 <h2> 章节；使用 <h2>、<h3>、<p>、<strong>、<ul>、<li> 等 HTML 标签，不得使用 Markdown，不得包含知识库来源标签、流程说明或占位文字。不得用空话、重复句或大段免责声明凑字数。JSON 必须闭合；HTML 属性如需引号应使用单引号。
@@ -3424,7 +3415,7 @@ workflow:
         - id: air-final-17769383496066-sys
           role: system
           text: |-
-            你是国航品牌词文章质量修复器。依据预检的实际字数和问题所在句，修复篇幅不足或超长、结构缺失、竞品泄漏、禁用词、无依据事实及权益限定词缺失。正文不足2500字时，依据文章计划、大纲和知识库重写至2800—3500字；超过4200字时，删除重复说明和旁支内容，精简至2800—3500字。不得用空话凑字数，不得按字符截断，不得缩略会员及活动权益的主体、条件、期限、数量、单位和适用范围。
+            你是国航品牌词文章质量修复器。依据预检的实际字数和问题所在句，修复篇幅不足或超长、结构缺失、竞品泄漏、禁用词、无依据事实及权益限定词缺失。正文不足2500字时，依据文章计划、大纲和知识库重写至2800—3500字；超过4200字时，必须删除重复说明、无关等级和旁支内容，目标控制在3000—3600字；只保留与当前关键词、article_angle 和品牌主题直接相关的规则，不得把整段知识库重新搬回正文。正式会员名称可以按材料原文保留，但不相关的会员等级不得为了“完整”反复列出。不得用空话凑字数，不得按字符截断，不得缩略会员及活动权益的主体、条件、期限、数量、单位和适用范围。输出前必须重新计算可见文字长度，确认不超过4200字。
             输出必须是一个完整、合法的 JSON 对象，不得输出 Markdown 代码块、解释、前后缀或第二个对象。字段名和类型固定如下，禁止增删或改名：
             {"title":"20-28字完整标题","content":"完整HTML正文","description":"50-150字摘要","tags":["标签1","标签2","标签3"],"self_review":"事实与格式自检说明"}
             content 必须是非空完整正文，纯文本长度为 2800—3500 个中文字符，至少包含 5 个有实质信息的 <h2> 章节；使用 <h2>、<h3>、<p>、<strong>、<ul>、<li> 等 HTML 标签，不得使用 Markdown，不得包含知识库来源标签、流程说明或占位文字。JSON 必须闭合；HTML 属性如需引号应使用单引号。
@@ -3597,10 +3588,7 @@ workflow:
                                   official_matches.append(match)
                               else:
                                   normal_matches.append(match)
-                          if official_matches:
-                              contexts = ' / '.join(_snippet(value, m.start(), m.end()) for m in official_matches[:2])
-                              issues.append('{}含正式会员名称，需按文章主题处理“终身白金卡”({}处)：{}'.format(
-                                  field, len(official_matches), contexts))
+                          # 正式会员名称属于材料事实，不作为禁用词阻断；仅拦截普通语境中的绝对化表达。
                           if normal_matches:
                               contexts = ' / '.join(_snippet(value, m.start(), m.end()) for m in normal_matches[:2])
                               issues.append('{}含禁用词“{}”({}处)：{}'.format(field, word, len(normal_matches), contexts))
@@ -3868,10 +3856,7 @@ workflow:
                                   official_matches.append(match)
                               else:
                                   normal_matches.append(match)
-                          if official_matches:
-                              contexts = ' / '.join(_snippet(value, m.start(), m.end()) for m in official_matches[:2])
-                              issues.append('{}含正式会员名称，需按文章主题处理“终身白金卡”({}处)：{}'.format(
-                                  field, len(official_matches), contexts))
+                          # 正式会员名称属于材料事实，不作为禁用词阻断；仅拦截普通语境中的绝对化表达。
                           if normal_matches:
                               contexts = ' / '.join(_snippet(value, m.start(), m.end()) for m in normal_matches[:2])
                               issues.append('{}含禁用词“{}”({}处)：{}'.format(field, word, len(normal_matches), contexts))
@@ -4174,10 +4159,7 @@ workflow:
                                   official_matches.append(match)
                               else:
                                   normal_matches.append(match)
-                          if official_matches:
-                              contexts = ' / '.join(_snippet(value, m.start(), m.end()) for m in official_matches[:2])
-                              issues.append('{}含正式会员名称，需按文章主题处理“终身白金卡”({}处)：{}'.format(
-                                  field, len(official_matches), contexts))
+                          # 正式会员名称属于材料事实，不作为禁用词阻断；仅拦截普通语境中的绝对化表达。
                           if normal_matches:
                               contexts = ' / '.join(_snippet(value, m.start(), m.end()) for m in normal_matches[:2])
                               issues.append('{}含禁用词“{}”({}处)：{}'.format(field, word, len(normal_matches), contexts))
