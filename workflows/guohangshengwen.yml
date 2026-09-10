@@ -1992,6 +1992,12 @@ workflow:
                   raise ValueError('{}线路文章数量异常：计划{}篇，实际{}篇'.format(branch_name, len(plans), len(articles)))
               bound = []
               for pos, (article, plan) in enumerate(zip(articles, plans), 1):
+                  if isinstance(article, dict):
+                      for wrapper_key in ('structured_output', 'output'):
+                          wrapped = article.get(wrapper_key)
+                          if isinstance(wrapped, dict) and ('title' in wrapped or 'content' in wrapped):
+                              article = wrapped
+                              break
                   if not isinstance(article, dict):
                       raise ValueError('{}线路第{}篇输出不是文章对象'.format(branch_name, pos))
                   item = dict(article)
