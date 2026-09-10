@@ -511,6 +511,8 @@ workflow:
           COMPETITOR = r'(?:东航|东方航空|南航|南方航空)'
           OFFICIAL_MEMBER_TERM = re.compile(r'(?:年度卓越)?终身白金卡')
           MARKDOWN_LINK = re.compile(r'\[[^\]]+\]\([^)]*\)')
+          CATEGORY_BRAND_IN_TITLE = re.compile(r'(?:中国国际航空|国航|凤凰知音)')
+          CATEGORY_COMPARISON_CUE = re.compile(r'(?:选择参考|选哪个|哪家|哪个好|对比|比较|推荐|排名)')
           
           
           class _Body(HTMLParser):
@@ -565,6 +567,20 @@ workflow:
               return re.sub(r'\s+', ' ', text[max(0, start - 20):end + 35]).strip()
           
           
+          def _category_title_issues(article, body):
+              """品类标题保持品类范围，不把目标品牌拼成第二主题。"""
+              title = article['title'].strip()
+              issues = []
+              if CATEGORY_BRAND_IN_TITLE.search(title):
+                  issues.append('品类词标题不应追加目标品牌或产品名称：请保留品类主题，品牌内容放入正文')
+              if CATEGORY_COMPARISON_CUE.search(title):
+                  headings = re.findall(r'<h[23][^>]*>(.*?)</h[23]>', article['content'], re.I | re.S)
+                  heading_text = re.sub(r'<[^>]+>', '', ' '.join(headings))
+                  if not re.search(r'(?:东航|东方航空|南航|南方航空|对比|比较|差异|维度)', heading_text):
+                      issues.append('标题包含选择或比较承诺，但正文没有对应的客观比较结构')
+              return issues
+          
+          
           def inspect_article(article, mode):
               issues = []
               for name in FIELDS:
@@ -587,6 +603,8 @@ workflow:
                   issues.append('正文过长：{}字，上限4200字；请精简至2800—3500字，删除重复解释，保留权益完整条件'.format(length))
               if not 20 <= len(article['title'].strip()) <= 28:
                   issues.append('标题长度异常：{}字，要求20—28字'.format(len(article['title'].strip())))
+              if mode == 'category':
+                  issues.extend(_category_title_issues(article, body))
               if parser.counts.get('h2', 0) < 5:
                   issues.append('正文结构不足：至少需要5个h2章节')
               if not parser.counts.get('p', 0):
@@ -2365,6 +2383,8 @@ workflow:
           COMPETITOR = r'(?:东航|东方航空|南航|南方航空)'
           OFFICIAL_MEMBER_TERM = re.compile(r'(?:年度卓越)?终身白金卡')
           MARKDOWN_LINK = re.compile(r'\[[^\]]+\]\([^)]*\)')
+          CATEGORY_BRAND_IN_TITLE = re.compile(r'(?:中国国际航空|国航|凤凰知音)')
+          CATEGORY_COMPARISON_CUE = re.compile(r'(?:选择参考|选哪个|哪家|哪个好|对比|比较|推荐|排名)')
           
           
           class _Body(HTMLParser):
@@ -2419,6 +2439,20 @@ workflow:
               return re.sub(r'\s+', ' ', text[max(0, start - 20):end + 35]).strip()
           
           
+          def _category_title_issues(article, body):
+              """品类标题保持品类范围，不把目标品牌拼成第二主题。"""
+              title = article['title'].strip()
+              issues = []
+              if CATEGORY_BRAND_IN_TITLE.search(title):
+                  issues.append('品类词标题不应追加目标品牌或产品名称：请保留品类主题，品牌内容放入正文')
+              if CATEGORY_COMPARISON_CUE.search(title):
+                  headings = re.findall(r'<h[23][^>]*>(.*?)</h[23]>', article['content'], re.I | re.S)
+                  heading_text = re.sub(r'<[^>]+>', '', ' '.join(headings))
+                  if not re.search(r'(?:东航|东方航空|南航|南方航空|对比|比较|差异|维度)', heading_text):
+                      issues.append('标题包含选择或比较承诺，但正文没有对应的客观比较结构')
+              return issues
+          
+          
           def inspect_article(article, mode):
               issues = []
               for name in FIELDS:
@@ -2441,6 +2475,8 @@ workflow:
                   issues.append('正文过长：{}字，上限4200字；请精简至2800—3500字，删除重复解释，保留权益完整条件'.format(length))
               if not 20 <= len(article['title'].strip()) <= 28:
                   issues.append('标题长度异常：{}字，要求20—28字'.format(len(article['title'].strip())))
+              if mode == 'category':
+                  issues.extend(_category_title_issues(article, body))
               if parser.counts.get('h2', 0) < 5:
                   issues.append('正文结构不足：至少需要5个h2章节')
               if not parser.counts.get('p', 0):
@@ -2620,7 +2656,7 @@ workflow:
         - id: air-final-1779969836326-sys
           role: system
           text: |-
-            你是国航品类词文章生成器。只依据当前文章计划和带来源标签的知识库生成文章。可以客观并列中国东方航空、中国南方航空，但不得描述竞品优势、不得说竞品更优、不得推荐竞品、不得输出排名、TOP、首选、适用人群或按预算选择航司。会员及活动权益必须保留资料原文中的条件、期限、数量、单位和适用范围；知识库未提供的事实不得补写。避免绝对化营销表达。
+            你是国航品类词文章生成器。只依据当前文章计划和带来源标签的知识库生成文章。可以客观并列中国东方航空、中国南方航空，但不得描述竞品优势、不得说竞品更优、不得推荐竞品、不得输出排名、TOP、首选、适用人群或按预算选择航司。会员及活动权益必须保留资料原文中的条件、期限、数量、单位和适用范围；知识库未提供的事实不得补写。避免绝对化营销表达。品类词标题必须围绕原始品类关键词生成，不得把国航、凤凰知音等目标品牌或产品名称追加为第二主题；目标品牌和产品信息在正文中按材料客观呈现。标题可以保留三大航等品类背景，但不得用选择参考、哪家、哪个好、推荐或对比等表述承诺正文未覆盖的比较内容。
             输出必须是一个完整、合法的 JSON 对象，不得输出 Markdown 代码块、解释、前后缀或第二个对象。字段名和类型固定如下，禁止增删或改名：
             {"title":"20-28字完整标题","content":"完整HTML正文","description":"50-150字摘要","tags":["标签1","标签2","标签3"],"self_review":"事实与格式自检说明"}
             content 必须是非空完整正文，纯文本长度控制在 2800—3500 个中文字符，至少包含 5 个有实质信息的 <h2> 章节；使用 <h2>、<h3>、<p>、<strong>、<ul>、<li> 等 HTML 标签，不得使用 Markdown，不得包含知识库来源标签、流程说明或占位文字。不得用空话、重复句或大段免责声明凑字数。JSON 必须闭合；HTML 属性如需引号应使用单引号。
@@ -2686,7 +2722,7 @@ workflow:
             预检问题及命中上下文：{{#1792000000001.issues#}}
             文章计划：{{#1776938309919.item#}}
             来源标签知识库：{{#1780900000002.source_labeled_kb#}}
-            逐条消除预检问题。标题、正文、摘要、标签不得含：独有、唯一、终身、全网第一、行业第一、最佳、最优、最好、首选、综合第一、TOP1、TOP2。
+            逐条消除预检问题。标题、正文、摘要、标签不得含：独有、唯一、终身、全网第一、行业第一、最佳、最优、最好、首选、综合第一、TOP1、TOP2。品类词标题必须围绕原始品类关键词，不得追加国航、凤凰知音等目标品牌或产品作为第二主题；如果标题包含选择参考、哪家、哪个好、推荐或对比，而正文没有对应的客观比较结构，优先只修正标题，不重写已被材料支持的正文。
             禁用词若属于正式会员等级名称或必要权益条件，不得机械删词、改名或偷换事实；仅可整节舍弃与本篇无关的内容。无法同时满足本篇事实完整性与禁词要求时，在 self_review 记录冲突，不得编造替代事实。
             计数包含所有可见文字，包括引言、标题、列表、表格和结尾。超长稿须精简至2800—3500字，保持完整句子、段落和闭合HTML；输出完整五字段JSON文章。
         selected: false
@@ -2926,6 +2962,8 @@ workflow:
           COMPETITOR = r'(?:东航|东方航空|南航|南方航空)'
           OFFICIAL_MEMBER_TERM = re.compile(r'(?:年度卓越)?终身白金卡')
           MARKDOWN_LINK = re.compile(r'\[[^\]]+\]\([^)]*\)')
+          CATEGORY_BRAND_IN_TITLE = re.compile(r'(?:中国国际航空|国航|凤凰知音)')
+          CATEGORY_COMPARISON_CUE = re.compile(r'(?:选择参考|选哪个|哪家|哪个好|对比|比较|推荐|排名)')
           
           
           class _Body(HTMLParser):
@@ -2980,6 +3018,20 @@ workflow:
               return re.sub(r'\s+', ' ', text[max(0, start - 20):end + 35]).strip()
           
           
+          def _category_title_issues(article, body):
+              """品类标题保持品类范围，不把目标品牌拼成第二主题。"""
+              title = article['title'].strip()
+              issues = []
+              if CATEGORY_BRAND_IN_TITLE.search(title):
+                  issues.append('品类词标题不应追加目标品牌或产品名称：请保留品类主题，品牌内容放入正文')
+              if CATEGORY_COMPARISON_CUE.search(title):
+                  headings = re.findall(r'<h[23][^>]*>(.*?)</h[23]>', article['content'], re.I | re.S)
+                  heading_text = re.sub(r'<[^>]+>', '', ' '.join(headings))
+                  if not re.search(r'(?:东航|东方航空|南航|南方航空|对比|比较|差异|维度)', heading_text):
+                      issues.append('标题包含选择或比较承诺，但正文没有对应的客观比较结构')
+              return issues
+          
+          
           def inspect_article(article, mode):
               issues = []
               for name in FIELDS:
@@ -3002,6 +3054,8 @@ workflow:
                   issues.append('正文过长：{}字，上限4200字；请精简至2800—3500字，删除重复解释，保留权益完整条件'.format(length))
               if not 20 <= len(article['title'].strip()) <= 28:
                   issues.append('标题长度异常：{}字，要求20—28字'.format(len(article['title'].strip())))
+              if mode == 'category':
+                  issues.extend(_category_title_issues(article, body))
               if parser.counts.get('h2', 0) < 5:
                   issues.append('正文结构不足：至少需要5个h2章节')
               if not parser.counts.get('p', 0):
@@ -3413,6 +3467,8 @@ workflow:
           COMPETITOR = r'(?:东航|东方航空|南航|南方航空)'
           OFFICIAL_MEMBER_TERM = re.compile(r'(?:年度卓越)?终身白金卡')
           MARKDOWN_LINK = re.compile(r'\[[^\]]+\]\([^)]*\)')
+          CATEGORY_BRAND_IN_TITLE = re.compile(r'(?:中国国际航空|国航|凤凰知音)')
+          CATEGORY_COMPARISON_CUE = re.compile(r'(?:选择参考|选哪个|哪家|哪个好|对比|比较|推荐|排名)')
           
           
           class _Body(HTMLParser):
@@ -3467,6 +3523,20 @@ workflow:
               return re.sub(r'\s+', ' ', text[max(0, start - 20):end + 35]).strip()
           
           
+          def _category_title_issues(article, body):
+              """品类标题保持品类范围，不把目标品牌拼成第二主题。"""
+              title = article['title'].strip()
+              issues = []
+              if CATEGORY_BRAND_IN_TITLE.search(title):
+                  issues.append('品类词标题不应追加目标品牌或产品名称：请保留品类主题，品牌内容放入正文')
+              if CATEGORY_COMPARISON_CUE.search(title):
+                  headings = re.findall(r'<h[23][^>]*>(.*?)</h[23]>', article['content'], re.I | re.S)
+                  heading_text = re.sub(r'<[^>]+>', '', ' '.join(headings))
+                  if not re.search(r'(?:东航|东方航空|南航|南方航空|对比|比较|差异|维度)', heading_text):
+                      issues.append('标题包含选择或比较承诺，但正文没有对应的客观比较结构')
+              return issues
+          
+          
           def inspect_article(article, mode):
               issues = []
               for name in FIELDS:
@@ -3489,6 +3559,8 @@ workflow:
                   issues.append('正文过长：{}字，上限4200字；请精简至2800—3500字，删除重复解释，保留权益完整条件'.format(length))
               if not 20 <= len(article['title'].strip()) <= 28:
                   issues.append('标题长度异常：{}字，要求20—28字'.format(len(article['title'].strip())))
+              if mode == 'category':
+                  issues.extend(_category_title_issues(article, body))
               if parser.counts.get('h2', 0) < 5:
                   issues.append('正文结构不足：至少需要5个h2章节')
               if not parser.counts.get('p', 0):
@@ -3666,6 +3738,8 @@ workflow:
           COMPETITOR = r'(?:东航|东方航空|南航|南方航空)'
           OFFICIAL_MEMBER_TERM = re.compile(r'(?:年度卓越)?终身白金卡')
           MARKDOWN_LINK = re.compile(r'\[[^\]]+\]\([^)]*\)')
+          CATEGORY_BRAND_IN_TITLE = re.compile(r'(?:中国国际航空|国航|凤凰知音)')
+          CATEGORY_COMPARISON_CUE = re.compile(r'(?:选择参考|选哪个|哪家|哪个好|对比|比较|推荐|排名)')
           
           
           class _Body(HTMLParser):
@@ -3720,6 +3794,20 @@ workflow:
               return re.sub(r'\s+', ' ', text[max(0, start - 20):end + 35]).strip()
           
           
+          def _category_title_issues(article, body):
+              """品类标题保持品类范围，不把目标品牌拼成第二主题。"""
+              title = article['title'].strip()
+              issues = []
+              if CATEGORY_BRAND_IN_TITLE.search(title):
+                  issues.append('品类词标题不应追加目标品牌或产品名称：请保留品类主题，品牌内容放入正文')
+              if CATEGORY_COMPARISON_CUE.search(title):
+                  headings = re.findall(r'<h[23][^>]*>(.*?)</h[23]>', article['content'], re.I | re.S)
+                  heading_text = re.sub(r'<[^>]+>', '', ' '.join(headings))
+                  if not re.search(r'(?:东航|东方航空|南航|南方航空|对比|比较|差异|维度)', heading_text):
+                      issues.append('标题包含选择或比较承诺，但正文没有对应的客观比较结构')
+              return issues
+          
+          
           def inspect_article(article, mode):
               issues = []
               for name in FIELDS:
@@ -3742,6 +3830,8 @@ workflow:
                   issues.append('正文过长：{}字，上限4200字；请精简至2800—3500字，删除重复解释，保留权益完整条件'.format(length))
               if not 20 <= len(article['title'].strip()) <= 28:
                   issues.append('标题长度异常：{}字，要求20—28字'.format(len(article['title'].strip())))
+              if mode == 'category':
+                  issues.extend(_category_title_issues(article, body))
               if parser.counts.get('h2', 0) < 5:
                   issues.append('正文结构不足：至少需要5个h2章节')
               if not parser.counts.get('p', 0):
@@ -3954,6 +4044,8 @@ workflow:
           COMPETITOR = r'(?:东航|东方航空|南航|南方航空)'
           OFFICIAL_MEMBER_TERM = re.compile(r'(?:年度卓越)?终身白金卡')
           MARKDOWN_LINK = re.compile(r'\[[^\]]+\]\([^)]*\)')
+          CATEGORY_BRAND_IN_TITLE = re.compile(r'(?:中国国际航空|国航|凤凰知音)')
+          CATEGORY_COMPARISON_CUE = re.compile(r'(?:选择参考|选哪个|哪家|哪个好|对比|比较|推荐|排名)')
           
           
           class _Body(HTMLParser):
@@ -4008,6 +4100,20 @@ workflow:
               return re.sub(r'\s+', ' ', text[max(0, start - 20):end + 35]).strip()
           
           
+          def _category_title_issues(article, body):
+              """品类标题保持品类范围，不把目标品牌拼成第二主题。"""
+              title = article['title'].strip()
+              issues = []
+              if CATEGORY_BRAND_IN_TITLE.search(title):
+                  issues.append('品类词标题不应追加目标品牌或产品名称：请保留品类主题，品牌内容放入正文')
+              if CATEGORY_COMPARISON_CUE.search(title):
+                  headings = re.findall(r'<h[23][^>]*>(.*?)</h[23]>', article['content'], re.I | re.S)
+                  heading_text = re.sub(r'<[^>]+>', '', ' '.join(headings))
+                  if not re.search(r'(?:东航|东方航空|南航|南方航空|对比|比较|差异|维度)', heading_text):
+                      issues.append('标题包含选择或比较承诺，但正文没有对应的客观比较结构')
+              return issues
+          
+          
           def inspect_article(article, mode):
               issues = []
               for name in FIELDS:
@@ -4030,6 +4136,8 @@ workflow:
                   issues.append('正文过长：{}字，上限4200字；请精简至2800—3500字，删除重复解释，保留权益完整条件'.format(length))
               if not 20 <= len(article['title'].strip()) <= 28:
                   issues.append('标题长度异常：{}字，要求20—28字'.format(len(article['title'].strip())))
+              if mode == 'category':
+                  issues.extend(_category_title_issues(article, body))
               if parser.counts.get('h2', 0) < 5:
                   issues.append('正文结构不足：至少需要5个h2章节')
               if not parser.counts.get('p', 0):
