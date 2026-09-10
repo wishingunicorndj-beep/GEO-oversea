@@ -2244,10 +2244,16 @@ workflow:
               except Exception:
                   total = 1
               plans = []
+              angles = [
+                  '会员体系与保级规则概览',
+                  '核心出行权益与使用规则梳理',
+                  '里程累积兑换与服务渠道说明'
+              ]
               for i in range(total):
                   keyword = words[i % len(words)] if words else '航空服务'
                   mode = 'brand' if mode_map.get(keyword) == 'brand' else 'category'
                   brand = mode == 'brand'
+                  angle = angles[i % len(angles)] if not brand else '品牌会员权益与服务规则说明'
                   plans.append({
                       'article_index': i + 1,
                       '文章序号': i + 1,
@@ -2255,6 +2261,7 @@ workflow:
                       'keyword': keyword,
                       '关键词': keyword,
                       'keyword_mode': mode,
+                      'article_angle': angle,
                       'content_mode': 'brand_focus' if brand else 'category_compare',
                       'article_type': article_type or ('品牌介绍类' if brand else '客观对比类'),
                       'article_style': article_style or '专业客观',
@@ -2664,6 +2671,7 @@ workflow:
           role: user
           text: |-
             当前品类词文章计划：{{#1776938309919.item#}}
+            同一关键词生成多篇文章时，必须严格按照当前计划中的 article_angle 组织本篇内容。不同文章应围绕不同角度展开，避免复用相同标题、章节结构和正文内容。
             来源标签知识库：{{#1780900000002.source_labeled_kb#}}
             竞品边界：{{#1777000000003.text#}}
             写作时逐项核对以下词不得出现在标题、正文、摘要和标签中：独有、唯一、终身、全网第一、行业第一、最佳、最优、最好、首选、综合第一、TOP1、TOP2。
@@ -2721,6 +2729,7 @@ workflow:
             预检实测字数：{{#1792000000001.content_len#}}
             预检问题及命中上下文：{{#1792000000001.issues#}}
             文章计划：{{#1776938309919.item#}}
+            本篇必须严格按照文章计划中的 article_angle 修复和组织内容；同一关键词的其他文章使用不同角度时，不得复用其标题、章节结构和正文内容。
             来源标签知识库：{{#1780900000002.source_labeled_kb#}}
             逐条消除预检问题。标题、正文、摘要、标签不得含：独有、唯一、终身、全网第一、行业第一、最佳、最优、最好、首选、综合第一、TOP1、TOP2。品类词标题必须围绕原始品类关键词，不得追加国航、凤凰知音等目标品牌或产品作为第二主题；如果标题包含选择参考、哪家、哪个好、推荐或对比，而正文没有对应的客观比较结构，优先只修正标题，不重写已被材料支持的正文。
             禁用词若属于正式会员等级名称或必要权益条件，不得机械删词、改名或偷换事实；仅可整节舍弃与本篇无关的内容。无法同时满足本篇事实完整性与禁词要求时，在 self_review 记录冲突，不得编造替代事实。
