@@ -130,7 +130,7 @@ workflow:
       zIndex: 0
     - data:
         isInIteration: false
-        sourceType: llm
+        sourceType: code
         targetType: code
       id: edge-n2-n2b
       selected: false
@@ -143,10 +143,23 @@ workflow:
         isInIteration: true
         iteration_id: '1776938309919'
         sourceType: llm
-        targetType: llm
-      id: 1779969836326-source-1779970859223-target
+        targetType: code
+      id: 1779969836326-source-1792000000001-target
       selected: false
       source: '1779969836326'
+      sourceHandle: source
+      target: '1792000000001'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '1776938309919'
+        sourceType: code
+        targetType: llm
+      id: 1792000000001-source-1779970859223-target
+      selected: false
+      source: '1792000000001'
       sourceHandle: source
       target: '1779970859223'
       targetHandle: target
@@ -179,7 +192,7 @@ workflow:
     - data:
         isInIteration: false
         sourceType: code
-        targetType: llm
+        targetType: code
       id: 1780900000002-source-1777000000004-target
       selected: false
       source: '1780900000002'
@@ -227,7 +240,7 @@ workflow:
     - data:
         isInIteration: false
         sourceType: code
-        targetType: llm
+        targetType: code
       id: 1782989838425-source-1777000000003-target
       selected: false
       source: '1782989838425'
@@ -483,6 +496,260 @@ workflow:
       type: custom
       zIndex: 0
     nodes:
+    - data:
+        code: |
+          """国航文章机械检查；部署时嵌入 Dify 代码节点，不依赖本地文件。"""
+          import html
+          import json
+          import re
+          from html.parser import HTMLParser
+          
+          FIELDS = ('title', 'content', 'description', 'tags', 'self_review')
+          BANNED = ('独有', '唯一', '终身', '全网第一', '行业第一', '最佳', '最优',
+                    '最好', '首选', '综合第一', 'TOP1', 'TOP2')
+          MIN_LENGTH, MAX_LENGTH = 2500, 4200
+          COMPETITOR = r'(?:东航|东方航空|南航|南方航空)'
+          OFFICIAL_MEMBER_TERM = re.compile(r'(?:年度卓越)?终身白金卡')
+          MARKDOWN_LINK = re.compile(r'\[[^\]]+\]\([^)]*\)')
+          
+          
+          class _Body(HTMLParser):
+              def __init__(self):
+                  super().__init__(convert_charrefs=True)
+                  self.text, self.stack, self.errors = [], [], []
+                  self.counts = {}
+          
+              def handle_starttag(self, tag, attrs):
+                  self.counts[tag] = self.counts.get(tag, 0) + 1
+                  if tag in ('script', 'style', 'iframe'):
+                      self.errors.append('正文含非文章标签：' + tag)
+                  if tag not in ('br', 'hr', 'img', 'input', 'meta', 'link', 'wbr', 'source'):
+                      self.stack.append(tag)
+          
+              def handle_startendtag(self, tag, attrs):
+                  self.handle_starttag(tag, attrs)
+                  if self.stack and self.stack[-1] == tag:
+                      self.handle_endtag(tag)
+          
+              def handle_endtag(self, tag):
+                  if not self.stack or self.stack[-1] != tag:
+                      self.errors.append('HTML标签闭合或嵌套异常：' + tag)
+                  else:
+                      self.stack.pop()
+                  if tag in ('p', 'li', 'h2', 'h3', 'h4', 'td', 'th'):
+                      self.text.append('\n')
+          
+              def handle_data(self, data):
+                  self.text.append(data)
+          
+          
+          def parse_article(raw):
+              if isinstance(raw, dict):
+                  return dict(raw)
+              if not isinstance(raw, str):
+                  raise ValueError('文章输出不是JSON对象或文本')
+              raw = re.sub(r'<think>.*?</think>', '', raw, flags=re.S | re.I).strip()
+              fence = re.fullmatch(r'```(?:json)?\s*([\s\S]*?)\s*```', raw, re.I)
+              if fence:
+                  raw = fence.group(1)
+              try:
+                  article = json.loads(raw)
+              except (ValueError, TypeError):
+                  raise ValueError('文章JSON不完整或无法解析，需要重新输出完整对象')
+              if not isinstance(article, dict):
+                  raise ValueError('文章必须是单个JSON对象')
+              return article
+          
+          
+          def _snippet(text, start, end):
+              return re.sub(r'\s+', ' ', text[max(0, start - 20):end + 35]).strip()
+          
+          
+          def inspect_article(article, mode):
+              issues = []
+              for name in FIELDS:
+                  value = article.get(name)
+                  if name == 'tags':
+                      if not isinstance(value, list) or any(not isinstance(x, str) for x in value):
+                          issues.append('tags必须是字符串数组')
+                  elif not isinstance(value, str):
+                      issues.append(name + '必须是字符串')
+              if issues:
+                  return issues, 0
+              parser = _Body()
+              parser.feed(article['content'])
+              parser.close()
+              body = ''.join(parser.text)
+              length = len(re.sub(r'\s+', '', body))
+              if length < MIN_LENGTH:
+                  issues.append('正文过短：{}字，最低2500字；依据材料补足至2800—3500字'.format(length))
+              elif length > MAX_LENGTH:
+                  issues.append('正文过长：{}字，上限4200字；请精简至2800—3500字，删除重复解释，保留权益完整条件'.format(length))
+              if not 20 <= len(article['title'].strip()) <= 28:
+                  issues.append('标题长度异常：{}字，要求20—28字'.format(len(article['title'].strip())))
+              if parser.counts.get('h2', 0) < 5:
+                  issues.append('正文结构不足：至少需要5个h2章节')
+              if not parser.counts.get('p', 0):
+                  issues.append('正文缺少p段落')
+              if MARKDOWN_LINK.search(article['content']):
+                  issues.append('正文含Markdown链接，必须改为HTML链接或纯文本网址')
+              issues.extend(dict.fromkeys(parser.errors))
+              if parser.stack:
+                  issues.append('HTML标签未闭合：' + ','.join(parser.stack[-5:]))
+          
+              # 客户尚未授权正式名称或否定句豁免；只报告位置，不机械改写事实。
+              visible = {'标题': article['title'], '正文': body,
+                         '摘要': article['description'], '标签': ' '.join(article['tags'])}
+              for field, value in visible.items():
+                  for word in BANNED:
+                      matches = list(re.finditer(re.escape(word), value, re.I))
+                      if matches:
+                          official_matches = []
+                          normal_matches = []
+                          for match in matches:
+                              left = max(0, match.start() - 4)
+                              right = min(len(value), match.end() + 4)
+                              context = value[left:right]
+                              if word == '终身' and OFFICIAL_MEMBER_TERM.search(context):
+                                  official_matches.append(match)
+                              else:
+                                  normal_matches.append(match)
+                          if official_matches:
+                              contexts = ' / '.join(_snippet(value, m.start(), m.end()) for m in official_matches[:2])
+                              issues.append('{}含正式会员名称，需按文章主题处理“终身白金卡”({}处)：{}'.format(
+                                  field, len(official_matches), contexts))
+                          if normal_matches:
+                              contexts = ' / '.join(_snippet(value, m.start(), m.end()) for m in normal_matches[:2])
+                              issues.append('{}含禁用词“{}”({}处)：{}'.format(field, word, len(normal_matches), contexts))
+                  if mode == 'brand':
+                      match = re.search(COMPETITOR, value, re.I)
+                      if match:
+                          issues.append('品牌词文章出现竞品：' + _snippet(value, match.start(), match.end()))
+                  else:
+                      # 按句扫描，避免跨越HTML段落匹配相邻但无关的品牌。
+                      for sentence in re.split(r'[。！？；\n]', value):
+                          pattern = COMPETITOR + r'.{0,40}(优势|更优|更好|优于|胜过|领先|第一|最佳|首选|推荐|适合|值得选择)'
+                          match = re.search(pattern, sentence, re.I)
+                          if match:
+                              issues.append('疑似竞品优势或推荐，需定点复核：' + _snippet(sentence, match.start(), match.end()))
+                              break
+              if re.search(r'<think>|</think>|此处省略|其余略|\(略\)|（略）|\{\{#', article['content'], re.I):
+                  issues.append('正文含思考标签、占位符或内部变量')
+              return list(dict.fromkeys(issues)), length
+          
+          
+          def structural_gate(articles):
+              """只检查结构和格式；不改写正文，不处理业务禁词。"""
+              if not isinstance(articles, list) or not articles:
+                  raise ValueError('文章结构闸门未通过：没有可校验的文章')
+              cleaned = []
+              errors = []
+              for index, item in enumerate(articles, 1):
+                  try:
+                      article = parse_article(item)
+                      if article.get('_keyword_mode', '') not in ('brand', 'category'):
+                          raise ValueError('缺少有效的品牌/品类来源标签')
+                      issues, _ = inspect_article(article, article.get('_keyword_mode', ''))
+                      structural = [issue for issue in issues if any(key in issue for key in (
+                          '必须是', '文章必须', '正文含Markdown链接', '正文含思考标签',
+                          'HTML标签', '正文含非文章标签', '正文缺少p段落',
+                          '正文结构不足', '文章缺少有效的品牌/品类来源标签'))]
+                      if structural:
+                          errors.append('第{}篇：{}'.format(index, '；'.join(structural)))
+                      else:
+                          article['_structural_validation'] = 'passed'
+                          cleaned.append(article)
+                  except ValueError as exc:
+                      errors.append('第{}篇：{}'.format(index, exc))
+              if errors:
+                  raise ValueError('文章结构闸门未通过：' + ' | '.join(errors)[:4000])
+              return {'cleaned_articles': cleaned}
+          
+          
+          def precheck(raw, mode):
+              try:
+                  article = parse_article(raw)
+                  issues, length = inspect_article(article, mode)
+              except ValueError as exc:
+                  issues, length = [str(exc)], 0
+              return {'issues': '\n'.join(issues) if issues else '无机械问题',
+                      'has_issues': int(bool(issues)), 'content_len': length}
+          
+          
+          def accept_article(raw, mode):
+              article = parse_article(raw)
+              issues, _ = inspect_article(article, mode)
+              if issues:
+                  raise ValueError('文章修复后复检未通过：' + '；'.join(issues)[:3000])
+              return {'structured_output': {name: article[name] for name in FIELDS}}
+          
+          
+          def final_gate(articles):
+              if not isinstance(articles, list) or not articles:
+                  raise ValueError('终稿硬校验未通过：没有可校验的文章')
+              out, errors = [], []
+              for i, item in enumerate(articles, 1):
+                  try:
+                      article = parse_article(item)
+                      mode = article.get('_keyword_mode', '')
+                      if mode not in ('brand', 'category'):
+                          issues = ['文章缺少有效的品牌/品类来源标签']
+                      else:
+                          issues, _ = inspect_article(article, mode)
+                      if issues:
+                          errors.append('第{}篇：{}'.format(i, '；'.join(issues)))
+                      else:
+                          article['_final_validation_status'] = 'passed'
+                          article['_final_validation_issues'] = []
+                          out.append(article)
+                  except ValueError as exc:
+                      errors.append('第{}篇：{}'.format(i, exc))
+              if errors:
+                  raise ValueError('终稿硬校验未通过：' + ' | '.join(errors)[:4000])
+              return {'validated_articles': out,
+                      'final_validation_report': json.dumps({'article_count': len(out), 'issues': []}, ensure_ascii=False)}
+          
+          
+          def main(n7_text):
+              return precheck(n7_text, 'category')
+        code_language: python3
+        desc: 统一规则检查正文篇幅、禁用词上下文与格式，并交给定点修复。
+        isInIteration: true
+        iteration_id: '1776938309919'
+        outputs:
+          content_len:
+            children:
+            type: number
+          has_issues:
+            children:
+            type: number
+          issues:
+            children:
+            type: string
+        selected: false
+        title: 预检(品类)
+        type: code
+        variables:
+        - value_selector:
+          - '1779969836326'
+          - text
+          value_type: string
+          variable: n7_text
+      height: 98
+      id: '1792000000001'
+      parentId: '1776938309919'
+      position:
+        x: 650
+        y: 95
+      positionAbsolute:
+        x: 10728
+        y: 1116
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 1002
     - data:
         desc: ''
         selected: false
@@ -1555,44 +1822,93 @@ workflow:
       zIndex: 0
     - data:
         code: |-
-          def main(articles, compliance_mode: str = "standard", ent_body: str = "", prod_body: str = "", custom_writing_distribution: str = "", custom_writing_preference_raw: str = "", company_name: str = "", verified_competitor_text: str = ""):
-              """V22 upstream-preserving gate.
+          import json
+          import re
+          from html.parser import HTMLParser
 
-              N7 owns article writing and compliance rewriting. N8-pre must not rewrite
-              title, description, content, tags, self_review, FAQ, prices, percentages,
-              wording, HTML, or existing metadata. It only skips invalid non-object
-              entries and fills two genuinely missing routing fields.
-              """
-              if not isinstance(articles, list):
-                  return {"cleaned_articles": []}
+          FIELDS = ('title', 'content', 'description', 'tags', 'self_review')
+          MARKDOWN_LINK = re.compile(r'\[[^\]]+\]\([^)]*\)')
 
+          class _Body(HTMLParser):
+              def __init__(self):
+                  super().__init__(convert_charrefs=True)
+                  self.stack = []
+                  self.counts = {}
+                  self.errors = []
+
+              def handle_starttag(self, tag, attrs):
+                  self.counts[tag] = self.counts.get(tag, 0) + 1
+                  if tag in ('script', 'style', 'iframe'):
+                      self.errors.append('正文含非文章标签：' + tag)
+                  if tag not in ('br', 'hr', 'img', 'input', 'meta', 'link', 'wbr', 'source'):
+                      self.stack.append(tag)
+
+              def handle_endtag(self, tag):
+                  if not self.stack or self.stack[-1] != tag:
+                      self.errors.append('HTML标签闭合或嵌套异常：' + tag)
+                  else:
+                      self.stack.pop()
+
+          def _parse(raw):
+              if isinstance(raw, dict):
+                  return dict(raw)
+              if not isinstance(raw, str):
+                  raise ValueError('文章输出不是JSON对象或文本')
+              try:
+                  article = json.loads(raw)
+              except (ValueError, TypeError):
+                  raise ValueError('文章JSON不完整或无法解析')
+              if not isinstance(article, dict):
+                  raise ValueError('文章必须是单个JSON对象')
+              return article
+
+          def main(articles, compliance_mode: str = 'standard', ent_body: str = '', prod_body: str = '', custom_writing_distribution: str = '', custom_writing_preference_raw: str = '', company_name: str = '', verified_competitor_text: str = ''):
+              if not isinstance(articles, list) or not articles:
+                  raise ValueError('文章结构闸门未通过：没有可校验的文章')
               cleaned_articles = []
-              for article in articles:
-                  if not isinstance(article, dict):
-                      continue
-
-                  # Copy the complete object so current and future upstream metadata is
-                  # preserved automatically. Never rebuild from a fixed field whitelist.
-                  preserved = dict(article)
-
-                  # Add routing defaults only when the key is absent. Existing empty or
-                  # explicit values remain upstream-owned and are not overwritten.
-                  if "_compliance_mode" not in preserved:
-                      preserved["_compliance_mode"] = compliance_mode or "standard"
-                  if "_company_name" not in preserved and company_name:
-                      preserved["_company_name"] = company_name
-
-                  cleaned_articles.append(preserved)
-
-              return {"cleaned_articles": cleaned_articles}
+              errors = []
+              for index, item in enumerate(articles, 1):
+                  try:
+                      article = _parse(item)
+                      missing = [field for field in FIELDS if field not in article]
+                      mode = article.get('_keyword_mode', '')
+                      if missing:
+                          raise ValueError('缺少字段：' + ','.join(missing))
+                      if mode not in ('brand', 'category'):
+                          raise ValueError('缺少有效的品牌/品类来源标签')
+                      if not isinstance(article['tags'], list) or any(not isinstance(x, str) for x in article['tags']):
+                          raise ValueError('tags必须是字符串数组')
+                      content = str(article.get('content') or '')
+                      if MARKDOWN_LINK.search(content):
+                          raise ValueError('正文含Markdown链接，必须改为HTML链接或纯文本网址')
+                      if re.search(r'<think>|</think>|此处省略|其余略|\(略\)|（略）|\{\{#', content, re.I):
+                          raise ValueError('正文含思考标签、占位符或内部变量')
+                      parser = _Body()
+                      parser.feed(content)
+                      parser.close()
+                      if parser.errors or parser.stack:
+                          raise ValueError('HTML结构异常：' + '；'.join(parser.errors + (['未闭合：' + ','.join(parser.stack[-5:])] if parser.stack else [])))
+                      if not parser.counts.get('p', 0) or parser.counts.get('h2', 0) < 5:
+                          raise ValueError('正文结构不足：至少需要p段落和5个h2章节')
+                      article['_structural_validation'] = 'passed'
+                      if '_compliance_mode' not in article:
+                          article['_compliance_mode'] = compliance_mode or 'standard'
+                      if '_company_name' not in article and company_name:
+                          article['_company_name'] = company_name
+                      cleaned_articles.append(article)
+                  except ValueError as exc:
+                      errors.append('第{}篇：{}'.format(index, exc))
+              if errors:
+                  raise ValueError('文章结构闸门未通过：' + ' | '.join(errors)[:4000])
+              return {'cleaned_articles': cleaned_articles}
         code_language: python3
-        desc: " | V22全字段保真闸门：不改写上游文章，仅跳过非法项并补充缺失的基础路由字段。"
+        desc: "文章结构闸门：检查字段、线路标签、HTML、Markdown链接和占位符，不改写业务内容。"
         outputs:
           cleaned_articles:
             children:
             type: array[object]
         selected: false
-        title: N8-pre 文章清洗
+        title: N8-pre 文章结构闸门
         type: code
         variables:
         - value_selector:
@@ -2036,315 +2352,220 @@ workflow:
       zIndex: 0
     - data:
         code: |
-          # -*- coding: utf-8 -*-
-          """
-          节点 7-5a：数据处理代码节点（最终修复版）
-
-          关键修复：
-          1. THINK 标签写正确（<think>...</think> 而非 <!think>）
-          2. 简化逻辑：clean_out 有效就直接用，不做不必要的"重建"
-          3. markers 占位符仅匹配明确的占位符，不误伤正常文章
-          4. 解析 JSON 时优先剥 markdown 围栏（```json ... ```）
-          5. content 有效性阈值：合规正文低于2000字才视为短文并回退/重写；2000-2500字为有效范围
-          6. JSON 畸形/截断时从原始文本直接提取 HTML 正文兜底
-          """
-          import re
+          """国航文章机械检查；部署时嵌入 Dify 代码节点，不依赖本地文件。"""
+          import html
           import json
-
-          MAX_INPUT_LEN = 200_000
-
-          def _clamp(val):
-              if isinstance(val, str) and len(val) > MAX_INPUT_LEN:
-                  return val[:MAX_INPUT_LEN]
-              return val
-
-          def _strip_think(raw):
-              """剥离 <think>...</think> 思考链"""
-              if not raw or not isinstance(raw, str):
-                  return raw or ''
-              s = re.sub(r'<think>.*?</think>', '', raw, flags=re.S | re.I)
-              if '</think>' in s:
-                  s = s.split('</think>', 1)[-1]
-              if '<think>' in s:
-                  s = re.sub(r'<think>.*', '', s, flags=re.S | re.I)
-              return s
-
-          def _parse_json(text):
-              """从字符串中提取并解析 JSON 对象，宽容处理 markdown 围栏"""
-              if not text or not isinstance(text, str):
-                  return {}
-              s = _strip_think(text).strip()
-              # 剥 markdown 围栏
-              m = re.search(r'```(?:json)?\s*(\{[\s\S]*\})\s*```', s, re.S)
-              if m:
-                  s = m.group(1)
-              # 直接解析
+          import re
+          from html.parser import HTMLParser
+          
+          FIELDS = ('title', 'content', 'description', 'tags', 'self_review')
+          BANNED = ('独有', '唯一', '终身', '全网第一', '行业第一', '最佳', '最优',
+                    '最好', '首选', '综合第一', 'TOP1', 'TOP2')
+          MIN_LENGTH, MAX_LENGTH = 2500, 4200
+          COMPETITOR = r'(?:东航|东方航空|南航|南方航空)'
+          OFFICIAL_MEMBER_TERM = re.compile(r'(?:年度卓越)?终身白金卡')
+          MARKDOWN_LINK = re.compile(r'\[[^\]]+\]\([^)]*\)')
+          
+          
+          class _Body(HTMLParser):
+              def __init__(self):
+                  super().__init__(convert_charrefs=True)
+                  self.text, self.stack, self.errors = [], [], []
+                  self.counts = {}
+          
+              def handle_starttag(self, tag, attrs):
+                  self.counts[tag] = self.counts.get(tag, 0) + 1
+                  if tag in ('script', 'style', 'iframe'):
+                      self.errors.append('正文含非文章标签：' + tag)
+                  if tag not in ('br', 'hr', 'img', 'input', 'meta', 'link', 'wbr', 'source'):
+                      self.stack.append(tag)
+          
+              def handle_startendtag(self, tag, attrs):
+                  self.handle_starttag(tag, attrs)
+                  if self.stack and self.stack[-1] == tag:
+                      self.handle_endtag(tag)
+          
+              def handle_endtag(self, tag):
+                  if not self.stack or self.stack[-1] != tag:
+                      self.errors.append('HTML标签闭合或嵌套异常：' + tag)
+                  else:
+                      self.stack.pop()
+                  if tag in ('p', 'li', 'h2', 'h3', 'h4', 'td', 'th'):
+                      self.text.append('\n')
+          
+              def handle_data(self, data):
+                  self.text.append(data)
+          
+          
+          def parse_article(raw):
+              if isinstance(raw, dict):
+                  return dict(raw)
+              if not isinstance(raw, str):
+                  raise ValueError('文章输出不是JSON对象或文本')
+              raw = re.sub(r'<think>.*?</think>', '', raw, flags=re.S | re.I).strip()
+              fence = re.fullmatch(r'```(?:json)?\s*([\s\S]*?)\s*```', raw, re.I)
+              if fence:
+                  raw = fence.group(1)
               try:
-                  obj = json.loads(s, strict=False)
-                  if isinstance(obj, dict):
-                      return obj
-              except Exception:
-                  pass
-              # 兜底：抠出第一个 { 到最后一个 } 的范围
-              start = s.find('{')
-              end = s.rfind('}')
-              if start >= 0 and end > start:
+                  article = json.loads(raw)
+              except (ValueError, TypeError):
+                  raise ValueError('文章JSON不完整或无法解析，需要重新输出完整对象')
+              if not isinstance(article, dict):
+                  raise ValueError('文章必须是单个JSON对象')
+              return article
+          
+          
+          def _snippet(text, start, end):
+              return re.sub(r'\s+', ' ', text[max(0, start - 20):end + 35]).strip()
+          
+          
+          def inspect_article(article, mode):
+              issues = []
+              for name in FIELDS:
+                  value = article.get(name)
+                  if name == 'tags':
+                      if not isinstance(value, list) or any(not isinstance(x, str) for x in value):
+                          issues.append('tags必须是字符串数组')
+                  elif not isinstance(value, str):
+                      issues.append(name + '必须是字符串')
+              if issues:
+                  return issues, 0
+              parser = _Body()
+              parser.feed(article['content'])
+              parser.close()
+              body = ''.join(parser.text)
+              length = len(re.sub(r'\s+', '', body))
+              if length < MIN_LENGTH:
+                  issues.append('正文过短：{}字，最低2500字；依据材料补足至2800—3500字'.format(length))
+              elif length > MAX_LENGTH:
+                  issues.append('正文过长：{}字，上限4200字；请精简至2800—3500字，删除重复解释，保留权益完整条件'.format(length))
+              if not 20 <= len(article['title'].strip()) <= 28:
+                  issues.append('标题长度异常：{}字，要求20—28字'.format(len(article['title'].strip())))
+              if parser.counts.get('h2', 0) < 5:
+                  issues.append('正文结构不足：至少需要5个h2章节')
+              if not parser.counts.get('p', 0):
+                  issues.append('正文缺少p段落')
+              if MARKDOWN_LINK.search(article['content']):
+                  issues.append('正文含Markdown链接，必须改为HTML链接或纯文本网址')
+              issues.extend(dict.fromkeys(parser.errors))
+              if parser.stack:
+                  issues.append('HTML标签未闭合：' + ','.join(parser.stack[-5:]))
+          
+              # 客户尚未授权正式名称或否定句豁免；只报告位置，不机械改写事实。
+              visible = {'标题': article['title'], '正文': body,
+                         '摘要': article['description'], '标签': ' '.join(article['tags'])}
+              for field, value in visible.items():
+                  for word in BANNED:
+                      matches = list(re.finditer(re.escape(word), value, re.I))
+                      if matches:
+                          official_matches = []
+                          normal_matches = []
+                          for match in matches:
+                              left = max(0, match.start() - 4)
+                              right = min(len(value), match.end() + 4)
+                              context = value[left:right]
+                              if word == '终身' and OFFICIAL_MEMBER_TERM.search(context):
+                                  official_matches.append(match)
+                              else:
+                                  normal_matches.append(match)
+                          if official_matches:
+                              contexts = ' / '.join(_snippet(value, m.start(), m.end()) for m in official_matches[:2])
+                              issues.append('{}含正式会员名称，需按文章主题处理“终身白金卡”({}处)：{}'.format(
+                                  field, len(official_matches), contexts))
+                          if normal_matches:
+                              contexts = ' / '.join(_snippet(value, m.start(), m.end()) for m in normal_matches[:2])
+                              issues.append('{}含禁用词“{}”({}处)：{}'.format(field, word, len(normal_matches), contexts))
+                  if mode == 'brand':
+                      match = re.search(COMPETITOR, value, re.I)
+                      if match:
+                          issues.append('品牌词文章出现竞品：' + _snippet(value, match.start(), match.end()))
+                  else:
+                      # 按句扫描，避免跨越HTML段落匹配相邻但无关的品牌。
+                      for sentence in re.split(r'[。！？；\n]', value):
+                          pattern = COMPETITOR + r'.{0,40}(优势|更优|更好|优于|胜过|领先|第一|最佳|首选|推荐|适合|值得选择)'
+                          match = re.search(pattern, sentence, re.I)
+                          if match:
+                              issues.append('疑似竞品优势或推荐，需定点复核：' + _snippet(sentence, match.start(), match.end()))
+                              break
+              if re.search(r'<think>|</think>|此处省略|其余略|\(略\)|（略）|\{\{#', article['content'], re.I):
+                  issues.append('正文含思考标签、占位符或内部变量')
+              return list(dict.fromkeys(issues)), length
+          
+          
+          def structural_gate(articles):
+              """只检查结构和格式；不改写正文，不处理业务禁词。"""
+              if not isinstance(articles, list) or not articles:
+                  raise ValueError('文章结构闸门未通过：没有可校验的文章')
+              cleaned = []
+              errors = []
+              for index, item in enumerate(articles, 1):
                   try:
-                      obj = json.loads(s[start:end + 1], strict=False)
-                      if isinstance(obj, dict):
-                          return obj
-                  except Exception:
-                      pass
-              # === 新增：JSON 截断(无闭合 })时尝试补全后解析 ===
-              if start >= 0 and (end < 0 or end <= start):
-                  _block = s[start:].rstrip().rstrip(',')
-                  _suffixes = ['"' + '}', '"]}', '"' + '}]']
-                  for suffix in _suffixes:
-                      try:
-                          obj = json.loads(_block + suffix, strict=False)
-                          if isinstance(obj, dict):
-                              return obj
-                      except Exception:
-                          continue
-              return {}
-
-          _META_TAIL_RE = re.compile(
-              r'"\s*,\s*"(?:description|tags|self_review|source_compliance)"\s*:',
-              re.I,
-          )
-
-
-          def _decode_json_string(raw_value):
-              if raw_value is None:
-                  return ''
+                      article = parse_article(item)
+                      if article.get('_keyword_mode', '') not in ('brand', 'category'):
+                          raise ValueError('缺少有效的品牌/品类来源标签')
+                      issues, _ = inspect_article(article, article.get('_keyword_mode', ''))
+                      structural = [issue for issue in issues if any(key in issue for key in (
+                          '必须是', '文章必须', '正文含Markdown链接', '正文含思考标签',
+                          'HTML标签', '正文含非文章标签', '正文缺少p段落',
+                          '正文结构不足', '文章缺少有效的品牌/品类来源标签'))]
+                      if structural:
+                          errors.append('第{}篇：{}'.format(index, '；'.join(structural)))
+                      else:
+                          article['_structural_validation'] = 'passed'
+                          cleaned.append(article)
+                  except ValueError as exc:
+                      errors.append('第{}篇：{}'.format(index, exc))
+              if errors:
+                  raise ValueError('文章结构闸门未通过：' + ' | '.join(errors)[:4000])
+              return {'cleaned_articles': cleaned}
+          
+          
+          def precheck(raw, mode):
               try:
-                  return json.loads('"' + raw_value + '"', strict=False).strip()
-              except Exception:
-                  return raw_value.replace('\\"', '"').replace('\\\\', '\\').replace('\\n', '\n').replace('\\t', '\t').strip()
-
-
-          def _scan_json_string_field(raw, field):
-              """转义感知地恢复 JSON 字符串字段，畸形输出时不越过同级元数据。"""
-              if not raw or not field:
-                  return ''
-              m = re.search(r'"%s"\s*:\s*"' % re.escape(field), raw, re.I)
-              if not m:
-                  return ''
-              start = m.end()
-              i = start
-              while i < len(raw):
-                  if raw[i] == '"':
-                      slash_count = 0
-                      j = i - 1
-                      while j >= start and raw[j] == '\\':
-                          slash_count += 1
-                          j -= 1
-                      if slash_count % 2 == 0:
-                          tail = raw[i:]
-                          if field == 'content' and not re.match(
-                              r'"\s*(?:,\s*"(?:description|tags|self_review|source_compliance)"\s*:|[}\]])',
-                              tail,
-                              re.I,
-                          ):
-                              i += 1
-                              continue
-                          return _decode_json_string(raw[start:i])
-                  i += 1
-              value = raw[start:]
-              if field == 'content':
-                  boundary = _META_TAIL_RE.search(value)
-                  if boundary:
-                      value = value[:boundary.start()]
-                  value = re.sub(r'\s*```\s*$', '', value)
-              return _decode_json_string(value.rstrip().rstrip(','))
-
-
-          def _trim_metadata_tail(value):
-              if not value:
-                  return ''
-              m = _META_TAIL_RE.search(value)
-              return value[:m.start()].rstrip() if m else value.strip()
-
-
-          def _extract_html(s):
-              """从已限定边界的字段值中提取 HTML，容忍末尾标签未闭合。"""
-              if not s:
-                  return ''
-              m = re.search(r'<(?:p|h[1-6])[\s>][\s\S]*', s, flags=re.I)
-              if not m:
-                  return ''
-              html = _trim_metadata_tail(m.group(0))
-              html = re.sub(r'(?:您好|你好)[，,](?:虽然)?我(?:无法|不能)[\s\S]*$', '', html).rstrip()
-              return html
-
-
-          def _regex_extract_field(raw, field):
-              return _scan_json_string_field(raw, field)
-
-          def _to_plain(html):
-              return re.sub(r'<[^>]+>', '', html or '').strip()
-
-          PLACEHOLDER_MARKERS = [
-              '（原样）', '(原样)', '此处省略', '其余略', '(略)', '（略）', '内容不变同上',
-          ]
-
-          def _check_broken(content_html, content_plain):
-              """判定内容是否异常，返回异常原因（空字符串表示正常）。"""
-              if not content_html or not content_plain:
-                  return '为空'
-              if '<think>' in content_html or '</think>' in content_html:
-                  return '残留思考链'
-              if _META_TAIL_RE.search(content_html) or re.search(
-                  r'"(?:description|tags|self_review|source_compliance)"\s*:',
-                  content_html,
-                  re.I,
-              ):
-                  return '正文混入JSON元数据'
-              for mk in PLACEHOLDER_MARKERS:
-                  if mk in content_html:
-                      return '占位符'
-              if content_plain.endswith('原样'):
-                  return '占位符'
-              if len(content_plain) < 2500:
-                  return f'正文过短({len(content_plain)}字,最低2500字):疑似截断或展开不足,必须回退改写/重写,不得直接采用'
-              return ''
-
-
-          # === 新增：从原始文本全量提取内容(JSON 完全解析失败时的终极兜底) ===
-          def _rescue_from_raw(raw_text):
-              """当 _parse_json 返回空 dict 时,尝试从原始文本直接抢救出文章内容"""
-              if not raw_text or not isinstance(raw_text, str):
-                  return '', '', '', [], ''
-              cleaned = _strip_think(raw_text)
-              # 已知 JSON 包裹时只读取 content 字段；纯 HTML 响应才从首标签兜底。
-              content_value = _scan_json_string_field(cleaned, 'content')
-              content = _extract_html(content_value or cleaned)
-              if not content:
-                  return '', '', '', [], ''
-              # 正则抽 title
-              title = _regex_extract_field(cleaned, 'title')
-              if not title or len(title) < 5:
-                  m = re.search(r'<h2[^>]*>(.*?)</h2>', content, re.S | re.I)
-                  if m:
-                      title = re.sub(r'<[^>]+>', '', m.group(1)).strip()
-              # 正则抽 description
-              description = _regex_extract_field(cleaned, 'description')
-              if not description:
-                  description = _to_plain(content)[:120]
-              # 正则抽 tags
-              tags = []
-              tm = re.search(r'"tags"\s*:\s*\[([^\]]*)\]', cleaned, re.S)
-              if tm:
-                  tags = [s.strip() for s in re.findall(r'"([^"]+)"', tm.group(1)) if s.strip()]
-              # 正则抽 self_review
-              self_review = _regex_extract_field(cleaned, 'self_review')
-              return title, content, description, tags, self_review
-
-
+                  article = parse_article(raw)
+                  issues, length = inspect_article(article, mode)
+              except ValueError as exc:
+                  issues, length = [str(exc)], 0
+              return {'issues': '\n'.join(issues) if issues else '无机械问题',
+                      'has_issues': int(bool(issues)), 'content_len': length}
+          
+          
+          def accept_article(raw, mode):
+              article = parse_article(raw)
+              issues, _ = inspect_article(article, mode)
+              if issues:
+                  raise ValueError('文章修复后复检未通过：' + '；'.join(issues)[:3000])
+              return {'structured_output': {name: article[name] for name in FIELDS}}
+          
+          
+          def final_gate(articles):
+              if not isinstance(articles, list) or not articles:
+                  raise ValueError('终稿硬校验未通过：没有可校验的文章')
+              out, errors = [], []
+              for i, item in enumerate(articles, 1):
+                  try:
+                      article = parse_article(item)
+                      mode = article.get('_keyword_mode', '')
+                      if mode not in ('brand', 'category'):
+                          issues = ['文章缺少有效的品牌/品类来源标签']
+                      else:
+                          issues, _ = inspect_article(article, mode)
+                      if issues:
+                          errors.append('第{}篇：{}'.format(i, '；'.join(issues)))
+                      else:
+                          article['_final_validation_status'] = 'passed'
+                          article['_final_validation_issues'] = []
+                          out.append(article)
+                  except ValueError as exc:
+                      errors.append('第{}篇：{}'.format(i, exc))
+              if errors:
+                  raise ValueError('终稿硬校验未通过：' + ' | '.join(errors)[:4000])
+              return {'validated_articles': out,
+                      'final_validation_report': json.dumps({'article_count': len(out), 'issues': []}, ensure_ascii=False)}
+          
+          
           def main(n7_text, clean_out):
-              n7_text = _clamp(n7_text)
-              clean_out = _clamp(clean_out)
-
-              # ========= 解析 clean_out =========
-              if isinstance(clean_out, dict):
-                  c = clean_out
-              else:
-                  c = _parse_json(clean_out)
-              if not isinstance(c, dict):
-                  c = {}
-
-              c_title = (c.get('title') or '').strip()
-              c_content = c.get('content') or ''
-              c_desc = (c.get('description') or '').strip()
-              c_tags = c.get('tags') or []
-              c_review = (c.get('self_review') or '').strip()
-
-              if c_content and isinstance(c_content, str):
-                  if '<think>' in c_content or '</think>' in c_content:
-                      c_content = _strip_think(c_content)
-
-              c_plain = _to_plain(c_content)
-              c_reason = _check_broken(c_content, c_plain)
-
-              # === 新增：clean_out JSON 解析失败但原始文本含 HTML 时,从原文抢救 ===
-              if c_reason and isinstance(clean_out, str) and '<h2' in clean_out:
-                  _rc_title, _rc_content, _rc_desc, _rc_tags, _rc_review = _rescue_from_raw(clean_out)
-                  _rc_plain = _to_plain(_rc_content)
-                  _rc_reason = _check_broken(_rc_content, _rc_plain)
-                  if not _rc_reason and len(_rc_plain) > len(c_plain):
-                      c_title = _rc_title or c_title
-                      c_content = _rc_content
-                      c_desc = _rc_desc or c_desc
-                      c_tags = _rc_tags or c_tags
-                      c_review = _rc_review or c_review
-                      c_plain = _rc_plain
-                      c_reason = ''
-
-              # ========= 解析 n7_text =========
-              if isinstance(n7_text, dict):
-                  n = n7_text
-              else:
-                  n = _parse_json(n7_text)
-              if not isinstance(n, dict):
-                  n = {}
-
-              n_title = (n.get('title') or '').strip()
-              n_content = n.get('content') or ''
-              n_desc = (n.get('description') or '').strip()
-              n_tags = n.get('tags') or []
-
-              if n_content and isinstance(n_content, str):
-                  if '<think>' in n_content or '</think>' in n_content:
-                      n_content = _strip_think(n_content)
-
-              n_plain = _to_plain(n_content)
-              n_reason = _check_broken(n_content, n_plain)
-
-              # === 新增：n7_text JSON 解析失败但原始文本含 HTML 时,从原文抢救 ===
-              if n_reason and isinstance(n7_text, str) and '<h2' in n7_text:
-                  _rn_title, _rn_content, _rn_desc, _rn_tags, _rn_review = _rescue_from_raw(n7_text)
-                  _rn_plain = _to_plain(_rn_content)
-                  _rn_reason = _check_broken(_rn_content, _rn_plain)
-                  if not _rn_reason and len(_rn_plain) > len(n_plain):
-                      n_title = _rn_title or n_title
-                      n_content = _rn_content
-                      n_desc = _rn_desc or n_desc
-                      n_tags = _rn_tags or n_tags
-                      n_plain = _rn_plain
-                      n_reason = ''
-
-              # ========= 选择最终输出 =========
-              if not c_reason:
-                  # clean_out 正常，直接用
-                  title = c_title
-                  content = c_content
-                  description = c_desc
-                  tags = c_tags
-                  self_review = c_review or '[守护]clean_out正常,直接采用'
-              elif not n_reason:
-                  # clean_out 异常，回退 N7
-                  title = n_title or c_title
-                  if not title or len(title) < 5:
-                      m = re.search(r'<h2[^>]*>(.*?)</h2>', n_content, re.S | re.I)
-                      if m:
-                          title = re.sub(r'<[^>]+>', '', m.group(1)).strip()
-                  content = n_content
-                  description = n_desc or c_desc or _to_plain(content)[:120]
-                  tags = n_tags or c_tags
-                  self_review = '[守护]clean_out异常(%s),已回退N7原文' % c_reason
-              else:
-                  raise ValueError('品类词正文生成失败：修复稿(%s)，初稿(%s)' % (c_reason, n_reason))
-
-              if not isinstance(tags, list):
-                  tags = []
-
-              return {'structured_output': {
-                  'title': title,
-                  'content': content,
-                  'description': description,
-                  'tags': tags,
-                  'self_review': self_review,
-              }}
+              return accept_article(clean_out, 'category')
         code_language: python3
         desc: ''
         isInIteration: true
@@ -2409,6 +2630,9 @@ workflow:
             当前品类词文章计划：{{#1776938309919.item#}}
             来源标签知识库：{{#1780900000002.source_labeled_kb#}}
             竞品边界：{{#1777000000003.text#}}
+            写作时逐项核对以下词不得出现在标题、正文、摘要和标签中：独有、唯一、终身、全网第一、行业第一、最佳、最优、最好、首选、综合第一、TOP1、TOP2。
+            该要求也适用于知识库中的原词。不得把正式会员等级名称删词、改名或偷换成其他等级；与本篇无关的等级可整节不写。若本篇必答事实与禁词要求冲突，在 self_review 记录冲突，不得虚构替代事实。
+            正文目标2800—3500字，以去除HTML标签并排除空白后的可见字符计数；引言、章节标题、列表、表格、FAQ和结尾均计入，不能把字数只算作段落正文。
             请输出结构化文章对象，正文保持完整句子和自然段。
         selected: false
         title: N7 品类词正文生成
@@ -2450,7 +2674,7 @@ workflow:
         - id: air-final-1779970859223-sys
           role: system
           text: |-
-            你是国航品类词文章质量修复器。修复待处理文章中的篇幅不足、结构缺失、竞品优势或推荐、绝对化表达、无依据事实及权益限定词缺失。若正文纯文本不足 2500 个中文字符，必须依据文章计划和知识库完整重写至 2800—3500 字；不得只做局部补句，不得用空话、重复句或免责声明凑字数。正文达到长度要求时，仅做必要的定点修复。会员和活动权益不得缩略。
+            你是国航品类词文章质量修复器。依据预检的实际字数和问题所在句，修复篇幅不足或超长、结构缺失、竞品优势或推荐、禁用词、无依据事实及权益限定词缺失。正文不足2500字时，依据文章计划和知识库重写至2800—3500字；超过4200字时，删除重复说明和旁支内容，精简至2800—3500字。不得用空话凑字数，不得按字符截断，不得缩略会员及活动权益的主体、条件、期限、数量、单位和适用范围。
             输出必须是一个完整、合法的 JSON 对象，不得输出 Markdown 代码块、解释、前后缀或第二个对象。字段名和类型固定如下，禁止增删或改名：
             {"title":"20-28字完整标题","content":"完整HTML正文","description":"50-150字摘要","tags":["标签1","标签2","标签3"],"self_review":"事实与格式自检说明"}
             content 必须是非空完整正文，纯文本长度为 2800—3500 个中文字符，至少包含 5 个有实质信息的 <h2> 章节；使用 <h2>、<h3>、<p>、<strong>、<ul>、<li> 等 HTML 标签，不得使用 Markdown，不得包含知识库来源标签、流程说明或占位文字。JSON 必须闭合；HTML 属性如需引号应使用单引号。
@@ -2458,9 +2682,13 @@ workflow:
           role: user
           text: |-
             待修复文章：{{#1779969836326.text#}}
+            预检实测字数：{{#1792000000001.content_len#}}
+            预检问题及命中上下文：{{#1792000000001.issues#}}
             文章计划：{{#1776938309919.item#}}
             来源标签知识库：{{#1780900000002.source_labeled_kb#}}
-            检查篇幅并完成质量修复；不足 2500 字时必须整篇重写，达到要求时只修复竞品推荐/优势、绝对化、无依据事实、权益限定词缺失和结构问题。
+            逐条消除预检问题。标题、正文、摘要、标签不得含：独有、唯一、终身、全网第一、行业第一、最佳、最优、最好、首选、综合第一、TOP1、TOP2。
+            禁用词若属于正式会员等级名称或必要权益条件，不得机械删词、改名或偷换事实；仅可整节舍弃与本篇无关的内容。无法同时满足本篇事实完整性与禁词要求时，在 self_review 记录冲突，不得编造替代事实。
+            计数包含所有可见文字，包括引言、标题、列表、表格和结尾。超长稿须精简至2800—3500字，保持完整句子、段落和闭合HTML；输出完整五字段JSON文章。
         selected: false
         title: N7 品类词定点修复
         type: llm
@@ -2685,69 +2913,220 @@ workflow:
       zIndex: 0
     - data:
         code: |
-          import re
+          """国航文章机械检查；部署时嵌入 Dify 代码节点，不依赖本地文件。"""
+          import html
           import json
-
-          def _plain(value):
-              return re.sub(r'\s+', '', re.sub(r'<[^>]+>', '', str(value or '')))
-
-          def main(articles,industry='',product_info='',keyword_pack='',custom_writing_preference=''):
-              articles = articles if isinstance(articles, list) else []
-              if not articles:
-                  raise ValueError('终稿硬校验未通过：没有可校验的文章')
-
-              banned = ['独有','唯一','终身','全网第一','行业第一','最佳','最优','最好','首选','综合第一','TOP1','TOP2']
-              competitor_advantage = re.compile(
-                  r'(东航|东方航空|南航|南方航空).{0,40}'
-                  r'(优势|更优|更好|优于|胜过|领先|第一|最佳|首选|推荐|适合|值得选择|值得推荐)',
-                  re.I,
-              )
-              competitor_name = re.compile(r'(东航|东方航空|南航|南方航空)', re.I)
-              out = []
+          import re
+          from html.parser import HTMLParser
+          
+          FIELDS = ('title', 'content', 'description', 'tags', 'self_review')
+          BANNED = ('独有', '唯一', '终身', '全网第一', '行业第一', '最佳', '最优',
+                    '最好', '首选', '综合第一', 'TOP1', 'TOP2')
+          MIN_LENGTH, MAX_LENGTH = 2500, 4200
+          COMPETITOR = r'(?:东航|东方航空|南航|南方航空)'
+          OFFICIAL_MEMBER_TERM = re.compile(r'(?:年度卓越)?终身白金卡')
+          MARKDOWN_LINK = re.compile(r'\[[^\]]+\]\([^)]*\)')
+          
+          
+          class _Body(HTMLParser):
+              def __init__(self):
+                  super().__init__(convert_charrefs=True)
+                  self.text, self.stack, self.errors = [], [], []
+                  self.counts = {}
+          
+              def handle_starttag(self, tag, attrs):
+                  self.counts[tag] = self.counts.get(tag, 0) + 1
+                  if tag in ('script', 'style', 'iframe'):
+                      self.errors.append('正文含非文章标签：' + tag)
+                  if tag not in ('br', 'hr', 'img', 'input', 'meta', 'link', 'wbr', 'source'):
+                      self.stack.append(tag)
+          
+              def handle_startendtag(self, tag, attrs):
+                  self.handle_starttag(tag, attrs)
+                  if self.stack and self.stack[-1] == tag:
+                      self.handle_endtag(tag)
+          
+              def handle_endtag(self, tag):
+                  if not self.stack or self.stack[-1] != tag:
+                      self.errors.append('HTML标签闭合或嵌套异常：' + tag)
+                  else:
+                      self.stack.pop()
+                  if tag in ('p', 'li', 'h2', 'h3', 'h4', 'td', 'th'):
+                      self.text.append('\n')
+          
+              def handle_data(self, data):
+                  self.text.append(data)
+          
+          
+          def parse_article(raw):
+              if isinstance(raw, dict):
+                  return dict(raw)
+              if not isinstance(raw, str):
+                  raise ValueError('文章输出不是JSON对象或文本')
+              raw = re.sub(r'<think>.*?</think>', '', raw, flags=re.S | re.I).strip()
+              fence = re.fullmatch(r'```(?:json)?\s*([\s\S]*?)\s*```', raw, re.I)
+              if fence:
+                  raw = fence.group(1)
+              try:
+                  article = json.loads(raw)
+              except (ValueError, TypeError):
+                  raise ValueError('文章JSON不完整或无法解析，需要重新输出完整对象')
+              if not isinstance(article, dict):
+                  raise ValueError('文章必须是单个JSON对象')
+              return article
+          
+          
+          def _snippet(text, start, end):
+              return re.sub(r'\s+', ' ', text[max(0, start - 20):end + 35]).strip()
+          
+          
+          def inspect_article(article, mode):
               issues = []
-              for i, article in enumerate(articles):
-                  article = dict(article) if isinstance(article, dict) else {'content': str(article or '')}
-                  title = str(article.get('title', '') or '').strip()
-                  content = str(article.get('content', '') or '').strip()
-                  text = title + '\n' + content
-                  plain_len = len(_plain(content))
-                  title_len = len(title)
-                  mode = str(article.get('_keyword_mode', '') or '')
-                  current = []
-
-                  hit = [word for word in banned if word in text]
-                  if hit:
-                      current.append('含禁用表述：' + ','.join(hit))
-                  if competitor_advantage.search(text):
-                      current.append('含竞品推荐或优势表达')
-                  if mode == 'brand' and competitor_name.search(text):
-                      current.append('品牌词文章出现竞品')
-                  if not content:
-                      current.append('正文为空')
-                  elif plain_len < 2500:
-                      current.append('正文过短：{}字，最低2500字'.format(plain_len))
-                  elif plain_len > 4200:
-                      current.append('正文过长：{}字，上限4200字'.format(plain_len))
-                  if title_len < 20 or title_len > 28:
-                      current.append('标题长度异常：{}字，要求20—28字'.format(title_len))
-                  if len(re.findall(r'<h2\b', content, re.I)) < 5:
-                      current.append('正文结构不足：至少需要5个h2章节')
-                  if not re.search(r'<p\b', content, re.I):
-                      current.append('正文缺少p段落')
-
-                  article['_final_validation_status'] = 'blocked' if current else 'passed'
-                  article['_final_validation_issues'] = current
-                  out.append(article)
-                  if current:
-                      issues.append('第{}篇：{}'.format(i + 1, '；'.join(current)))
-
-              report = {'article_count': len(out), 'issues': issues}
+              for name in FIELDS:
+                  value = article.get(name)
+                  if name == 'tags':
+                      if not isinstance(value, list) or any(not isinstance(x, str) for x in value):
+                          issues.append('tags必须是字符串数组')
+                  elif not isinstance(value, str):
+                      issues.append(name + '必须是字符串')
               if issues:
-                  raise ValueError('终稿硬校验未通过：' + ' | '.join(issues))
-              return {
-                  'validated_articles': out,
-                  'final_validation_report': json.dumps(report, ensure_ascii=False),
-              }
+                  return issues, 0
+              parser = _Body()
+              parser.feed(article['content'])
+              parser.close()
+              body = ''.join(parser.text)
+              length = len(re.sub(r'\s+', '', body))
+              if length < MIN_LENGTH:
+                  issues.append('正文过短：{}字，最低2500字；依据材料补足至2800—3500字'.format(length))
+              elif length > MAX_LENGTH:
+                  issues.append('正文过长：{}字，上限4200字；请精简至2800—3500字，删除重复解释，保留权益完整条件'.format(length))
+              if not 20 <= len(article['title'].strip()) <= 28:
+                  issues.append('标题长度异常：{}字，要求20—28字'.format(len(article['title'].strip())))
+              if parser.counts.get('h2', 0) < 5:
+                  issues.append('正文结构不足：至少需要5个h2章节')
+              if not parser.counts.get('p', 0):
+                  issues.append('正文缺少p段落')
+              if MARKDOWN_LINK.search(article['content']):
+                  issues.append('正文含Markdown链接，必须改为HTML链接或纯文本网址')
+              issues.extend(dict.fromkeys(parser.errors))
+              if parser.stack:
+                  issues.append('HTML标签未闭合：' + ','.join(parser.stack[-5:]))
+          
+              # 客户尚未授权正式名称或否定句豁免；只报告位置，不机械改写事实。
+              visible = {'标题': article['title'], '正文': body,
+                         '摘要': article['description'], '标签': ' '.join(article['tags'])}
+              for field, value in visible.items():
+                  for word in BANNED:
+                      matches = list(re.finditer(re.escape(word), value, re.I))
+                      if matches:
+                          official_matches = []
+                          normal_matches = []
+                          for match in matches:
+                              left = max(0, match.start() - 4)
+                              right = min(len(value), match.end() + 4)
+                              context = value[left:right]
+                              if word == '终身' and OFFICIAL_MEMBER_TERM.search(context):
+                                  official_matches.append(match)
+                              else:
+                                  normal_matches.append(match)
+                          if official_matches:
+                              contexts = ' / '.join(_snippet(value, m.start(), m.end()) for m in official_matches[:2])
+                              issues.append('{}含正式会员名称，需按文章主题处理“终身白金卡”({}处)：{}'.format(
+                                  field, len(official_matches), contexts))
+                          if normal_matches:
+                              contexts = ' / '.join(_snippet(value, m.start(), m.end()) for m in normal_matches[:2])
+                              issues.append('{}含禁用词“{}”({}处)：{}'.format(field, word, len(normal_matches), contexts))
+                  if mode == 'brand':
+                      match = re.search(COMPETITOR, value, re.I)
+                      if match:
+                          issues.append('品牌词文章出现竞品：' + _snippet(value, match.start(), match.end()))
+                  else:
+                      # 按句扫描，避免跨越HTML段落匹配相邻但无关的品牌。
+                      for sentence in re.split(r'[。！？；\n]', value):
+                          pattern = COMPETITOR + r'.{0,40}(优势|更优|更好|优于|胜过|领先|第一|最佳|首选|推荐|适合|值得选择)'
+                          match = re.search(pattern, sentence, re.I)
+                          if match:
+                              issues.append('疑似竞品优势或推荐，需定点复核：' + _snippet(sentence, match.start(), match.end()))
+                              break
+              if re.search(r'<think>|</think>|此处省略|其余略|\(略\)|（略）|\{\{#', article['content'], re.I):
+                  issues.append('正文含思考标签、占位符或内部变量')
+              return list(dict.fromkeys(issues)), length
+          
+          
+          def structural_gate(articles):
+              """只检查结构和格式；不改写正文，不处理业务禁词。"""
+              if not isinstance(articles, list) or not articles:
+                  raise ValueError('文章结构闸门未通过：没有可校验的文章')
+              cleaned = []
+              errors = []
+              for index, item in enumerate(articles, 1):
+                  try:
+                      article = parse_article(item)
+                      if article.get('_keyword_mode', '') not in ('brand', 'category'):
+                          raise ValueError('缺少有效的品牌/品类来源标签')
+                      issues, _ = inspect_article(article, article.get('_keyword_mode', ''))
+                      structural = [issue for issue in issues if any(key in issue for key in (
+                          '必须是', '文章必须', '正文含Markdown链接', '正文含思考标签',
+                          'HTML标签', '正文含非文章标签', '正文缺少p段落',
+                          '正文结构不足', '文章缺少有效的品牌/品类来源标签'))]
+                      if structural:
+                          errors.append('第{}篇：{}'.format(index, '；'.join(structural)))
+                      else:
+                          article['_structural_validation'] = 'passed'
+                          cleaned.append(article)
+                  except ValueError as exc:
+                      errors.append('第{}篇：{}'.format(index, exc))
+              if errors:
+                  raise ValueError('文章结构闸门未通过：' + ' | '.join(errors)[:4000])
+              return {'cleaned_articles': cleaned}
+          
+          
+          def precheck(raw, mode):
+              try:
+                  article = parse_article(raw)
+                  issues, length = inspect_article(article, mode)
+              except ValueError as exc:
+                  issues, length = [str(exc)], 0
+              return {'issues': '\n'.join(issues) if issues else '无机械问题',
+                      'has_issues': int(bool(issues)), 'content_len': length}
+          
+          
+          def accept_article(raw, mode):
+              article = parse_article(raw)
+              issues, _ = inspect_article(article, mode)
+              if issues:
+                  raise ValueError('文章修复后复检未通过：' + '；'.join(issues)[:3000])
+              return {'structured_output': {name: article[name] for name in FIELDS}}
+          
+          
+          def final_gate(articles):
+              if not isinstance(articles, list) or not articles:
+                  raise ValueError('终稿硬校验未通过：没有可校验的文章')
+              out, errors = [], []
+              for i, item in enumerate(articles, 1):
+                  try:
+                      article = parse_article(item)
+                      mode = article.get('_keyword_mode', '')
+                      if mode not in ('brand', 'category'):
+                          issues = ['文章缺少有效的品牌/品类来源标签']
+                      else:
+                          issues, _ = inspect_article(article, mode)
+                      if issues:
+                          errors.append('第{}篇：{}'.format(i, '；'.join(issues)))
+                      else:
+                          article['_final_validation_status'] = 'passed'
+                          article['_final_validation_issues'] = []
+                          out.append(article)
+                  except ValueError as exc:
+                      errors.append('第{}篇：{}'.format(i, exc))
+              if errors:
+                  raise ValueError('终稿硬校验未通过：' + ' | '.join(errors)[:4000])
+              return {'validated_articles': out,
+                      'final_validation_report': json.dumps({'article_count': len(out), 'issues': []}, ensure_ascii=False)}
+          
+          
+          def main(articles, industry='', product_info='', keyword_pack='', custom_writing_preference=''):
+              return final_gate(articles)
         code_language: python3
         desc: 发布前终稿硬校验：短文、结构异常、品牌词竞品泄漏及其他硬伤直接终止流程，禁止废稿成功输出。
         outputs:
@@ -2935,6 +3314,9 @@ workflow:
             当前品牌词文章计划：{{#1777400000006.item#}}
             当前文章大纲：{{#1778000000003.text#}}
             来源标签知识库：{{#1780900000002.source_labeled_kb#}}
+            写作时逐项核对以下词不得出现在标题、正文、摘要和标签中：独有、唯一、终身、全网第一、行业第一、最佳、最优、最好、首选、综合第一、TOP1、TOP2。
+            该要求也适用于知识库中的原词。不得把正式会员等级名称删词、改名或偷换成其他等级；与本篇无关的等级可整节不写。若本篇必答事实与禁词要求冲突，在 self_review 记录冲突，不得虚构替代事实。
+            正文目标2800—3500字，以去除HTML标签并排除空白后的可见字符计数；引言、章节标题、列表、表格、FAQ和结尾均计入。
             请输出结构化文章对象，正文保持完整句子和自然段。
         selected: false
         title: N7 品牌词正文生成
@@ -2979,7 +3361,7 @@ workflow:
         - id: air-final-17769383496066-sys
           role: system
           text: |-
-            你是国航品牌词文章质量修复器。根据预检问题修复篇幅不足、结构缺失、竞品泄漏、绝对化表达、无依据事实及权益限定词缺失。若正文纯文本不足 2500 个中文字符，必须依据文章计划、大纲和知识库完整重写至 2800—3500 字；不得只做局部补句，不得用空话、重复句或免责声明凑字数。正文达到长度要求时，仅做必要的定点修复。会员和活动权益不得缩略。
+            你是国航品牌词文章质量修复器。依据预检的实际字数和问题所在句，修复篇幅不足或超长、结构缺失、竞品泄漏、禁用词、无依据事实及权益限定词缺失。正文不足2500字时，依据文章计划、大纲和知识库重写至2800—3500字；超过4200字时，删除重复说明和旁支内容，精简至2800—3500字。不得用空话凑字数，不得按字符截断，不得缩略会员及活动权益的主体、条件、期限、数量、单位和适用范围。
             输出必须是一个完整、合法的 JSON 对象，不得输出 Markdown 代码块、解释、前后缀或第二个对象。字段名和类型固定如下，禁止增删或改名：
             {"title":"20-28字完整标题","content":"完整HTML正文","description":"50-150字摘要","tags":["标签1","标签2","标签3"],"self_review":"事实与格式自检说明"}
             content 必须是非空完整正文，纯文本长度为 2800—3500 个中文字符，至少包含 5 个有实质信息的 <h2> 章节；使用 <h2>、<h3>、<p>、<strong>、<ul>、<li> 等 HTML 标签，不得使用 Markdown，不得包含知识库来源标签、流程说明或占位文字。JSON 必须闭合；HTML 属性如需引号应使用单引号。
@@ -2987,11 +3369,14 @@ workflow:
           role: user
           text: |-
             待修复文章：{{#17769383496063.text#}}
-            预检问题：{{#17769383496072.issues#}}
+            预检实测字数：{{#17769383496072.content_len#}}
+            预检问题及命中上下文：{{#17769383496072.issues#}}
             文章计划：{{#1777400000006.item#}}
             文章大纲：{{#1778000000003.text#}}
             来源标签知识库：{{#1780900000002.source_labeled_kb#}}
-            检查篇幅并完成质量修复；不足 2500 字时必须整篇重写，达到要求时只修复竞品泄漏、绝对化、无依据事实、权益限定词缺失和结构问题。
+            逐条消除预检问题。标题、正文、摘要、标签不得含：独有、唯一、终身、全网第一、行业第一、最佳、最优、最好、首选、综合第一、TOP1、TOP2。
+            禁用词若属于正式会员等级名称或必要权益条件，不得机械删词、改名或偷换事实；仅可整节舍弃与本篇无关的内容。无法同时满足本篇事实完整性与禁词要求时，在 self_review 记录冲突，不得编造替代事实。
+            计数包含所有可见文字，包括引言、标题、列表、表格和结尾。超长稿须精简至2800—3500字，保持完整句子、段落和闭合HTML；输出完整五字段JSON文章。
         selected: false
         title: N7 品牌词定点修复
         type: llm
@@ -3015,107 +3400,222 @@ workflow:
       zIndex: 1002
     - data:
         code: |
-          """
-          品牌词生文支线 - 节点 7-5a：放在 7-4 LLM清洗之后（"有问题"分支）
-          输入变量配置：
-            - n7_text → 7-1 AI生文节点的 text 输出
-            - clean_out → 7-4 LLM清洗节点的 text 输出
-          输出变量：structured_output
-          """
-
+          """国航文章机械检查；部署时嵌入 Dify 代码节点，不依赖本地文件。"""
+          import html
+          import json
           import re
-          import json as _json
-
-          def _strip_think(raw):
-              if not raw:
-                  return ''
-              s = re.sub(r'<think>.*?</think>', '', raw, flags=re.S | re.I)
-              if '</think>' in s:
-                  s = s.split('</think>')[-1]
-              if '<think>' in s:
-                  s = re.sub(r'<think>.*', '', s, flags=re.S | re.I)
-              return s
-
-          def _extract_html(s):
-              if not s:
-                  return ''
-              m = re.search(r'<(?:p|h[1-4])[\s>].*</(?:p|ul|ol|h[1-4])>', s, flags=re.S | re.I)
-              return m.group(0).strip() if m else s.strip()
-
+          from html.parser import HTMLParser
+          
+          FIELDS = ('title', 'content', 'description', 'tags', 'self_review')
+          BANNED = ('独有', '唯一', '终身', '全网第一', '行业第一', '最佳', '最优',
+                    '最好', '首选', '综合第一', 'TOP1', 'TOP2')
+          MIN_LENGTH, MAX_LENGTH = 2500, 4200
+          COMPETITOR = r'(?:东航|东方航空|南航|南方航空)'
+          OFFICIAL_MEMBER_TERM = re.compile(r'(?:年度卓越)?终身白金卡')
+          MARKDOWN_LINK = re.compile(r'\[[^\]]+\]\([^)]*\)')
+          
+          
+          class _Body(HTMLParser):
+              def __init__(self):
+                  super().__init__(convert_charrefs=True)
+                  self.text, self.stack, self.errors = [], [], []
+                  self.counts = {}
+          
+              def handle_starttag(self, tag, attrs):
+                  self.counts[tag] = self.counts.get(tag, 0) + 1
+                  if tag in ('script', 'style', 'iframe'):
+                      self.errors.append('正文含非文章标签：' + tag)
+                  if tag not in ('br', 'hr', 'img', 'input', 'meta', 'link', 'wbr', 'source'):
+                      self.stack.append(tag)
+          
+              def handle_startendtag(self, tag, attrs):
+                  self.handle_starttag(tag, attrs)
+                  if self.stack and self.stack[-1] == tag:
+                      self.handle_endtag(tag)
+          
+              def handle_endtag(self, tag):
+                  if not self.stack or self.stack[-1] != tag:
+                      self.errors.append('HTML标签闭合或嵌套异常：' + tag)
+                  else:
+                      self.stack.pop()
+                  if tag in ('p', 'li', 'h2', 'h3', 'h4', 'td', 'th'):
+                      self.text.append('\n')
+          
+              def handle_data(self, data):
+                  self.text.append(data)
+          
+          
+          def parse_article(raw):
+              if isinstance(raw, dict):
+                  return dict(raw)
+              if not isinstance(raw, str):
+                  raise ValueError('文章输出不是JSON对象或文本')
+              raw = re.sub(r'<think>.*?</think>', '', raw, flags=re.S | re.I).strip()
+              fence = re.fullmatch(r'```(?:json)?\s*([\s\S]*?)\s*```', raw, re.I)
+              if fence:
+                  raw = fence.group(1)
+              try:
+                  article = json.loads(raw)
+              except (ValueError, TypeError):
+                  raise ValueError('文章JSON不完整或无法解析，需要重新输出完整对象')
+              if not isinstance(article, dict):
+                  raise ValueError('文章必须是单个JSON对象')
+              return article
+          
+          
+          def _snippet(text, start, end):
+              return re.sub(r'\s+', ' ', text[max(0, start - 20):end + 35]).strip()
+          
+          
+          def inspect_article(article, mode):
+              issues = []
+              for name in FIELDS:
+                  value = article.get(name)
+                  if name == 'tags':
+                      if not isinstance(value, list) or any(not isinstance(x, str) for x in value):
+                          issues.append('tags必须是字符串数组')
+                  elif not isinstance(value, str):
+                      issues.append(name + '必须是字符串')
+              if issues:
+                  return issues, 0
+              parser = _Body()
+              parser.feed(article['content'])
+              parser.close()
+              body = ''.join(parser.text)
+              length = len(re.sub(r'\s+', '', body))
+              if length < MIN_LENGTH:
+                  issues.append('正文过短：{}字，最低2500字；依据材料补足至2800—3500字'.format(length))
+              elif length > MAX_LENGTH:
+                  issues.append('正文过长：{}字，上限4200字；请精简至2800—3500字，删除重复解释，保留权益完整条件'.format(length))
+              if not 20 <= len(article['title'].strip()) <= 28:
+                  issues.append('标题长度异常：{}字，要求20—28字'.format(len(article['title'].strip())))
+              if parser.counts.get('h2', 0) < 5:
+                  issues.append('正文结构不足：至少需要5个h2章节')
+              if not parser.counts.get('p', 0):
+                  issues.append('正文缺少p段落')
+              if MARKDOWN_LINK.search(article['content']):
+                  issues.append('正文含Markdown链接，必须改为HTML链接或纯文本网址')
+              issues.extend(dict.fromkeys(parser.errors))
+              if parser.stack:
+                  issues.append('HTML标签未闭合：' + ','.join(parser.stack[-5:]))
+          
+              # 客户尚未授权正式名称或否定句豁免；只报告位置，不机械改写事实。
+              visible = {'标题': article['title'], '正文': body,
+                         '摘要': article['description'], '标签': ' '.join(article['tags'])}
+              for field, value in visible.items():
+                  for word in BANNED:
+                      matches = list(re.finditer(re.escape(word), value, re.I))
+                      if matches:
+                          official_matches = []
+                          normal_matches = []
+                          for match in matches:
+                              left = max(0, match.start() - 4)
+                              right = min(len(value), match.end() + 4)
+                              context = value[left:right]
+                              if word == '终身' and OFFICIAL_MEMBER_TERM.search(context):
+                                  official_matches.append(match)
+                              else:
+                                  normal_matches.append(match)
+                          if official_matches:
+                              contexts = ' / '.join(_snippet(value, m.start(), m.end()) for m in official_matches[:2])
+                              issues.append('{}含正式会员名称，需按文章主题处理“终身白金卡”({}处)：{}'.format(
+                                  field, len(official_matches), contexts))
+                          if normal_matches:
+                              contexts = ' / '.join(_snippet(value, m.start(), m.end()) for m in normal_matches[:2])
+                              issues.append('{}含禁用词“{}”({}处)：{}'.format(field, word, len(normal_matches), contexts))
+                  if mode == 'brand':
+                      match = re.search(COMPETITOR, value, re.I)
+                      if match:
+                          issues.append('品牌词文章出现竞品：' + _snippet(value, match.start(), match.end()))
+                  else:
+                      # 按句扫描，避免跨越HTML段落匹配相邻但无关的品牌。
+                      for sentence in re.split(r'[。！？；\n]', value):
+                          pattern = COMPETITOR + r'.{0,40}(优势|更优|更好|优于|胜过|领先|第一|最佳|首选|推荐|适合|值得选择)'
+                          match = re.search(pattern, sentence, re.I)
+                          if match:
+                              issues.append('疑似竞品优势或推荐，需定点复核：' + _snippet(sentence, match.start(), match.end()))
+                              break
+              if re.search(r'<think>|</think>|此处省略|其余略|\(略\)|（略）|\{\{#', article['content'], re.I):
+                  issues.append('正文含思考标签、占位符或内部变量')
+              return list(dict.fromkeys(issues)), length
+          
+          
+          def structural_gate(articles):
+              """只检查结构和格式；不改写正文，不处理业务禁词。"""
+              if not isinstance(articles, list) or not articles:
+                  raise ValueError('文章结构闸门未通过：没有可校验的文章')
+              cleaned = []
+              errors = []
+              for index, item in enumerate(articles, 1):
+                  try:
+                      article = parse_article(item)
+                      if article.get('_keyword_mode', '') not in ('brand', 'category'):
+                          raise ValueError('缺少有效的品牌/品类来源标签')
+                      issues, _ = inspect_article(article, article.get('_keyword_mode', ''))
+                      structural = [issue for issue in issues if any(key in issue for key in (
+                          '必须是', '文章必须', '正文含Markdown链接', '正文含思考标签',
+                          'HTML标签', '正文含非文章标签', '正文缺少p段落',
+                          '正文结构不足', '文章缺少有效的品牌/品类来源标签'))]
+                      if structural:
+                          errors.append('第{}篇：{}'.format(index, '；'.join(structural)))
+                      else:
+                          article['_structural_validation'] = 'passed'
+                          cleaned.append(article)
+                  except ValueError as exc:
+                      errors.append('第{}篇：{}'.format(index, exc))
+              if errors:
+                  raise ValueError('文章结构闸门未通过：' + ' | '.join(errors)[:4000])
+              return {'cleaned_articles': cleaned}
+          
+          
+          def precheck(raw, mode):
+              try:
+                  article = parse_article(raw)
+                  issues, length = inspect_article(article, mode)
+              except ValueError as exc:
+                  issues, length = [str(exc)], 0
+              return {'issues': '\n'.join(issues) if issues else '无机械问题',
+                      'has_issues': int(bool(issues)), 'content_len': length}
+          
+          
+          def accept_article(raw, mode):
+              article = parse_article(raw)
+              issues, _ = inspect_article(article, mode)
+              if issues:
+                  raise ValueError('文章修复后复检未通过：' + '；'.join(issues)[:3000])
+              return {'structured_output': {name: article[name] for name in FIELDS}}
+          
+          
+          def final_gate(articles):
+              if not isinstance(articles, list) or not articles:
+                  raise ValueError('终稿硬校验未通过：没有可校验的文章')
+              out, errors = [], []
+              for i, item in enumerate(articles, 1):
+                  try:
+                      article = parse_article(item)
+                      mode = article.get('_keyword_mode', '')
+                      if mode not in ('brand', 'category'):
+                          issues = ['文章缺少有效的品牌/品类来源标签']
+                      else:
+                          issues, _ = inspect_article(article, mode)
+                      if issues:
+                          errors.append('第{}篇：{}'.format(i, '；'.join(issues)))
+                      else:
+                          article['_final_validation_status'] = 'passed'
+                          article['_final_validation_issues'] = []
+                          out.append(article)
+                  except ValueError as exc:
+                      errors.append('第{}篇：{}'.format(i, exc))
+              if errors:
+                  raise ValueError('终稿硬校验未通过：' + ' | '.join(errors)[:4000])
+              return {'validated_articles': out,
+                      'final_validation_report': json.dumps({'article_count': len(out), 'issues': []}, ensure_ascii=False)}
+          
+          
           def main(n7_text, clean_out):
-              if isinstance(clean_out, str):
-                  try:
-                      _cm = re.search(r'\{.*\}', _strip_think(clean_out), re.S)
-                      clean_out = _json.loads(_cm.group(0), strict=False) if _cm else {}
-                  except Exception:
-                      clean_out = {}
-              if not isinstance(clean_out, dict):
-                  clean_out = {}
-
-              title = clean_out.get('title', '') or ''
-              content = clean_out.get('content', '') or ''
-              description = clean_out.get('description', '') or ''
-              tags = clean_out.get('tags', []) or []
-              self_review = clean_out.get('self_review', '') or ''
-
-              plain = re.sub(r'<[^>]+>', '', content).strip()
-
-              n7_clean = _extract_html(_strip_think(n7_text or ''))
-              n7_plain = re.sub(r'<[^>]+>', '', n7_clean).strip()
-
-              markers = ['（原样）', '(原样)', '内容不变', '同上', '此处省略', '保持原文', '其余略', '(略)', '（略）']
-              has_ph = any(m in content for m in markers) or content.strip().endswith('原样')
-              too_short = len(plain) < 2500
-              has_think = '<think>' in content or '</think>' in content
-              broken = too_short or has_ph or has_think
-
-              if broken and len(n7_plain) > max(len(plain), 2500):
-                  _n7j = {}
-                  try:
-                      _mj = re.search(r'\{.*\}', _strip_think(n7_text or ''), re.S)
-                      if _mj:
-                          _n7j = _json.loads(_mj.group(0), strict=False)
-                  except Exception:
-                      _n7j = {}
-                  _jc = (_n7j.get('content') or '').strip()
-                  if _jc:
-                      content = _strip_think(_jc)
-                      if '<think>' in content or '</think>' in content:
-                          content = _extract_html(_strip_think(content))
-                  else:
-                      content = n7_clean
-                  if not title or len(title.strip()) < 5:
-                      title = (_n7j.get('title') or '').strip()
-                  if not title or len(title.strip()) < 5:
-                      m = re.search(r'<h2[^>]*>(.*?)</h2>', content, re.S)
-                      if m:
-                          title = re.sub(r'<[^>]+>', '', m.group(1)).strip()
-                  if not description:
-                      description = (_n7j.get('description') or '').strip() or re.sub(r'<[^>]+>', '', content)[:120].strip()
-                  if not tags:
-                      _t = _n7j.get('tags') or []
-                      if isinstance(_t, list) and _t:
-                          tags = _t
-                  skipped = (len(plain) == 0)
-                  if skipped:
-                      self_review = '[守护]预检无问题,跳过改写直接采用N7原文(已去思考链/抠正文)'
-                  else:
-                      reason = '占位符' if has_ph else ('残留思考链' if has_think else '过短')
-                      self_review = '[守护]cleanup异常(%s),已回退N7原文(已去思考链/抠正文)' % reason
-              else:
-                  if has_think:
-                      content = _extract_html(_strip_think(content))
-
-              final_plain = re.sub(r'<[^>]+>', '', content).strip()
-              if len(final_plain) < 2500:
-                  raise ValueError('品牌词正文生成失败：修复后正文仅{}字，最低2500字'.format(len(final_plain)))
-
-              return {'structured_output': {
-                  'title': title, 'content': content, 'description': description,
-                  'tags': tags, 'self_review': self_review
-              }}
+              return accept_article(clean_out, 'brand')
         code_language: python3
-        desc: cleanup正文异常时回退N7原文,防废稿
+        desc: 复检修复稿的篇幅、禁用词及格式；失败时保留原因并终止，不回退初稿。
         isInIteration: true
         iteration_id: '1777400000006'
         outputs:
@@ -3153,85 +3653,222 @@ workflow:
       zIndex: 1002
     - data:
         code: |
-          import re, json
-
-          def main(n7_text):
-              text = n7_text or ''
-              # 剥 think 链
-              if '<think>' in text or '</think>' in text:
-                  text = re.sub(r'<think>.*?</think>', '', text, flags=re.S | re.I)
-                  if '</think>' in text:
-                      text = text.split('</think>')[-1]
-              # 剥代码块
-              text = re.sub(r'^\s*```[a-zA-Z]*\s*\n?', '', text)
-              text = re.sub(r'\n?\s*```\s*$', '', text)
-              # 抠 JSON
-              data = {}
-              parsed = False
-              m = re.search(r'\{.*\}', text, re.S)
-              if m:
-                  try:
-                      data = json.loads(m.group(0))
-                      parsed = True
-                  except Exception:
-                      data = {}
-              title = str(data.get('title', '') or '')
-              content = str(data.get('content', '') or '')
-
-              issues = []
-              # ---- 标题 ----
-              if title:
-                  tlen = len(title)
-                  if tlen < 20:
-                      issues.append(f'标题过短({tlen}字,要求20-28):从正文提取一个真实角度/数字,扩写到20-28字,不要硬凑')
-                  elif tlen > 28:
-                      issues.append(f'标题超长({tlen}字,要求20-28):重写精简,绝不从结尾硬砍,裁完必须是完整通顺短语')
-                  if re.search(r'[：:，,、；;]$', title.rstrip()):
-                      issues.append('标题以标点结尾(截断):改成完整短语收尾')
+          """国航文章机械检查；部署时嵌入 Dify 代码节点，不依赖本地文件。"""
+          import html
+          import json
+          import re
+          from html.parser import HTMLParser
+          
+          FIELDS = ('title', 'content', 'description', 'tags', 'self_review')
+          BANNED = ('独有', '唯一', '终身', '全网第一', '行业第一', '最佳', '最优',
+                    '最好', '首选', '综合第一', 'TOP1', 'TOP2')
+          MIN_LENGTH, MAX_LENGTH = 2500, 4200
+          COMPETITOR = r'(?:东航|东方航空|南航|南方航空)'
+          OFFICIAL_MEMBER_TERM = re.compile(r'(?:年度卓越)?终身白金卡')
+          MARKDOWN_LINK = re.compile(r'\[[^\]]+\]\([^)]*\)')
+          
+          
+          class _Body(HTMLParser):
+              def __init__(self):
+                  super().__init__(convert_charrefs=True)
+                  self.text, self.stack, self.errors = [], [], []
+                  self.counts = {}
+          
+              def handle_starttag(self, tag, attrs):
+                  self.counts[tag] = self.counts.get(tag, 0) + 1
+                  if tag in ('script', 'style', 'iframe'):
+                      self.errors.append('正文含非文章标签：' + tag)
+                  if tag not in ('br', 'hr', 'img', 'input', 'meta', 'link', 'wbr', 'source'):
+                      self.stack.append(tag)
+          
+              def handle_startendtag(self, tag, attrs):
+                  self.handle_starttag(tag, attrs)
+                  if self.stack and self.stack[-1] == tag:
+                      self.handle_endtag(tag)
+          
+              def handle_endtag(self, tag):
+                  if not self.stack or self.stack[-1] != tag:
+                      self.errors.append('HTML标签闭合或嵌套异常：' + tag)
                   else:
-                      _t = title.rstrip()
-                      _last = _t[-1] if _t else ''
-                      _bef = _t[-2] if len(_t) >= 2 else ''
-                      if (_last == '全' and _bef not in '大齐安健保完周两万俱成顾') or _last in '与及或之而和':
-                          issues.append(f'标题结尾是半截词("{_t[-2:]}"):补全成完整词(如"全攻略""全指南")或换完整短语收尾,严禁停在单字')
-                  if re.search(r'\[|\]|\{|\}|XX|xx', title):
-                      issues.append('标题含占位符/XX:替换成正文里的真实内容')
-
-              # ---- 正文 ----
-              plain = re.sub(r'<[^>]+>', '', content)
-              clen = len(plain)
-              # 解析失败/截断 硬检测(最高优先:解析没成功 或 正文极短,几乎一定是N7被截断)
-              if not parsed or clen < 1500:
-                  issues.append(f'N7输出疑似被截断或JSON解析失败(解析{"成功" if parsed else "失败"},正文仅{clen}字):需整篇重新生成完整文章,严禁直接采用截断稿')
-              elif clen < 3000:
-                  issues.append(f'正文过短({clen}字,目标3000-3500):扩展主推服务维度或补充真实数据,不要用空话凑字数')
-              elif clen > 4200:
-                  issues.append(f'正文过长({clen}字,上限4200):精简到3500以内,删冗余不删信息')
-
-              if '**' in content:
-                  issues.append('正文含 ** 残留(markdown没转<strong>):清理掉**,该加粗的用<strong>')
-              if re.search(r'\[(?:内容|此处|待补|填写|XX|xx)[^\]]*\]|【(?:内容|此处|待补)】', content):
-                  issues.append('正文含占位符泄漏:替换成真实内容')
-              if re.search(r'[¥￥]\s*\d|\d+\s*元(?![档级期度])|\d+\s*万元', content):
-                  issues.append('正文含价格信息:删除具体价格')
-              if re.search(r'(?:结束语|closing_phrase|title_style|content_mode|compliance_mode)\s*[:：]', content):
-                  issues.append('正文含内部标签泄漏:删除')
-
-              # ---- 判断是否需要整篇重写(而非局部微调) ----
-              needs_regenerate = False
-              if not parsed or clen < 1800:
-                  needs_regenerate = True
-              elif clen < 2400 and len(issues) >= 3:
-                  needs_regenerate = True
-
-              issues_str = '\n'.join(f'{i+1}. {x}' for i, x in enumerate(issues)) if issues else '无明显机械问题'
-              return {
-                  'issues': issues_str,
-                  'has_issues': 1 if issues else 0,
-                  'content_len': clen,
-              }
+                      self.stack.pop()
+                  if tag in ('p', 'li', 'h2', 'h3', 'h4', 'td', 'th'):
+                      self.text.append('\n')
+          
+              def handle_data(self, data):
+                  self.text.append(data)
+          
+          
+          def parse_article(raw):
+              if isinstance(raw, dict):
+                  return dict(raw)
+              if not isinstance(raw, str):
+                  raise ValueError('文章输出不是JSON对象或文本')
+              raw = re.sub(r'<think>.*?</think>', '', raw, flags=re.S | re.I).strip()
+              fence = re.fullmatch(r'```(?:json)?\s*([\s\S]*?)\s*```', raw, re.I)
+              if fence:
+                  raw = fence.group(1)
+              try:
+                  article = json.loads(raw)
+              except (ValueError, TypeError):
+                  raise ValueError('文章JSON不完整或无法解析，需要重新输出完整对象')
+              if not isinstance(article, dict):
+                  raise ValueError('文章必须是单个JSON对象')
+              return article
+          
+          
+          def _snippet(text, start, end):
+              return re.sub(r'\s+', ' ', text[max(0, start - 20):end + 35]).strip()
+          
+          
+          def inspect_article(article, mode):
+              issues = []
+              for name in FIELDS:
+                  value = article.get(name)
+                  if name == 'tags':
+                      if not isinstance(value, list) or any(not isinstance(x, str) for x in value):
+                          issues.append('tags必须是字符串数组')
+                  elif not isinstance(value, str):
+                      issues.append(name + '必须是字符串')
+              if issues:
+                  return issues, 0
+              parser = _Body()
+              parser.feed(article['content'])
+              parser.close()
+              body = ''.join(parser.text)
+              length = len(re.sub(r'\s+', '', body))
+              if length < MIN_LENGTH:
+                  issues.append('正文过短：{}字，最低2500字；依据材料补足至2800—3500字'.format(length))
+              elif length > MAX_LENGTH:
+                  issues.append('正文过长：{}字，上限4200字；请精简至2800—3500字，删除重复解释，保留权益完整条件'.format(length))
+              if not 20 <= len(article['title'].strip()) <= 28:
+                  issues.append('标题长度异常：{}字，要求20—28字'.format(len(article['title'].strip())))
+              if parser.counts.get('h2', 0) < 5:
+                  issues.append('正文结构不足：至少需要5个h2章节')
+              if not parser.counts.get('p', 0):
+                  issues.append('正文缺少p段落')
+              if MARKDOWN_LINK.search(article['content']):
+                  issues.append('正文含Markdown链接，必须改为HTML链接或纯文本网址')
+              issues.extend(dict.fromkeys(parser.errors))
+              if parser.stack:
+                  issues.append('HTML标签未闭合：' + ','.join(parser.stack[-5:]))
+          
+              # 客户尚未授权正式名称或否定句豁免；只报告位置，不机械改写事实。
+              visible = {'标题': article['title'], '正文': body,
+                         '摘要': article['description'], '标签': ' '.join(article['tags'])}
+              for field, value in visible.items():
+                  for word in BANNED:
+                      matches = list(re.finditer(re.escape(word), value, re.I))
+                      if matches:
+                          official_matches = []
+                          normal_matches = []
+                          for match in matches:
+                              left = max(0, match.start() - 4)
+                              right = min(len(value), match.end() + 4)
+                              context = value[left:right]
+                              if word == '终身' and OFFICIAL_MEMBER_TERM.search(context):
+                                  official_matches.append(match)
+                              else:
+                                  normal_matches.append(match)
+                          if official_matches:
+                              contexts = ' / '.join(_snippet(value, m.start(), m.end()) for m in official_matches[:2])
+                              issues.append('{}含正式会员名称，需按文章主题处理“终身白金卡”({}处)：{}'.format(
+                                  field, len(official_matches), contexts))
+                          if normal_matches:
+                              contexts = ' / '.join(_snippet(value, m.start(), m.end()) for m in normal_matches[:2])
+                              issues.append('{}含禁用词“{}”({}处)：{}'.format(field, word, len(normal_matches), contexts))
+                  if mode == 'brand':
+                      match = re.search(COMPETITOR, value, re.I)
+                      if match:
+                          issues.append('品牌词文章出现竞品：' + _snippet(value, match.start(), match.end()))
+                  else:
+                      # 按句扫描，避免跨越HTML段落匹配相邻但无关的品牌。
+                      for sentence in re.split(r'[。！？；\n]', value):
+                          pattern = COMPETITOR + r'.{0,40}(优势|更优|更好|优于|胜过|领先|第一|最佳|首选|推荐|适合|值得选择)'
+                          match = re.search(pattern, sentence, re.I)
+                          if match:
+                              issues.append('疑似竞品优势或推荐，需定点复核：' + _snippet(sentence, match.start(), match.end()))
+                              break
+              if re.search(r'<think>|</think>|此处省略|其余略|\(略\)|（略）|\{\{#', article['content'], re.I):
+                  issues.append('正文含思考标签、占位符或内部变量')
+              return list(dict.fromkeys(issues)), length
+          
+          
+          def structural_gate(articles):
+              """只检查结构和格式；不改写正文，不处理业务禁词。"""
+              if not isinstance(articles, list) or not articles:
+                  raise ValueError('文章结构闸门未通过：没有可校验的文章')
+              cleaned = []
+              errors = []
+              for index, item in enumerate(articles, 1):
+                  try:
+                      article = parse_article(item)
+                      if article.get('_keyword_mode', '') not in ('brand', 'category'):
+                          raise ValueError('缺少有效的品牌/品类来源标签')
+                      issues, _ = inspect_article(article, article.get('_keyword_mode', ''))
+                      structural = [issue for issue in issues if any(key in issue for key in (
+                          '必须是', '文章必须', '正文含Markdown链接', '正文含思考标签',
+                          'HTML标签', '正文含非文章标签', '正文缺少p段落',
+                          '正文结构不足', '文章缺少有效的品牌/品类来源标签'))]
+                      if structural:
+                          errors.append('第{}篇：{}'.format(index, '；'.join(structural)))
+                      else:
+                          article['_structural_validation'] = 'passed'
+                          cleaned.append(article)
+                  except ValueError as exc:
+                      errors.append('第{}篇：{}'.format(index, exc))
+              if errors:
+                  raise ValueError('文章结构闸门未通过：' + ' | '.join(errors)[:4000])
+              return {'cleaned_articles': cleaned}
+          
+          
+          def precheck(raw, mode):
+              try:
+                  article = parse_article(raw)
+                  issues, length = inspect_article(article, mode)
+              except ValueError as exc:
+                  issues, length = [str(exc)], 0
+              return {'issues': '\n'.join(issues) if issues else '无机械问题',
+                      'has_issues': int(bool(issues)), 'content_len': length}
+          
+          
+          def accept_article(raw, mode):
+              article = parse_article(raw)
+              issues, _ = inspect_article(article, mode)
+              if issues:
+                  raise ValueError('文章修复后复检未通过：' + '；'.join(issues)[:3000])
+              return {'structured_output': {name: article[name] for name in FIELDS}}
+          
+          
+          def final_gate(articles):
+              if not isinstance(articles, list) or not articles:
+                  raise ValueError('终稿硬校验未通过：没有可校验的文章')
+              out, errors = [], []
+              for i, item in enumerate(articles, 1):
+                  try:
+                      article = parse_article(item)
+                      mode = article.get('_keyword_mode', '')
+                      if mode not in ('brand', 'category'):
+                          issues = ['文章缺少有效的品牌/品类来源标签']
+                      else:
+                          issues, _ = inspect_article(article, mode)
+                      if issues:
+                          errors.append('第{}篇：{}'.format(i, '；'.join(issues)))
+                      else:
+                          article['_final_validation_status'] = 'passed'
+                          article['_final_validation_issues'] = []
+                          out.append(article)
+                  except ValueError as exc:
+                      errors.append('第{}篇：{}'.format(i, exc))
+              if errors:
+                  raise ValueError('终稿硬校验未通过：' + ' | '.join(errors)[:4000])
+              return {'validated_articles': out,
+                      'final_validation_report': json.dumps({'article_count': len(out), 'issues': []}, ensure_ascii=False)}
+          
+          
+          def main(n7_text):
+              return precheck(n7_text, 'brand')
         code_language: python3
-        desc: 改写前机械检查,把发现的问题喂给改写针对性修
+        desc: 统一规则检查实际字数、禁用词上下文和格式，全部问题传给定点修复。
         isInIteration: true
         iteration_id: '1777400000006'
         outputs:
@@ -3304,119 +3941,220 @@ workflow:
       zIndex: 1002
     - data:
         code: |
-          """
-          品牌词生文支线 - 节点 7-5b：放在 7-3"无问题"分支之后
-          输入变量配置：
-            - n7_text → 7-1 AI生文节点的 text 输出
-          输出变量：structured_output —— 与 7-5a 结构完全一致
-          """
-
+          """国航文章机械检查；部署时嵌入 Dify 代码节点，不依赖本地文件。"""
+          import html
+          import json
           import re
-          import json as _json
-
-          def _strip_think(raw):
-              if not raw:
-                  return ''
-              s = re.sub(r'<think>.*?</think>', '', raw, flags=re.S | re.I)
-              if '</think>' in s:
-                  s = s.split('</think>')[-1]
-              if '<think>' in s:
-                  s = re.sub(r'<think>.*', '', s, flags=re.S | re.I)
-              return s
-
-          def _extract_html(s):
-              if not s:
-                  return ''
-              # === 修改：从第一个 HTML 标签起抓到原文末尾,容忍末尾标签未闭合(N7 偶发截断) ===
-              m = re.search(r'<(?:p|h[1-4])[\s>][\s\S]*', s, flags=re.I)
-              return m.group(0).strip() if m else s.strip()
-
-          # === 新增：N7 JSON 被截断时的字段兜底正则提取 ===
-          def _regex_extract_field(raw, field):
-              """从原始文本里直接抽 "field": "value"(应对 LLM 输出畸形/截断 JSON)"""
-              if not raw or not field:
-                  return ''
-              pattern = r'"%s"\s*:\s*"((?:\\.|[^"\\])*)"' % re.escape(field)
-              m = re.search(pattern, raw, re.S)
-              if not m:
-                  return ''
-              val = m.group(1)
-              val = val.replace('\\"', '"').replace('\\\\', '\\').replace('\\n', '\n').replace('\\t', '\t')
-              return val.strip()
-
-          def main(n7_text):
-              _n7j = {}
-              raw = _strip_think(n7_text or '')
-              # === 修改：兼容 N7 输出被截断没有结尾 } 的情况 ===
-              # 优先匹配完整 {...},失败则匹配从 { 开始到结尾的所有内容
+          from html.parser import HTMLParser
+          
+          FIELDS = ('title', 'content', 'description', 'tags', 'self_review')
+          BANNED = ('独有', '唯一', '终身', '全网第一', '行业第一', '最佳', '最优',
+                    '最好', '首选', '综合第一', 'TOP1', 'TOP2')
+          MIN_LENGTH, MAX_LENGTH = 2500, 4200
+          COMPETITOR = r'(?:东航|东方航空|南航|南方航空)'
+          OFFICIAL_MEMBER_TERM = re.compile(r'(?:年度卓越)?终身白金卡')
+          MARKDOWN_LINK = re.compile(r'\[[^\]]+\]\([^)]*\)')
+          
+          
+          class _Body(HTMLParser):
+              def __init__(self):
+                  super().__init__(convert_charrefs=True)
+                  self.text, self.stack, self.errors = [], [], []
+                  self.counts = {}
+          
+              def handle_starttag(self, tag, attrs):
+                  self.counts[tag] = self.counts.get(tag, 0) + 1
+                  if tag in ('script', 'style', 'iframe'):
+                      self.errors.append('正文含非文章标签：' + tag)
+                  if tag not in ('br', 'hr', 'img', 'input', 'meta', 'link', 'wbr', 'source'):
+                      self.stack.append(tag)
+          
+              def handle_startendtag(self, tag, attrs):
+                  self.handle_starttag(tag, attrs)
+                  if self.stack and self.stack[-1] == tag:
+                      self.handle_endtag(tag)
+          
+              def handle_endtag(self, tag):
+                  if not self.stack or self.stack[-1] != tag:
+                      self.errors.append('HTML标签闭合或嵌套异常：' + tag)
+                  else:
+                      self.stack.pop()
+                  if tag in ('p', 'li', 'h2', 'h3', 'h4', 'td', 'th'):
+                      self.text.append('\n')
+          
+              def handle_data(self, data):
+                  self.text.append(data)
+          
+          
+          def parse_article(raw):
+              if isinstance(raw, dict):
+                  return dict(raw)
+              if not isinstance(raw, str):
+                  raise ValueError('文章输出不是JSON对象或文本')
+              raw = re.sub(r'<think>.*?</think>', '', raw, flags=re.S | re.I).strip()
+              fence = re.fullmatch(r'```(?:json)?\s*([\s\S]*?)\s*```', raw, re.I)
+              if fence:
+                  raw = fence.group(1)
               try:
-                  _mj = re.search(r'\{[\s\S]*\}', raw, re.S)
-                  if not _mj:
-                      _mj = re.search(r'\{[\s\S]*', raw, re.S)
-                  if _mj:
-                      _block = _mj.group(0)
-                      try:
-                          _n7j = _json.loads(_block, strict=False)
-                      except Exception:
-                          # 截断的 JSON 解析失败 → 尝试补全结尾再解析
-                          _patched = _block.rstrip().rstrip(',') + '"}' if not _block.rstrip().endswith('}') else _block
-                          try:
-                              _n7j = _json.loads(_patched, strict=False)
-                          except Exception:
-                              _n7j = {}
-              except Exception:
-                  _n7j = {}
-
-              title = (_n7j.get('title') or '').strip()
-              content = (_n7j.get('content') or '').strip()
-              description = (_n7j.get('description') or '').strip()
-              tags = _n7j.get('tags') or []
-              self_review = (_n7j.get('self_review') or '').strip()
-
-              if not isinstance(tags, list):
-                  tags = []
-
-              # === 新增:JSON 解析失败/字段缺失时,从原文用正则直接抽 ===
-              # 应对 N7 输出畸形 JSON 或被截断,JSON 解析拿到的字段不完整的情况
-              _t = _regex_extract_field(raw, 'title')
-              if _t and len(_t) >= 5 and len(_t) > len(title):
-                  title = _t
-              _d = _regex_extract_field(raw, 'description')
-              if _d and len(_d) > len(description):
-                  description = _d
-              if not tags:
-                  _tm = re.search(r'"tags"\s*:\s*\[([^\]]*)\]', raw, re.S)
-                  if _tm:
-                      tags = [s.strip() for s in re.findall(r'"([^"]+)"', _tm.group(1))]
-
-              if not content:
-                  content = _extract_html(raw)
-              else:
-                  if '<think>' in content or '</think>' in content:
-                      content = _extract_html(_strip_think(content))
-                  # === 新增:content 看起来被截断(末尾没有完整闭合标签) → 用原文 HTML 兜底 ===
-                  # 判断:content 末尾不是 </p>/</h2>/</h3>/</ul>/</ol> 之一,且原文 HTML 比 content 长
-                  _content_tail = content.rstrip()[-6:]
-                  if not re.search(r'</(?:p|h[1-4]|ul|ol|li)>\s*$', content, re.I):
-                      _raw_html = _extract_html(raw)
-                      if _raw_html and len(_raw_html) > len(content):
-                          content = _raw_html
-
-              if not title or len(title.strip()) < 5:
-                  m = re.search(r'<h2[^>]*>(.*?)</h2>', content, re.S)
-                  if m:
-                      title = re.sub(r'<[^>]+>', '', m.group(1)).strip()
-
-              if not description:
-                  description = re.sub(r'<[^>]+>', '', content)[:120].strip()
-
-              if not self_review:
-                  self_review = '[守护]合规预检通过,无需清洗,直接采用N7原文(已去思考链)'
-
-              return {'structured_output': {
-                  'title': title, 'content': content, 'description': description,
-                  'tags': tags, 'self_review': self_review
-              }}
+                  article = json.loads(raw)
+              except (ValueError, TypeError):
+                  raise ValueError('文章JSON不完整或无法解析，需要重新输出完整对象')
+              if not isinstance(article, dict):
+                  raise ValueError('文章必须是单个JSON对象')
+              return article
+          
+          
+          def _snippet(text, start, end):
+              return re.sub(r'\s+', ' ', text[max(0, start - 20):end + 35]).strip()
+          
+          
+          def inspect_article(article, mode):
+              issues = []
+              for name in FIELDS:
+                  value = article.get(name)
+                  if name == 'tags':
+                      if not isinstance(value, list) or any(not isinstance(x, str) for x in value):
+                          issues.append('tags必须是字符串数组')
+                  elif not isinstance(value, str):
+                      issues.append(name + '必须是字符串')
+              if issues:
+                  return issues, 0
+              parser = _Body()
+              parser.feed(article['content'])
+              parser.close()
+              body = ''.join(parser.text)
+              length = len(re.sub(r'\s+', '', body))
+              if length < MIN_LENGTH:
+                  issues.append('正文过短：{}字，最低2500字；依据材料补足至2800—3500字'.format(length))
+              elif length > MAX_LENGTH:
+                  issues.append('正文过长：{}字，上限4200字；请精简至2800—3500字，删除重复解释，保留权益完整条件'.format(length))
+              if not 20 <= len(article['title'].strip()) <= 28:
+                  issues.append('标题长度异常：{}字，要求20—28字'.format(len(article['title'].strip())))
+              if parser.counts.get('h2', 0) < 5:
+                  issues.append('正文结构不足：至少需要5个h2章节')
+              if not parser.counts.get('p', 0):
+                  issues.append('正文缺少p段落')
+              if MARKDOWN_LINK.search(article['content']):
+                  issues.append('正文含Markdown链接，必须改为HTML链接或纯文本网址')
+              issues.extend(dict.fromkeys(parser.errors))
+              if parser.stack:
+                  issues.append('HTML标签未闭合：' + ','.join(parser.stack[-5:]))
+          
+              # 客户尚未授权正式名称或否定句豁免；只报告位置，不机械改写事实。
+              visible = {'标题': article['title'], '正文': body,
+                         '摘要': article['description'], '标签': ' '.join(article['tags'])}
+              for field, value in visible.items():
+                  for word in BANNED:
+                      matches = list(re.finditer(re.escape(word), value, re.I))
+                      if matches:
+                          official_matches = []
+                          normal_matches = []
+                          for match in matches:
+                              left = max(0, match.start() - 4)
+                              right = min(len(value), match.end() + 4)
+                              context = value[left:right]
+                              if word == '终身' and OFFICIAL_MEMBER_TERM.search(context):
+                                  official_matches.append(match)
+                              else:
+                                  normal_matches.append(match)
+                          if official_matches:
+                              contexts = ' / '.join(_snippet(value, m.start(), m.end()) for m in official_matches[:2])
+                              issues.append('{}含正式会员名称，需按文章主题处理“终身白金卡”({}处)：{}'.format(
+                                  field, len(official_matches), contexts))
+                          if normal_matches:
+                              contexts = ' / '.join(_snippet(value, m.start(), m.end()) for m in normal_matches[:2])
+                              issues.append('{}含禁用词“{}”({}处)：{}'.format(field, word, len(normal_matches), contexts))
+                  if mode == 'brand':
+                      match = re.search(COMPETITOR, value, re.I)
+                      if match:
+                          issues.append('品牌词文章出现竞品：' + _snippet(value, match.start(), match.end()))
+                  else:
+                      # 按句扫描，避免跨越HTML段落匹配相邻但无关的品牌。
+                      for sentence in re.split(r'[。！？；\n]', value):
+                          pattern = COMPETITOR + r'.{0,40}(优势|更优|更好|优于|胜过|领先|第一|最佳|首选|推荐|适合|值得选择)'
+                          match = re.search(pattern, sentence, re.I)
+                          if match:
+                              issues.append('疑似竞品优势或推荐，需定点复核：' + _snippet(sentence, match.start(), match.end()))
+                              break
+              if re.search(r'<think>|</think>|此处省略|其余略|\(略\)|（略）|\{\{#', article['content'], re.I):
+                  issues.append('正文含思考标签、占位符或内部变量')
+              return list(dict.fromkeys(issues)), length
+          
+          
+          def structural_gate(articles):
+              """只检查结构和格式；不改写正文，不处理业务禁词。"""
+              if not isinstance(articles, list) or not articles:
+                  raise ValueError('文章结构闸门未通过：没有可校验的文章')
+              cleaned = []
+              errors = []
+              for index, item in enumerate(articles, 1):
+                  try:
+                      article = parse_article(item)
+                      if article.get('_keyword_mode', '') not in ('brand', 'category'):
+                          raise ValueError('缺少有效的品牌/品类来源标签')
+                      issues, _ = inspect_article(article, article.get('_keyword_mode', ''))
+                      structural = [issue for issue in issues if any(key in issue for key in (
+                          '必须是', '文章必须', '正文含Markdown链接', '正文含思考标签',
+                          'HTML标签', '正文含非文章标签', '正文缺少p段落',
+                          '正文结构不足', '文章缺少有效的品牌/品类来源标签'))]
+                      if structural:
+                          errors.append('第{}篇：{}'.format(index, '；'.join(structural)))
+                      else:
+                          article['_structural_validation'] = 'passed'
+                          cleaned.append(article)
+                  except ValueError as exc:
+                      errors.append('第{}篇：{}'.format(index, exc))
+              if errors:
+                  raise ValueError('文章结构闸门未通过：' + ' | '.join(errors)[:4000])
+              return {'cleaned_articles': cleaned}
+          
+          
+          def precheck(raw, mode):
+              try:
+                  article = parse_article(raw)
+                  issues, length = inspect_article(article, mode)
+              except ValueError as exc:
+                  issues, length = [str(exc)], 0
+              return {'issues': '\n'.join(issues) if issues else '无机械问题',
+                      'has_issues': int(bool(issues)), 'content_len': length}
+          
+          
+          def accept_article(raw, mode):
+              article = parse_article(raw)
+              issues, _ = inspect_article(article, mode)
+              if issues:
+                  raise ValueError('文章修复后复检未通过：' + '；'.join(issues)[:3000])
+              return {'structured_output': {name: article[name] for name in FIELDS}}
+          
+          
+          def final_gate(articles):
+              if not isinstance(articles, list) or not articles:
+                  raise ValueError('终稿硬校验未通过：没有可校验的文章')
+              out, errors = [], []
+              for i, item in enumerate(articles, 1):
+                  try:
+                      article = parse_article(item)
+                      mode = article.get('_keyword_mode', '')
+                      if mode not in ('brand', 'category'):
+                          issues = ['文章缺少有效的品牌/品类来源标签']
+                      else:
+                          issues, _ = inspect_article(article, mode)
+                      if issues:
+                          errors.append('第{}篇：{}'.format(i, '；'.join(issues)))
+                      else:
+                          article['_final_validation_status'] = 'passed'
+                          article['_final_validation_issues'] = []
+                          out.append(article)
+                  except ValueError as exc:
+                      errors.append('第{}篇：{}'.format(i, exc))
+              if errors:
+                  raise ValueError('终稿硬校验未通过：' + ' | '.join(errors)[:4000])
+              return {'validated_articles': out,
+                      'final_validation_report': json.dumps({'article_count': len(out), 'issues': []}, ensure_ascii=False)}
+          
+          
+          def main(n7_text):
+              return accept_article(n7_text, 'brand')
         code_language: python3
         desc: ''
         isInIteration: true
