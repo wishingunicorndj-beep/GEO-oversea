@@ -989,7 +989,7 @@ workflow:
           - id: key-value-187
             key: ''
             type: text
-          value: '{"query":"{{#1776605036452.prod_rag_query#}}","dataset_ids":["{{#1776153503356.prod_dataset_id#}}"],"top_k":4,"score":0.30}'
+            value: '{"query":"{{#1776605036452.prod_rag_query#}}","dataset_ids":["{{#1776153503356.prod_dataset_id#}}"],"top_k":4,"score":0.30}'
           type: json
         desc: ''
         headers: |-
