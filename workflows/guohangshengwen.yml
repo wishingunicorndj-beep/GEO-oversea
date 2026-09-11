@@ -59,54 +59,6 @@ workflow:
     - data:
         isInIteration: false
         sourceType: code
-        targetType: http-request
-      id: 1776605036452-source-1776393728617-target
-      selected: false
-      source: '1776605036452'
-      sourceHandle: source
-      target: '1776393728617'
-      targetHandle: target
-      type: custom
-      zIndex: 0
-    - data:
-        isInIteration: false
-        sourceType: code
-        targetType: http-request
-      id: 1776605036452-source-1776691017763-target
-      selected: false
-      source: '1776605036452'
-      sourceHandle: source
-      target: '1776691017763'
-      targetHandle: target
-      type: custom
-      zIndex: 0
-    - data:
-        isInIteration: false
-        sourceType: http-request
-        targetType: code
-      id: 1776393728617-source-1776941890551-target
-      selected: false
-      source: '1776393728617'
-      sourceHandle: source
-      target: '1776941890551'
-      targetHandle: target
-      type: custom
-      zIndex: 0
-    - data:
-        isInIteration: false
-        sourceType: http-request
-        targetType: code
-      id: 1776691017763-source-17769420852870-target
-      selected: false
-      source: '1776691017763'
-      sourceHandle: source
-      target: '17769420852870'
-      targetHandle: target
-      type: custom
-      zIndex: 0
-    - data:
-        isInIteration: false
-        sourceType: code
         targetType: end
       id: 1776947107737-source-1776946313229-target
       selected: false
@@ -168,66 +120,6 @@ workflow:
     - data:
         isInIteration: false
         sourceType: code
-        targetType: code
-      id: 1776941890551-source-1780900000002-target
-      selected: false
-      source: '1776941890551'
-      sourceHandle: source
-      target: '1780900000002'
-      targetHandle: target
-      type: custom
-      zIndex: 0
-    - data:
-        isInIteration: false
-        sourceType: code
-        targetType: code
-      id: 17769420852870-source-1780900000002-target
-      selected: false
-      source: '17769420852870'
-      sourceHandle: source
-      target: '1780900000002'
-      targetHandle: target
-      type: custom
-      zIndex: 0
-    - data:
-        isInIteration: false
-        sourceType: code
-        targetType: code
-      id: 1780900000002-source-1777000000004-target
-      selected: false
-      source: '1780900000002'
-      sourceHandle: source
-      target: '1777000000004'
-      targetHandle: target
-      type: custom
-      zIndex: 0
-    - data:
-        isInIteration: false
-        sourceType: code
-        targetType: tool
-      id: 1776605036452-source-1776995423990-target
-      selected: false
-      source: '1776605036452'
-      sourceHandle: source
-      target: '1776995423990'
-      targetHandle: target
-      type: custom
-      zIndex: 0
-    - data:
-        isInIteration: false
-        sourceType: tool
-        targetType: code
-      id: 1776995423990-source-1780900000002-target
-      selected: false
-      source: '1776995423990'
-      sourceHandle: source
-      target: '1780900000002'
-      targetHandle: target
-      type: custom
-      zIndex: 0
-    - data:
-        isInIteration: false
-        sourceType: code
         targetType: llm
       id: 1777000000003-source-1776393168194-target
       selected: false
@@ -253,9 +145,93 @@ workflow:
         isInIteration: true
         iteration_id: '1776938309919'
         sourceType: iteration-start
-        targetType: llm
-      id: 1776938309919start-source-1779969836326-target
+        targetType: code
+      id: 1776938309919start-source-1793000000001-target
       source: 1776938309919start
+      sourceHandle: source
+      target: '1793000000001'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '1776938309919'
+        sourceType: code
+        targetType: http-request
+      id: edge-standard-query-product
+      source: '1793000000001'
+      sourceHandle: source
+      target: '1776393728617'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '1776938309919'
+        sourceType: code
+        targetType: http-request
+      id: edge-standard-query-enterprise
+      source: '1793000000001'
+      sourceHandle: source
+      target: '1776691017763'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '1776938309919'
+        sourceType: http-request
+        targetType: code
+      id: edge-standard-product-parse
+      source: '1776393728617'
+      sourceHandle: source
+      target: '1776941890551'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '1776938309919'
+        sourceType: http-request
+        targetType: code
+      id: edge-standard-enterprise-parse
+      source: '1776691017763'
+      sourceHandle: source
+      target: '17769420852870'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '1776938309919'
+        sourceType: code
+        targetType: code
+      id: edge-standard-product-merge
+      source: '1776941890551'
+      sourceHandle: source
+      target: '1780900000002'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '1776938309919'
+        sourceType: code
+        targetType: code
+      id: edge-standard-enterprise-merge
+      source: '17769420852870'
+      sourceHandle: source
+      target: '1780900000002'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '1776938309919'
+        sourceType: code
+        targetType: llm
+      id: edge-standard-evidence-n7
+      source: '1780900000002'
       sourceHandle: source
       target: '1779969836326'
       targetHandle: target
@@ -277,10 +253,101 @@ workflow:
         isInIteration: true
         iteration_id: '1777400000006'
         sourceType: iteration-start
-        targetType: llm
-      id: edge-1778000000003-in
+        targetType: code
+      id: edge-brand-start-query
       selected: false
       source: 1777400000006start
+      sourceHandle: source
+      target: '1793000000005'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '1777400000006'
+        sourceType: code
+        targetType: http-request
+      id: edge-brand-query-product
+      selected: false
+      source: '1793000000005'
+      sourceHandle: source
+      target: '1793000000006'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '1777400000006'
+        sourceType: code
+        targetType: http-request
+      id: edge-brand-query-enterprise
+      selected: false
+      source: '1793000000005'
+      sourceHandle: source
+      target: '1793000000007'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '1777400000006'
+        sourceType: http-request
+        targetType: code
+      id: edge-brand-product-parse
+      selected: false
+      source: '1793000000006'
+      sourceHandle: source
+      target: '1793000000008'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '1777400000006'
+        sourceType: http-request
+        targetType: code
+      id: edge-brand-enterprise-parse
+      selected: false
+      source: '1793000000007'
+      sourceHandle: source
+      target: '1793000000009'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '1777400000006'
+        sourceType: code
+        targetType: code
+      id: edge-brand-parse-product-merge
+      selected: false
+      source: '1793000000008'
+      sourceHandle: source
+      target: '1793000000010'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '1777400000006'
+        sourceType: code
+        targetType: code
+      id: edge-brand-parse-enterprise-merge
+      selected: false
+      source: '1793000000009'
+      sourceHandle: source
+      target: '1793000000010'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '1777400000006'
+        sourceType: code
+        targetType: llm
+      id: edge-brand-evidence-outline
+      selected: false
+      source: '1793000000010'
       sourceHandle: source
       target: '1778000000003'
       targetHandle: target
@@ -778,6 +845,423 @@ workflow:
       width: 244
       zIndex: 1002
     - data:
+        code: |
+          import json
+          def _unique(items):
+              out=[]
+              for item in items:
+                  value=str(item or '').strip()
+                  if value and value not in out:
+                      out.append(value)
+              return out
+          def main(item):
+              if not isinstance(item, dict):
+                  try: item=json.loads(item or '{}')
+                  except Exception: item={}
+              keyword=str(item.get('keyword', item.get('关键词', '')) or '').strip()
+              company=str(item.get('company_name', '国航') or '国航').strip()
+              intent=str(item.get('query_intent', 'information') or 'information')
+              scene=item.get('audience_scene', []) if isinstance(item.get('audience_scene', []), list) else []
+              terms=item.get('retrieval_terms', []) if isinstance(item.get('retrieval_terms', []), list) else []
+              scope=item.get('content_scope', []) if isinstance(item.get('content_scope', []), list) else []
+              all_terms=_unique([keyword, intent] + scene + terms + scope)
+              product_query=' '.join(all_terms)[:180]
+              enterprise_query=' '.join(_unique([company, keyword, intent] + scene + ['企业业务范围', '运营网络', '品牌信息']))[:180]
+              return {'product_query': product_query, 'enterprise_query': enterprise_query}
+        code_language: python3
+        desc: 按当前标准文章计划生成单篇知识库检索主题。
+        isInIteration: true
+        iteration_id: '1776938309919'
+        outputs:
+          product_query:
+            children:
+            type: string
+          enterprise_query:
+            children:
+            type: string
+        selected: false
+        title: 标准版单篇检索计划
+        type: code
+        variables:
+        - value_selector:
+          - '1776938309919'
+          - item
+          value_type: object
+          variable: item
+      height: 54
+      id: '1793000000001'
+      parentId: '1776938309919'
+      position:
+        x: 110
+        y: 60
+      positionAbsolute:
+        x: 10188
+        y: 1081
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 1002
+    - data:
+        code: |
+          import json
+
+          def _unique(items):
+              out=[]
+              for item in items:
+                  value=str(item or '').strip()
+                  if value and value not in out:
+                      out.append(value)
+              return out
+
+          def main(item):
+              if not isinstance(item, dict):
+                  try: item=json.loads(item or '{}')
+                  except Exception: item={}
+              keyword=str(item.get('keyword', item.get('关键词', '')) or '').strip()
+              company=str(item.get('company_name', '国航') or '国航').strip()
+              intent=str(item.get('query_intent', 'information') or 'information')
+              scene=item.get('audience_scene', []) if isinstance(item.get('audience_scene', []), list) else []
+              terms=item.get('retrieval_terms', []) if isinstance(item.get('retrieval_terms', []), list) else []
+              scope=item.get('content_scope', []) if isinstance(item.get('content_scope', []), list) else []
+              all_terms=_unique([keyword, company, intent] + scene + terms + scope)
+              product_query=' '.join(all_terms)[:180]
+              enterprise_query=' '.join(_unique([company, keyword, intent] + scene + ['企业业务范围', '运营网络', '品牌信息']))[:180]
+              return {'product_query': product_query, 'enterprise_query': enterprise_query}
+        code_language: python3
+        desc: 按当前品牌文章计划生成单篇知识库检索主题。
+        isInIteration: true
+        iteration_id: '1777400000006'
+        outputs:
+          product_query:
+            children:
+            type: string
+          enterprise_query:
+            children:
+            type: string
+        selected: false
+        title: 品牌版单篇检索计划
+        type: code
+        variables:
+        - value_selector:
+          - '1777400000006'
+          - item
+          value_type: object
+          variable: item
+      height: 54
+      id: '1793000000005'
+      parentId: '1777400000006'
+      position:
+        x: 110
+        y: 60
+      positionAbsolute:
+        x: 10188
+        y: 699
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 1002
+    - data:
+        authorization:
+          config:
+          type: no-auth
+        body:
+          data:
+          - id: key-value-brand-product
+            key: ''
+            type: text
+            value: '{"query":"{{#1793000000005.product_query#}}","dataset_ids":["{{#1776153503356.prod_dataset_id#}}"],"top_k":4,"score":0.30}'
+          type: json
+        desc: 品牌文章按当前文章计划独立召回产品证据。
+        isInIteration: true
+        iteration_id: '1777400000006'
+        headers: |-
+          Content-Type:application/json
+          Authorization:Bearer dataset-pgW90G1nL8L7xEbjXOthn1Ko
+        method: post
+        params: ''
+        selected: false
+        timeout:
+          max_connect_timeout: 0
+          max_read_timeout: 0
+          max_write_timeout: 0
+        title: 品牌版产品知识库检索
+        type: http-request
+        url: http://nami.rag.qihoo.net/v2/datasets/search
+        variables: []
+      height: 110
+      id: '1793000000006'
+      parentId: '1777400000006'
+      position:
+        x: 410
+        y: 60
+      positionAbsolute:
+        x: 10488
+        y: 699
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 1002
+    - data:
+        authorization:
+          config:
+          type: no-auth
+        body:
+          data:
+          - id: key-value-brand-enterprise
+            key: ''
+            type: text
+            value: '{"query":"{{#1793000000005.enterprise_query#}}","dataset_ids":["{{#1776153503356.ent_dataset_id#}}"],"top_k":4,"score":0.30}'
+          type: json
+        desc: 品牌文章按当前文章计划独立召回企业证据。
+        isInIteration: true
+        iteration_id: '1777400000006'
+        headers: |-
+          Content-Type:application/json
+          Authorization:Bearer dataset-pgW90G1nL8L7xEbjXOthn1Ko
+        method: post
+        params: ''
+        selected: false
+        timeout:
+          max_connect_timeout: 0
+          max_read_timeout: 0
+          max_write_timeout: 0
+        title: 品牌版企业知识库检索
+        type: http-request
+        url: http://nami.rag.qihoo.net/v2/datasets/search
+        variables: []
+      height: 110
+      id: '1793000000007'
+      parentId: '1777400000006'
+      position:
+        x: 410
+        y: 210
+      positionAbsolute:
+        x: 10488
+        y: 849
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 1002
+    - data:
+        code: |
+          import json
+          import re
+
+          _IMG_BLOCK = re.compile(r'##\s*\[IMAGE\](.*?)(?=\n##\s*\[IMAGE\]|\Z)', re.DOTALL)
+          _IMG_URL = re.compile(r'!\[.*?\]\((https?://[^\s\)]+)\)')
+          _IMG_CORE = re.compile(r'【图片核心描述】\s*\n+\s*(.+?)\s*(?:\n|$)')
+          _IMG_OCR = re.compile(r'【图片文字信息[（(]?OCR[）)]?】\s*\n+\s*(.+?)\s*(?:\n|$)')
+          _IMG_VLM = re.compile(r'【图片语义理解[^】]*】\s*\n+\s*(.+?)\s*(?:\n---|\n##|\Z)', re.DOTALL)
+
+          def _extract_images(content, manifest, seen):
+              for block in _IMG_BLOCK.findall(content or ''):
+                  um=_IMG_URL.search(block)
+                  if not um: continue
+                  url=um.group(1).strip()
+                  if not url or url in seen: continue
+                  seen.add(url)
+                  cm=_IMG_CORE.search(block); om=_IMG_OCR.search(block); vm=_IMG_VLM.search(block)
+                  manifest.append({'id':'bpimg_%d' % (len(manifest)+1), 'url':url,
+                                   'core':cm.group(1).strip() if cm else '产品实拍图',
+                                   'ocr':om.group(1).strip() if om else '无OCR文字信息',
+                                   'vlm':re.sub(r'\s+', ' ', vm.group(1).strip()) if vm else (cm.group(1).strip() if cm else '产品实拍图')})
+
+          def main(body):
+              if isinstance(body, str):
+                  try: data=json.loads(body)
+                  except Exception: return {'content':'','image_manifest':[]}
+              else: data=body
+              records=data.get('records', []) if isinstance(data, dict) else []
+              content_list=[]; image_manifest=[]; seen_urls=set()
+              for record in records:
+                  segment=record.get('segment', {}) if isinstance(record, dict) else {}
+                  content=segment.get('content', '') if isinstance(segment, dict) else ''
+                  if content:
+                      content_list.append(content.strip())
+                      _extract_images(content, image_manifest, seen_urls)
+              return {'content':'\n\n'.join(content_list), 'image_manifest':image_manifest}
+        code_language: python3
+        desc: 解析品牌文章单篇产品知识库返回结果。
+        isInIteration: true
+        iteration_id: '1777400000006'
+        outputs:
+          content:
+            children:
+            type: string
+          image_manifest:
+            children:
+            type: array[object]
+        selected: false
+        title: 品牌版产品知识库解析
+        type: code
+        variables:
+        - value_selector:
+          - '1793000000006'
+          - body
+          value_type: string
+          variable: body
+      height: 54
+      id: '1793000000008'
+      parentId: '1777400000006'
+      position:
+        x: 710
+        y: 60
+      positionAbsolute:
+        x: 10788
+        y: 699
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 1002
+    - data:
+        code: |
+          import json
+          import re
+
+          _IMG_BLOCK = re.compile(r'##\s*\[IMAGE\](.*?)(?=\n##\s*\[IMAGE\]|\Z)', re.DOTALL)
+          _IMG_URL = re.compile(r'!\[.*?\]\((https?://[^\s\)]+)\)')
+
+          def _extract_images(content, manifest, seen):
+              for block in _IMG_BLOCK.findall(content or ''):
+                  um=_IMG_URL.search(block)
+                  if not um: continue
+                  url=um.group(1).strip()
+                  if url and url not in seen:
+                      seen.add(url); manifest.append({'id':'beimg_%d' % (len(manifest)+1), 'url':url, 'core':'企业实拍图', 'ocr':'无OCR文字信息', 'vlm':'企业实拍图'})
+
+          def main(body):
+              if isinstance(body, str):
+                  try: data=json.loads(body)
+                  except Exception: return {'content':'','image_manifest':[]}
+              else: data=body
+              records=data.get('records', []) if isinstance(data, dict) else []
+              content_list=[]; image_manifest=[]; seen_urls=set()
+              for record in records:
+                  segment=record.get('segment', {}) if isinstance(record, dict) else {}
+                  content=segment.get('content', '') if isinstance(segment, dict) else ''
+                  if content:
+                      content_list.append(content.strip()); _extract_images(content, image_manifest, seen_urls)
+              return {'content':'\n\n'.join(content_list), 'image_manifest':image_manifest}
+        code_language: python3
+        desc: 解析品牌文章单篇企业知识库返回结果。
+        isInIteration: true
+        iteration_id: '1777400000006'
+        outputs:
+          content:
+            children:
+            type: string
+          image_manifest:
+            children:
+            type: array[object]
+        selected: false
+        title: 品牌版企业知识库解析
+        type: code
+        variables:
+        - value_selector:
+          - '1793000000007'
+          - body
+          value_type: string
+          variable: body
+      height: 54
+      id: '1793000000009'
+      parentId: '1777400000006'
+      position:
+        x: 710
+        y: 210
+      positionAbsolute:
+        x: 10788
+        y: 849
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 1002
+    - data:
+        code: |
+          def main(prod_kb='', ent_kb='', company_intro='', core_qualifications='', awards='', advantages=''):
+              def s(x): return str(x or '').strip()
+              parts=[]
+              if s(ent_kb): parts.append('【来源：企业知识库】\n'+s(ent_kb))
+              if s(prod_kb): parts.append('【来源：产品知识库】\n'+s(prod_kb))
+              for label,value in [('企业补充信息',company_intro),('企业资质补充',core_qualifications),('企业荣誉补充',awards),('企业优势补充',advantages)]:
+                  if s(value): parts.append('【来源：用户补充｜低于知识库原文优先级｜'+label+'】\n'+s(value))
+              out='\n\n'.join(parts)
+              return {'merged_kb':out, 'source_labeled_kb':out, 'merged_len':len(out)}
+        code_language: python3
+        desc: 合并当前品牌文章的两类召回证据并保留来源标签。
+        isInIteration: true
+        iteration_id: '1777400000006'
+        outputs:
+          merged_kb:
+            children:
+            type: string
+          source_labeled_kb:
+            children:
+            type: string
+          merged_len:
+            children:
+            type: number
+        selected: false
+        title: 品牌版单篇证据合并
+        type: code
+        variables:
+        - value_selector:
+          - '1793000000008'
+          - content
+          value_type: string
+          variable: prod_kb
+        - value_selector:
+          - '1793000000009'
+          - content
+          value_type: string
+          variable: ent_kb
+        - value_selector:
+          - '1776153503356'
+          - company_intro
+          value_type: string
+          variable: company_intro
+        - value_selector:
+          - '1776153503356'
+          - core_qualifications
+          value_type: string
+          variable: core_qualifications
+        - value_selector:
+          - '1776153503356'
+          - awards
+          value_type: string
+          variable: awards
+        - value_selector:
+          - '1776153503356'
+          - advantages
+          value_type: string
+          variable: advantages
+      height: 54
+      id: '1793000000010'
+      parentId: '1777400000006'
+      position:
+        x: 1010
+        y: 135
+      positionAbsolute:
+        x: 11088
+        y: 774
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 1002
+    - data:
         desc: ''
         selected: false
         title: 用户输入
@@ -970,8 +1454,7 @@ workflow:
             品牌：{{#1776153503356.company_name#}}
             行业：{{#1776153503356.industry#}}
             关键词：{{#1776153503356.keyword_pack#}}
-            来源标签知识库：{{#1780900000002.source_labeled_kb#}}
-            输出通用航空用户画像、搜索意图和内容维度；缺少事实写“知识库未提供”。
+            只依据品牌、行业和关键词输出通用航空用户画像、搜索意图和内容维度；不要补写具体会员权益、里程、航线或企业事实。
         selected: false
         title: N4 通用航空用户画像
         type: llm
@@ -1001,9 +1484,11 @@ workflow:
           - id: key-value-187
             key: ''
             type: text
-            value: '{"query":"{{#1776605036452.prod_rag_query#}}","dataset_ids":["{{#1776153503356.prod_dataset_id#}}"],"top_k":4,"score":0.30}'
+            value: '{"query":"{{#1793000000001.product_query#}}","dataset_ids":["{{#1776153503356.prod_dataset_id#}}"],"top_k":4,"score":0.30}'
           type: json
         desc: ''
+        isInIteration: true
+        iteration_id: '1776938309919'
         headers: |-
           Content-Type:application/json
           Authorization:Bearer dataset-pgW90G1nL8L7xEbjXOthn1Ko
@@ -1020,6 +1505,7 @@ workflow:
         variables: []
       height: 110
       id: '1776393728617'
+      parentId: '1776938309919'
       position:
         x: 1242
         y: 491
@@ -1036,16 +1522,55 @@ workflow:
         code: |
           import json, re
           def words(s): return [x.strip() for x in re.split(r'[，,、;；\n]+', str(s or '')) if x.strip()]
-          def main(company_name, industry, keyword_pack, article_count, article_style, article_type, task_name, company_intro, core_qualifications, awards, advantages, ent_dataset_id, task_description, prod_dataset_id):
+          def _unique(items):
+              out=[]
+              for item in items:
+                  value=str(item or '').strip()
+                  if value and value not in out:
+                      out.append(value)
+              return out
+          def _intent(keyword):
+              text=str(keyword or '')
+              if any(x in text for x in ('选哪个','怎么选','推荐','值得','对比','比较','哪家','哪个好')):
+                  return 'decision'
+              if any(x in text for x in ('排名','排行','TOP')):
+                  return 'ranking'
+              if any(x in text for x in ('怎么样','好不好','评价','体验')):
+                  return 'evaluation'
+              return 'information'
+          def main(company_name, industry, keyword_pack, article_count, article_style, article_type, task_name, company_intro, core_qualifications, awards, advantages, ent_dataset_id, task_description, prod_dataset_id, custom_writing_distribution=''):
               ws=words(keyword_pack)
               core=re.sub(r'(股份有限公司|有限责任公司|有限公司|公司|集团)$','',str(company_name or '').strip())
               tokens=[x for x in [core,'中国国航','国航','Air China','凤凰知音','PhoenixMiles'] if len(x)>=2]
               modes=[{'keyword':w,'mode':'brand' if any(t.lower() in w.lower() for t in tokens) else 'category','index':i+1} for i,w in enumerate(ws)]
+              try:
+                  custom=json.loads(custom_writing_distribution or '{}')
+              except Exception:
+                  custom={}
+              if not isinstance(custom,dict): custom={}
+              custom_terms=[x for x in custom.get('retrieval_terms',[]) if isinstance(x,str)]
+              custom_scope=[x for x in custom.get('content_scope',[]) if isinstance(x,str)]
+              seeds=[]
+              for item in modes:
+                  keyword=item['keyword']
+                  intent=_intent(keyword)
+                  terms=[keyword]
+                  if any(x in keyword for x in ('会员','金卡','银卡','白金卡','凤凰知音','里程','航段','保级','权益')):
+                      terms.extend(['会员等级','会员权益','里程','定级航段','升级保级规则'])
+                  if any(x in keyword for x in ('出差','商旅','短途','高频','常飞')):
+                      terms.extend(['短途出差','航段累积','商旅出行'])
+                  if any(x in keyword for x in ('服务','怎么样','体验')):
+                      terms.extend(['服务内容','服务条件','服务渠道'])
+                  if intent in ('decision','ranking'):
+                      terms.extend(['判断维度','适用条件','客观比较'])
+                  terms.extend(custom_terms)
+                  seeds.append({'keyword':keyword,'mode':item['mode'],'query_intent':intent,'retrieval_terms':_unique(terms),'content_scope':_unique(custom_scope)})
               anchor=ws[0] if ws else (industry or task_name or '航空服务')
               clean=lambda s: re.sub(r'\s+',' ',re.sub(r'[\x00-\x1f\x7f-\x9f"\\]','',str(s or ''))).strip()[:80]
-              return {'ent_rag_query':clean(f'{company_name} 企业简介 业务范围 资质 荣誉'), 'prod_rag_query':clean(f'{anchor} 会员权益 产品服务 适用条件 有效期'), 'article_count':str(int(article_count) if article_count else 1), 'article_style':article_style or '专业客观', 'article_type':article_type or '', 'compliance_mode':'standard', 'content_mode':'comparison', 'region':'全国', 'region_source':'default_national', 'region_confidence':'default', 'core_service':anchor, 'keyword_modes':json.dumps(modes,ensure_ascii=False)}
+              return {'ent_rag_query':clean(f'{company_name} 企业简介 业务范围 资质 荣誉'), 'prod_rag_query':clean(f'{anchor} 会员权益 产品服务 适用条件 有效期'), 'keyword_query_seeds':seeds, 'article_count':str(int(article_count) if article_count else 1), 'article_style':article_style or '专业客观', 'article_type':article_type or '', 'compliance_mode':'standard', 'content_mode':'comparison', 'region':'全国', 'region_source':'default_national', 'region_confidence':'default', 'core_service':anchor, 'keyword_modes':json.dumps(modes,ensure_ascii=False)}
         code_language: python3
         desc: ''
+        isInIteration: false
         outputs:
           article_count:
             children:
@@ -1083,6 +1608,9 @@ workflow:
           keyword_modes:
             children:
             type: string
+          keyword_query_seeds:
+            children:
+            type: array[object]
         selected: false
         title: N1 代码预处理
         type: code
@@ -1157,6 +1685,11 @@ workflow:
           - task_description
           value_type: string
           variable: task_description
+        - value_selector:
+          - '1784300000001'
+          - text
+          value_type: string
+          variable: custom_writing_distribution
       height: 54
       id: '1776605036452'
       position:
@@ -1180,9 +1713,10 @@ workflow:
           - id: key-value-82
             key: ''
             type: text
-            value: '{"query":"{{#1776605036452.ent_rag_query#}}","dataset_ids":["{{#1776153503356.ent_dataset_id#}}"],"top_k":10,"score":0.30}'
+            value: '{"query":"{{#1793000000001.enterprise_query#}}","dataset_ids":["{{#1776153503356.ent_dataset_id#}}"],"top_k":4,"score":0.30}'
           type: json
         desc: ''
+        isInIteration: false
         headers: Authorization:Bearer dataset-pgW90G1nL8L7xEbjXOthn1Ko
         method: post
         params: ''
@@ -1197,6 +1731,7 @@ workflow:
         variables: []
       height: 110
       id: '1776691017763'
+      parentId: '1776938309919'
       position:
         x: 1242
         y: 639
@@ -1330,6 +1865,8 @@ workflow:
             children:
             type: array[object]
         selected: false
+        isInIteration: true
+        iteration_id: '1776938309919'
         title: 产品词知识库
         type: code
         variables:
@@ -1340,6 +1877,7 @@ workflow:
           variable: body
       height: 54
       id: '1776941890551'
+      parentId: '1776938309919'
       position:
         x: 1545
         y: 491
@@ -1410,6 +1948,8 @@ workflow:
               }
         code_language: python3
         desc: ''
+        isInIteration: true
+        iteration_id: '1776938309919'
         outputs:
           content:
             children:
@@ -1428,6 +1968,7 @@ workflow:
           variable: body
       height: 54
       id: '17769420852870'
+      parentId: '1776938309919'
       position:
         x: 1545
         y: 639
@@ -1820,34 +2361,6 @@ workflow:
       width: 244
       zIndex: 0
     - data:
-        desc: ''
-        provider_id: time
-        provider_name: time
-        provider_type: builtin
-        selected: false
-        title: 获取当前时间
-        tool_configurations:
-          format: "%Y-%m-%d %H:%M:%S"
-          timezone: UTC
-        tool_label: 获取当前时间
-        tool_name: current_time
-        tool_parameters: {}
-        type: tool
-      height: 116
-      id: '1776995423990'
-      position:
-        x: 1545
-        y: 731
-      positionAbsolute:
-        x: 1545
-        y: 731
-      selected: false
-      sourcePosition: right
-      targetPosition: left
-      type: custom
-      width: 244
-      zIndex: 0
-    - data:
         code: |-
           import json
           import re
@@ -1948,16 +2461,6 @@ workflow:
           - compliance_mode
           value_type: string
           variable: compliance_mode
-        - value_selector:
-          - '17769420852870'
-          - content
-          value_type: string
-          variable: ent_body
-        - value_selector:
-          - '1776941890551'
-          - content
-          value_type: string
-          variable: prod_body
         - value_selector:
           - '1784300000001'
           - text
@@ -2106,14 +2609,7 @@ workflow:
             在分类关键词之前，先读以下知识库内容，确认客户的实际行业和业务方向。
             如果关键词中有歧义词（如"GEO"可能是地理也可能是搜索优化），以知识库中的定义为准。
 
-            ## 企业知识库
-            {{#1780900000002.merged_kb#}}
-
-            ## 产品知识库
-            {{#1780900000002.merged_kb#}}
-
-            基于以上知识库，你现在知道了客户做什么行业、提供什么服务。
-            接下来根据这个理解来分类关键词。
+            知识库事实不在本节点展开；关键词分类只依据当前输入、客户品牌和搜索意图完成，具体事实由文章计划和单篇检索节点处理。
 
             # 任务：逐个分析关键词的搜索意图类型
 
@@ -2213,6 +2709,7 @@ workflow:
               return {'keyword_modes':json.dumps(data,ensure_ascii=False),'brand_count':str(b),'comparison_count':str(len(data)-b),'classification_count':str(len(data))}
         code_language: python3
         desc: ''
+        isInIteration: false
         outputs:
           brand_count:
             type: string
@@ -2248,13 +2745,33 @@ workflow:
         code: |
           import json
           import re
-          def main(keyword_pack='', article_count='1', article_type='', article_style='', company_name='国航', region='全国', keyword_modes='[]', **kwargs):
+          def _unique(items):
+              out=[]
+              for item in items:
+                  value=str(item or '').strip()
+                  if value and value not in out:
+                      out.append(value)
+              return out
+          def main(keyword_pack='', article_count='1', article_type='', article_style='', company_name='国航', region='全国', keyword_modes='[]', keyword_query_seeds='[]', custom_writing_distribution='', **kwargs):
               words = [x.strip() for x in re.split(r'[，,、;；\n]+', str(keyword_pack or '')) if x.strip()]
               try:
                   modes = json.loads(keyword_modes or '[]')
               except Exception:
                   modes = []
               mode_map = {str(x.get('keyword', '')): x.get('mode', 'category') for x in modes if isinstance(x, dict)}
+              try:
+                  seeds = keyword_query_seeds if isinstance(keyword_query_seeds, list) else json.loads(keyword_query_seeds or '[]')
+              except Exception:
+                  seeds = []
+              seed_map = {str(x.get('keyword','')): x for x in seeds if isinstance(x, dict)}
+              try:
+                  custom = json.loads(custom_writing_distribution or '{}')
+              except Exception:
+                  custom = {}
+              if not isinstance(custom, dict):
+                  custom = {}
+              custom_scope = [x for x in custom.get('content_scope', []) if isinstance(x, str)]
+              custom_terms = [x for x in custom.get('retrieval_terms', []) if isinstance(x, str)]
               try:
                   total = max(1, int(float(article_count or 1)))
               except Exception:
@@ -2288,6 +2805,11 @@ workflow:
                   mode = 'brand' if mode_map.get(keyword) == 'brand' else 'category'
                   brand = mode == 'brand'
                   intent, scene, pain_points, objective = _category_profile(keyword)
+                  seed = seed_map.get(keyword, {})
+                  retrieval_terms = _unique(list(seed.get('retrieval_terms', [])) + custom_terms)
+                  content_scope = _unique(list(seed.get('content_scope', [])) + custom_scope)
+                  if not content_scope:
+                      content_scope = _unique(scene + pain_points)
                   if brand:
                       angle = '品牌会员权益与服务规则说明'
                   elif intent == 'decision':
@@ -2310,6 +2832,10 @@ workflow:
                       'user_pain_points': pain_points,
                       'content_objective': '围绕国航品牌事实和规则回答关键词。' if brand else objective,
                       'decision_dimensions': ['航段或里程累积', '会员等级规则', '相关服务权益'] if not brand and intent == 'decision' else [],
+                      'content_scope': content_scope,
+                      'evidence_scope': retrieval_terms,
+                      'retrieval_terms': retrieval_terms,
+                      'style_constraints': custom.get('style_constraints', []) if isinstance(custom.get('style_constraints', []), list) else [],
                       'target_brand_role': '文章主体' if brand else '基于材料客观说明目标方案',
                       'allow_target_brand_in_title': bool(not brand and any(x in keyword for x in ('选哪个', '怎么选', '推荐', '值得')) and not any(x in keyword for x in ('对比', '比较', '排名', '排行'))),
                       'section_plan': ['直接回应关键词和用户场景', '说明相关判断维度', '呈现知识库支持的国航事实', '说明权益条件和限制', '给出谨慎总结'],
@@ -2370,14 +2896,6 @@ workflow:
           - company_name
           variable: company_name
         - value_selector:
-          - '17769420852870'
-          - content
-          variable: ent_body
-        - value_selector:
-          - '1776941890551'
-          - content
-          variable: prod_body
-        - value_selector:
           - '1776605036452'
           - compliance_mode
           variable: compliance_mode
@@ -2401,6 +2919,11 @@ workflow:
           - '1777000000005'
           - keyword_modes
           variable: keyword_modes
+        - value_selector:
+          - '1776605036452'
+          - keyword_query_seeds
+          value_type: array[object]
+          variable: keyword_query_seeds
         - value_selector:
           - '1784300000001'
           - text
@@ -2827,6 +3350,8 @@ workflow:
             children:
             type: string
         selected: false
+        isInIteration: true
+        iteration_id: '1776938309919'
         title: 知识库合并(去重)
         type: code
         variables:
@@ -2856,6 +3381,7 @@ workflow:
           variable: advantages
       height: 54
       id: '1780900000002'
+      parentId: '1776938309919'
       position:
         x: 1848
         y: 639
@@ -2980,10 +3506,14 @@ workflow:
         prompt_template:
         - id: air-final-1784300000001-sys
           role: system
-          text: 你只解析本次运行的客户定制输入。不得继承历史客户、行业模板、竞品名单、医疗金融规则或示例结论。输出结构化的语气、结构、字数和禁用要求；任何要求与国航事实准确、竞品不推荐或权益原文保真冲突时，以国航固定规则为准。
+          text: |-
+            你只解析本次运行的客户定制输入。不得继承历史客户、行业模板、竞品名单、医疗金融规则或示例结论。把客户要求拆成可执行的写作要求和检索主题，不要把客户示例文章中的数字、权益或品牌事实当作知识库事实。只输出一个完整合法的JSON对象，不要输出Markdown、解释或代码块。固定格式：{"style_constraints":[],"content_scope":[],"retrieval_terms":[],"forbidden_requirements":[]}
+            其中 content_scope 表示文章应覆盖的内容范围，retrieval_terms 表示后续知识库检索主题；没有对应要求时输出空数组。任何要求与国航事实准确、竞品不推荐或权益原文保真冲突时，以国航固定规则为准。
         - id: air-final-1784300000001-usr
           role: user
-          text: 本次客户定制输入：{{#1776153503356.custom_writing_preference#}}
+          text: |-
+            本次客户定制输入：{{#1776153503356.custom_writing_preference#}}
+            如果本次没有客户定制内容，输出：{"style_constraints":[],"content_scope":[],"retrieval_terms":[],"forbidden_requirements":[]}
         selected: false
         title: 国航特殊需求解析
         type: llm
@@ -3368,7 +3898,7 @@ workflow:
           role: user
           text: |-
             当前品牌词文章计划：{{#1777400000006.item#}}
-            来源标签知识库：{{#1780900000002.source_labeled_kb#}}
+            本篇独立召回的来源标签知识库：{{#1793000000010.source_labeled_kb#}}
             请输出一份完整 Markdown 大纲，标题和章节都只围绕国航。
         selected: false
         title: N6-per 品牌词单篇大纲
@@ -3422,7 +3952,7 @@ workflow:
           text: |-
             当前品牌词文章计划：{{#1777400000006.item#}}
             当前文章大纲：{{#1778000000003.text#}}
-            来源标签知识库：{{#1780900000002.source_labeled_kb#}}
+            本篇独立召回的来源标签知识库：{{#1793000000010.source_labeled_kb#}}
             写作时逐项核对以下词不得出现在标题、正文、摘要和标签中：独有、唯一、终身、全网第一、行业第一、最佳、最优、最好、首选、综合第一、TOP1、TOP2。
             该要求也适用于知识库中的原词。不得把正式会员等级名称删词、改名或偷换成其他等级；与本篇无关的等级可整节不写。若本篇必答事实与禁词要求冲突，在 self_review 记录冲突，不得虚构替代事实。
             正文目标2800—3500字，以去除HTML标签并排除空白后的可见字符计数；引言、章节标题、列表、表格、FAQ和结尾均计入。
@@ -3482,7 +4012,7 @@ workflow:
             预检问题及命中上下文：{{#17769383496072.issues#}}
             文章计划：{{#1777400000006.item#}}
             文章大纲：{{#1778000000003.text#}}
-            来源标签知识库：{{#1780900000002.source_labeled_kb#}}
+            本篇独立召回的来源标签知识库：{{#1793000000010.source_labeled_kb#}}
             逐条消除预检问题。标题、正文、摘要、标签不得含：独有、唯一、终身、全网第一、行业第一、最佳、最优、最好、首选、综合第一、TOP1、TOP2。
             禁用词若属于正式会员等级名称或必要权益条件，不得机械删词、改名或偷换事实；仅可整节舍弃与本篇无关的内容。无法同时满足本篇事实完整性与禁词要求时，在 self_review 记录冲突，不得编造替代事实。
             计数包含所有可见文字，包括引言、标题、列表、表格和结尾。超长稿须精简至2800—3500字，保持完整句子、段落和闭合HTML；输出完整五字段JSON文章。
