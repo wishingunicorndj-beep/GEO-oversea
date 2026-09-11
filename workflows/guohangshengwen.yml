@@ -2327,11 +2327,6 @@ workflow:
           value_type: array[object]
           variable: articles
         - value_selector:
-          - '1780900000002'
-          - merged_kb
-          value_type: string
-          variable: knowledge_base_evidence
-        - value_selector:
           - '1782989838425'
           - verified_text
           value_type: string
