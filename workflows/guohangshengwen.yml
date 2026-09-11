@@ -571,7 +571,8 @@ workflow:
               """品类标题保持品类范围，不把目标品牌拼成第二主题。"""
               title = article['title'].strip()
               issues = []
-              if CATEGORY_BRAND_IN_TITLE.search(title):
+              allow_target_brand = bool(article.get('allow_target_brand_in_title', False))
+              if CATEGORY_BRAND_IN_TITLE.search(title) and not allow_target_brand:
                   issues.append('品类词标题不应追加目标品牌或产品名称：请保留品类主题，品牌内容放入正文')
               if CATEGORY_COMPARISON_CUE.search(title):
                   headings = re.findall(r'<h[23][^>]*>(.*?)</h[23]>', article['content'], re.I | re.S)
@@ -2010,6 +2011,7 @@ workflow:
                   item['_article_total'] = plan.get('article_total', len(plans))
                   item['_keyword'] = plan.get('keyword', plan.get('关键词', ''))
                   item['_keyword_mode'] = plan.get('keyword_mode', '')
+                  item['allow_target_brand_in_title'] = bool(plan.get('allow_target_brand_in_title', False))
                   bound.append(item)
               return bound
 
@@ -2247,16 +2249,42 @@ workflow:
               except Exception:
                   total = 1
               plans = []
-              angles = [
-                  '会员体系与保级规则概览',
-                  '核心出行权益与使用规则梳理',
-                  '里程累积兑换与服务渠道说明'
-              ]
+              def _category_profile(keyword):
+                  text = str(keyword or '')
+                  scene = []
+                  pain_points = []
+                  intent = 'information'
+                  if any(x in text for x in ('出差', '商旅', '短途', '高频', '常飞')):
+                      scene.append('高频出行或短途商旅场景')
+                      pain_points.extend(['航段和里程是否能够持续累积', '会员等级和权益是否与出行频率匹配'])
+                  if any(x in text for x in ('选哪个', '怎么选', '推荐', '值得', '对比', '比较', '哪家', '哪个好')):
+                      intent = 'decision'
+                  elif any(x in text for x in ('排名', '排行', 'TOP')):
+                      intent = 'ranking'
+                  elif any(x in text for x in ('怎么样', '好不好', '评价', '体验')):
+                      intent = 'evaluation'
+                  if intent == 'decision':
+                      objective = '先回应用户的判断问题，再用材料支持的事实说明目标品牌方案与场景的关联'
+                  elif intent == 'evaluation':
+                      objective = '围绕用户关心的服务或会员内容给出有依据的说明，避免泛泛介绍企业信息'
+                  else:
+                      objective = '围绕关键词直接需要的信息组织材料，优先回答用户问题，不按知识库目录全文展开'
+                  if not scene:
+                      scene = ['由关键词明确表达的用户场景']
+                  return intent, scene, pain_points, objective
               for i in range(total):
                   keyword = words[i % len(words)] if words else '航空服务'
                   mode = 'brand' if mode_map.get(keyword) == 'brand' else 'category'
                   brand = mode == 'brand'
-                  angle = angles[i % len(angles)] if not brand else '品牌会员权益与服务规则说明'
+                  intent, scene, pain_points, objective = _category_profile(keyword)
+                  if brand:
+                      angle = '品牌会员权益与服务规则说明'
+                  elif intent == 'decision':
+                      angle = '用户场景、判断维度与目标方案说明'
+                  elif intent == 'evaluation':
+                      angle = '用户关心的服务内容与规则说明'
+                  else:
+                      angle = '关键词核心信息与相关规则梳理'
                   plans.append({
                       'article_index': i + 1,
                       '文章序号': i + 1,
@@ -2265,7 +2293,15 @@ workflow:
                       '关键词': keyword,
                       'keyword_mode': mode,
                       'article_angle': angle,
-                      'content_mode': 'brand_focus' if brand else 'category_compare',
+                      'content_mode': 'brand_focus' if brand else ('category_decision' if intent == 'decision' else 'category_compare'),
+                      'query_intent': 'brand' if brand else intent,
+                      'audience_scene': scene,
+                      'user_pain_points': pain_points,
+                      'content_objective': '围绕国航品牌事实和规则回答关键词。' if brand else objective,
+                      'decision_dimensions': ['航段或里程累积', '会员等级规则', '相关服务权益'] if not brand and intent == 'decision' else [],
+                      'target_brand_role': '文章主体' if brand else '基于材料客观说明目标方案',
+                      'allow_target_brand_in_title': bool(not brand and any(x in keyword for x in ('选哪个', '怎么选', '推荐', '值得')) and not any(x in keyword for x in ('对比', '比较', '排名', '排行'))),
+                      'section_plan': ['直接回应关键词和用户场景', '说明相关判断维度', '呈现知识库支持的国航事实', '说明权益条件和限制', '给出谨慎总结'],
                       'article_type': article_type or ('品牌介绍类' if brand else '客观对比类'),
                       'article_style': article_style or '专业客观',
                       'company_name': company_name or '国航',
@@ -2274,7 +2310,7 @@ workflow:
                       'competitor_names': [] if brand else ['中国东方航空', '中国南方航空'],
                       'ranking_allowed': False,
                       'faq_required': False,
-                      'writing_rule': '品牌词只写国航，不出现竞品。' if brand else '竞品只作客观并列，不得描述优势、排名、适配或推荐。'
+                      'writing_rule': '品牌词只写国航，不出现竞品。' if brand else '允许描述用户场景和判断维度；竞品只作有依据的客观并列，不得写竞品优势、优劣、推荐、排名或选择结论。'
                   })
               return {
                   'plan': plans,
@@ -2453,7 +2489,8 @@ workflow:
               """品类标题保持品类范围，不把目标品牌拼成第二主题。"""
               title = article['title'].strip()
               issues = []
-              if CATEGORY_BRAND_IN_TITLE.search(title):
+              allow_target_brand = bool(article.get('allow_target_brand_in_title', False))
+              if CATEGORY_BRAND_IN_TITLE.search(title) and not allow_target_brand:
                   issues.append('品类词标题不应追加目标品牌或产品名称：请保留品类主题，品牌内容放入正文')
               if CATEGORY_COMPARISON_CUE.search(title):
                   headings = re.findall(r'<h[23][^>]*>(.*?)</h[23]>', article['content'], re.I | re.S)
@@ -2663,7 +2700,7 @@ workflow:
         - id: air-final-1779969836326-sys
           role: system
           text: |-
-            你是国航品类词文章生成器。只依据当前文章计划和带来源标签的知识库生成文章。只选取与当前关键词、article_angle和本篇标题直接相关的材料，忽略知识库中无关的会员等级、活动和旁支规则，不要把整份知识库全部改写进文章。可以客观并列中国东方航空、中国南方航空，但不得描述竞品优势、不得说竞品更优、不得推荐竞品、不得输出排名、TOP、首选、适用人群或按预算选择航司。会员及活动权益必须保留资料原文中的条件、期限、数量、单位和适用范围；知识库未提供的事实不得补写。避免绝对化营销表达。品类词标题必须围绕原始品类关键词生成，不得把国航、凤凰知音等目标品牌或产品名称追加为第二主题；目标品牌和产品信息在正文中按材料客观呈现。标题可以保留三大航等品类背景，但不得用选择参考、哪家、哪个好、推荐或对比等表述承诺正文未覆盖的比较内容。
+            你是国航品类词文章生成器。依据当前文章计划和带来源标签的知识库，写一篇先回应用户问题、再用材料事实支撑判断的业务文章。必须优先按照计划中的 query_intent、audience_scene、user_pain_points、decision_dimensions、content_objective 和 section_plan 组织文章，不要按知识库目录全文改写。可以描述目标用户场景、出行痛点和通用判断维度；但涉及国航、会员、里程、航线、活动和权益的具体事实，必须有知识库依据。会员及活动权益必须保留原材料中的主体、条件、期限、数量、单位和适用范围；没有明确依据的数字、比例、等级门槛、有效期、航线数量和服务承诺不得补写。中国东方航空、中国南方航空可以客观出现，但不得描述竞品优势、竞品更优、竞品适用性推荐、排名或按预算选择竞品。可以基于材料说明国航方案与用户场景的关联，但不得使用绝对化或无依据的营销结论。品类词标题默认围绕原始品类关键词；只有文章计划中明确允许时，才可在场景决策型标题中出现国航或凤凰知音，不得无理由拼接品牌。
             输出必须是一个完整、合法的 JSON 对象，不得输出 Markdown 代码块、解释、前后缀或第二个对象。字段名和类型固定如下，禁止增删或改名：
             {"title":"20-28字完整标题","content":"完整HTML正文","description":"50-150字摘要","tags":["标签1","标签2","标签3"],"self_review":"事实与格式自检说明"}
             content 必须是非空完整正文，纯文本长度控制在 2800—3500 个中文字符，至少包含 5 个有实质信息的 <h2> 章节；使用 <h2>、<h3>、<p>、<strong>、<ul>、<li> 等 HTML 标签，不得使用 Markdown，不得包含知识库来源标签、流程说明或占位文字。不得用空话、重复句或大段免责声明凑字数。JSON 必须闭合；HTML 属性如需引号应使用单引号。
@@ -2676,7 +2713,7 @@ workflow:
             竞品边界：{{#1777000000003.text#}}
             写作时逐项核对以下词不得出现在标题、正文、摘要和标签中：独有、唯一、终身、全网第一、行业第一、最佳、最优、最好、首选、综合第一、TOP1、TOP2。
             该要求也适用于知识库中的原词。不得把正式会员等级名称删词、改名或偷换成其他等级；与本篇无关的等级可整节不写。若本篇必答事实与禁词要求冲突，在 self_review 记录冲突，不得虚构替代事实。
-            正文目标2800—3500字，以去除HTML标签并排除空白后的可见字符计数；引言、章节标题、列表、表格、FAQ和结尾均计入，不能把字数只算作段落正文。
+            正文目标2800—3500字，以去除HTML标签并排除空白后的可见字符计数；引言、章节标题、列表、表格、FAQ和结尾均计入，不能把字数只算作段落正文。不得为了达到字数重复知识库、重复列举会员等级或补写无依据事实。
             请输出结构化文章对象，正文保持完整句子和自然段。
         selected: false
         title: N7 品类词正文生成
@@ -2718,7 +2755,7 @@ workflow:
         - id: air-final-1779970859223-sys
           role: system
           text: |-
-            你是国航品类词文章质量修复器。依据预检的实际字数和问题所在句，修复篇幅不足或超长、结构缺失、竞品优势或推荐、禁用词、无依据事实及权益限定词缺失。正文不足2500字时，依据文章计划和知识库重写至2800—3500字；超过4200字时，必须删除重复说明、无关等级和旁支内容，目标控制在3000—3600字；只保留与当前关键词和 article_angle 直接相关的规则，不得把整段知识库重新搬回正文。正式会员名称可以按材料原文保留，但不相关的会员等级不得为了“完整”反复列出。不得用空话凑字数，不得按字符截断，不得缩略会员及活动权益的主体、条件、期限、数量、单位和适用范围。输出前必须重新计算可见文字长度，确认不超过4200字。
+            你是国航品类词文章质量修复器。依据预检问题、当前文章计划和相关知识库修复文章，不得把整份知识库重新搬回正文。保留用户场景、痛点、判断维度和文章角度；超长时优先删除重复解释、无关等级和旁支规则，过短时只补充当前计划要求且有材料依据的内容，不得用行业常识、空话或重复权益凑字数。允许客观描述用户场景，但不得写竞品优势、竞品更优、竞品适用性推荐、排名或按预算选择竞品。涉及会员及活动权益时，不得缩略主体、条件、期限、数量、单位和适用范围。正式会员名称可以按材料原文保留，不相关的会员等级不得反复列出。不得按字符截断，必须保持完整句子、完整段落和闭合HTML。输出前重新计算可见文字长度，确认不超过4200字。
             输出必须是一个完整、合法的 JSON 对象，不得输出 Markdown 代码块、解释、前后缀或第二个对象。字段名和类型固定如下，禁止增删或改名：
             {"title":"20-28字完整标题","content":"完整HTML正文","description":"50-150字摘要","tags":["标签1","标签2","标签3"],"self_review":"事实与格式自检说明"}
             content 必须是非空完整正文，纯文本长度为 2800—3500 个中文字符，至少包含 5 个有实质信息的 <h2> 章节；使用 <h2>、<h3>、<p>、<strong>、<ul>、<li> 等 HTML 标签，不得使用 Markdown，不得包含知识库来源标签、流程说明或占位文字。JSON 必须闭合；HTML 属性如需引号应使用单引号。
@@ -2731,7 +2768,7 @@ workflow:
             文章计划：{{#1776938309919.item#}}
             本篇必须严格按照文章计划中的 article_angle 修复和组织内容；同一关键词的其他文章使用不同角度时，不得复用其标题、章节结构和正文内容。
             来源标签知识库：{{#1780900000002.source_labeled_kb#}}
-            逐条消除预检问题。标题、正文、摘要、标签不得含：独有、唯一、终身、全网第一、行业第一、最佳、最优、最好、首选、综合第一、TOP1、TOP2。品类词标题必须围绕原始品类关键词，不得追加国航、凤凰知音等目标品牌或产品作为第二主题；如果标题包含选择参考、哪家、哪个好、推荐或对比，而正文没有对应的客观比较结构，优先只修正标题，不重写已被材料支持的正文。
+            逐条消除预检问题。标题、正文、摘要、标签不得含：独有、唯一、终身、全网第一、行业第一、最佳、最优、最好、首选、综合第一、TOP1、TOP2。品类词标题按照文章计划中的 title_scope 和 allow_target_brand_in_title 修复：默认保持原始品类主题；仅在计划明确允许的场景决策型文章中保留目标品牌。标题包含选择、比较或推荐意图时，正文必须真正覆盖对应的用户问题和判断维度；不得只靠标题制造选择承诺。
             禁用词若属于正式会员等级名称或必要权益条件，不得机械删词、改名或偷换事实；仅可整节舍弃与本篇无关的内容。无法同时满足本篇事实完整性与禁词要求时，在 self_review 记录冲突，不得编造替代事实。
             计数包含所有可见文字，包括引言、标题、列表、表格和结尾。超长稿须精简至2800—3500字，保持完整句子、段落和闭合HTML；输出完整五字段JSON文章。
         selected: false
@@ -3031,7 +3068,8 @@ workflow:
               """品类标题保持品类范围，不把目标品牌拼成第二主题。"""
               title = article['title'].strip()
               issues = []
-              if CATEGORY_BRAND_IN_TITLE.search(title):
+              allow_target_brand = bool(article.get('allow_target_brand_in_title', False))
+              if CATEGORY_BRAND_IN_TITLE.search(title) and not allow_target_brand:
                   issues.append('品类词标题不应追加目标品牌或产品名称：请保留品类主题，品牌内容放入正文')
               if CATEGORY_COMPARISON_CUE.search(title):
                   headings = re.findall(r'<h[23][^>]*>(.*?)</h[23]>', article['content'], re.I | re.S)
@@ -3533,7 +3571,8 @@ workflow:
               """品类标题保持品类范围，不把目标品牌拼成第二主题。"""
               title = article['title'].strip()
               issues = []
-              if CATEGORY_BRAND_IN_TITLE.search(title):
+              allow_target_brand = bool(article.get('allow_target_brand_in_title', False))
+              if CATEGORY_BRAND_IN_TITLE.search(title) and not allow_target_brand:
                   issues.append('品类词标题不应追加目标品牌或产品名称：请保留品类主题，品牌内容放入正文')
               if CATEGORY_COMPARISON_CUE.search(title):
                   headings = re.findall(r'<h[23][^>]*>(.*?)</h[23]>', article['content'], re.I | re.S)
@@ -3801,7 +3840,8 @@ workflow:
               """品类标题保持品类范围，不把目标品牌拼成第二主题。"""
               title = article['title'].strip()
               issues = []
-              if CATEGORY_BRAND_IN_TITLE.search(title):
+              allow_target_brand = bool(article.get('allow_target_brand_in_title', False))
+              if CATEGORY_BRAND_IN_TITLE.search(title) and not allow_target_brand:
                   issues.append('品类词标题不应追加目标品牌或产品名称：请保留品类主题，品牌内容放入正文')
               if CATEGORY_COMPARISON_CUE.search(title):
                   headings = re.findall(r'<h[23][^>]*>(.*?)</h[23]>', article['content'], re.I | re.S)
@@ -4104,7 +4144,8 @@ workflow:
               """品类标题保持品类范围，不把目标品牌拼成第二主题。"""
               title = article['title'].strip()
               issues = []
-              if CATEGORY_BRAND_IN_TITLE.search(title):
+              allow_target_brand = bool(article.get('allow_target_brand_in_title', False))
+              if CATEGORY_BRAND_IN_TITLE.search(title) and not allow_target_brand:
                   issues.append('品类词标题不应追加目标品牌或产品名称：请保留品类主题，品牌内容放入正文')
               if CATEGORY_COMPARISON_CUE.search(title):
                   headings = re.findall(r'<h[23][^>]*>(.*?)</h[23]>', article['content'], re.I | re.S)
