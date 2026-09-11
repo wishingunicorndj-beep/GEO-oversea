@@ -844,7 +844,7 @@ workflow:
           required: false
           type: paragraph
           variable: advantages
-        - default: ''
+        - default: '2b253a3d-a34f-42d7-804c-7d6766ea29d4'
           hint: ''
           label: 企业知识库ID
           options: []
@@ -861,7 +861,7 @@ workflow:
           required: false
           type: paragraph
           variable: product_info
-        - default: ''
+        - default: '1342ffcc-e065-454e-bc5f-33dd0c82a03f'
           hint: ''
           label: 产品知识库ID
           options: []
@@ -1006,7 +1006,7 @@ workflow:
         desc: ''
         headers: |-
           Content-Type:application/json
-          Authorization:Bearer dataset-i1hWlKJuVdm4NvyPVWvylhtW
+          Authorization:Bearer dataset-pgW90G1nL8L7xEbjXOthn1Ko
         method: post
         params: ''
         selected: false
@@ -1183,7 +1183,7 @@ workflow:
             value: '{"query":"{{#1776605036452.ent_rag_query#}}","dataset_ids":["{{#1776153503356.ent_dataset_id#}}"],"top_k":10,"score":0.30}'
           type: json
         desc: ''
-        headers: Authorization:Bearer dataset-i1hWlKJuVdm4NvyPVWvylhtW
+        headers: Authorization:Bearer dataset-pgW90G1nL8L7xEbjXOthn1Ko
         method: post
         params: ''
         selected: false
