@@ -1431,7 +1431,9 @@ workflow:
 
             负向句：该最小证据单元中，明确评价目标“缺点/不足/限制/风险/体验差/不推荐/不适合/较贵/较弱”，或在明确比较中目标是败方；必须存在负面语义，不能把其他实体的缺点、后续模块或泛行业风险归给目标。
 
-            中性句：仅事实、参数、名称、香调/内核/规格、客观时间地点、无评价的适用条件和排序数字；中性句不进入positive_sentences或negative_sentences。
+            中性句：仅事实、参数、名称、香调/内核/规格、客观时间地点、无评价的适用条件和排序数字；中性句进入neutral_evidence，不进入positive_sentences或negative_sentences。
+
+            每条证据必须输出一个public_opinion和一个public_opinion_summary。public_opinion只能从以下固定标签中选择，不得创造新标签：正向【品牌与市场认可、产品与服务质量、功能性能与使用效果、服务体验与履约保障、价格价值与综合竞争力】；负向【品牌声誉与信任风险、产品质量与耐用性问题、功能性能与技术问题、产品安全与合规风险、服务与售后体验问题、交付与履约问题、价格与交易争议、隐私与数据安全风险、环保与社会责任问题、经营与综合风险】；中性【品牌定位与市场信息、产品与服务对比、使用场景与适用条件、技术参数与功能说明、信息核实与持续观察】。无法判断时使用【信息核实与持续观察】。
 
             切分标准：优先以句号、问号、感叹号、分号（。！？!?；;）、换行、Markdown标题/编号项/项目符号、表格单元和“香调：/气质：/适合：/优点：/缺点：/✅/⚠️/❌”字段标记为边界；“但/然而/不过/反而/却”通常切到后半句。逗号、顿号、冒号本身不是强制边界，除非前后已是独立评价分句或字段。一个输出元素只能对应一个最小sentence_id；多句必须输出多组，禁止把相邻产品、标题、预算和建议拼成一条大段。一个sentence_id在同一实体内不得同时进入正向和负向。
 
@@ -1491,9 +1493,9 @@ workflow:
 
             仅输出严格紧凑JSON：
 
-            {"detected":true,"brand":"声明别名","mention":"正文写法","pattern":"P5","evidence":["S0001"],"score":0.3,"reason":"不超过100字","words":["原文词"],"pos":[["S0001",["关键词"]]],"neg":[["S0002",["关键词"]]]}
+            {"detected":true,"brand":"声明别名","mention":"正文写法","pattern":"P5","evidence":["S0001"],"score":0.3,"reason":"不超过100字","words":["原文词"],"pos":[["S0001",["关键词"],"产品与服务质量","舆情证据总结"]],"neg":[["S0002",["关键词"],"产品质量与耐用性问题","舆情证据总结"]],"neutral":[["S0003",["关键词"],"信息核实与持续观察","舆情证据总结"]]}
 
-            若未识别：{"detected":false,"brand":"","mention":"","pattern":"P5","evidence":[],"score":0,"reason":"品牌未被提及","words":[],"pos":[],"neg":[]}。
+            若未识别：{"detected":false,"brand":"","mention":"","pattern":"P5","evidence":[],"score":0,"reason":"品牌未被提及","words":[],"pos":[],"neg":[],"neutral":[]}。
 
             不要Markdown、代码围栏、推理过程或额外字段。输出前检查：独立推荐门禁、P3/P4/P5边界、兄弟产品、否定/转折、比较败方、表格串位、全部正负证据和JSON闭合。'
         - id: 5181dce1-1d70-4d9c-a143-d82b51804a70
@@ -1592,7 +1594,7 @@ workflow:
           \ else []:\n                if isinstance(item,dict):out.append(item)\n\
           \                elif isinstance(item,list) and item:\n                \
           \    out.append({\"sentence_id\":item[0],\"keywords\":item[1] if len(item)>1\
-          \ else []})\n                elif isinstance(item,str):out.append({\"sentence_id\"\
+          \ else [],\"public_opinion\":item[2] if len(item)>2 else \"\",\"public_opinion_summary\":item[3] if len(item)>3 else \"\"})\n                elif isinstance(item,str):out.append({\"sentence_id\"\
           :item,\"keywords\":[]})\n            return out\n        data={\n      \
           \      \"brand_detected\":compact.get(\"detected\",False),\"matched_brand\"\
           :compact.get(\"brand\",\"\"),\n            \"matched_mention\":compact.get(\"\
@@ -1601,7 +1603,7 @@ workflow:
           :compact.get(\"score\",0),\n            \"sentiment_reasoning\":compact.get(\"\
           reason\",\"\"),\"sentiment_classic_words\":compact.get(\"words\",[]),\n\
           \            \"positive_sentences\":expand(compact.get(\"pos\",[])),\"negative_sentences\"\
-          :expand(compact.get(\"neg\",[]))}\n    catalog=parse_list(sentence_catalog)\n\
+          :expand(compact.get(\"neg\",[])),\"neutral_evidence\":expand(compact.get(\"neutral\",[]))}\n    catalog=parse_list(sentence_catalog)\n\
           \    aliases=parse_list(target_aliases)\n    entities=parse_list(entity_inventory)\n\
           \    smap={str(x.get(\"id\")):x for x in catalog if isinstance(x,dict) and\
           \ x.get(\"id\")};order={sid:i for i,sid in enumerate(smap)}\n    subject_entities=[e\
@@ -1758,10 +1760,10 @@ workflow:
           ,\"list_item\") for x in between[:-1]):return True\n        return False\n\
           \    def details(raw,blocked=None):\n        blocked=blocked or set();out=[];ids=set()\n\
           \        if not isinstance(raw,list):return out,ids\n        for x in raw:\n\
-          \            if isinstance(x,str):sid=x;k=[];attributed=\"\"\n         \
+          \            if isinstance(x,str):sid=x;k=[];attributed=\"\";opinion=\"\";opinion_summary=\"\"\n         \
           \   elif isinstance(x,dict):\n                sid=str(x.get(\"sentence_id\"\
           ) or x.get(\"id\") or \"\");k=words(x.get(\"keywords\",[]),10);attributed=str(x.get(\"\
-          attributed_entity\") or \"\")\n            else:continue\n            if\
+          attributed_entity\") or \"\");opinion=str(x.get(\"public_opinion\") or \"\");opinion_summary=str(x.get(\"public_opinion_summary\") or \"\")\n            else:continue\n            if\
           \ sid not in smap or sid in blocked or sid in ids or not linked(sid,attributed):continue\n\
           \            # 最终text只从原文目录回填，禁止strip、重写或使用LLM生成quote。\n            text=str(smap[sid].get(\"\
           text\", \"\"));k=[w for w in k if w and w in text]\n            out.append({\"\
@@ -1770,7 +1772,7 @@ workflow:
           ,999999999))});ids.add(sid)\n        return out,ids\n    neg,negids=details(data.get(\"\
           negative_sentences\",[]) if isinstance(data,dict) else [])\n    pos,posids=details(data.get(\"\
           positive_sentences\",[]) if isinstance(data,dict) else [],negids)\n    #\
-          \ 语义词根二次校验：修正LLM把“不推荐/并不领先”放进正向，或把纯正向句放进负向的错误。\n    semantic_pos=[];semantic_neg=[]\n\
+          \ 语义词根二次校验：修正LLM把“不推荐/并不领先”放进正向，或把纯正向句放进负向的错误。\n    neutral,neutralids=details(data.get(\"neutral_evidence\",[]) if isinstance(data,dict) else [])\n    meta={}\n    for raw_key in (\"positive_sentences\",\"negative_sentences\",\"neutral_evidence\"):\n        for x in data.get(raw_key,[]) if isinstance(data,dict) and isinstance(data.get(raw_key,[]),list) else []:\n            if isinstance(x,dict):\n                sid=str(x.get(\"sentence_id\") or x.get(\"id\") or \"\")\n                if sid in smap:meta[str(smap[sid].get(\"text\") or \"\")]= {\"public_opinion\":str(x.get(\"public_opinion\") or \"\"),\"public_opinion_summary\":str(x.get(\"public_opinion_summary\") or \"\")}\n    for row in pos+neg+neutral:row.update(meta.get(row.get(\"text\"),{}))\n    semantic_pos=[];semantic_neg=[]\n\
           \    for row in neg:\n        nh,ph=polarity_hits(row.get(\"text\",\"\"\
           ))\n        if not row.get(\"keywords\") and not nh and not ph:continue\n\
           \        if ph and not nh:\n            row[\"keywords\"]=words(list(row.get(\"\
@@ -1831,11 +1833,11 @@ workflow:
           s+\",\"\",text)))),\"keywords\":nh or ph,\"_start\":int(item.get(\"start\"\
           ,999999999))}\n        if nh:neg.append(row);negids.add(sid);used.add(sid)\n\
           \        elif ph:pos.append(row);posids.add(sid);used.add(sid)\n    # 用原文offset稳定排序，不依赖LLM数组顺序。\n\
-          \    pos.sort(key=lambda x:x.get(\"_start\",999999999));neg.sort(key=lambda\
-          \ x:x.get(\"_start\",999999999))\n    for row in pos+neg:row.pop(\"_start\"\
+          \    opinion_sets={\"positive\":{\"品牌与市场认可\",\"产品与服务质量\",\"功能性能与使用效果\",\"服务体验与履约保障\",\"价格价值与综合竞争力\"},\"negative\":{\"品牌声誉与信任风险\",\"产品质量与耐用性问题\",\"功能性能与技术问题\",\"产品安全与合规风险\",\"服务与售后体验问题\",\"交付与履约问题\",\"价格与交易争议\",\"隐私与数据安全风险\",\"环保与社会责任问题\",\"经营与综合风险\"},\"neutral\":{\"品牌定位与市场信息\",\"产品与服务对比\",\"使用场景与适用条件\",\"技术参数与功能说明\",\"信息核实与持续观察\"}}\n    opinion_defaults={\"positive\":\"产品与服务质量\",\"negative\":\"品牌声誉与信任风险\",\"neutral\":\"信息核实与持续观察\"}\n    for kind,rows in ((\"positive\",pos),(\"negative\",neg),(\"neutral\",neutral)):\n        for row in rows:\n            opinion=str(row.get(\"public_opinion\") or \"\")\n            row[\"public_opinion\"]=opinion if opinion in opinion_sets[kind] else opinion_defaults[kind]\n            row[\"public_opinion_summary\"]=str(row.get(\"public_opinion_summary\") or f\"该证据体现{row[\'public_opinion\']}。\")[:240]\n    pos.sort(key=lambda x:x.get(\"_start\",999999999));neg.sort(key=lambda\
+          \ x:x.get(\"_start\",999999999));neutral.sort(key=lambda x:x.get(\"_start\",999999999))\n    for row in pos+neg+neutral:row.pop(\"_start\"\
           ,None)\n    try:total=max(0,int(answer_total_len or 0))\n    except Exception:total=0\n\
           \    score=clamp(data.get(\"sentiment_score\",0) if isinstance(data,dict)\
-          \ else 0)\n    if not detected:\n        score=0.0;reason=\"品牌未被提及\";pos=[];neg=[];classic=[]\n\
+          \ else 0)\n    if not detected:\n        score=0.0;reason=\"品牌未被提及\";pos=[];neg=[];neutral=[];classic=[]\n\
           \    else:\n        if not pos and not neg:score=0.0\n        elif pos and\
           \ not neg and score<0.1:score=0.3\n        elif neg and not pos and score>-0.1:score=-0.3\n\
           \        reason=str(data.get(\"sentiment_reasoning\") or \"\").strip()[:240]\n\
@@ -1845,9 +1847,7 @@ workflow:
           \ or ([\"仅提及\"] if detected else [])\n        if not reason:\n         \
           \   reason=f\"{matched or '目标品牌'}：正向证据{len(pos)}条，负向证据{len(neg)}条\"\n  \
           \  label=\"positive\" if score>=0.1 else (\"negative\" if score<=-0.1 else\
-          \ \"neutral\")\n    detail={\"char_count\":{\"total\":total,\"positive\"\
-          :sum(x[\"char_count\"] for x in pos),\"negative\":sum(x[\"char_count\"]\
-          \ for x in neg)},\"positive_sentences\":pos,\"negative_sentences\":neg}\n\
+          \ \"neutral\")\n    positive_chars=sum(x[\"char_count\"] for x in pos);negative_chars=sum(x[\"char_count\"] for x in neg);neutral_chars=sum(x[\"char_count\"] for x in neutral)\n    detail={\"char_count\":{\"total\":positive_chars+negative_chars+neutral_chars,\"positive\":positive_chars,\"negative\":negative_chars,\"neutral\":neutral_chars},\"sentence_count\":{\"total\":len(pos)+len(neg)+len(neutral),\"positive\":len(pos),\"negative\":len(neg),\"neutral\":len(neutral)},\"positive_sentences\":pos,\"negative_sentences\":neg,\"neutral_evidence\":neutral}\n\
           \    # 业务固定口径：是否重点推荐 = 是否位于全文排名前三；强推荐词但无排名不能置true。\n    top3=detected and\
           \ str(is_ranking).lower()==\"true\" and 1<=rank<=3\n    return {\"brand_detected\"\
           :\"true\" if detected else \"false\",\"matched_brand\":matched if detected\
