@@ -1,0 +1,518 @@
+app:
+  description: 'V1.5：更新模型到v4flash，切到qwen3.7plus；0819
+
+    V1.4：强化优先使用输入数据，里程碑总结减少负面舆情提及；0528
+
+    V1.3：修改链路，修订场景判断条件；0519
+
+    V1.2：修改整体的结论模块，修改小数点位数，只使用输入信息，增加典型词等，切到deepseekv4 pro模型；0512
+
+    V1.1：修改场景模块，以及服务版04媒体等内容；0507
+
+    V1.0：支持服务版和工具版全部模块的总结文案输出；0430'
+  icon: car
+  icon_background: '#FFEAD5'
+  mode: workflow
+  name: 售后报告-总结V1.5-0819
+  use_icon_as_answer_icon: false
+kind: app
+version: 0.1.3
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: false
+      fileUploadConfig:
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 15
+        image_file_size_limit: 10
+        video_file_size_limit: 100
+        workflow_file_upload_limit: 10
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: ''
+    retriever_resource:
+      enabled: false
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        sourceType: start
+        targetType: if-else
+      id: 1777013576772-source-1779193156876-target
+      source: '1777013576772'
+      sourceHandle: source
+      target: '1779193156876'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: if-else
+        targetType: llm
+      id: 1779193156876-true-1777017237105-target
+      source: '1779193156876'
+      sourceHandle: 'true'
+      target: '1777017237105'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: if-else
+        targetType: llm
+      id: 1779193156876-3b78ccc3-871c-463c-a414-47c292d1fe80-17791932271690-target
+      source: '1779193156876'
+      sourceHandle: 3b78ccc3-871c-463c-a414-47c292d1fe80
+      target: '17791932271690'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: variable-aggregator
+      id: 1777017237105-source-1779193338475-target
+      source: '1777017237105'
+      sourceHandle: source
+      target: '1779193338475'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: variable-aggregator
+        targetType: end
+      id: 1779193338475-source-1777017293646-target
+      source: '1779193338475'
+      sourceHandle: source
+      target: '1777017293646'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: variable-aggregator
+      id: 17791932271690-source-1779193338475-target
+      source: '17791932271690'
+      sourceHandle: source
+      target: '1779193338475'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        desc: ''
+        selected: false
+        title: 开始
+        type: start
+        variables:
+        - label: items
+          max_length: null
+          options: []
+          required: true
+          type: paragraph
+          variable: items
+      height: 89
+      id: '1777013576772'
+      position:
+        x: -36.46118317704156
+        y: 282
+      positionAbsolute:
+        x: -36.46118317704156
+        y: 282
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            max_tokens: 31901
+            temperature: 0.5
+            top_p: 0.8
+          mode: chat
+          name: qwen/qwen3.7-plus
+          provider: zhinao
+        prompt_template:
+        - id: 283acde9-22fb-41d3-ae08-cf169d150df9
+          role: system
+          text: "你是一个JSON解析器和GEO报告生成专家。接收输入的JSON字符串，解析其中的items数组，并为每个item生成对应的报告内容。\n\
+            {{#1777013576772.items#}}\n\n输入JSON格式示例：\n{\n  \"items\": [\n    {\n \
+            \     \"type\": \"service_01\",\n      \"data\": \"核心关键词（个）：3\\n语义关键词（个）：90\\\
+            n品牌提及率：94.1%，优化起始点12.3%，优秀\\n平均提及排名：1.2位，优化起始点12位，优秀\\n中正率：98.6%，优化起始点76%，优秀\"\
+            ,\n      \"extra\": {\n        \"company\": \"华纳化工\",\n        \"competitor_companies\"\
+            : [\"朗盛化学\", \"斯泰潘\", \"xxx\"]\n      }\n    },\n    {\n      \"type\"\
+            : \"service_02\",\n      \"data\": \"优势场景\\n    排行榜场景：华纳化工=100%，朗盛=90%，斯泰潘=80%\\\
+            n    厂家推荐场景：华纳化工=100%，朗盛=90%，斯泰潘=80%\\n机会场景\\n    价格咨询场景：华纳化工=84%，朗盛=78%，斯泰潘=65%\\\
+            n    DeepSeek价格场景：华纳化工=70%，朗盛=65%，斯泰潘=50%\",\n      \"extra\": { \"company\"\
+            : \"华纳化工\" }\n    }\n  ]\n}\n\n\n请严格按照以下每种type对应的处理规则，为每个item生成对应内容。\n\
+            \n关键要求：\n1. 只输出JSON，不要添加任何解释、markdown代码块或注释\n2. 所有字段名为英文字段名，不得使用中文作为JSON字段名\n\
+            3. 如果某个type在输入中不存在，对应modules下的键仍然保留，值设为null\n4. service_02的opportunity_scenes为空数组时输出[]，advantage_scene_evaluation和opportunity_scene_analysis为null\n\
+            5. 所有字符串值中不得包含未解析的占位符如{xxx}\n6. 确保JSON格式完全正确可被解析\n7.注意：本报告所有涉及百分数均保留小数点后一位数字，如48.0%而不是48%\n\
+            8.因为这份报告是售后总结报告，所以所有milestone_summary和continuous_optimization_suggestion优先进行正向的总结，不要提及不足，如“负向舆情1条”，更不要涉及“补足、补齐”等具体动作命令，如“自媒体内容缺失需要补足”等给业务方下达命令\n\
+            9. 当输入数据中已明确提供预计算的汇总数值（如\"均值+61.0%\"、\"+XX%\"等），必须直接使用该预计算值，严禁从原始数据重新计算替代。如输入标题为\"\
+            增长亮点（对比top1竞品\"BOSS直聘\"均值+61.0%）\"，则milestone_summary和summary中的竞品差距必须使用61.0%，不得自行从各场景数据计算均值差异。\n\
+            \n\n══════════════════════════════════════════════════════════\n【type:\
+            \ service_01 - 数据概览】\n══════════════════════════════════════════════════════════\n\
+            输入数据格式：\n核心关键词（个）：N\n语义关键词（个）：N\n品牌提及率：X%，VS优化起始点Y%，{评估}\n平均提及排名：X位，VS优化起始点Y位，{评估}\n\
+            中正率：X%，VS优化起始点Y%，{评估}\n\nextra: { company, competitor_companies }\n\n\
+            Prompt：\n你是GEO（生成式引擎优化）数据分析专家，擅长生成专业的售后数据效果交付报告。\n\n根据输入的品牌数据概览，生成2行专业总结。\n\
+            \n品牌信息：\n- 品牌名称：{extra.company}\n- 竞品列表：{extra.competitor_companies}\n\
+            \n数据解读规则：\n1. 核心关键词：品牌在AI搜索中的核心布局词数量\n2. 语义关键词：扩展的语义相关词数量\n3. 品牌提及率：AI回答中提及品牌的比例，待提升：<40%；良好：=\
+            \ 40%～80%；优秀：>80%\n4. 优化起始点：SEO优化开始时的基线值，计算变化时用 提及率-优化起始点\n5. 平均提及排名：品牌在AI回答中的平均位置，待提升：>6\
+            \ 位；良好：= 4 ~ 6 位；优秀：=< 3位\n6. 中正率：中性和正向之和的情感占比，待提升：<70%；良好：= 70% ~ 90%；优秀：>=\
+            \ 90%\n\n输出格式（严格按以下格式输出2行，不得添加任何额外内容，不得添加markdown标记）：\n\n输出字段（严格按以下字段输出，不得添加任何额外字段）：\n\
+            {\n  \"service_01\": {\n    \"milestone_summary\": \"35-50字的阶段性指标总结\"\
+            ,\n    \"continuous_optimization_suggestion\": \"35-50个字，{具体可执行的优化动作}，{风险提示}。\"\
+            \n  }\n}\n\n【milestone_summary数据输出要求】：\n- 按照优秀、良好和待提升数据指标依次点评；\n-如果当前值比签约时有正向提升，可以指出变化情况，如果是负向的则不提及变化，只提当前值即可；\n\
+            -如“品牌当前表现优秀平均排名为1.1位，比签约时提升0.5位；品牌提及率当前表现优秀，当前值为92.0%”；\n【continuous_optimization_suggestion数据输出要求】\n\
+            - 重点针对待提升、或者数据变化下降的指标进行重点分析并给出可执行的优化建议\n\n注意：本模块未涉及竞品，所有的总结内容不能出现和竞品对比的内容\n\
+            \n- 务必要严格使用输入的数据进行milestone_summary总结、分析，并给出continuous_optimization_suggestion的动作建议\n\
+            \n══════════════════════════════════════════════════════════\n【type: service_02\
+            \ - 关键问题场景提及率】\n══════════════════════════════════════════════════════════\n\
+            \n\n输入数据格式：\ndata输入数据中的场景分类标题与英文字段的映射关系如下（严格按此映射）：\n| 输入中文标签 | 对应英文字段\
+            \ |\n|-------------|-------------|\n| 优势场景 | advantage_scene_evaluation（单个字符串）\
+            \ |\n| 待巩固场景 | consolidation_scene（数组） |\n| 机会场景 | opportunity_scenes（数组）\
+            \ |\n| 增长亮点场景 | growth_highlight_scene（数组） |\n\n\n每类场景下可能有多个场景，格式如下：\n\
+            \    场景名：品牌A=X/X(X.X%)，品牌B=Y/Y(Y.Y%)，品牌C=Z/Z(Z.Z%)\n    或：\n    场景名：品牌A=X%，品牌B=Y%，品牌C=Z%\n\
+            \n\nextra: { company }\n\n\n分析规则（严格按以下口径判断）：\n1. 优势场景（advantage_scene_evaluation）：\n\
+            \   - 输出advantage_scene_evaluation：品牌在{场景名}全面占优，AI已将本品塑造为化工行业优选推荐。\n\n\
+            2. 待巩固场景（consolidation_scene）：\n   - 场景中仅比竞品略好，但达不到优势场景的标准\n   - 输出字段consolidation_scene（数组，每项包含scene_name和suggestion）\n\
+            \   - suggestion规则：\n     * 领先竞品均值 < 5pp：建议加强内容差异化，防范竞品反超\n     * 领先竞品均值\
+            \ 5-15pp：建议对标行业TOP1水平，补足内容缺口\n     * 领先竞品均值 > 15pp：建议保持当前节奏，扩大领先优势\n \
+            \  - 输出字段consolidation_scene_analysis（对象）：\n     * 如有待巩固场景：汇总所有待巩固场景，输出top_scene_1_rate、top_scene_1_name、top_scene_2_rate、top_scene_2_name、summary\n\
+            \     * summary文案：{品牌}{场景数}个场景提及率均值{均值}%，与最强竞品{差距}pp，{现状描述}。\n       -\
+            \ 本品均值 ≥ 40%,<50%：具备追赶潜力\n       - 30-40%：差距较大\n       - < 30%：明显落后\n\
+            \     * 如有待巩固场景，文案改为：\"虽领先竞品，但份额仍有增长空间，建议持续加固\"\n     * 无待巩固场景则输出：null\n\
+            \n3. 机会场景（opportunity_scenes）：\n   - 输出字段opportunity_scenes（数组，每项包含scene_name和suggestion）\n\
+            \   - suggestion：补充{场景类型}类内容，提升AI提及率。\n   - 输出字段opportunity_scene_analysis（对象）：\n\
+            \     * 选择提及率最高的2个机会场景\n     * summary：机会场景集中在\"{场景1名}\"和\"{场景2名}\"，针对性补充{内容类型}，可进一步提升AI能见度。\n\
+            \     * 无机会场景则输出：null\n\n4. 增长亮点场景（growth_highlight_scene）：\n   - 输出字段growth_highlight_scene（数组，每项包含scene_name和suggestion）\n\
+            \   - suggestion规则：\n     * 领先TOP1 ≥ 30pp：领先第二名竞品{差距}pp，优势明显\n     * 领先TOP1\
+            \ 20-30pp：领先第二名竞品{差距}pp，态势良好\n     * 领先TOP1 >15pp,< 20pp：略领先第二名竞品{差距}pp，需持续巩固\n\
+            \   - 输出字段growth_highlight_scene_analysis（对象）：\n     * 选择提及率最高的2个增长亮点场景\n\
+            \     * summary：强调\"从0到有\"的增长势头。\n       结构：{品牌}{场景数}大核心场景提及率均值达{均值}%，领先最强竞品{差距}pp，{优势程度}。\n\
+            \       - 本品均值 ≥ 95%：绝对领先\n       - 90-95%：领先\n     * 无增长亮点场景则输出：null\n\
+            \n\n数据提取规则：\n- \"品牌A=X/X(X.X%)\"格式：X.X%是提及率，X/X是提及数/总检索量，提取X.X%作为提及率\n\
+            - \"品牌A=X%\"格式：直接提取X%\n- 场景名要去除括号及括号内内容（如\"供应商寻源评估场景（186/186）\"→\"供应商寻源评估场景\"\
+            ）\n- 竞品均值 = 所有竞品提及率的平均值\n- 竞品TOP1 = 所有竞品中提及率最高的那个\n\n\n输出字段（严格按以下字段输出，一个字段都不能少）：\n\
+            \n\n{\n  \"service_02\": {\n    \"milestone_summary\": \"一句话总结核心成就，使用具体数字，35-50字。\"\
+            ,\n    \"continuous_optimization_suggestion\": \"务必基于数据情况深入分析，给出一句话优化方向总结和建议，35-50字。\"\
+            ,\n    \"advantage_scene_evaluation\": \"如有优势场景：\\\"品牌在{场景名}全面占优，AI已将本品塑造为化工行业优选推荐。\\\
+            \"；无优势场景则输出：null。\",\n    \"consolidation_scene\": [\n      {\n      \
+            \  \"scene_name\": \"场景名（去除括号及括号内内容）\",\n        \"suggestion\": \"25-35个字，基于数据给出针对性诊断建议。领先竞品均值<5pp：建议加强内容差异化，防范竞品反超。领先竞品均值5-15pp：建议对标TOP1补足缺口。领先竞品均值>15pp：建议保持节奏扩大领先优势。\"\
+            \n      }\n    ],\n    \"consolidation_scene_analysis\": {\n      \"top_scene_1_rate\"\
+            : \"提及率数字（不含%符号，如90）\",\n      \"top_scene_1_name\": \"场景1名\",\n     \
+            \ \"top_scene_2_rate\": \"提及率数字（不含%符号，如85）\",\n      \"top_scene_2_name\"\
+            : \"场景2名\",\n      \"summary\": \"30-50个字。如有待巩固场景，话术改为'虽领先竞品，但份额仍有增长空间，建议持续加固'。结构：{品牌}{场景数}个场景均值{均值}%，与最强竞品{差距}pp，{现状描述}。本品均值≥80%：具备追赶潜力；70-80%：差距较大；<70%：明显落后。无待巩固场景则输出：null。\"\
+            \n    },\n    \"opportunity_scenes\": [\n      {\n        \"scene_name\"\
+            : \"场景名（去除括号及括号内内容）\",\n        \"suggestion\": \"25-35个字，基于数据表现给出针对性建议。补充{场景类型}类内容，提升AI提及率。\"\
+            \n      }\n    ],\n    \"opportunity_scene_analysis\": {\n      \"top_scene_1_rate\"\
+            : \"提及率数字（不含%符号）\",\n      \"top_scene_1_name\": \"场景1名\",\n      \"top_scene_2_rate\"\
+            : \"提及率数字（不含%符号）\",\n      \"top_scene_2_name\": \"场景2名\",\n      \"summary\"\
+            : \"30-50个字，机会场景集中在\\\\\\\"{场景1名}\\\\\\\"和\\\\\\\"{场景2名}\\\\\\\"，针对性补充{内容类型}，可进一步提升AI能见度。无机会场景则输出：null。\"\
+            \n    },\n    \"growth_highlight_scene\": [\n      {\n        \"scene_name\"\
+            : \"场景名（去除括号及括号内内容）\",\n        \"suggestion\": \"25-35个字，基于数据表现给出针对性建议。领先TOP1≥20pp：领先第二名竞品{差距}pp，优势明显。领先TOP1\
+            \ 10-20pp：领先第二名竞品{差距}pp，态势良好。领先TOP1<10pp：略领先第二名竞品{差距}pp，需持续巩固。\"\n   \
+            \   }\n    ],\n    \"growth_highlight_scene_analysis\": {\n      \"top_scene_1_rate\"\
+            : \"提及率数字（不含%符号）\",\n      \"top_scene_1_name\": \"场景1名\",\n      \"top_scene_2_rate\"\
+            : \"提及率数字（不含%符号）\",\n      \"top_scene_2_name\": \"场景2名\",\n      \"summary\"\
+            : \"30-50个字，summary：强调\"从0到有\"的增长势头。结构：{品牌}{场景数}大核心场景提及率均值达{均值}%，领先最强竞品{差距}pp，{优势程度}。\n\
+            \  注意：{差距}必须优先使用输入标题中已提供的预计算值（如\"均值+61.0%\"中的61.0），若输入未提供预计算值，则从场景明细计算。本品均值≥95%：绝对领先；90-95%：显著领先；<90%：初步领先。无增长亮点场景则输出：null。\"\
+            \n    }\n  }\n}\n\n\n务必注意：\n- 所有7个场景字段必须存在，不得省略\n- 无优势场景时，advantage_scene_evaluation输出null（非空字符串）\n\
+            - 无待巩固场景，consolidation_scene输出[]，consolidation_scene_analysis输出null\n\
+            - 无机会场景，opportunity_scenes输出[]，opportunity_scene_analysis输出null\n- 无增长亮点场景，growth_highlight_scene输出[]，growth_highlight_scene_analysis输出null\n\
+            - 百分数保留小数点后一位，如48.0%而不是48%\n- 只输出JSON，不要任何解释\n\n══════════════════════════════════════════════════════════\n\
+            【type: service_03 - 品牌正负向舆情】\n══════════════════════════════════════════════════════════\n\
+            输入数据格式：\n中正率：占比X%\n    典型特征词：\"词1\"\"词2\"\"词3\"\n    场景分布：场景1、场景2\n  \
+            \  评估：优秀/良好\n注意：中正率只给推荐正向情感的典型特征词即可\n\n负向率：占比X%\n    典型特征词：\"词1\"\n  \
+            \  场景分布：场景1\n    评估：预警/无风险\nextra: { company }\n\n正负向口径：\n优秀：品牌在AI场景中获得主流正面推荐\
+            \ | 中正率占比 ≥ 90%\n良好：品牌以正面为主，偶有中性表述 | 中正占比 70%~90%\n正常：品牌以中性表述为主，无倾向偏差\
+            \ | 中正率在60%~70%，且负向 = 0%\n预警：出现负向情感，存在舆情隐患 | 负向率占比 > 0%\n无风险：仅用于负向情感列\
+            \ | 负向 = 0%\n\nPrompt：\n你是GEO舆情分析专家，擅长分析品牌在AI搜索中的情感倾向。\n分析品牌正负向舆情，生成舆情分析报告。\n\
+            \n品牌名称：{extra.company}\n\n输出字段：\n{\n  \"service_03\": {\n    \"milestone_summary\"\
+            : \"中正率达{比例}，AI描述高频词为\\\\\\\"{词1、词2、词3}\\\\\\\"。\",\n    \"continuous_optimization_suggestion\"\
+            : \"{下一步动作}，{风险提示}。\"\n  }\n}\n\n\n- 务必要严格使用输入的数据进行milestone_summary总结、分析，并给出continuous_optimization_suggestion的动作建议\n\
+            -AI描述高频词为\\\\\\\"{词1、词2、词3}需要取正向情感的典型特征词\n══════════════════════════════════════════════════════════\n\
+            【type: service_04 - AI信源数据】\n══════════════════════════════════════════════════════════\n\
+            输入数据格式：\n生文数量: xxx\n发文数量: xx\n发布媒体总量: xxx\n新闻媒体发布文章数: xxx\n自媒体发布文章数: xxx\n\
+            \nextra: { company }\n\nPrompt：\n你是GEO信源数据分析专家。\n分析客户品牌的信源收录表现，给出两句总结。\n\
+            \n品牌名称：{extra.company}\n\n输出字段：\n{\n  \"service_04\": {\n    \"milestone_summary\"\
+            : \"{权威媒体或专业内容描述}与{自媒体或社交内容描述}双轨并行。\",\n    \"continuous_optimization_suggestion\"\
+            : \"{具体优化方向}，{平台拓展建议}。\"\n  }\n}\n\n要严格使用输入的数据进行milestone_summary总结、分析，并给出continuous_optimization_suggestion的动作建议\n\
+            \n══════════════════════════════════════════════════════════\n【type: service_05\
+            \ - AI竞品分析】\n══════════════════════════════════════════════════════════\n\
+            输入数据格式：\n{品牌名}（您的品牌），品牌提及率=X%，平均排名=X，中正率=X%\n    \"豆包\"各场景品牌提及率\n    \
+            \    场景1:X%\n        场景2:X%\n    \"DeepSeek\"各场景品牌提及率\n        场景1:X%\n\
+            \        场景2:X%\n{竞品1}（竞品），品牌提及率=X%，平均排名=X，中正率=X%\n    ...（同样的结构）\n\n\
+            extra: { company, competitor_companies }\n\nPrompt：\n你是GEO竞品分析专家。\n分析品牌与竞品在各AI平台的提及率表现，生成竞品对比报告。\n\
+            \n品牌：{extra.company}\n竞品：{extra.competitor_companies}\n\n分析规则：\n1. 提及率对比：本品牌\
+            \ vs 竞品们的提及率差值\n2. 排名对比：各品牌平均排名比较\n3. 情感对比：中正率比例比较\n4. 场景覆盖：各平台各场景的覆盖情况\n\
+            \n输出字段：\n{\n  \"service_05\": {\n    \"milestone_summary\": \"提及率{领先或落后}{竞品名}+/-{差值}%，平均排名{排名}位，成为品类AI推荐{首选/优选/候选}国产品牌。\"\
+            ,\n    \"continuous_optimization_suggestion\": \"{巩固或追赶策略}，{具体动作}。\"\n\
+            \  }\n}\n\n数据使用和语言要求：\n- 提及率对比/中正率对比和场景覆盖的对比：大幅领先：>20PP；明显领先>10PP；领先5～10PP,稍有领先<5PP；1PP以内算作基本持平；<-5PP稍有落败，-5～10PP落后，明显落后>-10PP，大幅落后：>-20PP；\n\
+            - 排名对比：大幅领先：>2位；明显领先>1位；领先0.5～1位,稍有领先0.5位；0.1位以内算作基本持平；<-0.5位稍有落败，-0.5～1位落后，明显落后>-1位，大幅落后：>-2位；\n\
+            - {具体动作}具体动作不要提及关注竞品，围绕具体指标给出相应的策略和动作。\n\n\n【输出要求】\n\n现在，请严格按照以上11种type的处理规则，解析输入JSON，生成完整报告。\n\
+            \n对每个item：\n1. 根据type选择对应的处理规则\n2. 提取data字段内容作为输入数据\n3. 提取extra.company作为品牌名称\n\
+            4. 按输出格式要求生成对应内容\n\n【最终输出要求】\n\n请严格按照以上11种type的处理规则解析输入数据，生成结构化JSON。\n\
+            \n最终输出格式（只输出JSON，不要任何其他内容）：\n\n\n{\n  \"report_title\": \"GEO Post-Sales\
+            \ Data Effect Delivery Report\",\n  \"company\": \"{extra.company（从输入中提取）}\"\
+            ,\n  \"generated_at\": \"{YYYY-MM-DD HH:mm:ss 格式的当前时间}\",\n  \"modules\"\
+            : {\n    \"service_01\": { ... },\n    \"service_02\": { ... },\n    \"\
+            service_03\": { ... },\n    \"service_04\": { ... },\n    \"service_05\"\
+            : { ... }\n  }\n}\n\n"
+        - id: 365eedbf-c95b-4204-b89d-9e2ab7db6901
+          role: user
+          text: 请严格按照上面的规则输出内容
+        selected: false
+        title: 'service_llm_parser '
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 97
+      id: '1777017237105'
+      position:
+        x: 758.4327521337335
+        y: 282
+      positionAbsolute:
+        x: 758.4327521337335
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        desc: ''
+        outputs:
+        - value_selector:
+          - '1779193338475'
+          - output
+          variable: full_report
+        selected: false
+        title: 结束
+        type: end
+      height: 89
+      id: '1777017293646'
+      position:
+        x: 1636.0988792294445
+        y: 282
+      positionAbsolute:
+        x: 1636.0988792294445
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: contains
+            id: eb619fa2-3175-4916-aa23-4c43b5d2798f
+            value: service
+            varType: string
+            variable_selector:
+            - '1777013576772'
+            - items
+          id: 'true'
+          logical_operator: and
+        - case_id: 3b78ccc3-871c-463c-a414-47c292d1fe80
+          conditions:
+          - comparison_operator: contains
+            id: f4352737-19a7-4f4f-a048-41de4063b5a1
+            value: tool
+            varType: string
+            variable_selector:
+            - '1777013576772'
+            - items
+          id: 3b78ccc3-871c-463c-a414-47c292d1fe80
+          logical_operator: and
+        desc: ''
+        selected: false
+        title: 条件分支
+        type: if-else
+      height: 173
+      id: '1779193156876'
+      position:
+        x: 381.4758128026373
+        y: 282
+      positionAbsolute:
+        x: 381.4758128026373
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            max_tokens: 31901
+            temperature: 0.5
+            top_p: 0.8
+          mode: chat
+          name: qwen/qwen3.7-plus
+          provider: zhinao
+        prompt_template:
+        - id: 283acde9-22fb-41d3-ae08-cf169d150df9
+          role: system
+          text: "你是一个JSON解析器和GEO报告生成专家。接收输入的JSON字符串，解析其中的items数组，并为每个item生成对应的报告内容。\n\
+            {{#1777013576772.items#}}\n\n输入JSON格式示例：\n{\n  \"items\": [\n    {\n \
+            \     \"type\": \"tool_01\",\n      \"data\": \"核心关键词（个）：3\\n语义关键词（个）：90\\\
+            n品牌提及率：94.1%，优化起始点12.3%，优秀\\n平均提及排名：1.2位，优化起始点12位，优秀\\n中正率比例：98.6%，优化起始点76%，优秀\"\
+            ,\n      \"extra\": {\n        \"company\": \"华纳化工\",\n        \"competitor_companies\"\
+            : [\"朗盛化学\", \"斯泰潘\", \"xxx\"]\n      }\n    },\n    {\n      \"type\"\
+            : \"tool_02\",\n      \"data\": \"优势场景\\n    排行榜场景：华纳化工=100%，朗盛=90%，斯泰潘=80%\\\
+            n    厂家推荐场景：华纳化工=100%，朗盛=90%，斯泰潘=80%\\n机会场景\\n    价格咨询场景：华纳化工=84%，朗盛=78%，斯泰潘=65%\\\
+            n    DeepSeek价格场景：华纳化工=70%，朗盛=65%，斯泰潘=50%\",\n      \"extra\": { \"company\"\
+            : \"华纳化工\" }\n    }\n  ]\n}\n\n\n请严格按照以下每种type对应的处理规则，为每个item生成对应内容。\n\
+            \n关键要求：\n1. 只输出JSON，不要添加任何解释、markdown代码块或注释\n2. 所有字段名为英文字段名，不得使用中文作为JSON字段名\n\
+            3. 如果某个type在输入中不存在，对应modules下的键仍然保留，值设为null\n4. service_02的opportunity_scenes为空数组时输出[]，advantage_scene_evaluation和opportunity_scene_analysis为null\n\
+            5. 所有字符串值中不得包含未解析的占位符如{xxx}\n6. 确保JSON格式完全正确可被解析\n7.注意：本报告所有涉及百分数均保留小数点后一位数字，如48.0%而不是48%\n\
+            8.因为这份报告是售后总结报告，所以所有milestone_summary和continuous_optimization_suggestion优先进行正向的总结，不要提及不足，更不要涉及“补足、补齐”等具体动作命令，如“自媒体内容缺失需要补足”等给业务方下达命令\n\
+            \n\n══════════════════════════════════════════════════════════\n【type:\
+            \ tool_01 - 数据概览（核心成果）】\n══════════════════════════════════════════════════════════\n\
+            输入数据格式：\n核心关键词（个）：N\n语义关键词（个）：N\n品牌提及率：X%\n平均提及排名：X\n中正率：X%\n\nextra:\
+            \ { company }\n\nPrompt：\n从数据概览中提炼3个核心成果。\n\n品牌：{extra.company}\n\n输出字段：\n\
+            {\n  \"tool_01\": {\n    \"core_result_1\": \"核心成果第1条，包含具体数字\",\n    \"\
+            core_result_2\": \"核心成果第2条，包含具体数字\",\n    \"core_result_3\": \"核心成果第3条，包含具体数字\"\
+            \n  }\n}\n\n══════════════════════════════════════════════════════════\n\
+            【type: tool_02 - 品牌表现趋势】\n══════════════════════════════════════════════════════════\n\
+            输入数据格式：\n\"品牌提及率\"近期曲线：X%、X%、X%、X%（从早到晚排序）\n\"平均排名\"近期曲线：X%、X%、X%、X%（从早到晚排序，数字越小排名越前）\n\
+            \nextra: { company }\n\nPrompt：\n分析品牌表现趋势，生成趋势小结。\n\n品牌：{extra.company}\n\
+            \n输出字段：\n{\n  \"tool_02\": {\n    \"mention_rate_trend\": \"品牌提及率从首周{首周值}%持续攀升至当前{当前值}%，呈{上升/稳定}态势\"\
+            ,\n    \"ranking_trend\": \"平均排名由初始{初始值}位优化至当前{当前值}位，品牌在AI回答中位置{显著前移/稳定}\"\
+            \n  }\n}\n\n\n══════════════════════════════════════════════════════════\n\
+            【type: tool_03 - 各平台文章收录情况】\n══════════════════════════════════════════════════════════\n\
+            \n输入数据格式：\n\"Deepseek\"文章收录次数：N\n\"文心一言\"文章收录次数：N\n\"元宝\"文章收录次数：N\n\"\
+            智谱\"文章收录次数：N\n\"千问\"文章收录次数：N\n\nextra: { company }\n\nPrompt：\n分析各AI平台文章收录情况。\n\
+            \n品牌：{extra.company}\n\n输出字段：\n{\n  \"tool_03\": {\n    \"top_platform_summary\"\
+            : \"{最多平台}收录最多（{次数}次），其次为{第二名}（{次数}次）和{第三名}（{次数}次）\",\n    \"total_coverage_summary\"\
+            : \"五大AI平台合计收录{总次数}次，整体覆盖范围{广/中等/有限}。\"\n  }\n}\n\n══════════════════════════════════════════════════════════\n\
+            【type: tool_04 - 语义关键词排名】\n══════════════════════════════════════════════════════════\n\
+            \n输入数据格式：\n核心词\"关键词1\"：\"语义词A\"排名N、\"语义词B\"排名N、\"语义词C\"排名N\n核心词\"关键词2\"\
+            ：...\n\nextra: { company }\n\nPrompt：\n分析语义关键词排名情况。\n\n品牌：{extra.company}\n\
+            \n排名评估标准：\n- 1-3位：优秀\n- 4-6位：良好\n- 7位以外：待优化\n\n输出字段：\n{\n  \"tool_04\"\
+            : {\n    \"ranking_overview\": \"{核心词数量}大核心词对应的语义关键词均在AI回答中{排名区间}（{最高位}-{最低位}位）\"\
+            ,\n    \"best_performing_keywords\": \"\\\\\\\"{表现最好的语义词类型}\\\\\\\"类词条覆盖效果最佳，验证品牌在{核心场景}的认知度\"\
+            \n  }\n}\n\n══════════════════════════════════════════════════════════\n\
+            【type: tool_05 - AI媒体收录分析】\n══════════════════════════════════════════════════════════\n\
+            \n输入数据格式：\n生文数量: N\n发文数量: N\n发布媒体总量: N\n新闻媒体发布文章数: N\n自媒体发布文章数: N\n\n\
+            extra: { company }\n\nPrompt：\n分析AI媒体收录数据，给出两句总结。\n\n品牌：{extra.company}\n\
+            \n媒体分层：\nL1权威媒体：\n- 政务/权威认证机构如食品安全国家标准数据库 · 政府官网 · 行业协会\n- 建立品牌专业背书，AI高信任度引用\n\
+            L2官方等权威媒体：\n- 36氪 · 虎嗅 · 人民日报 · 新华社 · 财经类权威媒体\n- 官方权威发声，强化品牌可信度\nL3专业评测/科普平台：\n\
+            - 如知乎专栏 · 什么值得买 · 营养师/专家博客 · 微信公众号\n- 行业垂直渗透，技术内容覆盖\nL4UGC/用户评价：\n- 如小红书\
+            \ · 抖音 · 淘宝评价 · 微博\n- 社交传播扩散，UGC口碑建设\n\n输出字段：\n{\n  \"tool_05\": {\n \
+            \   \"media_type_summary\": \"从内容类型看，{权威媒体描述}构建品牌信任背书体系，{专业媒体描述}实现行业深度渗透与广度传播。\"\
+            ,\n    \"layer_coverage_summary\": \"{L1-L4媒体层级描述}形成立体化品牌声量矩阵，内容收录率达{收录率}%，内容策略有效触达AI搜索场景。\"\
+            \n  }\n}\n\n══════════════════════════════════════════════════════════\n\
+            【type: tool_06 - 词条收录明细】\n══════════════════════════════════════════════════════════\n\
+            \n输入数据格式：\n核心关键词\"关键词1\"\n    语义关键词\"词A、词B、词C\"\n    收录平台\"平台A、平台B、平台C\"\
+            \n核心关键词\"关键词2\"\n    ...\nextra: { company }\n\nPrompt：\n分析词条收录明细。\n\n\
+            品牌：{extra.company}\n\n输出字段：\n{\n  \"tool_06\": {\n    \"platform_coverage\"\
+            : \"{核心词数}大核心关键词在{已覆盖平台}均实现收录，{未覆盖平台}暂未覆盖\",\n    \"keyword_coverage\"\
+            : \"{语义词总数}个语义关键词中{覆盖率}%在{平台数}个以上平台获得收录，覆盖率表现{优秀/良好/一般}\"\n  }\n}\n\n\
+            ══════════════════════════════════════════════════════════\n【输出要求】\n\n\
+            现在，请严格按照以上11种type的处理规则，解析输入JSON，生成完整报告。\n\n对每个item：\n1. 根据type选择对应的处理规则\n\
+            2. 提取data字段内容作为输入数据\n3. 提取extra.company作为品牌名称\n4. 按输出格式要求生成对应内容\n\n【最终输出要求】\n\
+            \n请严格按照以上11种type的处理规则解析输入数据，生成结构化JSON。\n\n最终输出格式（只输出JSON，不要任何其他内容）：\n\n\
+            \n{\n  \"report_title\": \"GEO Post-Sales Data Effect Delivery Report\"\
+            ,\n  \"company\": \"{extra.company（从输入中提取）}\",\n  \"generated_at\": \"\
+            {YYYY-MM-DD HH:mm:ss 格式的当前时间}\",\n  \"modules\": {\n    \"tool_01\": {\
+            \ ... },\n    \"tool_02\": { ... },\n    \"tool_03\": { ... },\n    \"\
+            tool_04\": { ... },\n    \"tool_05\": { ... },\n    \"tool_06\": { ...\
+            \ }\n  }\n}\n\n"
+        - id: 365eedbf-c95b-4204-b89d-9e2ab7db6901
+          role: user
+          text: 请严格按照上面的规则输出内容
+        selected: false
+        title: 'tool_llm_parser '
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 97
+      id: '17791932271690'
+      position:
+        x: 766.676945812639
+        y: 437.13656534993584
+      positionAbsolute:
+        x: 766.676945812639
+        y: 437.13656534993584
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        desc: ''
+        output_type: string
+        selected: false
+        title: 变量聚合器
+        type: variable-aggregator
+        variables:
+        - - '1777017237105'
+          - text
+        - - '17791932271690'
+          - text
+      height: 137
+      id: '1779193338475'
+      position:
+        x: 1139.4338920568882
+        y: 282
+      positionAbsolute:
+        x: 1139.4338920568882
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    viewport:
+      x: 120.8825879574922
+      y: 47.344335119950074
+      zoom: 0.7334507036489883
