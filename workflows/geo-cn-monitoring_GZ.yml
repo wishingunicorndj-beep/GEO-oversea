@@ -2323,7 +2323,7 @@ workflow:
           \      \"competitor_pos\":str(competitor_pos or \"\"), \"competitor_count\"\
           :str(competitor_count or \"0\"),\n        \"summary\":str(summary or \"\"\
           ), \"word_cloud_tags\":word_cloud_tags or [],\n        \"sentiment_classic_words\"\
-          :sentiment_classic_words or [], \"references\":json.loads(references or \"[]\"),\n        \"referenced_urls\":urls(references),\n\
+          :sentiment_classic_words or [], \"references\":(references if isinstance(references,list) else (json.JSONDecoder().raw_decode(str(references or \"[]\").lstrip())[0] if isinstance(references,str) and str(references).lstrip().startswith(\"[\") else [])),\n        \"referenced_urls\":urls(references),\n\
           \        \"task_id\":str(task_id or \"\"), \"model_id\":str(model_id or\
           \ \"\"), \"company_name\":str(company_name or \"\"),\n        \"brand_name\"\
           :str(brand_name or \"\"), \"ent_dataset_id\":str(ent_dataset_id or \"\"\
