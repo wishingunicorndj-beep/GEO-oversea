@@ -209,6 +209,28 @@ workflow:
       targetHandle: target
       type: custom
       zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: start
+        targetType: llm
+      id: e01m
+      source: '1766746558986'
+      sourceHandle: source
+      target: '1779999000001'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: code
+      id: e06m
+      source: '1779999000001'
+      sourceHandle: source
+      target: '17774728161280'
+      targetHandle: target
+      type: custom
+      zIndex: 0
     nodes:
     - data:
         desc: V1.12输入契约：14字段，名称与类型保持不变
@@ -2311,8 +2333,8 @@ workflow:
           \ word_cloud_tags: list,\n         sentiment_classic_words: list, references:\
           \ str, task_id: str, model_id: str,\n         company_name: str, brand_name:\
           \ str, ent_dataset_id: str, answer_raw: str,\n         query: str, search_results:\
-          \ str, latency_ms: Any, tokens_count: Any,\n         comps_list: str) ->\
-          \ dict:\n    def parse_references(value):\n        if isinstance(value,list):return value\n        if isinstance(value,dict):\n            for key in (\"references\",\"items\",\"data\"):\n                if isinstance(value.get(key),list):return value.get(key)\n        text=str(value or \"\").strip()\n        candidates=[text]\n        if len(text)>=2 and text[0]==\"\\\"\" and text[-1]==\"\\\"\":candidates.append(text[1:-1])\n        for candidate in candidates:\n            try:data=json.loads(candidate)\n            except Exception:\n                try:data=json.JSONDecoder().raw_decode(candidate.lstrip())[0]\n                except Exception:continue\n            if isinstance(data,list):return data\n            if isinstance(data,dict):\n                for key in (\"references\",\"items\",\"data\"):\n                    if isinstance(data.get(key),list):return data.get(key)\n        return []\n    ref_items=parse_references(references)\n    media_type_map={\"zhihu.com\":\"问答社区\",\"iesdouyin.com\":\"内容平台或专业社区\",\"douyin.com\":\"内容平台或专业社区\",\"thepaper.cn\":\"新闻媒体\",\"tousu.sina.com.cn\":\"投诉平台\",\"jd.com\":\"电商平台\",\"taobao.com\":\"电商平台\",\"tmall.com\":\"电商平台\"}\n    media_name_map={\"zhihu.com\":\"知乎\",\"iesdouyin.com\":\"iesdouyin.com\",\"douyin.com\":\"抖音\",\"thepaper.cn\":\"澎湃新闻\",\"tousu.sina.com.cn\":\"黑猫投诉\",\"jd.com\":\"京东商城\",\"taobao.com\":\"淘宝\",\"tmall.com\":\"天猫\"}\n    def map_domain(host,mapping):\n        return next((v for k,v in mapping.items() if host==k or host.endswith(\".\"+k)),None)\n    brand_media=[]\n    for ref in ref_items if isinstance(ref_items,list) else []:\n        if not isinstance(ref,dict):continue\n        url=str(ref.get(\"url\") or \"\")\n        host=str(ref.get(\"site_domain\") or \"\").lower().strip()\n        if not host and url:host=re.sub(r\"^https?://\",\"\",url).split(\"/\",1)[0].split(\":\",1)[0].lower()\n        if host.startswith(\"www.\"):host=host[4:]\n        brand_media.append({\"media_name\":map_domain(host,media_name_map) or host,\"media_type\":map_domain(host,media_type_map) or \"其他\",\"url\":url,\"host\":host,\"title\":str(ref.get(\"title\") or \"\")})\n\n    return {\n        \"brand_detected\":str(brand_detected or\
+          \ str, latency_ms: Any, tokens_count: Any,\n         comps_list: str, brand_media_llm_output: str) ->\
+          \ dict:\n    def parse_references(value):\n        if isinstance(value,list):return value\n        if isinstance(value,dict):\n            for key in (\"references\",\"items\",\"data\"):\n                if isinstance(value.get(key),list):return value.get(key)\n        candidates=[str(value or \"\").strip()]\n        for _ in range(3):\n            next_candidates=[]\n            for candidate in candidates:\n                if not candidate:continue\n                try:data=json.loads(candidate)\n                except Exception:\n                    try:data=json.JSONDecoder().raw_decode(candidate.lstrip())[0]\n                    except Exception:continue\n                if isinstance(data,list):return data\n                if isinstance(data,str):next_candidates.append(data.strip())\n                elif isinstance(data,dict):\n                    for key in (\"references\",\"items\",\"data\"):\n                        if isinstance(data.get(key),list):return data.get(key)\n            candidates=next_candidates\n        return []\n    ref_items=parse_references(references)\n    media_type_map={\"zhihu.com\":\"问答社区\",\"iesdouyin.com\":\"内容平台或专业社区\",\"douyin.com\":\"内容平台或专业社区\",\"thepaper.cn\":\"新闻媒体\",\"tousu.sina.com.cn\":\"投诉平台\",\"jd.com\":\"电商平台\",\"taobao.com\":\"电商平台\",\"tmall.com\":\"电商平台\"}\n    media_name_map={\"zhihu.com\":\"知乎\",\"iesdouyin.com\":\"iesdouyin.com\",\"douyin.com\":\"抖音\",\"thepaper.cn\":\"澎湃新闻\",\"tousu.sina.com.cn\":\"黑猫投诉\",\"jd.com\":\"京东商城\",\"taobao.com\":\"淘宝\",\"tmall.com\":\"天猫\"}\n    def map_domain(host,mapping):\n        return next((v for k,v in mapping.items() if host==k or host.endswith(\".\"+k)),None)\n    brand_media=[]\n    for ref in ref_items if isinstance(ref_items,list) else []:\n        if not isinstance(ref,dict):continue\n        url=str(ref.get(\"url\") or \"\");m=re.search(r\"\\((https?://[^)]+)\\)\",url);url=m.group(1) if m else url\n        host_raw=str(ref.get(\"site_domain\") or \"\");host=host_raw.split(\"]\",1)[0].replace(\"[\",\"\").lower().strip()\n        if not host and url:host=re.sub(r\"^https?://\",\"\",url).split(\"/\",1)[0].split(\":\",1)[0].lower()\n        if host.startswith(\"www.\"):host=host[4:]\n        brand_media.append({\"media_name\":map_domain(host,media_name_map) or host,\"media_type\":map_domain(host,media_type_map) or \"其他\",\"url\":url,\"host\":host,\"title\":str(ref.get(\"title\") or \"\")})\n\n\n\n    model_media=[]\n    try:\n        raw_text=str(brand_media_llm_output or \"\").strip()\n        if raw_text.startswith(\"```\"):\n            raw_text=raw_text.strip(\"`\").replace(\"json\", \"\", 1).strip()\n        raw=json.loads(raw_text)\n        if isinstance(raw,dict):\n            model_media=raw.get(\"brand_media\") or []\n        elif isinstance(raw,list):\n            model_media=raw\n    except Exception:\n        model_media=[]\n    allowed_media_types={\"品牌官网\",\"企业官网\",\"新闻媒体\",\"家居媒体\",\"内容平台或专业社区\",\"投诉平台\",\"电商平台\",\"问答社区\",\"社交媒体\",\"其他\",\"其它\"}\n    if isinstance(ref_items,list) and model_media:\n        brand_media=[]\n        for idx,ref in enumerate(ref_items):\n            if not isinstance(ref,dict):\n                continue\n            item=model_media[idx] if idx<len(model_media) and isinstance(model_media[idx],dict) else {}\n            media_type=str(item.get(\"media_type\") or \"其他\")\n            if media_type not in allowed_media_types:\n                media_type=\"其他\"\n            host=str(ref.get(\"site_domain\") or \"\").strip()\n            if host.startswith(\"[\") and \"]\" in host:\n                host=host[1:host.index(\"]\")]\n            if host.startswith(\"www.\"):\n                host=host[4:]\n            brand_media.append({\"media_name\":str(item.get(\"media_name\") or host),\"media_type\":media_type,\"url\":str(ref.get(\"url\") or \"\"),\"host\":host,\"title\":str(ref.get(\"title\") or \"\")})\n    return {\n        \"brand_detected\":str(brand_detected or\
           \ \"false\"), \"matched_brand\":str(matched_brand or \"\"),\n        \"\
           rank_pos\":str(rank_pos or \"\"), \"is_top_recommend\":str(is_top_recommend\
           \ or \"false\"),\n        \"sentiment_score\":str(sentiment_score or \"\
@@ -2323,7 +2345,7 @@ workflow:
           \      \"competitor_pos\":str(competitor_pos or \"\"), \"competitor_count\"\
           :str(competitor_count or \"0\"),\n        \"summary\":str(summary or \"\"\
           ), \"word_cloud_tags\":word_cloud_tags or [],\n        \"sentiment_classic_words\"\
-          :sentiment_classic_words or [], \"references\":(references if isinstance(references,list) else (json.JSONDecoder().raw_decode(str(references or \"[]\").lstrip())[0] if isinstance(references,str) and str(references).lstrip().startswith(\"[\") else [])),\n        \"brand_media\":brand_media,\n        \"referenced_urls\":urls(references),\n\
+          :sentiment_classic_words or [], \"references\":ref_items,\n        \"brand_media\":brand_media,\n        \"referenced_urls\":urls(references),\n\
           \        \"task_id\":str(task_id or \"\"), \"model_id\":str(model_id or\
           \ \"\"), \"company_name\":str(company_name or \"\"),\n        \"brand_name\"\
           :str(brand_name or \"\"), \"ent_dataset_id\":str(ent_dataset_id or \"\"\
@@ -2490,6 +2512,10 @@ workflow:
           - '1766746558986'
           - references
           variable: references
+        - value_selector:
+          - '1779999000001'
+          - text
+          variable: brand_media_llm_output
         - value_selector:
           - '1766746558986'
           - task_id
@@ -2664,6 +2690,46 @@ workflow:
         y: 340
       positionAbsolute:
         x: 2570
+        y: 340
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: 从 references 按原顺序解析媒体名称和媒体类型；原始引用字段由最终合并代码回填
+        model:
+          completion_params:
+            enable_thinking: false
+            max_tokens: 12000
+            temperature: 0
+            top_p: 1
+          mode: chat
+          name: qwen/qwen3.7-plus
+          provider: zhinao
+        prompt_template:
+        - id: 1c2a3e4f5a6b7c8d9e0f
+          role: system
+          text: "你是媒体引用结构化解析器。只输出严格 JSON，不要输出 Markdown、解释或代码块。输入是 references，可能是 JSON 数组、JSON 字符串或双重编码 JSON 字符串。对每一条 reference 按原顺序生成一条 brand_media，不得合并、去重或丢弃。media_name 和 media_type 只能依据该条 reference 的 title、url、site_domain 判断，不得联网。media_type 只能从以下 10 类中选择：品牌官网、企业官网、新闻媒体、家居媒体、内容平台或专业社区、投诉平台、电商平台、问答社区、社交媒体、其他；无法判断时使用其他。media_name 无法判断时使用 site_domain 或 host。url、host、title 不要改写，最终结果中的这三个字段以原始 reference 为准。输出格式必须是：{\"brand_media\":[{\"media_name\":\"媒体名称\",\"media_type\":\"其他\",\"url\":\"原始url\",\"host\":\"原始site_domain\",\"title\":\"原始title\"}]}"
+        - id: 2d3e4f5a6b7c8d9e0f1a
+          role: user
+          text: "references：{{#1766746558986.references#}}"
+        selected: false
+        title: 4c.引用媒体信息解析LLM
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 113
+      id: '1779999000001'
+      position:
+        x: 1420
+        y: 340
+      positionAbsolute:
+        x: 1420
         y: 340
       selected: false
       sourcePosition: right
