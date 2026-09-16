@@ -95,18 +95,6 @@ workflow:
         isInIteration: false
         sourceType: code
         targetType: code
-      id: edge-special-n1
-      selected: false
-      source: '1784300000001'
-      sourceHandle: source
-      target: '1776605036452'
-      targetHandle: target
-      type: custom
-      zIndex: 0
-    - data:
-        isInIteration: false
-        sourceType: code
-        targetType: code
       id: edge-n1-n2
       selected: false
       source: '1776605036452'
