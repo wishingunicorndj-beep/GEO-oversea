@@ -2447,20 +2447,31 @@ workflow:
           def _coerce_article(value):
               """兼容迭代输出的对象、包装对象和JSON字符串。"""
               current = value
-              for _ in range(3):
+              for _ in range(6):
                   if isinstance(current, str):
                       raw = current.strip()
                       if not raw:
                           return None
+                      if raw.startswith('```') and raw.endswith('```'):
+                          raw = raw[3:-3].strip()
+                          if raw.lower().startswith('json'):
+                              raw = raw[4:].strip()
                       try:
                           current = json.loads(raw)
                       except (TypeError, ValueError):
                           return None
                       continue
+                  if isinstance(current, list):
+                      if len(current) != 1:
+                          return None
+                      current = current[0]
+                      continue
                   if isinstance(current, dict):
-                      for wrapper_key in ('structured_output', 'output'):
+                      if 'title' in current or 'content' in current:
+                          return current
+                      for wrapper_key in ('structured_output', 'output', 'data', 'result', 'text'):
                           wrapped = current.get(wrapper_key)
-                          if wrapped is not None and not ('title' in current or 'content' in current):
+                          if wrapped is not None:
                               current = wrapped
                               break
                       else:
