@@ -92,6 +92,54 @@ workflow:
       targetHandle: target
       type: custom
     - data:
+        isInIteration: false
+        sourceType: code
+        targetType: code
+      id: edge-special-n1
+      selected: false
+      source: '1784300000001'
+      sourceHandle: source
+      target: '1776605036452'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: code
+      id: edge-n1-n2
+      selected: false
+      source: '1776605036452'
+      sourceHandle: source
+      target: '1777000000004'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: code
+      id: edge-n2b-n5
+      selected: false
+      source: '1777000000005'
+      sourceHandle: source
+      target: '1780900000001'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: code
+      id: edge-competitor-context-n8
+      selected: false
+      source: '1777000000003'
+      sourceHandle: source
+      target: '1776947107737'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
         isInIteration: true
         iteration_id: '1776938309919'
         sourceType: llm
