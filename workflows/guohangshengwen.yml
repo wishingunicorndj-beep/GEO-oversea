@@ -577,6 +577,7 @@ workflow:
         code: |
           """国航文章机械检查；部署时嵌入 Dify 代码节点，不依赖本地文件。"""
           import html
+          import ast
           import json
           import re
           from html.parser import HTMLParser
@@ -1693,7 +1694,7 @@ workflow:
       zIndex: 0
     - data:
         desc: ''
-        error_handle_mode: continue-on-error
+        error_handle_mode: terminated
         height: 428
         is_parallel: true
         iterator_selector:
@@ -2444,41 +2445,47 @@ workflow:
           def _as_list(value):
               return value if isinstance(value, list) else []
 
-          def _coerce_article(value):
-              """兼容迭代输出的对象、包装对象和JSON字符串。"""
-              current = value
-              for _ in range(6):
-                  if isinstance(current, str):
-                      raw = current.strip()
-                      if not raw:
-                          return None
-                      if raw.startswith('```') and raw.endswith('```'):
-                          raw = raw[3:-3].strip()
-                          if raw.lower().startswith('json'):
-                              raw = raw[4:].strip()
-                      try:
-                          current = json.loads(raw)
-                      except (TypeError, ValueError):
-                          return None
-                      continue
-                  if isinstance(current, list):
-                      if len(current) != 1:
-                          return None
-                      current = current[0]
-                      continue
-                  if isinstance(current, dict):
-                      if 'title' in current or 'content' in current:
-                          return current
-                      for wrapper_key in ('structured_output', 'output', 'data', 'result', 'text'):
-                          wrapped = current.get(wrapper_key)
-                          if wrapped is not None:
-                              current = wrapped
-                              break
-                      else:
-                          return current
-                      continue
+          import ast
+
+          def _coerce_article(value, depth=0):
+              """递归兼容Dify迭代器的多层包装、JSON/Python字典字符串。"""
+              if depth > 8 or value is None:
                   return None
-              return current if isinstance(current, dict) else None
+              if isinstance(value, dict):
+                  if 'title' in value or 'content' in value:
+                      return value
+                  for nested in value.values():
+                      found = _coerce_article(nested, depth + 1)
+                      if isinstance(found, dict):
+                          return found
+                  return None
+              if isinstance(value, list):
+                  for nested in value:
+                      found = _coerce_article(nested, depth + 1)
+                      if isinstance(found, dict):
+                          return found
+                  return None
+              if isinstance(value, str):
+                  raw = value.strip()
+                  if not raw:
+                      return None
+                  if raw.startswith('```') and raw.endswith('```'):
+                      raw = raw[3:-3].strip()
+                      if raw.lower().startswith('json'):
+                          raw = raw[4:].strip()
+                  candidates = [raw]
+                  if '{' in raw and '}' in raw:
+                      candidates.append(raw[raw.find('{'):raw.rfind('}') + 1])
+                  for candidate in candidates:
+                      for parser in (json.loads, ast.literal_eval):
+                          try:
+                              found = _coerce_article(parser(candidate), depth + 1)
+                          except (TypeError, ValueError, SyntaxError):
+                              continue
+                          if isinstance(found, dict):
+                              return found
+                  return None
+              return None
 
           def _bind_articles(articles, plans, branch_name):
               articles = _as_list(articles)
@@ -3833,7 +3840,7 @@ workflow:
       zIndex: 0
     - data:
         desc: ''
-        error_handle_mode: continue-on-error
+        error_handle_mode: terminated
         height: 342.3211323547496
         is_parallel: true
         iterator_selector:
