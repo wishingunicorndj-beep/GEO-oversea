@@ -2312,7 +2312,7 @@ workflow:
           \ str, task_id: str, model_id: str,\n         company_name: str, brand_name:\
           \ str, ent_dataset_id: str, answer_raw: str,\n         query: str, search_results:\
           \ str, latency_ms: Any, tokens_count: Any,\n         comps_list: str) ->\
-          \ dict:\n    return {\n        \"brand_detected\":str(brand_detected or\
+          \ dict:\n    ref_items=references if isinstance(references,list) else []\n    if isinstance(references,str):\n        try:ref_items=json.JSONDecoder().raw_decode(references.lstrip())[0]\n        except Exception:ref_items=[]\n    media_type_map={\"zhihu.com\":\"问答社区\",\"iesdouyin.com\":\"内容平台或专业社区\",\"douyin.com\":\"内容平台或专业社区\",\"thepaper.cn\":\"新闻媒体\",\"tousu.sina.com.cn\":\"投诉平台\",\"jd.com\":\"电商平台\",\"taobao.com\":\"电商平台\",\"tmall.com\":\"电商平台\"}\n    media_name_map={\"zhihu.com\":\"知乎\",\"iesdouyin.com\":\"iesdouyin.com\",\"douyin.com\":\"抖音\",\"thepaper.cn\":\"澎湃新闻\",\"tousu.sina.com.cn\":\"黑猫投诉\",\"jd.com\":\"京东商城\",\"taobao.com\":\"淘宝\",\"tmall.com\":\"天猫\"}\n    def map_domain(host,mapping):\n        return next((v for k,v in mapping.items() if host==k or host.endswith(\".\"+k)),None)\n    brand_media=[]\n    for ref in ref_items if isinstance(ref_items,list) else []:\n        if not isinstance(ref,dict):continue\n        url=str(ref.get(\"url\") or \"\")\n        host=str(ref.get(\"site_domain\") or \"\").lower().strip()\n        if not host and url:host=re.sub(r\"^https?://\",\"\",url).split(\"/\",1)[0].split(\":\",1)[0].lower()\n        if host.startswith(\"www.\"):host=host[4:]\n        brand_media.append({\"media_name\":map_domain(host,media_name_map) or host,\"media_type\":map_domain(host,media_type_map) or \"其他\",\"url\":url,\"host\":host,\"title\":str(ref.get(\"title\") or \"\")})\n\n    return {\n        \"brand_detected\":str(brand_detected or\
           \ \"false\"), \"matched_brand\":str(matched_brand or \"\"),\n        \"\
           rank_pos\":str(rank_pos or \"\"), \"is_top_recommend\":str(is_top_recommend\
           \ or \"false\"),\n        \"sentiment_score\":str(sentiment_score or \"\
@@ -2323,7 +2323,7 @@ workflow:
           \      \"competitor_pos\":str(competitor_pos or \"\"), \"competitor_count\"\
           :str(competitor_count or \"0\"),\n        \"summary\":str(summary or \"\"\
           ), \"word_cloud_tags\":word_cloud_tags or [],\n        \"sentiment_classic_words\"\
-          :sentiment_classic_words or [], \"references\":(references if isinstance(references,list) else (json.JSONDecoder().raw_decode(str(references or \"[]\").lstrip())[0] if isinstance(references,str) and str(references).lstrip().startswith(\"[\") else [])),\n        \"referenced_urls\":urls(references),\n\
+          :sentiment_classic_words or [], \"references\":(references if isinstance(references,list) else (json.JSONDecoder().raw_decode(str(references or \"[]\").lstrip())[0] if isinstance(references,str) and str(references).lstrip().startswith(\"[\") else [])),\n        \"brand_media\":brand_media,\n        \"referenced_urls\":urls(references),\n\
           \        \"task_id\":str(task_id or \"\"), \"model_id\":str(model_id or\
           \ \"\"), \"company_name\":str(company_name or \"\"),\n        \"brand_name\"\
           :str(brand_name or \"\"), \"ent_dataset_id\":str(ent_dataset_id or \"\"\
@@ -2347,6 +2347,9 @@ workflow:
           brand_sentiment_analysis:
             children: null
             type: object
+          brand_media:
+            children: null
+            type: array[object]
           company_name:
             children: null
             type: string
@@ -2595,6 +2598,10 @@ workflow:
           - '17774728161280'
           - brand_sentiment_analysis
           variable: brand_sentiment_analysis
+        - value_selector:
+          - '17774728161280'
+          - brand_media
+          variable: brand_media
         - value_selector:
           - '17774728161280'
           - is_ranking
