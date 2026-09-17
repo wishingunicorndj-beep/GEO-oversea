@@ -1675,7 +1675,7 @@ workflow:
           }\n        # 上游3v已用brand_name粒度和正文anchor确认了独立目标时，所有模式（含P5产品系列）\n       \
           \ # 都应信任该关系。P5禁止的是母品牌/兄弟产品猜测，而不是阻断已校验的exact_target。\n        if exact_brand\
           \ or exact_llm_product or semantic_family:independent_target=True;break\n\
-          \    # 4a-1是唯一语义裁决；本代码节点不得覆盖上游detected。\n    detected=llm_detected\n   \
+          \    # 最终提及判定必须同时满足：上游LLM判断为已提及，且代码确认存在同粒度独立目标实体。\n    detected=llm_detected and independent_target\n   \
           \ # 多识别词按正文物理位置最早命中；同位置再取最完整别名。\n    matched=\"\";direct_ids=[]\n    if\
           \ detected:\n        # 目标实体本身是上游已校验的可靠产品/主体名；即使声明别名层因短词歧义过滤，也用实体surface回填正文证据。\n\
           \        target_names=[]\n        for e in entities if isinstance(entities,list)\
