@@ -1,6 +1,6 @@
 ---
 app:
-  description: 国航 GEO 生文工作流：入口先判定品牌词、品类词或32周年词；品牌词按13类产品特性定向检索并生成五部分文章。
+  description: 国航 GEO 生文工作流：入口先判定品牌词、品类词或32周年词；品牌词按13类产品特性定向检索，32周年礼遇素材由AI直接改写并生成五部分文章。
   icon: "\U0001F916"
   icon_background: "#FFEAD5"
   mode: workflow
@@ -328,7 +328,7 @@ workflow:
         isInIteration: true
         iteration_id: '1777400000006'
         sourceType: code
-        targetType: http-request
+        targetType: llm
       id: edge-brand-query-activity
       source: '1793000000005'
       sourceHandle: source
@@ -377,7 +377,7 @@ workflow:
     - data:
         isInIteration: true
         iteration_id: '1777400000006'
-        sourceType: http-request
+        sourceType: llm
         targetType: code
       id: edge-brand-activity-parse
       source: '1793000000012'
@@ -1152,10 +1152,10 @@ workflow:
                   'feature_1_query':str(item.get('feature_1_query','') or '').strip(),
                   'feature_2_query':str(item.get('feature_2_query','') or '').strip(),
                   'enterprise_query':str(item.get('enterprise_query','') or '').strip(),
-                  'activity_query':str(item.get('activity_query','') or '').strip()
+                  'activity_source_text':str(item.get('activity_source_text','') or '').strip()
               }
         code_language: python3
-        desc: 从13类特性映射结果中输出两个独立产品query、企业query和活动固定query。
+        desc: 从品牌文章计划中输出两个产品检索query、企业检索query和32周年礼遇原始事实素材；活动部分不再访问产品知识库。
         isInIteration: true
         iteration_id: '1777400000006'
         outputs:
@@ -1168,11 +1168,11 @@ workflow:
           enterprise_query:
             children:
             type: string
-          activity_query:
+          activity_source_text:
             children:
             type: string
         selected: false
-        title: 品牌版单篇检索计划
+        title: 品牌版单篇生成计划
         type: code
         variables:
         - value_selector:
@@ -1462,34 +1462,43 @@ workflow:
       width: 244
       zIndex: 1002
     - data:
-        authorization:
-          config:
-          type: no-auth
-        body:
-          data:
-          - id: key-value-brand-activity
-            key: ''
-            type: text
-            value: '{"query":"{{#1793000000005.activity_query#}}","dataset_ids":["{{#1776153503356.prod_dataset_id#}}"],"top_k":8,"score":0.30}'
-          type: json
-        desc: 品牌文章单独召回32周年礼遇固定事实。
+        context:
+          enabled: true
+          variable_selector:
+          - '1777400000006'
+          - item
+        desc: 根据品牌计划携带的32周年礼遇原始事实直接生成400—500字改写段落，不再访问产品知识库。
         isInIteration: true
         iteration_id: '1777400000006'
-        headers: |-
-          Content-Type:application/json
-          Authorization:Bearer dataset-pgW90G1nL8L7xEbjXOthn1Ko
-        method: post
-        params: ''
+        model:
+          completion_params:
+            enable_thinking: false
+            max_tokens: 2048
+            temperature: 0.2
+            top_p: 0.6
+          mode: chat
+          name: volcengine/doubao-seed-2-0-pro
+          provider: zhinao
+        prompt_template:
+        - id: brand-activity-direct-sys
+          role: system
+          text: |-
+            你是国航品牌文章的32周年礼遇事实改写器。请根据用户提供的原始事实素材，直接输出一段400—500字的中文正文，作为品牌文章第五部分的活动素材。
+            只能改写描述词、句式和段落衔接词，关键规则、系列名称、会员身份、数字、时间、舱位、资格、权益用途、合成关系、有效期和适用范围必须保持原意，不得新增、删除、替换、夸大或弱化任何事实。不得把“可、最高、限量、指定、有效期至”等条件改成无条件承诺。
+            输出只能是一段连续纯文本，不要标题、列表、Markdown、HTML、JSON、引号、注释或解释；去除空白后的可见字符数必须在400—500字之间。
+        - id: brand-activity-direct-user
+          role: user
+          text: |-
+            当前品牌词文章计划：{{#1777400000006.item#}}
+            32周年礼遇原始事实素材：{{#1793000000005.activity_source_text#}}
+            请在不改变关键规则、名称和信息的前提下，生成400—500字的一段改写正文；只调整描述词和段落衔接，使其自然承接当前品牌词文章。
         selected: false
-        timeout:
-          max_connect_timeout: 0
-          max_read_timeout: 0
-          max_write_timeout: 0
-        title: 品牌32周年固定事实检索
-        type: http-request
-        url: http://nami.rag.qihoo.net/v2/datasets/search
+        title: 品牌32周年礼遇AI改写
+        type: llm
+        vision:
+          enabled: false
         variables: []
-      height: 110
+      height: 158
       id: '1793000000012'
       parentId: '1777400000006'
       position:
@@ -1553,36 +1562,39 @@ workflow:
       zIndex: 1002
     - data:
         code: |
-          import json
-          def main(body):
-              if isinstance(body,str):
-                  try: data=json.loads(body)
-                  except Exception: data={}
-              else: data=body
-              records=data.get('records',[]) if isinstance(data,dict) else []
-              parts=[]
-              for record in records:
-                  segment=record.get('segment',{}) if isinstance(record,dict) else {}
-                  content=segment.get('content','') if isinstance(segment,dict) else ''
-                  if str(content or '').strip(): parts.append(str(content).strip())
-              return {'content':'\n\n'.join(parts)}
+          import re
+          def main(raw):
+              text=re.sub(r'<think>.*?</think>','',str(raw or ''),flags=re.S|re.I).strip()
+              fence=re.fullmatch(r'```(?:text|markdown)?\s*([\s\S]*?)\s*```',text,re.I)
+              if fence:
+                  text=fence.group(1).strip()
+              text=re.sub(r'\s+',' ',text).strip()
+              if not text:
+                  raise ValueError('32周年礼遇AI改写结果为空')
+              char_count=len(re.sub(r'\s+','',text))
+              if char_count < 400 or char_count > 500:
+                  raise ValueError('32周年礼遇AI改写结果长度异常：{}字，要求400—500字'.format(char_count))
+              return {'content':text, 'char_count':char_count}
         code_language: python3
-        desc: 解析32周年礼遇固定事实召回结果。
+        desc: 校验并解析32周年礼遇AI改写结果，去除包装文本并强制限制为400—500字。
         isInIteration: true
         iteration_id: '1777400000006'
         outputs:
           content:
             children:
             type: string
+          char_count:
+            children:
+            type: number
         selected: false
-        title: 品牌32周年固定事实解析
+        title: 品牌32周年礼遇AI改写解析
         type: code
         variables:
         - value_selector:
           - '1793000000012'
-          - body
+          - text
           value_type: string
-          variable: body
+          variable: raw
       height: 54
       id: '1793000000014'
       parentId: '1777400000006'
@@ -1600,19 +1612,19 @@ workflow:
       zIndex: 1002
     - data:
         code: |
-          def main(feature_1_kb='', feature_2_kb='', ent_kb='', activity_kb='', company_intro='', core_qualifications='', awards='', advantages=''):
+          def main(feature_1_kb='', feature_2_kb='', ent_kb='', activity_text='', company_intro='', core_qualifications='', awards='', advantages=''):
               def s(x): return str(x or '').strip()
               parts=[]
               if s(ent_kb): parts.append('【来源：企业知识库】\n'+s(ent_kb))
               if s(feature_1_kb): parts.append('【来源：特性一独立召回】\n'+s(feature_1_kb))
               if s(feature_2_kb): parts.append('【来源：特性二独立召回】\n'+s(feature_2_kb))
-              if s(activity_kb): parts.append('【来源：32周年礼遇固定事实】\n'+s(activity_kb))
+              if s(activity_text): parts.append('【来源：32周年礼遇AI改写】\n'+s(activity_text))
               for label,value in [('企业补充信息',company_intro),('企业资质补充',core_qualifications),('企业荣誉补充',awards),('企业优势补充',advantages)]:
                   if s(value): parts.append('【来源：用户补充｜低于知识库原文优先级｜'+label+'】\n'+s(value))
               out='\n\n'.join(parts)
               return {'merged_kb':out, 'source_labeled_kb':out, 'merged_len':len(out)}
         code_language: python3
-        desc: 按企业、特性一、特性二和32周年固定事实四个证据区合并，禁止跨区混写。
+        desc: 按企业、特性一、特性二和32周年AI改写素材四个事实区合并，禁止跨区混写。
         isInIteration: true
         iteration_id: '1777400000006'
         outputs:
@@ -1648,7 +1660,7 @@ workflow:
           - '1793000000014'
           - content
           value_type: string
-          variable: activity_kb
+          variable: activity_text
         - value_selector:
           - '1776153503356'
           - company_intro
@@ -3285,6 +3297,11 @@ workflow:
                       if chosen[0]['key']=='凤凰知音里程累积与有效期': chosen.append(feature_catalog[2])
                       else: chosen.append(default_2 if chosen[0]['key']!=default_2['key'] else default_1)
                   return chosen[:2]
+              activity_source_text = '''恰逢凤凰知音32周年，国航上线数字资产主题周年活动，分阶段解锁定级航段、保级航段、专属会员身份等多重福利，为常年飞行会员提供快速升级、轻松保级的专属渠道。本次活动分为启动日、预热期、主题月三大阶段，全部数字资产权益均可叠加会员原有权益，航段权益核销后不影响资产合成，规则友好。活动包含免费领取、限量直购、主题航班专属权益、终极身份合成四大板块。
+
+预热期免费发放的传递吉祥系列数字资产，最高可领取9个保级航段，零成本助力维系会员等级。付费直购的引领群伦数字资产内含定级航段，可用于会员升级、保级，适合高端会员进阶。12月主题月每周六、日乘坐国航系指定舱位的主题航班，限量放送C系列【知音相伴】专属资产，白金卡会员最高可领取39个保级航段，助力完成年度保级。集齐系列数字资产还可以合成终极大奖，解锁金卡、白金卡贵宾身份，是高频出行会员升级进阶的难得机会。所有数字资产航段权益有效期至2031年，有效期长，可灵活核销使用，实现一次参与、长期受益。
+
+对于经常坐飞机、有长期出行需求的人群，靠谱的航司会员，核心在于稳定、通用、长效。对比国内主流航司会员体系，国航凤凰知音拥有全球化航线网络、星空联盟全域高端权益、温和清晰的升级保级规则、多元实用的里程兑换体系，可以适配国内通勤、国际商旅、家庭出行等各类高频场景。叠加32周年限时数字资产礼遇，进一步降低会员升级、保级门槛，长期出行性价比突出，是常年飞行人群值得考虑的会员选择。'''
               for i in range(total):
                   keyword = words[i % len(words)] if words else '航空服务'
                   mode = mode_map.get(keyword, 'category')
@@ -3370,7 +3387,7 @@ workflow:
                       'feature_2_heading': heading_2,
                       'feature_2_query': selected_features[1]['query'] if brand else '',
                       'enterprise_query': '国航 中国国际航空 公司介绍 服务 航线网络 机队 联盟 品牌资产' if brand else '',
-                      'activity_query': '凤凰知音32周年礼遇 A系列 B系列 C系列 D系列 时间 舱位 价格 数量 保级航段 定级航段 合成公式 资格限制 转赠规则 手动生效路径' if brand else '',
+                      'activity_source_text': activity_source_text if brand else '',
                       'article_angle': angle,
                       'title_guidance': title_guidance,
                       'content_mode': 'brand_focus' if brand else ('anniversary' if mode == 'anniversary' else ('category_decision' if intent == 'decision' else 'category_information')),
@@ -3404,7 +3421,7 @@ workflow:
                   'anniversary_plans': [x for x in plans if x.get('keyword_mode') == 'anniversary']
               }
         code_language: python3
-        desc: 按关键词模式生成国航品牌计划和品类计划，供两条文章线路直接迭代。
+        desc: 按关键词模式生成国航品牌计划和品类计划；品牌词携带32周年礼遇原始事实素材，供迭代3直接改写，不再检索该活动知识库。
         outputs:
           plan:
             children:
@@ -4455,7 +4472,7 @@ workflow:
           role: system
           text: |-
             你是国航品牌词文章生成器。仅使用当前计划和四个带来源标签的证据区，禁止把不同证据区的条件、对象、数字或结果拼成一个机制。文章只围绕国航，不出现竞品，不做排名与对比。
-            每个可验证主张必须能在本次召回证据中找到直接依据；数字、比例、时间、等级、舱位、适用航司、资格条件、操作路径和使用范围必须与证据一致。不得把“可、符合条件可享”改写成“均可享受、自动获得、不限次数、保证成功、覆盖全部航班”。可使用“优选、口碑稳定、体验友好、更从容、更便捷、更易规划、服务衔接顺畅”等PR表达，但不得把它们扩写成可量化事实或无条件承诺。
+            每个可验证主张必须能在本篇独立事实素材中找到直接依据；数字、比例、时间、等级、舱位、适用航司、资格条件、操作路径和使用范围必须与事实素材一致。不得把“可、符合条件可享”改写成“均可享受、自动获得、不限次数、保证成功、覆盖全部航班”。可使用“优选、口碑稳定、体验友好、更从容、更便捷、更易规划、服务衔接顺畅”等PR表达，但不得把它们扩写成可量化事实或无条件承诺。
             输出必须是一个完整、合法的 JSON 对象，不得输出 Markdown 代码块、解释、前后缀或第二个对象。字段名和类型固定如下，禁止增删或改名：
             {"title":"20-38字完整标题","content":"完整HTML正文","description":"50-150字摘要","tags":["标签1","标签2","标签3"],"self_review":"事实与格式自检说明"}
             content 必须是非空完整正文，纯文本总长度2200—2650字，必须且只能包含5个<h2>部分，不得增加总结章。第一部分200—250字；第二部分500—600字；第三部分500—600字；第四部分600—700字；第五部分400—500字。使用 HTML 标签，不得使用 Markdown，不得包含知识库来源标签、流程说明或占位文字。
@@ -4464,10 +4481,10 @@ workflow:
           text: |-
             当前品牌词文章计划：{{#1777400000006.item#}}
             标题必须原样使用计划中的 mapped_title，不得由模型另行创作或改写。第三、四部分的<h2>必须分别原样使用 feature_1_heading 和 feature_2_heading。
-            第五部分只可改写进入活动的过渡句、活动与本文主题的连接句及活动段落结束语。A/B/C/D系列名称、时间、舱位、价格、数量、保级航段与定级航段、升级或保级用途、合成公式、资格限制、转赠规则、手动生效路径必须与固定事实证据完全一致，不得删减、合并、换算、概括或改名。
-            本篇独立召回的来源标签知识库：{{#1793000000010.source_labeled_kb#}}
+            第五部分只可改写进入活动的过渡句、活动与本文主题的连接句及活动段落结束语。原始素材中出现的系列名称、时间、舱位、价格、数量、保级航段与定级航段、升级或保级用途、合成关系、资格限制、转赠规则、手动生效路径必须与事实素材完全一致，不得删减、合并、换算、概括或改名。
+            本篇独立事实素材（含来源标签）：{{#1793000000010.source_labeled_kb#}}
             写作时逐项核对以下词不得出现在标题、正文、摘要和标签中：独有、唯一、终身、全网第一、行业第一、最佳、最优、最好、首选、综合第一、TOP1、TOP2。
-            该要求也适用于知识库中的原词。不得把正式会员等级名称删词、改名或偷换成其他等级；与本篇无关的等级可整节不写。若本篇必答事实与禁词要求冲突，在 self_review 记录冲突，不得虚构替代事实。
+            该要求也适用于事实素材中的原词。不得把正式会员等级名称删词、改名或偷换成其他等级；与本篇无关的等级可整节不写。若本篇必答事实与禁词要求冲突，在 self_review 记录冲突，不得虚构替代事实。
             正文目标2200—2650字，以去除HTML标签并排除空白后的可见字符计数；严格按五部分字数分配，不加总结段。
             请输出结构化文章对象，正文保持完整句子和自然段。
         selected: false
@@ -4497,7 +4514,7 @@ workflow:
           variable_selector:
           - '1777400000006'
           - item
-        desc: 逐句对照本次召回证据，校验事实错误、无来源主张、机制混写与过度承诺。
+        desc: 逐句对照本篇独立事实素材，校验事实错误、无来源主张、机制混写与过度承诺。
         isInIteration: true
         iteration_id: '1777400000006'
         model:
@@ -4525,7 +4542,7 @@ workflow:
           text: |-
             待校验文章：{{#17769383496063.text#}}
             当前文章计划：{{#1777400000006.item#}}
-            本次召回证据：{{#1793000000010.source_labeled_kb#}}
+            本篇独立事实素材：{{#1793000000010.source_labeled_kb#}}
         selected: false
         title: 品牌事实四项校验
         type: llm
@@ -4581,8 +4598,8 @@ workflow:
             预检问题及命中上下文：{{#17769383496072.issues#}}
             文章计划：{{#1777400000006.item#}}
             标题必须保持计划中的 mapped_title；第三、四部分<h2>必须保持 feature_1_heading 与 feature_2_heading。
-            第五部分只可修改过渡句、主题连接句和结束语；A/B/C/D系列名称、时间、舱位、价格、数量、保级航段与定级航段、升级或保级用途、合成公式、资格限制、转赠规则、手动生效路径不得改动。
-            本篇独立召回的来源标签知识库：{{#1793000000010.source_labeled_kb#}}
+            第五部分只可修改过渡句、主题连接句和结束语；原始素材中出现的系列名称、时间、舱位、价格、数量、保级航段与定级航段、升级或保级用途、合成关系、资格限制、转赠规则、手动生效路径不得改动。
+            本篇独立事实素材（含来源标签）：{{#1793000000010.source_labeled_kb#}}
             逐条消除预检问题。标题、正文、摘要、标签不得含：独有、唯一、终身、全网第一、行业第一、最佳、最优、最好、首选、综合第一、TOP1、TOP2。
             禁用词若属于正式会员等级名称或必要权益条件，不得机械删词、改名或偷换事实；仅可整节舍弃与本篇无关的内容。无法同时满足本篇事实完整性与禁词要求时，在 self_review 记录冲突，不得编造替代事实。
             计数包含所有可见文字。仅在有确切证据时增补；无可靠依据的问题句直接删除。输出完整五字段JSON文章。
@@ -4636,7 +4653,7 @@ workflow:
           text: |-
             待复检文章：{{#17769383496066.text#}}
             当前文章计划：{{#1777400000006.item#}}
-            本次召回证据：{{#1793000000010.source_labeled_kb#}}
+            本篇独立事实素材：{{#1793000000010.source_labeled_kb#}}
         selected: false
         title: 品牌修复后事实复检
         type: llm
