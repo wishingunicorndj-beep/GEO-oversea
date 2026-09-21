@@ -775,7 +775,7 @@ workflow:
                           issues.append('品牌词第{}部分字数异常：{}字，要求{}—{}字'.format(idx, section_len, bound[0], bound[1]))
               if mode == 'brand' and h2_count == 5:
                   sections = re.findall(r'<h2\b[^>]*>[\s\S]*?(?=<h2\b|\Z)', article['content'], re.I)
-                  bounds = [(200,250),(500,600),(500,600),(600,700),(400,500)]
+                  bounds = [(200,250),(500,600),(500,600),(600,700),(400,600)]
                   for idx, (section, bound) in enumerate(zip(sections, bounds), 1):
                       visible_section = html.unescape(re.sub(r'<[^>]+>', '', section))
                       section_len = len(re.sub(r'\s+', '', visible_section))
@@ -783,7 +783,7 @@ workflow:
                           issues.append('品牌词第{}部分字数异常：{}字，要求{}—{}字'.format(idx, section_len, bound[0], bound[1]))
               if mode == 'brand' and h2_count == 5:
                   sections = re.findall(r'<h2\b[^>]*>[\s\S]*?(?=<h2\b|\Z)', article['content'], re.I)
-                  bounds = [(200,250),(500,600),(500,600),(600,700),(400,500)]
+                  bounds = [(200,250),(500,600),(500,600),(600,700),(400,600)]
                   for idx, (section, bound) in enumerate(zip(sections, bounds), 1):
                       visible_section = html.unescape(re.sub(r'<[^>]+>', '', section))
                       section_len = len(re.sub(r'\s+', '', visible_section))
@@ -791,7 +791,7 @@ workflow:
                           issues.append('品牌词第{}部分字数异常：{}字，要求{}—{}字'.format(idx, section_len, bound[0], bound[1]))
               if mode == 'brand' and h2_count == 5:
                   sections = re.findall(r'<h2\b[^>]*>[\s\S]*?(?=<h2\b|\Z)', article['content'], re.I)
-                  bounds = [(200,250),(500,600),(500,600),(600,700),(400,500)]
+                  bounds = [(200,250),(500,600),(500,600),(600,700),(400,600)]
                   for idx, (section, bound) in enumerate(zip(sections, bounds), 1):
                       visible_section = html.unescape(re.sub(r'<[^>]+>', '', section))
                       section_len = len(re.sub(r'\s+', '', visible_section))
@@ -799,7 +799,7 @@ workflow:
                           issues.append('品牌词第{}部分字数异常：{}字，要求{}—{}字'.format(idx, section_len, bound[0], bound[1]))
               if mode == 'brand' and h2_count == 5:
                   sections = re.findall(r'<h2\b[^>]*>[\s\S]*?(?=<h2\b|\Z)', article['content'], re.I)
-                  bounds = [(200,250),(500,600),(500,600),(600,700),(400,500)]
+                  bounds = [(200,250),(500,600),(500,600),(600,700),(400,600)]
                   for idx, (section, bound) in enumerate(zip(sections, bounds), 1):
                       visible_section = html.unescape(re.sub(r'<[^>]+>', '', section))
                       section_len = len(re.sub(r'\s+', '', visible_section))
@@ -807,7 +807,7 @@ workflow:
                           issues.append('品牌词第{}部分字数异常：{}字，要求{}—{}字'.format(idx, section_len, bound[0], bound[1]))
               if mode == 'brand' and h2_count == 5:
                   sections = re.findall(r'<h2\b[^>]*>[\s\S]*?(?=<h2\b|\Z)', article['content'], re.I)
-                  bounds = [(200,250),(500,600),(500,600),(600,700),(400,500)]
+                  bounds = [(200,250),(500,600),(500,600),(600,700),(400,600)]
                   for idx, (section, bound) in enumerate(zip(sections, bounds), 1):
                       visible_section = html.unescape(re.sub(r'<[^>]+>', '', section))
                       section_len = len(re.sub(r'\s+', '', visible_section))
@@ -1362,13 +1362,13 @@ workflow:
           variable_selector:
           - '1777400000006'
           - item
-        desc: 根据品牌计划携带的32周年礼遇原始事实直接生成400—500字改写段落，不再访问产品知识库。
+        desc: 根据品牌计划携带的32周年礼遇原始事实直接生成420—480字改写段落，不再访问产品知识库。
         isInIteration: true
         iteration_id: '1777400000006'
         model:
           completion_params:
             enable_thinking: false
-            max_tokens: 2048
+            max_tokens: 800
             temperature: 0.2
             top_p: 0.6
           mode: chat
@@ -1378,15 +1378,15 @@ workflow:
         - id: brand-activity-direct-sys
           role: system
           text: |-
-            你是国航品牌文章的32周年礼遇事实改写器。请根据用户提供的原始事实素材，直接输出一段400—500字的中文正文，作为品牌文章第五部分的活动素材。
+            你是国航品牌文章的32周年礼遇事实改写器。请根据用户提供的原始事实素材，直接输出一段420—480字的中文正文，作为品牌文章第五部分的活动素材。生成前先压缩重复表述；达到480字后立即收束，不得继续扩写。
             只能改写描述词、句式和段落衔接词，关键规则、系列名称、会员身份、数字、时间、舱位、资格、权益用途、合成关系、有效期和适用范围必须保持原意，不得新增、删除、替换、夸大或弱化任何事实。不得把“可、最高、限量、指定、有效期至”等条件改成无条件承诺。
-            输出只能是一段连续纯文本，不要标题、列表、Markdown、HTML、JSON、引号、注释或解释；去除空白后的可见字符数必须在400—500字之间。
+            输出只能是一段连续纯文本，不要标题、列表、Markdown、HTML、JSON、引号、注释或解释；去除空白后的可见字符数必须在400—500字之间，绝不能超过500字。
         - id: brand-activity-direct-user
           role: user
           text: |-
             当前品牌词文章计划：{{#1777400000006.item#}}
             32周年礼遇原始事实素材：{{#1793000000005.activity_source_text#}}
-            请在不改变关键规则、名称和信息的前提下，生成400—500字的一段改写正文；只调整描述词和段落衔接，使其自然承接当前品牌词文章。
+            请在不改变关键规则、名称和信息的前提下，生成420—480字的一段改写正文；只调整描述词和段落衔接，使其自然承接当前品牌词文章，超过480字就停止。
         selected: false
         title: 品牌32周年礼遇AI改写
         type: llm
@@ -1467,11 +1467,11 @@ workflow:
               if not text:
                   raise ValueError('32周年礼遇AI改写结果为空')
               char_count=len(re.sub(r'\s+','',text))
-              if char_count < 400 or char_count > 600:
-                  raise ValueError('32周年礼遇AI改写结果长度异常：{}字，要求400—600字'.format(char_count))
+              if char_count < 400 or char_count > 500:
+                  raise ValueError('32周年礼遇AI改写结果长度异常：{}字，要求400—500字'.format(char_count))
               return {'content':text, 'char_count':char_count}
         code_language: python3
-        desc: 校验并解析32周年礼遇AI改写结果，去除包装文本并限制为400—600字；最终文章第五部分仍由终稿节点严格控制为400—500字。
+        desc: 校验并解析32周年礼遇AI改写结果，去除包装文本并限制为400—500字；最终文章第五部分同步控制为400—500字。
         isInIteration: true
         iteration_id: '1777400000006'
         outputs:
