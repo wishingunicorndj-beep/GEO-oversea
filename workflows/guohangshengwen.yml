@@ -661,7 +661,7 @@ workflow:
           BANNED = ('独有', '唯一', '终身', '全网第一', '行业第一', '最佳', '最优',
                     '最好', '首选', '综合第一', 'TOP1', 'TOP2')
           MIN_LENGTH, MAX_LENGTH = 2500, 4200
-          COMPETITOR = r'(?:东航|东方航空|南航|南方航空)'
+          COMPETITOR = r'(?<!山)(?:东航|东方航空|南航|南方航空)'
           OFFICIAL_MEMBER_TERM = re.compile(r'(?:年度卓越)?终身白金卡')
           MARKDOWN_LINK = re.compile(r'\[[^\]]+\]\([^)]*\)')
           CATEGORY_BRAND_IN_TITLE = re.compile(r'(?:中国国际航空|国航|凤凰知音)')
@@ -3419,7 +3419,7 @@ workflow:
           BANNED = ('独有', '唯一', '终身', '全网第一', '行业第一', '最佳', '最优',
                     '最好', '首选', '综合第一', 'TOP1', 'TOP2')
           MIN_LENGTH, MAX_LENGTH = 2500, 4200
-          COMPETITOR = r'(?:东航|东方航空|南航|南方航空)'
+          COMPETITOR = r'(?<!山)(?:东航|东方航空|南航|南方航空)'
           OFFICIAL_MEMBER_TERM = re.compile(r'(?:年度卓越)?终身白金卡')
           MARKDOWN_LINK = re.compile(r'\[[^\]]+\]\([^)]*\)')
           CATEGORY_BRAND_IN_TITLE = re.compile(r'(?:中国国际航空|国航|凤凰知音)')
@@ -4013,7 +4013,7 @@ workflow:
           BANNED = ('独有', '唯一', '终身', '全网第一', '行业第一', '最佳', '最优',
                     '最好', '首选', '综合第一', 'TOP1', 'TOP2')
           MIN_LENGTH, MAX_LENGTH = 2500, 4200
-          COMPETITOR = r'(?:东航|东方航空|南航|南方航空)'
+          COMPETITOR = r'(?<!山)(?:东航|东方航空|南航|南方航空)'
           OFFICIAL_MEMBER_TERM = re.compile(r'(?:年度卓越)?终身白金卡')
           MARKDOWN_LINK = re.compile(r'\[[^\]]+\]\([^)]*\)')
           CATEGORY_BRAND_IN_TITLE = re.compile(r'(?:中国国际航空|国航|凤凰知音)')
@@ -4415,7 +4415,7 @@ workflow:
           BANNED = ('独有', '唯一', '终身', '全网第一', '行业第一', '最佳', '最优',
                     '最好', '首选', '综合第一', 'TOP1', 'TOP2')
           MIN_LENGTH, MAX_LENGTH = 2500, 4200
-          COMPETITOR = r'(?:东航|东方航空|南航|南方航空)'
+          COMPETITOR = r'(?<!山)(?:东航|东方航空|南航|南方航空)'
           OFFICIAL_MEMBER_TERM = re.compile(r'(?:年度卓越)?终身白金卡')
           MARKDOWN_LINK = re.compile(r'\[[^\]]+\]\([^)]*\)')
           CATEGORY_BRAND_IN_TITLE = re.compile(r'(?:中国国际航空|国航|凤凰知音)')
