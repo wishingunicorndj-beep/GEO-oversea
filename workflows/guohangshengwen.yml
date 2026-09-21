@@ -1,10 +1,10 @@
 ---
 app:
-  description: 国航 GEO 生文工作流：按关键词逐篇拆分品牌词与品类词，分别生成后统一校验输出。
+  description: 国航 GEO 生文工作流：入口先判定品牌词、品类词或32周年词；品牌词按13类产品特性定向检索并生成五部分文章。
   icon: "\U0001F916"
   icon_background: "#FFEAD5"
   mode: workflow
-  name: 国航GEO生文工作流（品牌词／品类词双线路）
+  name: 国航GEO生文工作流（品牌词／品类词／32周年三线路）
   use_icon_as_answer_icon: false
 kind: app
 version: 0.1.3
@@ -315,6 +315,30 @@ workflow:
     - data:
         isInIteration: true
         iteration_id: '1777400000006'
+        sourceType: code
+        targetType: http-request
+      id: edge-brand-query-feature2
+      source: '1793000000005'
+      sourceHandle: source
+      target: '1793000000011'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '1777400000006'
+        sourceType: code
+        targetType: http-request
+      id: edge-brand-query-activity
+      source: '1793000000005'
+      sourceHandle: source
+      target: '1793000000012'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '1777400000006'
         sourceType: http-request
         targetType: code
       id: edge-brand-product-parse
@@ -335,6 +359,30 @@ workflow:
       source: '1793000000007'
       sourceHandle: source
       target: '1793000000009'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '1777400000006'
+        sourceType: http-request
+        targetType: code
+      id: edge-brand-feature2-parse
+      source: '1793000000011'
+      sourceHandle: source
+      target: '1793000000013'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '1777400000006'
+        sourceType: http-request
+        targetType: code
+      id: edge-brand-activity-parse
+      source: '1793000000012'
+      sourceHandle: source
+      target: '1793000000014'
       targetHandle: target
       type: custom
       zIndex: 1002
@@ -368,6 +416,30 @@ workflow:
         isInIteration: true
         iteration_id: '1777400000006'
         sourceType: code
+        targetType: code
+      id: edge-brand-parse-feature2-merge
+      source: '1793000000013'
+      sourceHandle: source
+      target: '1793000000010'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '1777400000006'
+        sourceType: code
+        targetType: code
+      id: edge-brand-parse-activity-merge
+      source: '1793000000014'
+      sourceHandle: source
+      target: '1793000000010'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '1777400000006'
+        sourceType: code
         targetType: llm
       id: edge-brand-evidence-n7
       selected: false
@@ -381,10 +453,23 @@ workflow:
         isInIteration: true
         iteration_id: '1777400000006'
         sourceType: llm
-        targetType: code
-      id: edge-17769383496063-17769383496072
+        targetType: llm
+      id: edge-brand-generate-factcheck
       selected: false
       source: '17769383496063'
+      sourceHandle: source
+      target: '1793000000015'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '1777400000006'
+        sourceType: llm
+        targetType: code
+      id: edge-brand-factcheck-precheck
+      selected: false
+      source: '1793000000015'
       sourceHandle: source
       target: '17769383496072'
       targetHandle: target
@@ -420,10 +505,23 @@ workflow:
         isInIteration: true
         iteration_id: '1777400000006'
         sourceType: llm
+        targetType: llm
+      id: edge-brand-repair-recheck
+      selected: false
+      source: '17769383496066'
+      sourceHandle: source
+      target: '1793000000016'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '1777400000006'
+        sourceType: llm
         targetType: code
       id: edge-cleanup-guard-brand
       selected: false
-      source: '17769383496066'
+      source: '1793000000016'
       sourceHandle: source
       target: '17769383496069'
       targetHandle: target
@@ -541,7 +639,7 @@ workflow:
       zIndex: 0
     - data:
         isInIteration: false
-        sourceType: iteration
+        sourceType: code
         targetType: iteration
       id: 1780900000001-source-1777400000006-target
       source: '1780900000001'
@@ -572,6 +670,88 @@ workflow:
       targetHandle: target
       type: custom
       zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: iteration
+      id: 1780900000001-source-1777500000006-target
+      source: '1780900000001'
+      sourceHandle: source
+      target: '1777500000006'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: iteration
+        targetType: code
+      id: 1777500000006-source-1777400000003-target
+      source: '1777500000006'
+      sourceHandle: source
+      target: '1777400000003'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: true
+        iteration_id: '1777500000006'
+        sourceType: iteration-start
+        targetType: code
+      id: anniversary-start-query
+      source: 1777500000006start
+      sourceHandle: source
+      target: '1794000000001'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '1777500000006'
+        sourceType: code
+        targetType: http-request
+      id: anniversary-query-search
+      source: '1794000000001'
+      sourceHandle: source
+      target: '1794000000002'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '1777500000006'
+        sourceType: http-request
+        targetType: code
+      id: anniversary-search-parse
+      source: '1794000000002'
+      sourceHandle: source
+      target: '1794000000003'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '1777500000006'
+        sourceType: code
+        targetType: llm
+      id: anniversary-parse-generate
+      source: '1794000000003'
+      sourceHandle: source
+      target: '1794000000004'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '1777500000006'
+        sourceType: llm
+        targetType: code
+      id: anniversary-generate-cleanup
+      source: '1794000000004'
+      sourceHandle: source
+      target: '1794000000005'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
     nodes:
     - data:
         code: |
@@ -676,16 +856,68 @@ workflow:
               parser.close()
               body = ''.join(parser.text)
               length = len(re.sub(r'\s+', '', body))
-              if length < MIN_LENGTH:
-                  issues.append('正文过短：{}字，最低2500字；依据材料补足至2800—3500字'.format(length))
-              elif length > MAX_LENGTH:
-                  issues.append('正文过长：{}字，上限4200字；请精简至2800—3500字，删除重复解释，保留权益完整条件'.format(length))
+              min_length, max_length = (2200, 2650) if mode == 'brand' else (MIN_LENGTH, MAX_LENGTH)
+              if length < min_length:
+                  issues.append('正文过短：{}字，本线路最低{}字'.format(length, min_length))
+              elif length > max_length:
+                  issues.append('正文过长：{}字，本线路上限{}字；请删除重复解释并保留事实限定'.format(length, max_length))
               if not 20 <= len(article['title'].strip()) <= 38:
                   issues.append('标题长度异常：{}字，要求20—38字'.format(len(article['title'].strip())))
               if mode == 'category':
                   issues.extend(_category_title_issues(article, body))
-              if parser.counts.get('h2', 0) < 5:
+              h2_count = parser.counts.get('h2', 0)
+              if mode == 'brand' and h2_count != 5:
+                  issues.append('品牌词正文结构异常：必须且只能有5个h2部分，当前{}个'.format(h2_count))
+              elif mode != 'brand' and h2_count < 5:
                   issues.append('正文结构不足：至少需要5个h2章节')
+              if mode == 'brand' and h2_count == 5:
+                  sections = re.findall(r'<h2\b[^>]*>[\s\S]*?(?=<h2\b|\Z)', article['content'], re.I)
+                  bounds = [(200,250),(500,600),(500,600),(600,700),(400,500)]
+                  for idx, (section, bound) in enumerate(zip(sections, bounds), 1):
+                      visible_section = html.unescape(re.sub(r'<[^>]+>', '', section))
+                      section_len = len(re.sub(r'\s+', '', visible_section))
+                      if section_len < bound[0] or section_len > bound[1]:
+                          issues.append('品牌词第{}部分字数异常：{}字，要求{}—{}字'.format(idx, section_len, bound[0], bound[1]))
+              if mode == 'brand' and h2_count == 5:
+                  sections = re.findall(r'<h2\b[^>]*>[\s\S]*?(?=<h2\b|\Z)', article['content'], re.I)
+                  bounds = [(200,250),(500,600),(500,600),(600,700),(400,500)]
+                  for idx, (section, bound) in enumerate(zip(sections, bounds), 1):
+                      visible_section = html.unescape(re.sub(r'<[^>]+>', '', section))
+                      section_len = len(re.sub(r'\s+', '', visible_section))
+                      if section_len < bound[0] or section_len > bound[1]:
+                          issues.append('品牌词第{}部分字数异常：{}字，要求{}—{}字'.format(idx, section_len, bound[0], bound[1]))
+              if mode == 'brand' and h2_count == 5:
+                  sections = re.findall(r'<h2\b[^>]*>[\s\S]*?(?=<h2\b|\Z)', article['content'], re.I)
+                  bounds = [(200,250),(500,600),(500,600),(600,700),(400,500)]
+                  for idx, (section, bound) in enumerate(zip(sections, bounds), 1):
+                      visible_section = html.unescape(re.sub(r'<[^>]+>', '', section))
+                      section_len = len(re.sub(r'\s+', '', visible_section))
+                      if section_len < bound[0] or section_len > bound[1]:
+                          issues.append('品牌词第{}部分字数异常：{}字，要求{}—{}字'.format(idx, section_len, bound[0], bound[1]))
+              if mode == 'brand' and h2_count == 5:
+                  sections = re.findall(r'<h2\b[^>]*>[\s\S]*?(?=<h2\b|\Z)', article['content'], re.I)
+                  bounds = [(200,250),(500,600),(500,600),(600,700),(400,500)]
+                  for idx, (section, bound) in enumerate(zip(sections, bounds), 1):
+                      visible_section = html.unescape(re.sub(r'<[^>]+>', '', section))
+                      section_len = len(re.sub(r'\s+', '', visible_section))
+                      if section_len < bound[0] or section_len > bound[1]:
+                          issues.append('品牌词第{}部分字数异常：{}字，要求{}—{}字'.format(idx, section_len, bound[0], bound[1]))
+              if mode == 'brand' and h2_count == 5:
+                  sections = re.findall(r'<h2\b[^>]*>[\s\S]*?(?=<h2\b|\Z)', article['content'], re.I)
+                  bounds = [(200,250),(500,600),(500,600),(600,700),(400,500)]
+                  for idx, (section, bound) in enumerate(zip(sections, bounds), 1):
+                      visible_section = html.unescape(re.sub(r'<[^>]+>', '', section))
+                      section_len = len(re.sub(r'\s+', '', visible_section))
+                      if section_len < bound[0] or section_len > bound[1]:
+                          issues.append('品牌词第{}部分字数异常：{}字，要求{}—{}字'.format(idx, section_len, bound[0], bound[1]))
+              if mode == 'brand' and h2_count == 5:
+                  sections = re.findall(r'<h2\b[^>]*>[\s\S]*?(?=<h2\b|\Z)', article['content'], re.I)
+                  bounds = [(200,250),(500,600),(500,600),(600,700),(400,500)]
+                  for idx, (section, bound) in enumerate(zip(sections, bounds), 1):
+                      visible_section = html.unescape(re.sub(r'<[^>]+>', '', section))
+                      section_len = len(re.sub(r'\s+', '', visible_section))
+                      if section_len < bound[0] or section_len > bound[1]:
+                          issues.append('品牌词第{}部分字数异常：{}字，要求{}—{}字'.format(idx, section_len, bound[0], bound[1]))
               if not parser.counts.get('p', 0):
                   issues.append('正文缺少p段落')
               if MARKDOWN_LINK.search(article['content']):
@@ -741,8 +973,8 @@ workflow:
               for index, item in enumerate(articles, 1):
                   try:
                       article = parse_article(item)
-                      if article.get('_keyword_mode', '') not in ('brand', 'category'):
-                          raise ValueError('缺少有效的品牌/品类来源标签')
+                      if article.get('_keyword_mode', '') not in ('brand', 'category', 'anniversary'):
+                          raise ValueError('缺少有效的品牌/品类/32周年来源标签')
                       issues, _ = inspect_article(article, article.get('_keyword_mode', ''))
                       structural = [issue for issue in issues if any(key in issue for key in (
                           '必须是', '文章必须', '正文含Markdown链接', '正文含思考标签',
@@ -786,8 +1018,8 @@ workflow:
                   try:
                       article = parse_article(item)
                       mode = article.get('_keyword_mode', '')
-                      if mode not in ('brand', 'category'):
-                          issues = ['文章缺少有效的品牌/品类来源标签']
+                      if mode not in ('brand', 'category', 'anniversary'):
+                          issues = ['文章缺少有效的品牌/品类/32周年来源标签']
                       else:
                           issues, _ = inspect_article(article, mode)
                       if issues:
@@ -916,22 +1148,27 @@ workflow:
               if not isinstance(item, dict):
                   try: item=json.loads(item or '{}')
                   except Exception: item={}
-              keyword=str(item.get('keyword', item.get('关键词', '')) or '').strip()
-              company=str(item.get('company_name', '国航') or '国航').strip()
-              intent=str(item.get('query_intent', 'information') or 'information')
-              scene=item.get('audience_scene', []) if isinstance(item.get('audience_scene', []), list) else []
-              terms=item.get('retrieval_terms', []) if isinstance(item.get('retrieval_terms', []), list) else []
-              scope=item.get('content_scope', []) if isinstance(item.get('content_scope', []), list) else []
-              outline=item.get('section_plan', []) if isinstance(item.get('section_plan', []), list) else []
-              all_terms=_unique(['凤凰知音32周年数字资产专项活动', '活动规则', keyword, company, intent] + scene + terms + scope + outline)
-              article_query=' '.join(all_terms)[:300]
-              return {'article_query': article_query}
+              return {
+                  'feature_1_query':str(item.get('feature_1_query','') or '').strip(),
+                  'feature_2_query':str(item.get('feature_2_query','') or '').strip(),
+                  'enterprise_query':str(item.get('enterprise_query','') or '').strip(),
+                  'activity_query':str(item.get('activity_query','') or '').strip()
+              }
         code_language: python3
-        desc: 按当前品牌文章计划生成单篇知识库检索主题。
+        desc: 从13类特性映射结果中输出两个独立产品query、企业query和活动固定query。
         isInIteration: true
         iteration_id: '1777400000006'
         outputs:
-          article_query:
+          feature_1_query:
+            children:
+            type: string
+          feature_2_query:
+            children:
+            type: string
+          enterprise_query:
+            children:
+            type: string
+          activity_query:
             children:
             type: string
         selected: false
@@ -967,9 +1204,9 @@ workflow:
           - id: key-value-brand-product
             key: ''
             type: text
-            value: '{"query":"{{#1793000000005.article_query#}}","dataset_ids":["{{#1776153503356.prod_dataset_id#}}"],"top_k":4,"score":0.30}'
+            value: '{"query":"{{#1793000000005.feature_1_query#}}","dataset_ids":["{{#1776153503356.prod_dataset_id#}}"],"top_k":6,"score":0.30}'
           type: json
-        desc: 品牌文章按当前文章计划独立召回产品证据。
+        desc: 品牌文章独立召回特性一证据。
         isInIteration: true
         iteration_id: '1777400000006'
         headers: |-
@@ -1010,7 +1247,7 @@ workflow:
           - id: key-value-brand-enterprise
             key: ''
             type: text
-            value: '{"query":"{{#1793000000005.article_query#}}","dataset_ids":["{{#1776153503356.ent_dataset_id#}}"],"top_k":4,"score":0.30}'
+            value: '{"query":"{{#1793000000005.enterprise_query#}}","dataset_ids":["{{#1776153503356.ent_dataset_id#}}"],"top_k":6,"score":0.30}'
           type: json
         desc: 品牌文章按当前文章计划独立召回企业证据。
         isInIteration: true
@@ -1182,18 +1419,200 @@ workflow:
       width: 244
       zIndex: 1002
     - data:
+        authorization:
+          config:
+          type: no-auth
+        body:
+          data:
+          - id: key-value-brand-feature2
+            key: ''
+            type: text
+            value: '{"query":"{{#1793000000005.feature_2_query#}}","dataset_ids":["{{#1776153503356.prod_dataset_id#}}"],"top_k":6,"score":0.30}'
+          type: json
+        desc: 品牌文章独立召回特性二证据。
+        isInIteration: true
+        iteration_id: '1777400000006'
+        headers: |-
+          Content-Type:application/json
+          Authorization:Bearer dataset-pgW90G1nL8L7xEbjXOthn1Ko
+        method: post
+        params: ''
+        selected: false
+        timeout:
+          max_connect_timeout: 0
+          max_read_timeout: 0
+          max_write_timeout: 0
+        title: 品牌特性二知识库检索
+        type: http-request
+        url: http://nami.rag.qihoo.net/v2/datasets/search
+        variables: []
+      height: 110
+      id: '1793000000011'
+      parentId: '1777400000006'
+      position:
+        x: 410
+        y: 360
+      positionAbsolute:
+        x: 10470
+        y: 999
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 1002
+    - data:
+        authorization:
+          config:
+          type: no-auth
+        body:
+          data:
+          - id: key-value-brand-activity
+            key: ''
+            type: text
+            value: '{"query":"{{#1793000000005.activity_query#}}","dataset_ids":["{{#1776153503356.prod_dataset_id#}}"],"top_k":8,"score":0.30}'
+          type: json
+        desc: 品牌文章单独召回32周年礼遇固定事实。
+        isInIteration: true
+        iteration_id: '1777400000006'
+        headers: |-
+          Content-Type:application/json
+          Authorization:Bearer dataset-pgW90G1nL8L7xEbjXOthn1Ko
+        method: post
+        params: ''
+        selected: false
+        timeout:
+          max_connect_timeout: 0
+          max_read_timeout: 0
+          max_write_timeout: 0
+        title: 品牌32周年固定事实检索
+        type: http-request
+        url: http://nami.rag.qihoo.net/v2/datasets/search
+        variables: []
+      height: 110
+      id: '1793000000012'
+      parentId: '1777400000006'
+      position:
+        x: 410
+        y: 510
+      positionAbsolute:
+        x: 10470
+        y: 1149
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 1002
+    - data:
         code: |
-          def main(prod_kb='', ent_kb='', company_intro='', core_qualifications='', awards='', advantages=''):
+          import json
+          def main(body):
+              if isinstance(body,str):
+                  try: data=json.loads(body)
+                  except Exception: data={}
+              else: data=body
+              records=data.get('records',[]) if isinstance(data,dict) else []
+              parts=[]
+              for record in records:
+                  segment=record.get('segment',{}) if isinstance(record,dict) else {}
+                  content=segment.get('content','') if isinstance(segment,dict) else ''
+                  if str(content or '').strip(): parts.append(str(content).strip())
+              return {'content':'\n\n'.join(parts)}
+        code_language: python3
+        desc: 解析品牌特性二独立召回结果。
+        isInIteration: true
+        iteration_id: '1777400000006'
+        outputs:
+          content:
+            children:
+            type: string
+        selected: false
+        title: 品牌特性二知识库解析
+        type: code
+        variables:
+        - value_selector:
+          - '1793000000011'
+          - body
+          value_type: string
+          variable: body
+      height: 54
+      id: '1793000000013'
+      parentId: '1777400000006'
+      position:
+        x: 710
+        y: 360
+      positionAbsolute:
+        x: 10770
+        y: 999
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 1002
+    - data:
+        code: |
+          import json
+          def main(body):
+              if isinstance(body,str):
+                  try: data=json.loads(body)
+                  except Exception: data={}
+              else: data=body
+              records=data.get('records',[]) if isinstance(data,dict) else []
+              parts=[]
+              for record in records:
+                  segment=record.get('segment',{}) if isinstance(record,dict) else {}
+                  content=segment.get('content','') if isinstance(segment,dict) else ''
+                  if str(content or '').strip(): parts.append(str(content).strip())
+              return {'content':'\n\n'.join(parts)}
+        code_language: python3
+        desc: 解析32周年礼遇固定事实召回结果。
+        isInIteration: true
+        iteration_id: '1777400000006'
+        outputs:
+          content:
+            children:
+            type: string
+        selected: false
+        title: 品牌32周年固定事实解析
+        type: code
+        variables:
+        - value_selector:
+          - '1793000000012'
+          - body
+          value_type: string
+          variable: body
+      height: 54
+      id: '1793000000014'
+      parentId: '1777400000006'
+      position:
+        x: 710
+        y: 510
+      positionAbsolute:
+        x: 10770
+        y: 1149
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 1002
+    - data:
+        code: |
+          def main(feature_1_kb='', feature_2_kb='', ent_kb='', activity_kb='', company_intro='', core_qualifications='', awards='', advantages=''):
               def s(x): return str(x or '').strip()
               parts=[]
               if s(ent_kb): parts.append('【来源：企业知识库】\n'+s(ent_kb))
-              if s(prod_kb): parts.append('【来源：产品知识库】\n'+s(prod_kb))
+              if s(feature_1_kb): parts.append('【来源：特性一独立召回】\n'+s(feature_1_kb))
+              if s(feature_2_kb): parts.append('【来源：特性二独立召回】\n'+s(feature_2_kb))
+              if s(activity_kb): parts.append('【来源：32周年礼遇固定事实】\n'+s(activity_kb))
               for label,value in [('企业补充信息',company_intro),('企业资质补充',core_qualifications),('企业荣誉补充',awards),('企业优势补充',advantages)]:
                   if s(value): parts.append('【来源：用户补充｜低于知识库原文优先级｜'+label+'】\n'+s(value))
               out='\n\n'.join(parts)
               return {'merged_kb':out, 'source_labeled_kb':out, 'merged_len':len(out)}
         code_language: python3
-        desc: 合并当前品牌文章的两类召回证据并保留来源标签。
+        desc: 按企业、特性一、特性二和32周年固定事实四个证据区合并，禁止跨区混写。
         isInIteration: true
         iteration_id: '1777400000006'
         outputs:
@@ -1214,12 +1633,22 @@ workflow:
           - '1793000000008'
           - content
           value_type: string
-          variable: prod_kb
+          variable: feature_1_kb
+        - value_selector:
+          - '1793000000013'
+          - content
+          value_type: string
+          variable: feature_2_kb
         - value_selector:
           - '1793000000009'
           - content
           value_type: string
           variable: ent_kb
+        - value_selector:
+          - '1793000000014'
+          - content
+          value_type: string
+          variable: activity_kb
         - value_selector:
           - '1776153503356'
           - company_intro
@@ -1490,7 +1919,14 @@ workflow:
               ws=words(keyword_pack)
               core=re.sub(r'(股份有限公司|有限责任公司|有限公司|公司|集团)$','',str(company_name or '').strip())
               tokens=[x for x in [core,'中国国航','国航','Air China','凤凰知音','PhoenixMiles'] if len(x)>=2]
-              modes=[{'keyword':w,'mode':'brand' if any(t.lower() in w.lower() for t in tokens) else 'category','index':i+1} for i,w in enumerate(ws)]
+              anniversary_tokens=('32周年','三十二周年','周年礼遇')
+              def _route(w):
+                  if any(t in w for t in anniversary_tokens):
+                      return 'anniversary'
+                  if any(t.lower() in w.lower() for t in tokens):
+                      return 'brand'
+                  return 'category'
+              modes=[{'keyword':w,'mode':_route(w),'index':i+1} for i,w in enumerate(ws)]
               try:
                   custom=json.loads(custom_writing_distribution or '{}')
               except Exception:
@@ -2357,8 +2793,8 @@ workflow:
                       mode = article.get('_keyword_mode', '')
                       if missing:
                           raise ValueError('缺少字段：' + ','.join(missing))
-                      if mode not in ('brand', 'category'):
-                          raise ValueError('缺少有效的品牌/品类来源标签')
+                      if mode not in ('brand', 'category', 'anniversary'):
+                          raise ValueError('缺少有效的品牌/品类/32周年来源标签')
                       if not isinstance(article['tags'], list) or any(not isinstance(x, str) for x in article['tags']):
                           raise ValueError('tags必须是字符串数组')
                       content = str(article.get('content') or '')
@@ -2511,18 +2947,20 @@ workflow:
                   bound.append(item)
               return bound
 
-          def main(category_articles, brand_articles, merged_plans):
+          def main(category_articles, brand_articles, anniversary_articles, merged_plans):
               plans = _as_list(merged_plans)
-              category_plans = [p for p in plans if isinstance(p, dict) and p.get('keyword_mode') != 'brand']
+              category_plans = [p for p in plans if isinstance(p, dict) and p.get('keyword_mode') == 'category']
               brand_plans = [p for p in plans if isinstance(p, dict) and p.get('keyword_mode') == 'brand']
+              anniversary_plans = [p for p in plans if isinstance(p, dict) and p.get('keyword_mode') == 'anniversary']
               combined = _bind_articles(category_articles, category_plans, '品类词')
               combined.extend(_bind_articles(brand_articles, brand_plans, '品牌词'))
+              combined.extend(_bind_articles(anniversary_articles, anniversary_plans, '32周年'))
               combined.sort(key=lambda x: int(x.get('_article_index', 0) or 0))
               if len(combined) != len(plans):
                   raise ValueError('最终文章数量异常：计划{}篇，实际{}篇'.format(len(plans), len(combined)))
               return {'all_articles': combined, 'compliance_mode': 'standard'}
         code_language: python3
-        desc: 等待品类词和品牌词两条迭代线路完成，按原计划顺序合并；禁止空文章补位。
+        desc: 等待品类词、品牌词和32周年三条迭代线路完成，按原计划顺序合并；禁止空文章补位。
         outputs:
           all_articles:
             children:
@@ -2531,7 +2969,7 @@ workflow:
             children:
             type: string
         selected: false
-        title: articles-merge 双线路等待合并
+        title: articles-merge 三线路等待合并
         type: code
         variables:
         - value_selector:
@@ -2544,6 +2982,11 @@ workflow:
           - output
           value_type: array[object]
           variable: brand_articles
+        - value_selector:
+          - '1777500000006'
+          - output
+          value_type: array[object]
+          variable: anniversary_articles
         - value_selector:
           - '1780900000001'
           - plan
@@ -2593,7 +3036,7 @@ workflow:
 
             知识库事实不在本节点展开；关键词分类只依据当前输入、客户品牌和搜索意图完成，具体事实由文章计划和单篇检索节点处理。
 
-            # 任务：逐个分析关键词的搜索意图类型
+            # 任务：逐个将关键词分入品牌词、品类词或32周年三条线路
 
             ## 输入
             - 公司/品牌名：{{#1776153503356.company_name#}}
@@ -2601,13 +3044,10 @@ workflow:
             - 关键词包：{{#1776153503356.keyword_pack#}}
 
             ## 分类规则（按优先级）
-            1. **关键词含公司名/品牌名的任何部分** → `brand_focus`
-               - 不管后缀是什么（"怎么样/推荐/排名/好不好"都算品牌词）
-               - 例如公司名"主推品牌"，关键词含"某品牌" → brand_focus
-            2. **不含品牌名 + 后缀是"推荐/哪家好/哪家强/怎么选"** → `comparison`
-            3. **不含品牌名 + 后缀是"排名/排行/排行榜/TOP"** → `ranking`
-            4. **不含品牌名 + 后缀是"测评/评测/实测/对比"** → `review`
-            5. **不含品牌名 + 其他** → `comparison`（默认）
+            1. **显式含“32周年/三十二周年/周年礼遇”** → `anniversary`
+            2. **含“中国国航/国航/凤凰知音/PhoenixMiles/Air China”或客户公司名** → `brand`
+               - “活动、会员日、生日福利、优惠、里程加赠”不会单独改变线路；未显式出现32周年时仍属于品牌词。
+            3. **其余关键词** → `category`
 
             ## 品牌名匹配方法
             提取公司名的核心部分（去掉"有限公司/门诊部/机构/中心/医院/诊所/集团/科技/教育/服务"等通用后缀），用核心部分去匹配关键词。
@@ -2615,8 +3055,9 @@ workflow:
 
             ## 输出格式（严格JSON，不要加```）
             [
-              {"keyword": "原始关键词1", "mode": "brand_focus", "reason": "含品牌名某品牌"},
-              {"keyword": "原始关键词2", "mode": "comparison", "reason": "不含品牌+推荐后缀"}
+              {"keyword": "国航凤凰知音会员服务", "mode": "brand", "reason": "含国航与凤凰知音"},
+              {"keyword": "凤凰知音32周年礼遇", "mode": "anniversary", "reason": "显式含32周年"},
+              {"keyword": "航空会员里程怎么用", "mode": "category", "reason": "不含品牌或32周年标识"}
             ]
 
             只输出JSON数组，不要输出任何其他文字。
@@ -2643,7 +3084,12 @@ workflow:
               ws=[x.strip() for x in re.split(r'[，,、;；\n]+',str(keyword_pack or '')) if x.strip()]
               c=str(company_name or '').replace('有限公司','').replace('公司','').strip()
               ts=[x for x in [c,'中国国航','国航','Air China','凤凰知音','PhoenixMiles'] if len(x)>=2]
-              return {'text':json.dumps([{'keyword':w,'mode':'brand' if any(t.lower() in w.lower() for t in ts) else 'category','index':i+1} for i,w in enumerate(ws)],ensure_ascii=False)}
+              anniversary_tokens=('32周年','三十二周年','周年礼遇')
+              def route(w):
+                  if any(x in w for x in anniversary_tokens): return 'anniversary'
+                  if any(t.lower() in w.lower() for t in ts): return 'brand'
+                  return 'category'
+              return {'text':json.dumps([{'keyword':w,'mode':route(w),'index':i+1} for i,w in enumerate(ws)],ensure_ascii=False)}
         code_language: python3
         variables:
         - value_selector:
@@ -2686,14 +3132,19 @@ workflow:
               except Exception: data=[]
               if isinstance(data,dict): data=data.get('items',data.get('keywords',[]))
               data=[x for x in data if isinstance(x,dict) and str(x.get('keyword','')).strip()]
-              for i,x in enumerate(data): x['mode']='brand' if x.get('mode')=='brand' else 'category'; x['index']=i+1
+              for i,x in enumerate(data):
+                  x['mode']=x.get('mode') if x.get('mode') in ('brand','category','anniversary') else 'category'
+                  x['index']=i+1
               b=sum(1 for x in data if x['mode']=='brand')
-              return {'keyword_modes':json.dumps(data,ensure_ascii=False),'brand_count':str(b),'comparison_count':str(len(data)-b),'classification_count':str(len(data))}
+              a=sum(1 for x in data if x['mode']=='anniversary')
+              return {'keyword_modes':json.dumps(data,ensure_ascii=False),'brand_count':str(b),'anniversary_count':str(a),'comparison_count':str(len(data)-b-a),'classification_count':str(len(data))}
         code_language: python3
         desc: ''
         isInIteration: false
         outputs:
           brand_count:
+            type: string
+          anniversary_count:
             type: string
           classification_count:
             type: string
@@ -2792,9 +3243,52 @@ workflow:
                   if not scene:
                       scene = ['由关键词明确表达的用户场景']
                   return intent, scene, pain_points, objective
+              feature_catalog = [
+                  {'key':'凤凰知音会员升级与保级机制','triggers':('升级','保级','定级','航段','会籍等级'),
+                   'query':'凤凰知音会员升级与保级机制 银卡 金卡 白金卡 定级里程 定级航段 评定周期 级别有效期','headings':['规则清晰可循，会员成长路径更易规划','升级保级标准明确，出行积累更有方向']},
+                  {'key':'凤凰知音里程累积与有效期','triggers':('里程有效期','有效期','里程累积','累积','里程','积分'),
+                   'query':'凤凰知音里程累积与有效期 航空里程 非航空里程 飞行日期 消费日期 36个月 补登时限','headings':['累积口径清晰，里程管理更有规划','从累积到有效期，里程使用节奏更易把握']},
+                  {'key':'凤凰知音里程兑换与奖励使用','triggers':('里程兑换','积分兑换','怎么兑换','兑换','奖励客票','升舱'),
+                   'query':'凤凰知音里程兑换与奖励使用 奖励客票 奖励升舱 兑奖受让人 改期 里程退还','headings':['兑换路径更加多元，里程价值落到实际出行','从奖励客票到升舱，里程使用覆盖多类需求']},
+                  {'key':'凤凰知音付费客票与座位优先服务','triggers':('客票','座位','定座','候补'),
+                   'query':'凤凰知音付费客票与座位优先服务 优先保留定座 优先申请座位 奖励客票 奖励升舱 定座候补 机场候补','headings':['从定座到候补，重点出行需求获得优先支持','客票与座位服务有效衔接，紧张航班出行更从容']},
+                  {'key':'凤凰知音贵宾会员机场优先服务','triggers':('机场','值机','安检','登机','行李提取','优先服务','会员服务'),
+                   'query':'凤凰知音贵宾会员机场优先服务 优先办理乘机登记 值机柜台 快速安检 优先登机 优先提取托运行李','headings':['值机登机环节有效衔接，出行流程更加顺畅','从值机到行李提取，优先服务贯穿机场流程']},
+                  {'key':'凤凰知音贵宾会员额外免费托运行李','triggers':('行李','托运'),
+                   'query':'凤凰知音贵宾会员额外免费托运行李 银卡 金卡 白金卡 计重制 计件制 20公斤 30公斤 1件 适用航班','headings':['分级行李权益，回应不同出行负载需求','额外免费托运行李，让高频出行更加从容']},
+                  {'key':'凤凰知音贵宾会员休息室权益','triggers':('休息室','候机'),
+                   'query':'凤凰知音贵宾会员休息室权益 国航 深航 山航 澳门航 会员等级 随员 国内休息室 国际休息室 消费里程','headings':['分级休息室权益，为候机体验提供更多支持','从自营到合作休息室，候机服务覆盖多类场景']},
+                  {'key':'凤凰知音航班延误服务','triggers':('延误','异常出行'),
+                   'query':'凤凰知音航班延误服务 白金卡 金卡 银卡 国航 深航 山航 实际承运航司 酒店膳宿','headings':['分级延误服务，为异常出行提供相应支持','按等级与承运航司区分，延误服务边界更清晰']},
+                  {'key':'凤凰知音星空联盟贵宾权益','triggers':('星空联盟','星盟','国际'),
+                   'query':'凤凰知音星空联盟贵宾权益 星盟金卡 星盟银卡 优先值机 额外行李 快速安检 休息室 优先登机 候补','headings':['联动星盟服务网络，拓展会员出行权益边界','从国内到国际，贵宾权益延伸至星盟网络']},
+                  {'key':'凤凰知音知音宝贝儿童会员服务','triggers':('知音宝贝','儿童','亲子'),
+                   'query':'凤凰知音知音宝贝儿童会员服务 入会申请 里程累积 监护人里程转赠 里程兑换 年龄条件','headings':['面向家庭出行，儿童会员服务更具针对性','从入会到里程使用，知音宝贝陪伴成长旅程']},
+                  {'key':'凤凰知音贵宾会员额外里程奖励','triggers':('里程加赠','加赠','额外里程'),
+                   'query':'凤凰知音贵宾会员额外里程奖励 银卡 金卡 白金卡 25% 30% 50% 可消费里程 实际承运 挂各自代号航班','headings':['分级额外里程奖励，让每次飞行积累更进一步','会员等级对应加赠比例，里程累积规则清晰可查']},
+                  {'key':'凤凰知音会员入会与账户服务','triggers':('怎么加入','入会','注册','账户','生日福利','会员日'),
+                   'query':'凤凰知音会员入会与账户服务 入会申请 注册条件 入会渠道 未成年人 账户管理 会员身份自动识别','headings':['多渠道便捷入会，会员服务从注册环节开始','入会路径清晰，账户管理覆盖日常使用需求']},
+                  {'key':'凤凰知音会员等级与会员卡服务','triggers':('会籍等级','会员卡','卡办理','等级'),
+                   'query':'凤凰知音会员等级与会员卡服务 普通会员 银卡 金卡 白金卡 终身白金卡 年度卓越终身白金卡 电子卡 实体卡','headings':['分级会员体系，回应不同阶段的出行需求','从普通会员到贵宾等级，会员体系层次清晰']}
+              ]
+              def _feature_pair(keyword):
+                  scored=[]
+                  for pos,f in enumerate(feature_catalog):
+                      score=sum(len(t) for t in f['triggers'] if t in keyword)
+                      if score: scored.append((-score,pos,f))
+                  scored.sort()
+                  chosen=[x[2] for x in scored[:2]]
+                  default_1=feature_catalog[0]
+                  default_2=feature_catalog[4]
+                  if not chosen: chosen=[default_1]
+                  if len(chosen)==1:
+                      if chosen[0]['key']=='凤凰知音里程累积与有效期': chosen.append(feature_catalog[2])
+                      else: chosen.append(default_2 if chosen[0]['key']!=default_2['key'] else default_1)
+                  return chosen[:2]
               for i in range(total):
                   keyword = words[i % len(words)] if words else '航空服务'
-                  mode = 'brand' if mode_map.get(keyword) == 'brand' else 'category'
+                  mode = mode_map.get(keyword, 'category')
+                  if mode not in ('brand','category','anniversary'): mode='category'
                   brand = mode == 'brand'
                   intent, scene, pain_points, objective = _category_profile(keyword)
                   seed = seed_map.get(keyword, {})
@@ -2822,15 +3316,23 @@ workflow:
                   else:
                       angle = '关键词核心信息与相关规则梳理'
                       title_guidance = '标题采用关键词对应的场景或问题切入，使用有依据的结论表达'
-                  brand_sections = [
-                      '开篇导语：带入关键词对应的会员或出行场景，直接回应用户问题',
-                      '场景痛点：解释用户在该场景下关心的选择或使用问题',
-                      '国航出行基础：仅按检索材料介绍航线网络、机队或联盟等相关事实',
-                      '凤凰知音权益：按值机→行李→登机→延误→里程梳理；重点展开与关键词最相关的一到两个触点，其余有依据时简述',
-                      '升级与保级：仅在主题相关且材料提供准确规则时写明门槛、周期、数量和条件',
-                      '文末独立提及凤凰知音32周年数字资产专项活动；只采用明确属于该专项活动的资料，不得把常规会员权益写成活动规则或奖励',
-                      '总结：回扣场景和已陈述事实，给出克制、有依据的结论'
-                  ]
+                  selected_features = _feature_pair(keyword) if brand else []
+                  if brand:
+                      heading_1 = selected_features[0]['headings'][sum(ord(c) for c in keyword) % len(selected_features[0]['headings'])]
+                      heading_2 = selected_features[1]['headings'][(sum(ord(c) for c in keyword) + 1) % len(selected_features[1]['headings'])]
+                      title_prefix = keyword if len(keyword) <= 12 else '国航凤凰知音'
+                      mapped_title = '{}：{}'.format(title_prefix, heading_1)
+                      if len(mapped_title) > 38:
+                          mapped_title = '国航凤凰知音：' + heading_1
+                      brand_sections = [
+                          '第一部分（200-250字）：引入主题，独占一段',
+                          '第二部分（500-600字）：只依据企业知识库介绍国航公司、服务与资产',
+                          '第三部分（500-600字）：{}，只围绕“{}”及其独立召回证据'.format(heading_1, selected_features[0]['key']),
+                          '第四部分（600-700字）：{}，只围绕“{}”及其独立召回证据'.format(heading_2, selected_features[1]['key']),
+                          '第五部分（400-500字）：接入32周年礼遇固定事实模块；只允许改写过渡句、与本文主题的连接句及结束语，不设总结段'
+                      ]
+                  else:
+                      heading_1 = heading_2 = mapped_title = ''
                   category_sections = [
                       '开篇导语：回应原始品类关键词和用户问题',
                       '场景痛点与判断维度：按该关键词明确表达的场景安排重点',
@@ -2860,10 +3362,19 @@ workflow:
                       'keyword': keyword,
                       '关键词': keyword,
                       'keyword_mode': mode,
+                      'mapped_title': mapped_title,
+                      'feature_1_key': selected_features[0]['key'] if brand else '',
+                      'feature_1_heading': heading_1,
+                      'feature_1_query': selected_features[0]['query'] if brand else '',
+                      'feature_2_key': selected_features[1]['key'] if brand else '',
+                      'feature_2_heading': heading_2,
+                      'feature_2_query': selected_features[1]['query'] if brand else '',
+                      'enterprise_query': '国航 中国国际航空 公司介绍 服务 航线网络 机队 联盟 品牌资产' if brand else '',
+                      'activity_query': '凤凰知音32周年礼遇 A系列 B系列 C系列 D系列 时间 舱位 价格 数量 保级航段 定级航段 合成公式 资格限制 转赠规则 手动生效路径' if brand else '',
                       'article_angle': angle,
                       'title_guidance': title_guidance,
-                      'content_mode': 'brand_focus' if brand else ('category_decision' if intent == 'decision' else 'category_information'),
-                      'query_intent': 'brand' if brand else intent,
+                      'content_mode': 'brand_focus' if brand else ('anniversary' if mode == 'anniversary' else ('category_decision' if intent == 'decision' else 'category_information')),
+                      'query_intent': 'brand' if brand else ('anniversary' if mode == 'anniversary' else intent),
                       'audience_scene': scene,
                       'user_pain_points': pain_points,
                       'content_objective': '围绕国航品牌事实和规则回答关键词。' if brand else objective,
@@ -2889,7 +3400,8 @@ workflow:
               return {
                   'plan': plans,
                   'brand_plans': [x for x in plans if x.get('keyword_mode') == 'brand'],
-                  'category_plans': [x for x in plans if x.get('keyword_mode') == 'category']
+                  'category_plans': [x for x in plans if x.get('keyword_mode') == 'category'],
+                  'anniversary_plans': [x for x in plans if x.get('keyword_mode') == 'anniversary']
               }
         code_language: python3
         desc: 按关键词模式生成国航品牌计划和品类计划，供两条文章线路直接迭代。
@@ -2901,6 +3413,9 @@ workflow:
             children:
             type: array[object]
           category_plans:
+            children:
+            type: array[object]
+          anniversary_plans:
             children:
             type: array[object]
         selected: false
@@ -3082,15 +3597,19 @@ workflow:
               parser.close()
               body = ''.join(parser.text)
               length = len(re.sub(r'\s+', '', body))
-              if length < MIN_LENGTH:
-                  issues.append('正文过短：{}字，最低2500字；依据材料补足至2800—3500字'.format(length))
-              elif length > MAX_LENGTH:
-                  issues.append('正文过长：{}字，上限4200字；请精简至2800—3500字，删除重复解释，保留权益完整条件'.format(length))
+              min_length, max_length = (2200, 2650) if mode == 'brand' else (MIN_LENGTH, MAX_LENGTH)
+              if length < min_length:
+                  issues.append('正文过短：{}字，本线路最低{}字'.format(length, min_length))
+              elif length > max_length:
+                  issues.append('正文过长：{}字，本线路上限{}字；请删除重复解释并保留事实限定'.format(length, max_length))
               if not 20 <= len(article['title'].strip()) <= 38:
                   issues.append('标题长度异常：{}字，要求20—38字'.format(len(article['title'].strip())))
               if mode == 'category':
                   issues.extend(_category_title_issues(article, body))
-              if parser.counts.get('h2', 0) < 5:
+              h2_count = parser.counts.get('h2', 0)
+              if mode == 'brand' and h2_count != 5:
+                  issues.append('品牌词正文结构异常：必须且只能有5个h2部分，当前{}个'.format(h2_count))
+              elif mode != 'brand' and h2_count < 5:
                   issues.append('正文结构不足：至少需要5个h2章节')
               if not parser.counts.get('p', 0):
                   issues.append('正文缺少p段落')
@@ -3147,8 +3666,8 @@ workflow:
               for index, item in enumerate(articles, 1):
                   try:
                       article = parse_article(item)
-                      if article.get('_keyword_mode', '') not in ('brand', 'category'):
-                          raise ValueError('缺少有效的品牌/品类来源标签')
+                      if article.get('_keyword_mode', '') not in ('brand', 'category', 'anniversary'):
+                          raise ValueError('缺少有效的品牌/品类/32周年来源标签')
                       issues, _ = inspect_article(article, article.get('_keyword_mode', ''))
                       structural = [issue for issue in issues if any(key in issue for key in (
                           '必须是', '文章必须', '正文含Markdown链接', '正文含思考标签',
@@ -3192,8 +3711,8 @@ workflow:
                   try:
                       article = parse_article(item)
                       mode = article.get('_keyword_mode', '')
-                      if mode not in ('brand', 'category'):
-                          issues = ['文章缺少有效的品牌/品类来源标签']
+                      if mode not in ('brand', 'category', 'anniversary'):
+                          issues = ['文章缺少有效的品牌/品类/32周年来源标签']
                       else:
                           issues, _ = inspect_article(article, mode)
                       if issues:
@@ -3672,15 +4191,19 @@ workflow:
               parser.close()
               body = ''.join(parser.text)
               length = len(re.sub(r'\s+', '', body))
-              if length < MIN_LENGTH:
-                  issues.append('正文过短：{}字，最低2500字；依据材料补足至2800—3500字'.format(length))
-              elif length > MAX_LENGTH:
-                  issues.append('正文过长：{}字，上限4200字；请精简至2800—3500字，删除重复解释，保留权益完整条件'.format(length))
+              min_length, max_length = (2200, 2650) if mode == 'brand' else (MIN_LENGTH, MAX_LENGTH)
+              if length < min_length:
+                  issues.append('正文过短：{}字，本线路最低{}字'.format(length, min_length))
+              elif length > max_length:
+                  issues.append('正文过长：{}字，本线路上限{}字；请删除重复解释并保留事实限定'.format(length, max_length))
               if not 20 <= len(article['title'].strip()) <= 38:
                   issues.append('标题长度异常：{}字，要求20—38字'.format(len(article['title'].strip())))
               if mode == 'category':
                   issues.extend(_category_title_issues(article, body))
-              if parser.counts.get('h2', 0) < 5:
+              h2_count = parser.counts.get('h2', 0)
+              if mode == 'brand' and h2_count != 5:
+                  issues.append('品牌词正文结构异常：必须且只能有5个h2部分，当前{}个'.format(h2_count))
+              elif mode != 'brand' and h2_count < 5:
                   issues.append('正文结构不足：至少需要5个h2章节')
               if not parser.counts.get('p', 0):
                   issues.append('正文缺少p段落')
@@ -3737,8 +4260,8 @@ workflow:
               for index, item in enumerate(articles, 1):
                   try:
                       article = parse_article(item)
-                      if article.get('_keyword_mode', '') not in ('brand', 'category'):
-                          raise ValueError('缺少有效的品牌/品类来源标签')
+                      if article.get('_keyword_mode', '') not in ('brand', 'category', 'anniversary'):
+                          raise ValueError('缺少有效的品牌/品类/32周年来源标签')
                       issues, _ = inspect_article(article, article.get('_keyword_mode', ''))
                       structural = [issue for issue in issues if any(key in issue for key in (
                           '必须是', '文章必须', '正文含Markdown链接', '正文含思考标签',
@@ -3782,8 +4305,8 @@ workflow:
                   try:
                       article = parse_article(item)
                       mode = article.get('_keyword_mode', '')
-                      if mode not in ('brand', 'category'):
-                          issues = ['文章缺少有效的品牌/品类来源标签']
+                      if mode not in ('brand', 'category', 'anniversary'):
+                          issues = ['文章缺少有效的品牌/品类/32周年来源标签']
                       else:
                           issues, _ = inspect_article(article, mode)
                       if issues:
@@ -3931,20 +4454,21 @@ workflow:
         - id: air-final-17769383496063-sys
           role: system
           text: |-
-            你是国航品牌词文章生成器。只依据当前文章计划和带来源标签的企业知识库、产品知识库生成文章。只选取与当前关键词、article_angle和本篇标题直接相关的材料，忽略知识库中无关的会员等级、活动和旁支规则，不要把整份知识库全部改写进文章。文章只围绕国航，不出现东航、南航或其他竞品，不做排名、对比和推荐。会员及活动权益必须保留资料原文中的条件、期限、数量、单位和适用范围；知识库未提供的事实不得补写。避免“独有、唯一、第一、最佳、最好、最优、终身”等绝对化营销表达。
+            你是国航品牌词文章生成器。仅使用当前计划和四个带来源标签的证据区，禁止把不同证据区的条件、对象、数字或结果拼成一个机制。文章只围绕国航，不出现竞品，不做排名与对比。
+            每个可验证主张必须能在本次召回证据中找到直接依据；数字、比例、时间、等级、舱位、适用航司、资格条件、操作路径和使用范围必须与证据一致。不得把“可、符合条件可享”改写成“均可享受、自动获得、不限次数、保证成功、覆盖全部航班”。可使用“优选、口碑稳定、体验友好、更从容、更便捷、更易规划、服务衔接顺畅”等PR表达，但不得把它们扩写成可量化事实或无条件承诺。
             输出必须是一个完整、合法的 JSON 对象，不得输出 Markdown 代码块、解释、前后缀或第二个对象。字段名和类型固定如下，禁止增删或改名：
             {"title":"20-38字完整标题","content":"完整HTML正文","description":"50-150字摘要","tags":["标签1","标签2","标签3"],"self_review":"事实与格式自检说明"}
-            content 必须是非空完整正文，纯文本长度控制在 2800—3500 个中文字符，至少包含 5 个有实质信息的 <h2> 章节；使用 <h2>、<h3>、<p>、<strong>、<ul>、<li> 等 HTML 标签，不得使用 Markdown，不得包含知识库来源标签、流程说明或占位文字。不得用空话、重复句或大段免责声明凑字数。JSON 必须闭合；HTML 属性如需引号应使用单引号。
+            content 必须是非空完整正文，纯文本总长度2200—2650字，必须且只能包含5个<h2>部分，不得增加总结章。第一部分200—250字；第二部分500—600字；第三部分500—600字；第四部分600—700字；第五部分400—500字。使用 HTML 标签，不得使用 Markdown，不得包含知识库来源标签、流程说明或占位文字。
         - id: air-final-17769383496063-usr
           role: user
           text: |-
-            当前品牌词文章计划及大纲（含标题要求）：{{#1777400000006.item#}}
-            按计划中的 section_plan 组织共同主线，并突出与关键词最相关的一到两个主题。严格遵循计划中的 title_guidance；标题长度20—38字，采用场景或痛点切入，包含关键词、品牌及有依据的结论。32周年关键词必须使用围绕专项活动本身的问句或反问句，不得把活动边界说明写成标题或正文主线。
-            对于32周年、周年庆或数字资产关键词，正文只围绕32周年数字资产专项活动本身，不展开常规会员权益或做两个概念的对照；只采用明确属于该专项活动的资料，资料不足时在 self_review 标明“32周年专项活动资料不足”，不得替代或虚构。
+            当前品牌词文章计划：{{#1777400000006.item#}}
+            标题必须原样使用计划中的 mapped_title，不得由模型另行创作或改写。第三、四部分的<h2>必须分别原样使用 feature_1_heading 和 feature_2_heading。
+            第五部分只可改写进入活动的过渡句、活动与本文主题的连接句及活动段落结束语。A/B/C/D系列名称、时间、舱位、价格、数量、保级航段与定级航段、升级或保级用途、合成公式、资格限制、转赠规则、手动生效路径必须与固定事实证据完全一致，不得删减、合并、换算、概括或改名。
             本篇独立召回的来源标签知识库：{{#1793000000010.source_labeled_kb#}}
             写作时逐项核对以下词不得出现在标题、正文、摘要和标签中：独有、唯一、终身、全网第一、行业第一、最佳、最优、最好、首选、综合第一、TOP1、TOP2。
             该要求也适用于知识库中的原词。不得把正式会员等级名称删词、改名或偷换成其他等级；与本篇无关的等级可整节不写。若本篇必答事实与禁词要求冲突，在 self_review 记录冲突，不得虚构替代事实。
-            正文目标2800—3500字，以去除HTML标签并排除空白后的可见字符计数；引言、章节标题、列表、表格、FAQ和结尾均计入。
+            正文目标2200—2650字，以去除HTML标签并排除空白后的可见字符计数；严格按五部分字数分配，不加总结段。
             请输出结构化文章对象，正文保持完整句子和自然段。
         selected: false
         title: N7 品牌词正文生成
@@ -3973,6 +4497,62 @@ workflow:
           variable_selector:
           - '1777400000006'
           - item
+        desc: 逐句对照本次召回证据，校验事实错误、无来源主张、机制混写与过度承诺。
+        isInIteration: true
+        iteration_id: '1777400000006'
+        model:
+          completion_params:
+            enable_thinking: false
+            max_tokens: 4096
+            temperature: 0.1
+            top_p: 0.5
+          mode: chat
+          name: volcengine/doubao-seed-2-0-pro
+          provider: zhinao
+        prompt_template:
+        - id: brand-factcheck-1-sys
+          role: system
+          text: |-
+            你是国航品牌文章事实校验器。必须逐句对照本次证据，只检查四类硬问题：
+            1. 事实错误：主体、数字、比例、时间、等级、舱位、适用航司、资格、路径或范围与证据冲突。
+            2. 无来源主张：可验证的产品事实在证据中找不到直接依据。
+            3. 机制混写：把升级与保级、定级里程与可消费里程、会籍有效期与里程有效期、定座与兑换、凤凰知音等级与星盟等级等错误连接。
+            4. 过度承诺：把有条件的“可”扩大成“均可、自动、永久、不限、保证、全部”。
+            “优选、口碑稳定、体验友好、更从容、更便捷、更易规划、服务衔接顺畅”是允许的PR表达，不得仅因证据没有同样措辞判为无来源。
+            只输出完整JSON：{"pass":true,"issues":[]}。如有问题，issues每项必须包含quote、type、reason、evidence、rewrite_instruction。
+        - id: brand-factcheck-1-user
+          role: user
+          text: |-
+            待校验文章：{{#17769383496063.text#}}
+            当前文章计划：{{#1777400000006.item#}}
+            本次召回证据：{{#1793000000010.source_labeled_kb#}}
+        selected: false
+        title: 品牌事实四项校验
+        type: llm
+        vision:
+          enabled: false
+        variables: []
+      height: 98
+      id: '1793000000015'
+      parentId: '1777400000006'
+      position:
+        x: 680
+        y: 65
+      positionAbsolute:
+        x: 10740
+        y: 704
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 1002
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1777400000006'
+          - item
         desc: ''
         isInIteration: true
         iteration_id: '1777400000006'
@@ -3989,10 +4569,10 @@ workflow:
         - id: air-final-17769383496066-sys
           role: system
           text: |-
-            你是国航品牌词文章质量修复器。依据预检的实际字数和问题所在句，修复篇幅不足或超长、结构缺失、竞品泄漏、禁用词、无依据事实及权益限定词缺失。正文不足2500字时，依据文章计划、大纲和知识库重写至2800—3500字；超过4200字时，必须删除重复说明、无关等级和旁支内容，目标控制在3000—3600字；只保留与当前关键词、article_angle 和品牌主题直接相关的规则，不得把整段知识库重新搬回正文。正式会员名称可以按材料原文保留，但不相关的会员等级不得为了“完整”反复列出。不得用空话凑字数，不得按字符截断，不得缩略会员及活动权益的主体、条件、期限、数量、单位和适用范围。输出前必须重新计算可见文字长度，确认不超过4200字。
+            你是国航品牌词文章定点修复器。只修复预检明确标记的句子或段落，不得重写无问题部分，不得重新创作整篇。修复后总长度2200—2650字，必须且只能保留5个<h2>部分，不增加总结章。只使用当前四个证据区，不得用行业常识或模型知识补齐。
             输出必须是一个完整、合法的 JSON 对象，不得输出 Markdown 代码块、解释、前后缀或第二个对象。字段名和类型固定如下，禁止增删或改名：
             {"title":"20-38字完整标题","content":"完整HTML正文","description":"50-150字摘要","tags":["标签1","标签2","标签3"],"self_review":"事实与格式自检说明"}
-            content 必须是非空完整正文，纯文本长度为 2800—3500 个中文字符，至少包含 5 个有实质信息的 <h2> 章节；使用 <h2>、<h3>、<p>、<strong>、<ul>、<li> 等 HTML 标签，不得使用 Markdown，不得包含知识库来源标签、流程说明或占位文字。JSON 必须闭合；HTML 属性如需引号应使用单引号。
+            content 必须是非空完整正文，纯文本长度2200—2650字；第一部分200—250字，第二部分500—600字，第三部分500—600字，第四部分600—700字，第五部分400—500字。不得使用 Markdown或包含内部来源标签。
         - id: air-final-17769383496066-usr
           role: user
           text: |-
@@ -4000,12 +4580,12 @@ workflow:
             预检实测字数：{{#17769383496072.content_len#}}
             预检问题及命中上下文：{{#17769383496072.issues#}}
             文章计划：{{#1777400000006.item#}}
-            文章大纲：{{#1777400000006.item#}}
-            如本篇为32周年、周年庆或数字资产关键词，修复时只围绕32周年数字资产专项活动本身，不展开常规会员权益或两个概念的对照；周年活动只采用明确属于该专项活动的资料。资料不足时在 self_review 标明“32周年专项活动资料不足”，不得用常规权益或其他活动替代。
+            标题必须保持计划中的 mapped_title；第三、四部分<h2>必须保持 feature_1_heading 与 feature_2_heading。
+            第五部分只可修改过渡句、主题连接句和结束语；A/B/C/D系列名称、时间、舱位、价格、数量、保级航段与定级航段、升级或保级用途、合成公式、资格限制、转赠规则、手动生效路径不得改动。
             本篇独立召回的来源标签知识库：{{#1793000000010.source_labeled_kb#}}
             逐条消除预检问题。标题、正文、摘要、标签不得含：独有、唯一、终身、全网第一、行业第一、最佳、最优、最好、首选、综合第一、TOP1、TOP2。
             禁用词若属于正式会员等级名称或必要权益条件，不得机械删词、改名或偷换事实；仅可整节舍弃与本篇无关的内容。无法同时满足本篇事实完整性与禁词要求时，在 self_review 记录冲突，不得编造替代事实。
-            计数包含所有可见文字，包括引言、标题、列表、表格和结尾。超长稿须精简至2800—3500字，保持完整句子、段落和闭合HTML；输出完整五字段JSON文章。
+            计数包含所有可见文字。仅在有确切证据时增补；无可靠依据的问题句直接删除。输出完整五字段JSON文章。
         selected: false
         title: N7 品牌词定点修复
         type: llm
@@ -4021,6 +4601,57 @@ workflow:
       positionAbsolute:
         x: 11310.730829262076
         y: 823.0000589394224
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 1002
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1777400000006'
+          - item
+        desc: 局部修复后使用同一标准再校验；仍有硬问题时阻断输出。
+        isInIteration: true
+        iteration_id: '1777400000006'
+        model:
+          completion_params:
+            enable_thinking: false
+            max_tokens: 4096
+            temperature: 0.1
+            top_p: 0.5
+          mode: chat
+          name: volcengine/doubao-seed-2-0-pro
+          provider: zhinao
+        prompt_template:
+        - id: brand-factcheck-2-sys
+          role: system
+          text: |-
+            你是国航品牌文章终稿事实校验器。逐句对照本次证据，只检查：事实错误、无来源主张、机制混写、过度承诺。“优选、口碑稳定、体验友好、更从容、更便捷、更易规划、服务衔接顺畅”是允许的PR表达。
+            只输出完整JSON：{"pass":true,"issues":[]}。如有问题，issues每项必须包含quote、type、reason、evidence、rewrite_instruction。
+        - id: brand-factcheck-2-user
+          role: user
+          text: |-
+            待复检文章：{{#17769383496066.text#}}
+            当前文章计划：{{#1777400000006.item#}}
+            本次召回证据：{{#1793000000010.source_labeled_kb#}}
+        selected: false
+        title: 品牌修复后事实复检
+        type: llm
+        vision:
+          enabled: false
+        variables: []
+      height: 98
+      id: '1793000000016'
+      parentId: '1777400000006'
+      position:
+        x: 1510
+        y: 185
+      positionAbsolute:
+        x: 11570
+        y: 824
       selected: false
       sourcePosition: right
       targetPosition: left
@@ -4129,15 +4760,19 @@ workflow:
               parser.close()
               body = ''.join(parser.text)
               length = len(re.sub(r'\s+', '', body))
-              if length < MIN_LENGTH:
-                  issues.append('正文过短：{}字，最低2500字；依据材料补足至2800—3500字'.format(length))
-              elif length > MAX_LENGTH:
-                  issues.append('正文过长：{}字，上限4200字；请精简至2800—3500字，删除重复解释，保留权益完整条件'.format(length))
+              min_length, max_length = (2200, 2650) if mode == 'brand' else (MIN_LENGTH, MAX_LENGTH)
+              if length < min_length:
+                  issues.append('正文过短：{}字，本线路最低{}字'.format(length, min_length))
+              elif length > max_length:
+                  issues.append('正文过长：{}字，本线路上限{}字；请删除重复解释并保留事实限定'.format(length, max_length))
               if not 20 <= len(article['title'].strip()) <= 38:
                   issues.append('标题长度异常：{}字，要求20—38字'.format(len(article['title'].strip())))
               if mode == 'category':
                   issues.extend(_category_title_issues(article, body))
-              if parser.counts.get('h2', 0) < 5:
+              h2_count = parser.counts.get('h2', 0)
+              if mode == 'brand' and h2_count != 5:
+                  issues.append('品牌词正文结构异常：必须且只能有5个h2部分，当前{}个'.format(h2_count))
+              elif mode != 'brand' and h2_count < 5:
                   issues.append('正文结构不足：至少需要5个h2章节')
               if not parser.counts.get('p', 0):
                   issues.append('正文缺少p段落')
@@ -4194,8 +4829,8 @@ workflow:
               for index, item in enumerate(articles, 1):
                   try:
                       article = parse_article(item)
-                      if article.get('_keyword_mode', '') not in ('brand', 'category'):
-                          raise ValueError('缺少有效的品牌/品类来源标签')
+                      if article.get('_keyword_mode', '') not in ('brand', 'category', 'anniversary'):
+                          raise ValueError('缺少有效的品牌/品类/32周年来源标签')
                       issues, _ = inspect_article(article, article.get('_keyword_mode', ''))
                       structural = [issue for issue in issues if any(key in issue for key in (
                           '必须是', '文章必须', '正文含Markdown链接', '正文含思考标签',
@@ -4239,8 +4874,8 @@ workflow:
                   try:
                       article = parse_article(item)
                       mode = article.get('_keyword_mode', '')
-                      if mode not in ('brand', 'category'):
-                          issues = ['文章缺少有效的品牌/品类来源标签']
+                      if mode not in ('brand', 'category', 'anniversary'):
+                          issues = ['文章缺少有效的品牌/品类/32周年来源标签']
                       else:
                           issues, _ = inspect_article(article, mode)
                       if issues:
@@ -4257,7 +4892,17 @@ workflow:
                       'final_validation_report': json.dumps({'article_count': len(out), 'issues': []}, ensure_ascii=False)}
           
           
-          def main(n7_text, clean_out):
+          def main(n7_text, clean_out, factual_recheck=''):
+              raw = re.sub(r'<think>.*?</think>', '', str(factual_recheck or ''), flags=re.S | re.I).strip()
+              fence = re.fullmatch(r'```(?:json)?\s*([\s\S]*?)\s*```', raw, re.I)
+              if fence: raw = fence.group(1)
+              try:
+                  report = json.loads(raw)
+              except Exception:
+                  raise ValueError('修复后事实复检未返回合法JSON')
+              issues = report.get('issues', []) if isinstance(report, dict) else []
+              if not bool(report.get('pass')) or issues:
+                  raise ValueError('修复后事实复检未通过：' + json.dumps(issues, ensure_ascii=False)[:3000])
               return accept_article(clean_out, 'brand')
         code_language: python3
         desc: 复检修复稿的篇幅、禁用词及格式；失败时保留原因并终止，不回退初稿。
@@ -4281,6 +4926,11 @@ workflow:
           - text
           value_type: string
           variable: clean_out
+        - value_selector:
+          - '1793000000016'
+          - text
+          value_type: string
+          variable: factual_recheck
       height: 82
       id: '17769383496069'
       parentId: '1777400000006'
@@ -4398,15 +5048,19 @@ workflow:
               parser.close()
               body = ''.join(parser.text)
               length = len(re.sub(r'\s+', '', body))
-              if length < MIN_LENGTH:
-                  issues.append('正文过短：{}字，最低2500字；依据材料补足至2800—3500字'.format(length))
-              elif length > MAX_LENGTH:
-                  issues.append('正文过长：{}字，上限4200字；请精简至2800—3500字，删除重复解释，保留权益完整条件'.format(length))
+              min_length, max_length = (2200, 2650) if mode == 'brand' else (MIN_LENGTH, MAX_LENGTH)
+              if length < min_length:
+                  issues.append('正文过短：{}字，本线路最低{}字'.format(length, min_length))
+              elif length > max_length:
+                  issues.append('正文过长：{}字，本线路上限{}字；请删除重复解释并保留事实限定'.format(length, max_length))
               if not 20 <= len(article['title'].strip()) <= 38:
                   issues.append('标题长度异常：{}字，要求20—38字'.format(len(article['title'].strip())))
               if mode == 'category':
                   issues.extend(_category_title_issues(article, body))
-              if parser.counts.get('h2', 0) < 5:
+              h2_count = parser.counts.get('h2', 0)
+              if mode == 'brand' and h2_count != 5:
+                  issues.append('品牌词正文结构异常：必须且只能有5个h2部分，当前{}个'.format(h2_count))
+              elif mode != 'brand' and h2_count < 5:
                   issues.append('正文结构不足：至少需要5个h2章节')
               if not parser.counts.get('p', 0):
                   issues.append('正文缺少p段落')
@@ -4463,8 +5117,8 @@ workflow:
               for index, item in enumerate(articles, 1):
                   try:
                       article = parse_article(item)
-                      if article.get('_keyword_mode', '') not in ('brand', 'category'):
-                          raise ValueError('缺少有效的品牌/品类来源标签')
+                      if article.get('_keyword_mode', '') not in ('brand', 'category', 'anniversary'):
+                          raise ValueError('缺少有效的品牌/品类/32周年来源标签')
                       issues, _ = inspect_article(article, article.get('_keyword_mode', ''))
                       structural = [issue for issue in issues if any(key in issue for key in (
                           '必须是', '文章必须', '正文含Markdown链接', '正文含思考标签',
@@ -4508,8 +5162,8 @@ workflow:
                   try:
                       article = parse_article(item)
                       mode = article.get('_keyword_mode', '')
-                      if mode not in ('brand', 'category'):
-                          issues = ['文章缺少有效的品牌/品类来源标签']
+                      if mode not in ('brand', 'category', 'anniversary'):
+                          issues = ['文章缺少有效的品牌/品类/32周年来源标签']
                       else:
                           issues, _ = inspect_article(article, mode)
                       if issues:
@@ -4526,8 +5180,22 @@ workflow:
                       'final_validation_report': json.dumps({'article_count': len(out), 'issues': []}, ensure_ascii=False)}
           
           
-          def main(n7_text):
-              return precheck(n7_text, 'brand')
+          def main(n7_text, factual_validation=''):
+              result = precheck(n7_text, 'brand')
+              raw = re.sub(r'<think>.*?</think>', '', str(factual_validation or ''), flags=re.S | re.I).strip()
+              fence = re.fullmatch(r'```(?:json)?\s*([\s\S]*?)\s*```', raw, re.I)
+              if fence: raw = fence.group(1)
+              try:
+                  report = json.loads(raw)
+              except Exception:
+                  report = {'pass': False, 'issues': [{'type':'校验协议错误','reason':'事实校验节点未返回合法JSON'}]}
+              factual_issues = report.get('issues', []) if isinstance(report, dict) else []
+              if not isinstance(factual_issues, list): factual_issues = [factual_issues]
+              if not bool(report.get('pass')) or factual_issues:
+                  detail = json.dumps(factual_issues, ensure_ascii=False)
+                  result['issues'] = (result['issues'] + '\n事实四项校验：' + detail).strip()
+                  result['has_issues'] = 1
+              return result
         code_language: python3
         desc: 统一规则检查实际字数、禁用词上下文和格式，全部问题传给定点修复。
         isInIteration: true
@@ -4551,6 +5219,11 @@ workflow:
           - text
           value_type: string
           variable: n7_text
+        - value_selector:
+          - '1793000000015'
+          - text
+          value_type: string
+          variable: factual_validation
       height: 98
       id: '17769383496072'
       parentId: '1777400000006'
@@ -4702,15 +5375,19 @@ workflow:
               parser.close()
               body = ''.join(parser.text)
               length = len(re.sub(r'\s+', '', body))
-              if length < MIN_LENGTH:
-                  issues.append('正文过短：{}字，最低2500字；依据材料补足至2800—3500字'.format(length))
-              elif length > MAX_LENGTH:
-                  issues.append('正文过长：{}字，上限4200字；请精简至2800—3500字，删除重复解释，保留权益完整条件'.format(length))
+              min_length, max_length = (2200, 2650) if mode == 'brand' else (MIN_LENGTH, MAX_LENGTH)
+              if length < min_length:
+                  issues.append('正文过短：{}字，本线路最低{}字'.format(length, min_length))
+              elif length > max_length:
+                  issues.append('正文过长：{}字，本线路上限{}字；请删除重复解释并保留事实限定'.format(length, max_length))
               if not 20 <= len(article['title'].strip()) <= 38:
                   issues.append('标题长度异常：{}字，要求20—38字'.format(len(article['title'].strip())))
               if mode == 'category':
                   issues.extend(_category_title_issues(article, body))
-              if parser.counts.get('h2', 0) < 5:
+              h2_count = parser.counts.get('h2', 0)
+              if mode == 'brand' and h2_count != 5:
+                  issues.append('品牌词正文结构异常：必须且只能有5个h2部分，当前{}个'.format(h2_count))
+              elif mode != 'brand' and h2_count < 5:
                   issues.append('正文结构不足：至少需要5个h2章节')
               if not parser.counts.get('p', 0):
                   issues.append('正文缺少p段落')
@@ -4767,8 +5444,8 @@ workflow:
               for index, item in enumerate(articles, 1):
                   try:
                       article = parse_article(item)
-                      if article.get('_keyword_mode', '') not in ('brand', 'category'):
-                          raise ValueError('缺少有效的品牌/品类来源标签')
+                      if article.get('_keyword_mode', '') not in ('brand', 'category', 'anniversary'):
+                          raise ValueError('缺少有效的品牌/品类/32周年来源标签')
                       issues, _ = inspect_article(article, article.get('_keyword_mode', ''))
                       structural = [issue for issue in issues if any(key in issue for key in (
                           '必须是', '文章必须', '正文含Markdown链接', '正文含思考标签',
@@ -4812,8 +5489,8 @@ workflow:
                   try:
                       article = parse_article(item)
                       mode = article.get('_keyword_mode', '')
-                      if mode not in ('brand', 'category'):
-                          issues = ['文章缺少有效的品牌/品类来源标签']
+                      if mode not in ('brand', 'category', 'anniversary'):
+                          issues = ['文章缺少有效的品牌/品类/32周年来源标签']
                       else:
                           issues, _ = inspect_article(article, mode)
                       if issues:
@@ -4885,6 +5562,285 @@ workflow:
       positionAbsolute:
         x: 11879.572050291441
         y: 777.9469798501207
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 1002
+    - data:
+        desc: 32周年关键词独立线路，不进入品牌词或品类词生成器。
+        error_handle_mode: terminated
+        height: 360
+        is_parallel: true
+        iterator_selector:
+        - '1780900000001'
+        - anniversary_plans
+        output_selector:
+        - '1794000000005'
+        - structured_output
+        output_type: array[object]
+        parallel_nums: 10
+        selected: false
+        start_node_id: 1777500000006start
+        title: 迭代-32周年专线
+        type: iteration
+        width: 1750
+      height: 360
+      id: '1777500000006'
+      position:
+        x: 10060
+        y: 1450
+      positionAbsolute:
+        x: 10060
+        y: 1450
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 1750
+      zIndex: 1
+    - data:
+        desc: ''
+        isInIteration: true
+        selected: false
+        title: 32周年-start
+        type: iteration-start
+      draggable: false
+      height: 48
+      id: 1777500000006start
+      parentId: '1777500000006'
+      position:
+        x: 40
+        y: 80
+      positionAbsolute:
+        x: 10100
+        y: 1530
+      selectable: false
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom-iteration-start
+      width: 44
+      zIndex: 1002
+    - data:
+        code: |
+          import json
+          def main(item):
+              if not isinstance(item,dict):
+                  try: item=json.loads(item or '{}')
+                  except Exception: item={}
+              keyword=str(item.get('keyword','') or '').strip()
+              return {'query':'{} 凤凰知音32周年礼遇 活动规则 参与方式 时间 资格 限制'.format(keyword)}
+        code_language: python3
+        desc: 仅生成32周年专项检索query。
+        isInIteration: true
+        iteration_id: '1777500000006'
+        outputs:
+          query:
+            children:
+            type: string
+        selected: false
+        title: 32周年检索计划
+        type: code
+        variables:
+        - value_selector:
+          - '1777500000006'
+          - item
+          value_type: object
+          variable: item
+      height: 54
+      id: '1794000000001'
+      parentId: '1777500000006'
+      position:
+        x: 110
+        y: 80
+      positionAbsolute:
+        x: 10170
+        y: 1530
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 1002
+    - data:
+        authorization:
+          config:
+          type: no-auth
+        body:
+          data:
+          - id: key-value-anniversary
+            key: ''
+            type: text
+            value: '{"query":"{{#1794000000001.query#}}","dataset_ids":["{{#1776153503356.prod_dataset_id#}}"],"top_k":8,"score":0.30}'
+          type: json
+        desc: 只召回32周年专项活动证据。
+        isInIteration: true
+        iteration_id: '1777500000006'
+        headers: |-
+          Content-Type:application/json
+          Authorization:Bearer dataset-pgW90G1nL8L7xEbjXOthn1Ko
+        method: post
+        params: ''
+        selected: false
+        timeout:
+          max_connect_timeout: 0
+          max_read_timeout: 0
+          max_write_timeout: 0
+        title: 32周年专项知识库检索
+        type: http-request
+        url: http://nami.rag.qihoo.net/v2/datasets/search
+        variables: []
+      height: 110
+      id: '1794000000002'
+      parentId: '1777500000006'
+      position:
+        x: 400
+        y: 80
+      positionAbsolute:
+        x: 10460
+        y: 1530
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 1002
+    - data:
+        code: |
+          import json
+          def main(body):
+              if isinstance(body,str):
+                  try: data=json.loads(body)
+                  except Exception: data={}
+              else: data=body
+              parts=[]
+              for record in data.get('records',[]) if isinstance(data,dict) else []:
+                  segment=record.get('segment',{}) if isinstance(record,dict) else {}
+                  content=segment.get('content','') if isinstance(segment,dict) else ''
+                  if str(content or '').strip(): parts.append(str(content).strip())
+              return {'evidence':'\n\n'.join(parts)}
+        code_language: python3
+        desc: 解析32周年专项召回。
+        isInIteration: true
+        iteration_id: '1777500000006'
+        outputs:
+          evidence:
+            children:
+            type: string
+        selected: false
+        title: 32周年证据解析
+        type: code
+        variables:
+        - value_selector:
+          - '1794000000002'
+          - body
+          value_type: string
+          variable: body
+      height: 54
+      id: '1794000000003'
+      parentId: '1777500000006'
+      position:
+        x: 690
+        y: 80
+      positionAbsolute:
+        x: 10750
+        y: 1530
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 1002
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1777500000006'
+          - item
+        desc: 32周年专项文章独立生成。
+        isInIteration: true
+        iteration_id: '1777500000006'
+        model:
+          completion_params:
+            enable_thinking: false
+            max_tokens: 16384
+            temperature: 0.3
+            top_p: 0.6
+          mode: chat
+          name: volcengine/doubao-seed-2-0-pro
+          provider: zhinao
+        prompt_template:
+        - id: anniversary-generate-sys
+          role: system
+          text: |-
+            你是凤凰知音32周年专项文章生成器。只使用当前专项召回证据，不得引入常规会员权益补充活动规则。事实与限制必须与证据一致，无来源信息不得补写。
+            只输出完整JSON对象：{"title":"20-38字标题","content":"完整HTML正文","description":"50-150字摘要","tags":["标签1","标签2","标签3"],"self_review":"自检说明"}。不得输出Markdown代码块或解释。
+        - id: anniversary-generate-user
+          role: user
+          text: |-
+            当前计划：{{#1777500000006.item#}}
+            32周年专项证据：{{#1794000000003.evidence#}}
+        selected: false
+        title: 32周年专项正文生成
+        type: llm
+        vision:
+          enabled: false
+        variables: []
+      height: 98
+      id: '1794000000004'
+      parentId: '1777500000006'
+      position:
+        x: 980
+        y: 80
+      positionAbsolute:
+        x: 11040
+        y: 1530
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 1002
+    - data:
+        code: |
+          import json,re
+          def main(raw):
+              text=re.sub(r'<think>.*?</think>','',str(raw or ''),flags=re.S|re.I).strip()
+              fence=re.fullmatch(r'```(?:json)?\s*([\s\S]*?)\s*```',text,re.I)
+              if fence: text=fence.group(1)
+              article=json.loads(text)
+              if not isinstance(article,dict): raise ValueError('32周年输出不是JSON对象')
+              for key in ('title','content','description','tags','self_review'):
+                  if key not in article: raise ValueError('32周年输出缺少字段：'+key)
+              return {'structured_output':article}
+        code_language: python3
+        desc: 解析32周年专线输出。
+        isInIteration: true
+        iteration_id: '1777500000006'
+        outputs:
+          structured_output:
+            children:
+            type: object
+        selected: false
+        title: 32周年文章解析
+        type: code
+        variables:
+        - value_selector:
+          - '1794000000004'
+          - text
+          value_type: string
+          variable: raw
+      height: 54
+      id: '1794000000005'
+      parentId: '1777500000006'
+      position:
+        x: 1270
+        y: 80
+      positionAbsolute:
+        x: 11330
+        y: 1530
       selected: false
       sourcePosition: right
       targetPosition: left
