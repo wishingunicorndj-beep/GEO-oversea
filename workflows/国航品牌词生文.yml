@@ -1,0 +1,1067 @@
+---
+app:
+  description: 国航品牌词专用生文工作流：13类特性代码映射，企业知识库检索1次，两个特性合并query检索产品知识库1次，第五部分使用内置固定活动事实直接组装。
+  icon: "✈️"
+  icon_background: '#E8F3FF'
+  mode: workflow
+  name: 国航品牌词生文
+  use_icon_as_answer_icon: false
+kind: app
+version: 0.1.3
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      enabled: false
+    opening_statement: ''
+    retriever_resource:
+      enabled: false
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        sourceType: start
+        targetType: code
+      id: brand-start-plan
+      source: '2000000000001'
+      sourceHandle: source
+      target: '2000000000002'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: iteration
+      id: brand-plan-iteration
+      source: '2000000000002'
+      sourceHandle: source
+      target: '2000000000003'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: true
+        iteration_id: '2000000000003'
+        sourceType: iteration-start
+        targetType: http-request
+      id: brand-iter-ent-search
+      source: 2000000000003start
+      sourceHandle: source
+      target: '2000000000004'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '2000000000003'
+        sourceType: iteration-start
+        targetType: http-request
+      id: brand-iter-prod-search
+      source: 2000000000003start
+      sourceHandle: source
+      target: '2000000000005'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '2000000000003'
+        sourceType: iteration-start
+        targetType: llm
+      id: brand-iter-activity-wrapper
+      source: 2000000000003start
+      sourceHandle: source
+      target: '2000000000007'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '2000000000003'
+        sourceType: http-request
+        targetType: code
+      id: brand-ent-parse
+      source: '2000000000004'
+      sourceHandle: source
+      target: '2000000000006'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '2000000000003'
+        sourceType: http-request
+        targetType: code
+      id: brand-prod-parse
+      source: '2000000000005'
+      sourceHandle: source
+      target: '2000000000006'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '2000000000003'
+        sourceType: code
+        targetType: llm
+      id: brand-evidence-core
+      source: '2000000000006'
+      sourceHandle: source
+      target: '2000000000008'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '2000000000003'
+        sourceType: llm
+        targetType: code
+      id: brand-core-assemble
+      source: '2000000000008'
+      sourceHandle: source
+      target: '2000000000009'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '2000000000003'
+        sourceType: llm
+        targetType: code
+      id: brand-wrapper-assemble
+      source: '2000000000007'
+      sourceHandle: source
+      target: '2000000000009'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '2000000000003'
+        sourceType: code
+        targetType: llm
+      id: brand-assemble-validate
+      source: '2000000000009'
+      sourceHandle: source
+      target: '2000000000010'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '2000000000003'
+        sourceType: llm
+        targetType: code
+      id: brand-validate-parse
+      source: '2000000000010'
+      sourceHandle: source
+      target: '2000000000011'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '2000000000003'
+        sourceType: code
+        targetType: if-else
+      id: brand-parse-condition
+      source: '2000000000011'
+      sourceHandle: source
+      target: '2000000000012'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '2000000000003'
+        sourceType: if-else
+        targetType: code
+      id: brand-condition-pass
+      source: '2000000000012'
+      sourceHandle: 'true'
+      target: '2000000000013'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '2000000000003'
+        sourceType: if-else
+        targetType: llm
+      id: brand-condition-repair
+      source: '2000000000012'
+      sourceHandle: 'false'
+      target: '2000000000014'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '2000000000003'
+        sourceType: llm
+        targetType: code
+      id: brand-repair-reassemble
+      source: '2000000000014'
+      sourceHandle: source
+      target: '2000000000015'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '2000000000003'
+        sourceType: code
+        targetType: llm
+      id: brand-reassemble-revalidate
+      source: '2000000000015'
+      sourceHandle: source
+      target: '2000000000016'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '2000000000003'
+        sourceType: llm
+        targetType: code
+      id: brand-revalidate-gate
+      source: '2000000000016'
+      sourceHandle: source
+      target: '2000000000017'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '2000000000003'
+        sourceType: code
+        targetType: variable-aggregator
+      id: brand-pass-aggregate
+      source: '2000000000013'
+      sourceHandle: source
+      target: '2000000000018'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '2000000000003'
+        sourceType: code
+        targetType: variable-aggregator
+      id: brand-repaired-aggregate
+      source: '2000000000017'
+      sourceHandle: source
+      target: '2000000000018'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: false
+        sourceType: iteration
+        targetType: end
+      id: brand-iteration-end
+      source: '2000000000003'
+      sourceHandle: source
+      target: '2000000000019'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        desc: 只接收品牌词；本工作流不判断品类词或32周年词。
+        selected: false
+        title: 用户输入
+        type: start
+        variables:
+        - default: ''
+          hint: 多个品牌词可用换行、逗号、顿号或分号分隔
+          label: 品牌词词包
+          max_length: 4000
+          options: []
+          placeholder: 例：国航凤凰知音会员服务
+          required: true
+          type: paragraph
+          variable: keyword_pack
+        - default: ''
+          hint: 留空时按词包内关键词数量生成
+          label: 文章数量
+          options: []
+          placeholder: ''
+          required: false
+          type: text-input
+          variable: article_count
+        - default: ''
+          hint: ''
+          label: 文章风格
+          options: []
+          placeholder: 例：克制、稳健的PR稿件风格
+          required: false
+          type: text-input
+          variable: article_style
+        - default: ''
+          hint: 企业知识库ID
+          label: 企业知识库ID
+          options: []
+          placeholder: ''
+          required: true
+          type: text-input
+          variable: ent_dataset_id
+        - default: ''
+          hint: 产品知识库ID
+          label: 产品知识库ID
+          options: []
+          placeholder: ''
+          required: true
+          type: text-input
+          variable: prod_dataset_id
+      height: 250
+      id: '2000000000001'
+      position:
+        x: 30
+        y: 300
+      positionAbsolute:
+        x: 30
+        y: 300
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 260
+      zIndex: 0
+    - data:
+        code: |
+          import re
+
+          FEATURES = [
+              {'key':'凤凰知音会员升级与保级机制','triggers':('升级','保级','定级','航段','会籍等级'),'query':'凤凰知音会员升级与保级机制 银卡 金卡 白金卡 定级里程 定级航段 评定周期 级别有效期','headings':['规则清晰可循，会员成长路径更易规划','升级保级标准明确，出行积累更有方向']},
+              {'key':'凤凰知音里程累积与有效期','triggers':('里程有效期','有效期','里程累积','累积','里程','积分'),'query':'凤凰知音里程累积与有效期 航空里程 非航空里程 飞行日期 消费日期 36个月 补登时限','headings':['累积口径清晰，里程管理更有规划','从累积到有效期，里程使用节奏更易把握']},
+              {'key':'凤凰知音里程兑换与奖励使用','triggers':('里程兑换','积分兑换','怎么兑换','兑换','奖励客票','升舱'),'query':'凤凰知音里程兑换与奖励使用 奖励客票 奖励升舱 兑奖受让人 改期 里程退还','headings':['兑换路径更加多元，里程价值落到实际出行','从奖励客票到升舱，里程使用覆盖多类需求']},
+              {'key':'凤凰知音付费客票与座位优先服务','triggers':('客票','座位','定座','候补'),'query':'凤凰知音付费客票与座位优先服务 优先保留定座 优先申请座位 奖励客票 奖励升舱 定座候补 机场候补','headings':['从定座到候补，重点出行需求获得优先支持','客票与座位服务有效衔接，紧张航班出行更从容']},
+              {'key':'凤凰知音贵宾会员机场优先服务','triggers':('机场','值机','安检','登机','行李提取','优先服务','会员服务'),'query':'凤凰知音贵宾会员机场优先服务 优先办理乘机登记 值机柜台 快速安检 优先登机 优先提取托运行李','headings':['值机登机环节有效衔接，出行流程更加顺畅','从值机到行李提取，优先服务贯穿机场流程']},
+              {'key':'凤凰知音贵宾会员额外免费托运行李','triggers':('行李','托运'),'query':'凤凰知音贵宾会员额外免费托运行李 银卡 金卡 白金卡 计重制 计件制 20公斤 30公斤 1件 适用航班','headings':['分级行李权益，回应不同出行负载需求','额外免费托运行李，让高频出行更加从容']},
+              {'key':'凤凰知音贵宾会员休息室权益','triggers':('休息室','候机'),'query':'凤凰知音贵宾会员休息室权益 国航 深航 山航 澳门航 会员等级 随员 国内休息室 国际休息室 消费里程','headings':['分级休息室权益，为候机体验提供更多支持','从自营到合作休息室，候机服务覆盖多类场景']},
+              {'key':'凤凰知音航班延误服务','triggers':('延误','异常出行'),'query':'凤凰知音航班延误服务 白金卡 金卡 银卡 国航 深航 山航 实际承运航司 酒店膳宿','headings':['分级延误服务，为异常出行提供相应支持','按等级与承运航司区分，延误服务边界更清晰']},
+              {'key':'凤凰知音星空联盟贵宾权益','triggers':('星空联盟','星盟','国际'),'query':'凤凰知音星空联盟贵宾权益 星盟金卡 星盟银卡 优先值机 额外行李 快速安检 休息室 优先登机 候补','headings':['联动星盟服务网络，拓展会员出行权益边界','从国内到国际，贵宾权益延伸至星盟网络']},
+              {'key':'凤凰知音知音宝贝儿童会员服务','triggers':('知音宝贝','儿童','亲子'),'query':'凤凰知音知音宝贝儿童会员服务 入会申请 里程累积 监护人里程转赠 里程兑换 年龄条件','headings':['面向家庭出行，儿童会员服务更具针对性','从入会到里程使用，知音宝贝陪伴成长旅程']},
+              {'key':'凤凰知音贵宾会员额外里程奖励','triggers':('里程加赠','加赠','额外里程'),'query':'凤凰知音贵宾会员额外里程奖励 银卡 金卡 白金卡 25% 30% 50% 可消费里程 实际承运 挂各自代号航班','headings':['分级额外里程奖励，让每次飞行积累更进一步','会员等级对应加赠比例，里程累积规则清晰可查']},
+              {'key':'凤凰知音会员入会与账户服务','triggers':('怎么加入','入会','注册','账户','生日福利','会员日'),'query':'凤凰知音会员入会与账户服务 入会申请 注册条件 入会渠道 未成年人 账户管理 会员身份自动识别','headings':['多渠道便捷入会，会员服务从注册环节开始','入会路径清晰，账户管理覆盖日常使用需求']},
+              {'key':'凤凰知音会员等级与会员卡服务','triggers':('会籍等级','会员卡','卡办理','等级'),'query':'凤凰知音会员等级与会员卡服务 普通会员 银卡 金卡 白金卡 终身白金卡 年度卓越终身白金卡 电子卡 实体卡','headings':['分级会员体系，回应不同阶段的出行需求','从普通会员到贵宾等级，会员体系层次清晰']}
+          ]
+
+          ACTIVITY_FACTS = 'A系列【传递吉祥】：2026年7月2日至11月30日乘国航系指定航班F/J/Y舱，次日在中国国航APP领取。璀璨款适用F/J舱，9个保级航段，0元、20000枚；金辉款适用Y舱，3个保级航段，0元、40000枚；每款最多6枚。B系列【引领群伦】：2026年9月1日至10月8日发售，999元，含1个升级或保级用定级航段，2000枚，每人1枚。C系列【知音相伴】：2026年12月每周六、日乘国航系主题航班；璀璨款面向白金卡F/J舱，39个保级航段，0元、7000枚；金辉款面向金卡F/J/Y舱，15个保级航段，0元、15000枚；银耀款面向银卡、普卡指定舱位，7个保级航段，199元、10000枚；每次飞行一份，最多两份。D系列【超越自我】：3枚A璀璨款+1枚B+1枚C璀璨款合成D璀璨款，解锁白金卡；2枚A金辉款+1枚B+1枚C金辉款合成D金辉款，解锁金卡；原元素权益保留。须满18周岁并实名认证；全部资产可在指定时间内通过中国国航APP“我的资产—赠与好友”转赠。航段权益须在APP首页进入“数字资产—我的权益”手动生效。'
+
+          def split_words(value):
+              return [x.strip() for x in re.split(r'[，,、;；\n]+', str(value or '')) if x.strip()]
+
+          def choose_features(keyword):
+              scored=[]
+              for index, feature in enumerate(FEATURES):
+                  score=sum(len(trigger) for trigger in feature['triggers'] if trigger in keyword)
+                  if score: scored.append((-score,index,feature))
+              scored.sort()
+              chosen=[item[2] for item in scored[:2]]
+              if not chosen: chosen=[FEATURES[0]]
+              if len(chosen)==1:
+                  if chosen[0]['key']=='凤凰知音里程累积与有效期': chosen.append(FEATURES[2])
+                  else: chosen.append(FEATURES[4] if chosen[0]['key']!=FEATURES[4]['key'] else FEATURES[0])
+              return chosen[:2]
+
+          def main(keyword_pack, article_count='', article_style=''):
+              words=split_words(keyword_pack)
+              if not words: raise ValueError('品牌词词包不能为空')
+              try: total=int(float(article_count)) if str(article_count or '').strip() else len(words)
+              except Exception: total=len(words)
+              total=max(1,total)
+              plans=[]
+              for index in range(total):
+                  keyword=words[index % len(words)]
+                  first,second=choose_features(keyword)
+                  seed=sum(ord(char) for char in keyword)
+                  heading_1=first['headings'][seed % len(first['headings'])]
+                  heading_2=second['headings'][(seed+1) % len(second['headings'])]
+                  prefix=keyword if len(keyword)<=12 else '国航凤凰知音'
+                  title=prefix+'：'+heading_1
+                  if len(title)>38: title='国航凤凰知音：'+heading_1
+                  plans.append({
+                      'article_index':index+1,'article_total':total,'keyword':keyword,
+                      'title':title,'feature_1_key':first['key'],'feature_1_heading':heading_1,
+                      'feature_2_key':second['key'],'feature_2_heading':heading_2,
+                      'enterprise_query':'国航 中国国际航空 公司介绍 品牌 服务 航线网络 机队 联盟 资产',
+                      'product_query':'特性一：'+first['query']+'；特性二：'+second['query'],
+                      'activity_facts':ACTIVITY_FACTS,
+                      'article_style':article_style or '克制、稳健、事实支撑的PR稿件风格'
+                  })
+              return {'brand_plans':plans}
+        code_language: python3
+        desc: 代码节点完成13类特性选择、PR标题、两个小标题及两特性合并query。
+        outputs:
+          brand_plans:
+            children:
+            type: array[object]
+        selected: false
+        title: 13类特性与PR标题映射
+        type: code
+        variables:
+        - value_selector: ['2000000000001', keyword_pack]
+          value_type: string
+          variable: keyword_pack
+        - value_selector: ['2000000000001', article_count]
+          value_type: string
+          variable: article_count
+        - value_selector: ['2000000000001', article_style]
+          value_type: string
+          variable: article_style
+      height: 54
+      id: '2000000000002'
+      position: {x: 340, y: 300}
+      positionAbsolute: {x: 340, y: 300}
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 260
+      zIndex: 0
+    - data:
+        desc: 品牌词按篇迭代。
+        error_handle_mode: terminated
+        height: 760
+        is_parallel: true
+        iterator_selector: ['2000000000002', brand_plans]
+        output_selector: ['2000000000018', output]
+        output_type: array[object]
+        parallel_nums: 5
+        selected: false
+        start_node_id: 2000000000003start
+        title: 品牌词逐篇生成
+        type: iteration
+        width: 4300
+      height: 760
+      id: '2000000000003'
+      position: {x: 650, y: 80}
+      positionAbsolute: {x: 650, y: 80}
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 4300
+      zIndex: 1
+    - data:
+        desc: ''
+        isInIteration: true
+        selected: false
+        title: 品牌词迭代-start
+        type: iteration-start
+      draggable: false
+      height: 48
+      id: 2000000000003start
+      parentId: '2000000000003'
+      position: {x: 40, y: 80}
+      positionAbsolute: {x: 690, y: 160}
+      selectable: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom-iteration-start
+      width: 44
+      zIndex: 1002
+    - data:
+        authorization: {config: null, type: no-auth}
+        body:
+          data:
+          - id: brand-ent-body
+            key: ''
+            type: text
+            value: '{"query":"{{#2000000000003.item.enterprise_query#}}","dataset_ids":["{{#2000000000001.ent_dataset_id#}}"],"top_k":6,"score":0.30}'
+          type: json
+        desc: 唯一的企业知识库检索。
+        isInIteration: true
+        iteration_id: '2000000000003'
+        headers: |-
+          Content-Type:application/json
+          Authorization:Bearer dataset-pgW90G1nL8L7xEbjXOthn1Ko
+        method: post
+        params: ''
+        selected: false
+        timeout: {max_connect_timeout: 0, max_read_timeout: 0, max_write_timeout: 0}
+        title: 企业知识库检索（1次）
+        type: http-request
+        url: http://nami.rag.qihoo.net/v2/datasets/search
+        variables: []
+      height: 110
+      id: '2000000000004'
+      parentId: '2000000000003'
+      position: {x: 120, y: 40}
+      positionAbsolute: {x: 770, y: 120}
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 260
+      zIndex: 1002
+    - data:
+        authorization: {config: null, type: no-auth}
+        body:
+          data:
+          - id: brand-prod-body
+            key: ''
+            type: text
+            value: '{"query":"{{#2000000000003.item.product_query#}}","dataset_ids":["{{#2000000000001.prod_dataset_id#}}"],"top_k":10,"score":0.30}'
+          type: json
+        desc: 特性1和特性2的query已在代码节点拼接，两个特性共用本次产品知识库检索。
+        isInIteration: true
+        iteration_id: '2000000000003'
+        headers: |-
+          Content-Type:application/json
+          Authorization:Bearer dataset-pgW90G1nL8L7xEbjXOthn1Ko
+        method: post
+        params: ''
+        selected: false
+        timeout: {max_connect_timeout: 0, max_read_timeout: 0, max_write_timeout: 0}
+        title: 两特性共用产品知识库检索（1次）
+        type: http-request
+        url: http://nami.rag.qihoo.net/v2/datasets/search
+        variables: []
+      height: 110
+      id: '2000000000005'
+      parentId: '2000000000003'
+      position: {x: 120, y: 200}
+      positionAbsolute: {x: 770, y: 280}
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 260
+      zIndex: 1002
+    - data:
+        code: |
+          import json
+          def extract(body):
+              if isinstance(body,str):
+                  try: data=json.loads(body)
+                  except Exception: data={}
+              else: data=body
+              parts=[]
+              for record in data.get('records',[]) if isinstance(data,dict) else []:
+                  segment=record.get('segment',{}) if isinstance(record,dict) else {}
+                  content=segment.get('content','') if isinstance(segment,dict) else ''
+                  if str(content or '').strip(): parts.append(str(content).strip())
+              return '\n\n'.join(parts)
+          def main(ent_body, prod_body):
+              return {'enterprise_evidence':extract(ent_body),'product_evidence':extract(prod_body)}
+        code_language: python3
+        desc: 只解析两次检索的结果。
+        isInIteration: true
+        iteration_id: '2000000000003'
+        outputs:
+          enterprise_evidence: {children: null, type: string}
+          product_evidence: {children: null, type: string}
+        selected: false
+        title: 两次检索结果解析
+        type: code
+        variables:
+        - value_selector: ['2000000000004', body]
+          value_type: string
+          variable: ent_body
+        - value_selector: ['2000000000005', body]
+          value_type: string
+          variable: prod_body
+      height: 54
+      id: '2000000000006'
+      parentId: '2000000000003'
+      position: {x: 430, y: 120}
+      positionAbsolute: {x: 1080, y: 200}
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 260
+      zIndex: 1002
+    - data:
+        context: {enabled: true, variable_selector: ['2000000000003', item]}
+        desc: 不读取知识库，只为第五部分生成三个极短衔接句。
+        isInIteration: true
+        iteration_id: '2000000000003'
+        model:
+          completion_params: {enable_thinking: false, max_tokens: 512, temperature: 0.5, top_p: 0.7}
+          mode: chat
+          name: volcengine/doubao-seed-2-0-pro
+          provider: zhinao
+        prompt_template:
+        - id: activity-wrapper-system
+          role: system
+          text: |-
+            你只负责第五部分的衔接文案，不生成、概括或复述活动事实。
+            输出一个合法JSON对象：{"transition":"8-12字过渡句","connection":"8-12字主题连接句","ending":"8-12字结束语"}。
+            三句均不得包含数字、日期、价格、航段、舱位、数量、系列名称、资格、转赠或操作路径。
+        - id: activity-wrapper-user
+          role: user
+          text: |-
+            文章关键词：{{#2000000000003.item.keyword#}}
+            特性一：{{#2000000000003.item.feature_1_key#}}
+            特性二：{{#2000000000003.item.feature_2_key#}}
+        selected: false
+        title: 第五部分仅改写衔接句
+        type: llm
+        vision: {enabled: false}
+        variables: []
+      height: 98
+      id: '2000000000007'
+      parentId: '2000000000003'
+      position: {x: 430, y: 300}
+      positionAbsolute: {x: 1080, y: 380}
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 260
+      zIndex: 1002
+    - data:
+        context: {enabled: true, variable_selector: ['2000000000003', item]}
+        desc: 只生成前四部分，不写32周年内容。
+        isInIteration: true
+        iteration_id: '2000000000003'
+        model:
+          completion_params: {enable_thinking: false, max_tokens: 16384, temperature: 0.5, top_p: 0.7}
+          mode: chat
+          name: volcengine/doubao-seed-2-0-pro
+          provider: zhinao
+        prompt_template:
+        - id: core-writer-system
+          role: system
+          text: |-
+            你是国航品牌词文章生成器，只生成前四部分，不得出现32周年、周年礼遇或数字资产内容。
+            第一部分200-250字，独占一段，引入主题；第二部分500-600字，只根据企业证据介绍国航公司、服务和资产；第三部分500-600字，只围绕特性一；第四部分600-700字，只围绕特性二。
+            content必须且只能有4个<h2>；第三、四个<h2>必须原样使用计划中的小标题。只使用HTML，不得使用Markdown。
+            数字、比例、时间、等级、适用航司、资格、路径与范围必须有证据；禁止机制混写和过度承诺。允许使用“优选、口碑稳定、体验友好、更从容、更便捷、更易规划、服务衔接顺畅”等PR表达。
+            只输出合法JSON：{"content":"前四部分HTML","description":"50-150字摘要","tags":["标签1","标签2","标签3"],"self_review":"自检说明"}。
+        - id: core-writer-user
+          role: user
+          text: |-
+            文章计划：{{#2000000000003.item#}}
+            企业证据：{{#2000000000006.enterprise_evidence#}}
+            特性一和特性二的共用产品证据：{{#2000000000006.product_evidence#}}
+        selected: false
+        title: 前四部分生成
+        type: llm
+        vision: {enabled: false}
+        variables: []
+      height: 98
+      id: '2000000000008'
+      parentId: '2000000000003'
+      position: {x: 740, y: 120}
+      positionAbsolute: {x: 1390, y: 200}
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 280
+      zIndex: 1002
+    - data:
+        code: |
+          import json,re,html
+          def parse(raw):
+              if isinstance(raw,dict): return dict(raw)
+              text=re.sub(r'<think>.*?</think>','',str(raw or ''),flags=re.S|re.I).strip()
+              fence=re.fullmatch(r'```(?:json)?\s*([\s\S]*?)\s*```',text,re.I)
+              if fence: text=fence.group(1)
+              return json.loads(text)
+          def safe_sentence(value, fallback):
+              text=re.sub(r'[<>\n\r]','',str(value or '')).strip()
+              return text if 4<=len(text)<=16 else fallback
+          def main(core_text, wrapper_text, item):
+              core=parse(core_text); wrapper=parse(wrapper_text)
+              transition=safe_sentence(wrapper.get('transition'),'再看周年礼遇')
+              connection=safe_sentence(wrapper.get('connection'),'也延伸本文主题')
+              ending=safe_sentence(wrapper.get('ending'),'具体以活动规则为准')
+              activity='<h2>凤凰知音32周年礼遇</h2><p>'+html.escape(transition)+'，'+html.escape(connection)+'。</p><p>'+html.escape(str(item.get('activity_facts','')))+' </p><p>'+html.escape(ending)+'。</p>'
+              article={'title':str(item.get('title','')),'content':str(core.get('content',''))+activity,'description':str(core.get('description','')),'tags':core.get('tags',[]),'self_review':str(core.get('self_review',''))}
+              return {'article':article,'article_json':json.dumps(article,ensure_ascii=False)}
+        code_language: python3
+        desc: 代码原样插入固定活动事实；模型不参与改写事实内容。
+        isInIteration: true
+        iteration_id: '2000000000003'
+        outputs:
+          article: {children: null, type: object}
+          article_json: {children: null, type: string}
+        selected: false
+        title: 五部分代码组装
+        type: code
+        variables:
+        - value_selector: ['2000000000008', text]
+          value_type: string
+          variable: core_text
+        - value_selector: ['2000000000007', text]
+          value_type: string
+          variable: wrapper_text
+        - value_selector: ['2000000000003', item]
+          value_type: object
+          variable: item
+      height: 54
+      id: '2000000000009'
+      parentId: '2000000000003'
+      position: {x: 1060, y: 120}
+      positionAbsolute: {x: 1710, y: 200}
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 280
+      zIndex: 1002
+    - data:
+        context: {enabled: true, variable_selector: ['2000000000009', article]}
+        desc: 只检查已确认的四类硬问题。
+        isInIteration: true
+        iteration_id: '2000000000003'
+        model:
+          completion_params: {enable_thinking: false, max_tokens: 4096, temperature: 0.1, top_p: 0.5}
+          mode: chat
+          name: volcengine/doubao-seed-2-0-pro
+          provider: zhinao
+        prompt_template:
+        - id: validator-system
+          role: system
+          text: |-
+            逐句对照证据检查：事实错误、无来源主张、机制混写、过度承诺。第五部分以内置固定事实为唯一依据。PR白名单：优选、口碑稳定、体验友好、更从容、更便捷、更易规划、服务衔接顺畅。
+            只输出JSON：{"pass":true,"issues":[]}。问题项格式：{"quote":"原句","type":"类型","reason":"原因","evidence":"依据","rewrite_instruction":"局部修复指令"}。
+        - id: validator-user
+          role: user
+          text: |-
+            文章：{{#2000000000009.article_json#}}
+            企业证据：{{#2000000000006.enterprise_evidence#}}
+            产品证据：{{#2000000000006.product_evidence#}}
+            第五部分固定事实：{{#2000000000003.item.activity_facts#}}
+        selected: false
+        title: 事实四项校验
+        type: llm
+        vision: {enabled: false}
+        variables: []
+      height: 98
+      id: '2000000000010'
+      parentId: '2000000000003'
+      position: {x: 1380, y: 120}
+      positionAbsolute: {x: 2030, y: 200}
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 280
+      zIndex: 1002
+    - data:
+        code: |
+          import json,re,html
+          BOUNDS=[(200,250),(500,600),(500,600),(600,700),(400,500)]
+          def parse(raw):
+              text=re.sub(r'<think>.*?</think>','',str(raw or ''),flags=re.S|re.I).strip()
+              fence=re.fullmatch(r'```(?:json)?\s*([\s\S]*?)\s*```',text,re.I)
+              if fence: text=fence.group(1)
+              return json.loads(text)
+          def main(validation_text, article):
+              issues=[]
+              try:
+                  report=parse(validation_text)
+                  model_issues=report.get('issues',[]) if isinstance(report,dict) else []
+                  if not bool(report.get('pass')) or model_issues: issues.extend(model_issues or [{'type':'事实校验','reason':'校验未通过'}])
+              except Exception:
+                  issues.append({'type':'校验协议','reason':'校验节点未返回合法JSON'})
+              content=str(article.get('content','')) if isinstance(article,dict) else ''
+              title=str(article.get('title','')) if isinstance(article,dict) else ''
+              sections=re.findall(r'<h2\b[^>]*>[\s\S]*?(?=<h2\b|\Z)',content,re.I)
+              if not 20<=len(title)<=38: issues.append({'type':'标题长度','reason':'标题必须20-38字'})
+              if len(sections)!=5: issues.append({'type':'结构','reason':'正文必须且只能有5个h2部分'})
+              for index,(section,bound) in enumerate(zip(sections,BOUNDS),1):
+                  section_body=re.sub(r'<h2\b[^>]*>[\s\S]*?</h2>','',section,count=1,flags=re.I)
+                  visible=html.unescape(re.sub(r'<[^>]+>','',section_body))
+                  length=len(re.sub(r'\s+','',visible))
+                  if length<bound[0] or length>bound[1]: issues.append({'type':'分段字数','reason':'第{}部分{}字，要求{}-{}字'.format(index,length,bound[0],bound[1])})
+              return {'has_issues':1 if issues else 0,'issues':json.dumps(issues,ensure_ascii=False),'content_len':len(re.sub(r'\s+','',re.sub(r'<[^>]+>','',content)))}
+        code_language: python3
+        desc: 合并事实校验和五部分机械检查。
+        isInIteration: true
+        iteration_id: '2000000000003'
+        outputs:
+          content_len: {children: null, type: number}
+          has_issues: {children: null, type: number}
+          issues: {children: null, type: string}
+        selected: false
+        title: 校验结果解析
+        type: code
+        variables:
+        - value_selector: ['2000000000010', text]
+          value_type: string
+          variable: validation_text
+        - value_selector: ['2000000000009', article]
+          value_type: object
+          variable: article
+      height: 54
+      id: '2000000000011'
+      parentId: '2000000000003'
+      position: {x: 1700, y: 120}
+      positionAbsolute: {x: 2350, y: 200}
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 260
+      zIndex: 1002
+    - data:
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: '='
+            id: brand-pass-condition
+            value: '0'
+            varType: number
+            variable_selector: ['2000000000011', has_issues]
+          id: 'true'
+          logical_operator: and
+        desc: 无问题直接输出，有问题只修复前四部分。
+        isInIteration: true
+        iteration_id: '2000000000003'
+        selected: false
+        title: 是否需要局部修复
+        type: if-else
+      height: 170
+      id: '2000000000012'
+      parentId: '2000000000003'
+      position: {x: 2000, y: 120}
+      positionAbsolute: {x: 2650, y: 200}
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 260
+      zIndex: 1002
+    - data:
+        code: |
+          def main(article):
+              if not isinstance(article,dict): raise ValueError('文章不是对象')
+              return {'structured_output':article}
+        code_language: python3
+        desc: 首次校验通过时原样输出。
+        isInIteration: true
+        iteration_id: '2000000000003'
+        outputs:
+          structured_output: {children: null, type: object}
+        selected: false
+        title: 无问题直接采用
+        type: code
+        variables:
+        - value_selector: ['2000000000009', article]
+          value_type: object
+          variable: article
+      height: 54
+      id: '2000000000013'
+      parentId: '2000000000003'
+      position: {x: 2320, y: 40}
+      positionAbsolute: {x: 2970, y: 120}
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 260
+      zIndex: 1002
+    - data:
+        context: {enabled: true, variable_selector: ['2000000000008', text]}
+        desc: 只修复前四部分，第五部分不进入本节点。
+        isInIteration: true
+        iteration_id: '2000000000003'
+        model:
+          completion_params: {enable_thinking: false, max_tokens: 16384, temperature: 0.3, top_p: 0.6}
+          mode: chat
+          name: volcengine/doubao-seed-2-0-pro
+          provider: zhinao
+        prompt_template:
+        - id: repair-system
+          role: system
+          text: |-
+            你是品牌词文章局部修复器。只修复已标记的前四部分问题，不得写第五部分，不得重写无问题内容。无证据的可验证主张直接删除。
+            输出格式与原前四部分一致：{"content":"4个h2的HTML","description":"50-150字摘要","tags":["标签1","标签2","标签3"],"self_review":"修复说明"}。
+        - id: repair-user
+          role: user
+          text: |-
+            原前四部分：{{#2000000000008.text#}}
+            问题：{{#2000000000011.issues#}}
+            文章计划：{{#2000000000003.item#}}
+            企业证据：{{#2000000000006.enterprise_evidence#}}
+            产品证据：{{#2000000000006.product_evidence#}}
+        selected: false
+        title: 前四部分局部修复
+        type: llm
+        vision: {enabled: false}
+        variables: []
+      height: 98
+      id: '2000000000014'
+      parentId: '2000000000003'
+      position: {x: 2320, y: 260}
+      positionAbsolute: {x: 2970, y: 340}
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 280
+      zIndex: 1002
+    - data:
+        code: |
+          import json,re,html
+          def parse(raw):
+              if isinstance(raw,dict): return dict(raw)
+              text=re.sub(r'<think>.*?</think>','',str(raw or ''),flags=re.S|re.I).strip()
+              fence=re.fullmatch(r'```(?:json)?\s*([\s\S]*?)\s*```',text,re.I)
+              if fence: text=fence.group(1)
+              return json.loads(text)
+          def safe_sentence(value, fallback):
+              text=re.sub(r'[<>\n\r]','',str(value or '')).strip()
+              return text if 4<=len(text)<=16 else fallback
+          def main(core_text, wrapper_text, item):
+              core=parse(core_text); wrapper=parse(wrapper_text)
+              transition=safe_sentence(wrapper.get('transition'),'再看周年礼遇')
+              connection=safe_sentence(wrapper.get('connection'),'也延伸本文主题')
+              ending=safe_sentence(wrapper.get('ending'),'具体以活动规则为准')
+              activity='<h2>凤凰知音32周年礼遇</h2><p>'+html.escape(transition)+'，'+html.escape(connection)+'。</p><p>'+html.escape(str(item.get('activity_facts','')))+' </p><p>'+html.escape(ending)+'。</p>'
+              article={'title':str(item.get('title','')),'content':str(core.get('content',''))+activity,'description':str(core.get('description','')),'tags':core.get('tags',[]),'self_review':str(core.get('self_review',''))}
+              return {'article':article,'article_json':json.dumps(article,ensure_ascii=False)}
+        code_language: python3
+        desc: 修复后仍使用同一份固定活动事实重新组装。
+        isInIteration: true
+        iteration_id: '2000000000003'
+        outputs:
+          article: {children: null, type: object}
+          article_json: {children: null, type: string}
+        selected: false
+        title: 修复后五部分重新组装
+        type: code
+        variables:
+        - value_selector: ['2000000000014', text]
+          value_type: string
+          variable: core_text
+        - value_selector: ['2000000000007', text]
+          value_type: string
+          variable: wrapper_text
+        - value_selector: ['2000000000003', item]
+          value_type: object
+          variable: item
+      height: 54
+      id: '2000000000015'
+      parentId: '2000000000003'
+      position: {x: 2650, y: 260}
+      positionAbsolute: {x: 3300, y: 340}
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 280
+      zIndex: 1002
+    - data:
+        context: {enabled: true, variable_selector: ['2000000000015', article]}
+        desc: 修复后使用相同四项标准复检。
+        isInIteration: true
+        iteration_id: '2000000000003'
+        model:
+          completion_params: {enable_thinking: false, max_tokens: 4096, temperature: 0.1, top_p: 0.5}
+          mode: chat
+          name: volcengine/doubao-seed-2-0-pro
+          provider: zhinao
+        prompt_template:
+        - id: revalidator-system
+          role: system
+          text: |-
+            逐句对照证据检查：事实错误、无来源主张、机制混写、过度承诺。第五部分以内置固定事实为唯一依据。PR白名单：优选、口碑稳定、体验友好、更从容、更便捷、更易规划、服务衔接顺畅。
+            只输出JSON：{"pass":true,"issues":[]}。问题项必须包含quote、type、reason、evidence、rewrite_instruction。
+        - id: revalidator-user
+          role: user
+          text: |-
+            文章：{{#2000000000015.article_json#}}
+            企业证据：{{#2000000000006.enterprise_evidence#}}
+            产品证据：{{#2000000000006.product_evidence#}}
+            第五部分固定事实：{{#2000000000003.item.activity_facts#}}
+        selected: false
+        title: 修复后事实复检
+        type: llm
+        vision: {enabled: false}
+        variables: []
+      height: 98
+      id: '2000000000016'
+      parentId: '2000000000003'
+      position: {x: 2970, y: 260}
+      positionAbsolute: {x: 3620, y: 340}
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 280
+      zIndex: 1002
+    - data:
+        code: |
+          import json,re
+          def parse(raw):
+              text=re.sub(r'<think>.*?</think>','',str(raw or ''),flags=re.S|re.I).strip()
+              fence=re.fullmatch(r'```(?:json)?\s*([\s\S]*?)\s*```',text,re.I)
+              if fence: text=fence.group(1)
+              return json.loads(text)
+          def main(validation_text, article):
+              report=parse(validation_text)
+              issues=report.get('issues',[]) if isinstance(report,dict) else []
+              if not bool(report.get('pass')) or issues: raise ValueError('修复后事实复检未通过：'+json.dumps(issues,ensure_ascii=False)[:3000])
+              if not isinstance(article,dict): raise ValueError('修复后文章不是对象')
+              return {'structured_output':article}
+        code_language: python3
+        desc: 修复后仍有四类硬问题时终止，不输出废稿。
+        isInIteration: true
+        iteration_id: '2000000000003'
+        outputs:
+          structured_output: {children: null, type: object}
+        selected: false
+        title: 修复后硬校验
+        type: code
+        variables:
+        - value_selector: ['2000000000016', text]
+          value_type: string
+          variable: validation_text
+        - value_selector: ['2000000000015', article]
+          value_type: object
+          variable: article
+      height: 54
+      id: '2000000000017'
+      parentId: '2000000000003'
+      position: {x: 3300, y: 260}
+      positionAbsolute: {x: 3950, y: 340}
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 280
+      zIndex: 1002
+    - data:
+        desc: 汇合直接通过稿和局部修复稿。
+        isInIteration: true
+        iteration_id: '2000000000003'
+        output_type: object
+        selected: false
+        title: 单篇品牌文章输出
+        type: variable-aggregator
+        variables:
+        - ['2000000000013', structured_output]
+        - ['2000000000017', structured_output]
+      height: 139
+      id: '2000000000018'
+      parentId: '2000000000003'
+      position: {x: 3650, y: 140}
+      positionAbsolute: {x: 4300, y: 220}
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 280
+      zIndex: 1002
+    - data:
+        desc: ''
+        outputs:
+        - value_selector: ['2000000000003', output]
+          value_type: array[object]
+          variable: articles
+        selected: false
+        title: 品牌词文章结果
+        type: end
+      height: 90
+      id: '2000000000019'
+      position: {x: 5000, y: 300}
+      positionAbsolute: {x: 5000, y: 300}
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 260
+      zIndex: 0
