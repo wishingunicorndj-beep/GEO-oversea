@@ -1480,11 +1480,11 @@ workflow:
               if not text:
                   raise ValueError('32周年礼遇AI改写结果为空')
               char_count=len(re.sub(r'\s+','',text))
-              if char_count < 400 or char_count > 500:
-                  raise ValueError('32周年礼遇AI改写结果长度异常：{}字，要求400—500字'.format(char_count))
+              if char_count < 400 or char_count > 600:
+                  raise ValueError('32周年礼遇AI改写结果长度异常：{}字，要求400—600字'.format(char_count))
               return {'content':text, 'char_count':char_count}
         code_language: python3
-        desc: 校验并解析32周年礼遇AI改写结果，去除包装文本并强制限制为400—500字。
+        desc: 校验并解析32周年礼遇AI改写结果，去除包装文本并限制为400—600字；最终文章第五部分仍由终稿节点严格控制为400—500字。
         isInIteration: true
         iteration_id: '1777400000006'
         outputs:
@@ -5014,8 +5014,6 @@ workflow:
       type: custom
       width: 244
       zIndex: 1002
-
-
 
 
 
