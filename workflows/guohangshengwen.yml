@@ -462,6 +462,32 @@ workflow:
       type: custom
       zIndex: 1002
     - data:
+        isInIteration: true
+        iteration_id: '1777400000006'
+        sourceType: code
+        targetType: llm
+      id: edge-brand-validation-repair
+      selected: false
+      source: '17769383496072'
+      sourceHandle: source
+      target: '1793000000020'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '1777400000006'
+        sourceType: llm
+        targetType: code
+      id: edge-brand-repair-parse
+      selected: false
+      source: '1793000000020'
+      sourceHandle: source
+      target: '1793000000021'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
         isInIteration: false
         sourceType: llm
         targetType: code
@@ -4298,7 +4324,7 @@ workflow:
         - '1780900000001'
         - brand_plans
         output_selector:
-        - '17769383496072'
+        - '1793000000021'
         - structured_output
         output_type: array[object]
         parallel_nums: 10
@@ -4701,6 +4727,108 @@ workflow:
       positionAbsolute:
         x: 10737.692292756052
         y: 704.0933535387173
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 1002
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: 品牌词文章最多执行一次定点修复；按综合校验问题补足字数、修正结构并保留全部事实，修复后不再循环。
+        isInIteration: true
+        iteration_id: '1777400000006'
+        model:
+          completion_params:
+            enable_thinking: false
+            max_tokens: 16384
+            temperature: 0.3
+            top_p: 0.7
+          mode: chat
+          name: volcengine/doubao-seed-2-0-pro
+          provider: zhinao
+        prompt_template:
+        - id: brand-repair-sys
+          role: system
+          text: |-
+            你是国航品牌文章修复器。请修复当前文章并输出完整、合法的JSON对象，不得输出Markdown、解释或代码块。
+            只允许依据当前文章、文章计划和带来源标签的事实素材修复；不得新增事实，不得删除规则、数字、时间、资格、舱位、权益用途或有效期。
+            必须保留且只能有5个<h2>部分。正文去除HTML标签和空白后必须为2200—2650字，修复后的目标长度为2400—2500字，绝不能低于2200字：第一部分200—250字，第二部分500—600字，第三部分500—600字，第四部分600—700字，第五部分400—500字。若原文过短，只补充已有事实的具体说明，不得用空话凑字数；若超长，删除重复解释。保持完整句子、自然段和闭合HTML。
+            品牌词文章不得提及竞品、排名或比较，不得使用绝对化禁用词。字段固定为title、content、description、tags、self_review。
+        - id: brand-repair-user
+          role: user
+          text: |-
+            当前文章：{{#17769383496063.text#}}
+            综合校验问题：{{#17769383496072.issues#}}
+            当前品牌文章计划：{{#1777400000006.item#}}
+            本篇事实素材：{{#1793000000010.source_labeled_kb#}}
+            请逐条修复问题并重新输出完整JSON。重点处理综合校验指出的字数不足；修复后先自行检查可见字数，目标2400—2500字，低于2200字不得输出。只输出完整文章对象。
+        selected: false
+        title: N7 品牌词正文自动修复
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 98
+      id: '1793000000020'
+      parentId: '1777400000006'
+      position:
+        x: 980
+        y: 65
+      positionAbsolute:
+        x: 11040
+        y: 704
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 1002
+    - data:
+        code: |
+          import json
+          import re
+          def main(raw):
+              text = re.sub(r'<think>.*?</think>', '', str(raw or ''), flags=re.S | re.I).strip()
+              fence = re.fullmatch(r'```(?:json)?\s*([\s\S]*?)\s*```', text, re.I)
+              if fence:
+                  text = fence.group(1).strip()
+              article = json.loads(text)
+              if not isinstance(article, dict):
+                  raise ValueError('品牌修复结果不是JSON对象')
+              fields = ('title', 'content', 'description', 'tags', 'self_review')
+              missing = [x for x in fields if x not in article]
+              if missing:
+                  raise ValueError('品牌修复结果缺少字段：' + ','.join(missing))
+              return {'structured_output': {x: article[x] for x in fields}}
+        code_language: python3
+        desc: 解析品牌词自动修复结果，交给终稿硬校验。
+        isInIteration: true
+        iteration_id: '1777400000006'
+        outputs:
+          structured_output:
+            children:
+            type: object
+        selected: false
+        title: 品牌词修复结果解析
+        type: code
+        variables:
+        - value_selector:
+          - '1793000000020'
+          - text
+          value_type: string
+          variable: raw
+      height: 54
+      id: '1793000000021'
+      parentId: '1777400000006'
+      position:
+        x: 1260
+        y: 65
+      positionAbsolute:
+        x: 11320
+        y: 704
       selected: false
       sourcePosition: right
       targetPosition: left
