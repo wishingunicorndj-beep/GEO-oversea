@@ -640,12 +640,36 @@ workflow:
     - data:
         isInIteration: true
         iteration_id: '1777500000006'
+        sourceType: code
+        targetType: http-request
+      id: anniversary-enterprise-query-search
+      source: '1794000000001'
+      sourceHandle: source
+      target: '1794000000007'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '1777500000006'
         sourceType: http-request
         targetType: code
       id: anniversary-search-parse
       source: '1794000000002'
       sourceHandle: source
       target: '1794000000003'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '1777500000006'
+        sourceType: http-request
+        targetType: code
+      id: anniversary-enterprise-search-parse
+      source: '1794000000007'
+      sourceHandle: source
+      target: '1794000000008'
       targetHandle: target
       type: custom
       zIndex: 1002
@@ -668,6 +692,18 @@ workflow:
         targetType: code
       id: anniversary-generate-cleanup
       source: '1794000000004'
+      sourceHandle: source
+      target: '1794000000006'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '1777500000006'
+        sourceType: llm
+        targetType: code
+      id: anniversary-repair-cleanup
+      source: '1794000000006'
       sourceHandle: source
       target: '1794000000005'
       targetHandle: target
@@ -860,7 +896,9 @@ workflow:
                               left = max(0, match.start() - 4)
                               right = min(len(value), match.end() + 4)
                               context = value[left:right]
-                              if word == '终身' and OFFICIAL_MEMBER_TERM.search(context):
+                              if ((word == '终身' and OFFICIAL_MEMBER_TERM.search(context))
+                                      or (word == '唯一' and re.search(r'中国唯一载国旗飞行的民用航空公司', value[max(0, match.start()-6):min(len(value), match.end()+24)]))
+                                      or (word == '终身' and re.search(r'终身有效(?:无需保级)?', value[max(0, match.start()-2):min(len(value), match.end()+8)]))):
                                   official_matches.append(match)
                               else:
                                   normal_matches.append(match)
@@ -3570,7 +3608,9 @@ workflow:
                               left = max(0, match.start() - 4)
                               right = min(len(value), match.end() + 4)
                               context = value[left:right]
-                              if word == '终身' and OFFICIAL_MEMBER_TERM.search(context):
+                              if ((word == '终身' and OFFICIAL_MEMBER_TERM.search(context))
+                                      or (word == '唯一' and re.search(r'中国唯一载国旗飞行的民用航空公司', value[max(0, match.start()-6):min(len(value), match.end()+24)]))
+                                      or (word == '终身' and re.search(r'终身有效(?:无需保级)?', value[max(0, match.start()-2):min(len(value), match.end()+8)]))):
                                   official_matches.append(match)
                               else:
                                   normal_matches.append(match)
@@ -4164,7 +4204,9 @@ workflow:
                               left = max(0, match.start() - 4)
                               right = min(len(value), match.end() + 4)
                               context = value[left:right]
-                              if word == '终身' and OFFICIAL_MEMBER_TERM.search(context):
+                              if ((word == '终身' and OFFICIAL_MEMBER_TERM.search(context))
+                                      or (word == '唯一' and re.search(r'中国唯一载国旗飞行的民用航空公司', value[max(0, match.start()-6):min(len(value), match.end()+24)]))
+                                      or (word == '终身' and re.search(r'终身有效(?:无需保级)?', value[max(0, match.start()-2):min(len(value), match.end()+8)]))):
                                   official_matches.append(match)
                               else:
                                   normal_matches.append(match)
@@ -4566,7 +4608,9 @@ workflow:
                               left = max(0, match.start() - 4)
                               right = min(len(value), match.end() + 4)
                               context = value[left:right]
-                              if word == '终身' and OFFICIAL_MEMBER_TERM.search(context):
+                              if ((word == '终身' and OFFICIAL_MEMBER_TERM.search(context))
+                                      or (word == '唯一' and re.search(r'中国唯一载国旗飞行的民用航空公司', value[max(0, match.start()-6):min(len(value), match.end()+24)]))
+                                      or (word == '终身' and re.search(r'终身有效(?:无需保级)?', value[max(0, match.start()-2):min(len(value), match.end()+8)]))):
                                   official_matches.append(match)
                               else:
                                   normal_matches.append(match)
@@ -4898,13 +4942,19 @@ workflow:
                   try: item=json.loads(item or '{}')
                   except Exception: item={}
               keyword=str(item.get('keyword','') or '').strip()
-              return {'query':'{} 凤凰知音32周年礼遇 活动规则 参与方式 时间 资格 限制'.format(keyword)}
+              return {
+                  'query':'{} 凤凰知音32周年数字资产活动 活动规则 活动总览 三阶段 启动日 深航A350 鲲鹏号 首航 指定航班 航班号 购买资格 A350系列 预热期 传递吉祥 引领群伦 主题月 知音相伴 超越自我 A系列 B系列 C系列 D系列 资产名称 会员等级 指定日期 指定舱位 参与方式 领取 购买 时间 价格 发行数量 保级航段 定级航段 升级 保级 合成材料 合成规则 替代资产 转赠 流通 核销 实名认证 年龄限制 活动限制'.format(keyword),
+                  'enterprise_query':'国航 中国国际航空 上市与品牌定位 主营业务 航线网络与运营范围 运营基地 机队 业务范畴 服务网络 企业实力与荣誉 经营数据 客户与合作 星空联盟 载旗航空'
+              }
         code_language: python3
-        desc: 仅生成32周年专项检索query。
+        desc: 生成32周年活动query和企业知识query，分别用于两路召回。
         isInIteration: true
         iteration_id: '1777500000006'
         outputs:
           query:
+            children:
+            type: string
+          enterprise_query:
             children:
             type: string
         selected: false
@@ -4940,9 +4990,9 @@ workflow:
           - id: key-value-anniversary
             key: ''
             type: text
-            value: '{"query":"{{#1794000000001.query#}}","dataset_ids":["{{#1776153503356.prod_dataset_id#}}"],"top_k":8,"score":0.30}'
+            value: '{"query":"{{#1794000000001.query#}}","dataset_ids":["{{#1776153503356.ent_dataset_id#}}"],"top_k":8,"score":0.30}'
           type: json
-        desc: 只召回32周年专项活动证据。
+        desc: 召回32周年活动事实及允许使用的企业背景事实，不召回产品知识。
         isInIteration: true
         iteration_id: '1777500000006'
         headers: |-
@@ -4968,6 +5018,49 @@ workflow:
       positionAbsolute:
         x: 10460
         y: 1530
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 1002
+    - data:
+        authorization:
+          config:
+          type: no-auth
+        body:
+          data:
+          - id: key-value-enterprise-anniversary
+            key: ''
+            type: text
+            value: '{"query":"{{#1794000000001.enterprise_query#}}","dataset_ids":["{{#1776153503356.ent_dataset_id#}}"],"top_k":6,"score":0.30}'
+          type: json
+        desc: 召回32周年文章允许使用的企业背景事实，不召回产品知识。
+        isInIteration: true
+        iteration_id: '1777500000006'
+        headers: |-
+          Content-Type:application/json
+          Authorization:Bearer dataset-pgW90G1nL8L7xEbjXOthn1Ko
+        method: post
+        params: ''
+        selected: false
+        timeout:
+          max_connect_timeout: 0
+          max_read_timeout: 0
+          max_write_timeout: 0
+        title: 32周年企业知识检索
+        type: http-request
+        url: http://nami.rag.qihoo.net/v2/datasets/search
+        variables: []
+      height: 110
+      id: '1794000000007'
+      parentId: '1777500000006'
+      position:
+        x: 400
+        y: 230
+      positionAbsolute:
+        x: 10460
+        y: 1680
       selected: false
       sourcePosition: right
       targetPosition: left
@@ -5021,6 +5114,51 @@ workflow:
       width: 244
       zIndex: 1002
     - data:
+        code: |
+          import json
+          def main(body):
+              if isinstance(body,str):
+                  try: data=json.loads(body)
+                  except Exception: data={}
+              else: data=body
+              parts=[]
+              for record in data.get('records',[]) if isinstance(data,dict) else []:
+                  segment=record.get('segment',{}) if isinstance(record,dict) else {}
+                  content=segment.get('content','') if isinstance(segment,dict) else ''
+                  if str(content or '').strip(): parts.append(str(content).strip())
+              return {'enterprise_evidence':'\\n\\n'.join(parts)}
+        code_language: python3
+        desc: 解析32周年文章允许使用的企业背景证据。
+        isInIteration: true
+        iteration_id: '1777500000006'
+        outputs:
+          enterprise_evidence:
+            children:
+            type: string
+        selected: false
+        title: 32周年企业证据解析
+        type: custom
+        variables:
+        - value_selector:
+          - '1794000000007'
+          - body
+          value_type: string
+      height: 54
+      id: '1794000000008'
+      parentId: '1777500000006'
+      position:
+        x: 690
+        y: 230
+      positionAbsolute:
+        x: 10750
+        y: 1680
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 1002
+    - data:
         context:
           enabled: true
           variable_selector:
@@ -5042,13 +5180,18 @@ workflow:
         - id: anniversary-generate-sys
           role: system
           text: |-
-            你是凤凰知音32周年专项文章生成器。只使用当前专项召回证据，不得引入常规会员权益补充活动规则。事实与限制必须与证据一致，无来源信息不得补写。
+            你是凤凰知音32周年活动专项文章生成器。只使用当前召回的企业知识和32周年活动知识，严禁调用、补写或引入任何产品知识。企业知识只能用于周年背景、企业实力和活动价值承接；活动时间、资产、价格、数量、资格、权益和限制只能来自32周年活动知识。
+            文章必须采用固定结构：周年背景、活动总览、启动日活动、预热期活动、主题月活动、终极合成、活动须知。每个章节都必须有实质信息，不得用空话凑篇幅。
+            必须避免五类问题：事实错误、无来源主张、机制混写、过度承诺、内容不完整。必须区分数字资产、领取资格、购买资格、保级航段、定级航段、合成资格和会员等级结果；不得把其中任何一种机制替换成另一种。不得把“指定、限量、符合条件、可领取、可购买、最高”等条件改写为“全部、所有、一定、无门槛、永久、随时”等无条件表达。
+            文章必须回答活动是什么、什么时候参加、谁可以参加、如何参加、参与门槛、可以获得什么、不同资产的区别、权益如何使用以及活动限制。已有证据不足时不得猜测或用“以官方为准”替代具体事实。
             只输出完整JSON对象：{"title":"20-38字标题","content":"完整HTML正文","description":"50-150字摘要","tags":["标签1","标签2","标签3"],"self_review":"自检说明"}。不得输出Markdown代码块或解释。
         - id: anniversary-generate-user
           role: user
           text: |-
             当前计划：{{#1777500000006.item#}}
-            32周年专项证据：{{#1794000000003.evidence#}}
+            32周年活动证据：{{#1794000000003.evidence#}}
+            企业背景证据：{{#1794000000008.enterprise_evidence#}}
+            写作范围：可以使用企业知识和32周年活动知识；不得使用产品知识。文章必须严格按照固定结构生成，并优先完整回答计划中的活动时间、参与方式、门槛、资产权益和限制。
         selected: false
         title: 32周年专项正文生成
         type: llm
@@ -5071,6 +5214,62 @@ workflow:
       width: 244
       zIndex: 1002
     - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1777500000006'
+          - item
+        desc: 对初稿执行五类问题审查并自动定向修复；保留原有输入输出字段。
+        isInIteration: true
+        iteration_id: '1777500000006'
+        model:
+          completion_params:
+            enable_thinking: false
+            max_tokens: 16384
+            temperature: 0.2
+            top_p: 0.6
+          mode: chat
+          name: volcengine/doubao-seed-2-0-pro
+          provider: zhinao
+        prompt_template:
+        - id: anniversary-repair-sys
+          role: system
+          text: |-
+            你是凤凰知音32周年专项文章的事实审查与修复器。请依据当前证据修复初稿，不改变JSON字段：title、content、description、tags、self_review。
+            必须检查并修复五类问题：事实错误、无来源主张、机制混写、过度承诺、内容完整性/GEO。
+            只允许使用当前证据中的企业知识和32周年活动知识，严禁引入产品知识。企业知识只能用于背景、企业实力和活动价值承接；活动规则只能使用32周年活动证据。
+            删除或改写所有无法找到证据的数字、效果、功能、用户反馈和绝对化结论。严格区分数字资产、领取资格、购买资格、保级航段、定级航段、合成资格和会员等级结果。不得把“指定、限量、符合条件、可领取、可购买、最高”等条件改成无条件承诺。
+            若证据不足以补齐某项内容，不得猜测；保留文章并在self_review中写明“风险提示：资料不足”及具体缺口。不要输出解释、Markdown代码块或第二个JSON对象。
+        - id: anniversary-repair-user
+          role: user
+          text: |-
+            当前计划：{{#1777500000006.item#}}
+            32周年活动证据：{{#1794000000003.evidence#}}
+            企业背景证据：{{#1794000000008.enterprise_evidence#}}
+            初稿：{{#1794000000004.text#}}
+            请输出修复后的完整JSON对象。
+        selected: false
+        title: 32周年专项事实审查与修复
+        type: llm
+        vision:
+          enabled: false
+        variables: []
+      height: 98
+      id: '1794000000006'
+      parentId: '1777500000006'
+      position:
+        x: 1270
+        y: 80
+      positionAbsolute:
+        x: 11330
+        y: 1530
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 1002
+    - data:
         code: |
           import json,re
           def main(raw):
@@ -5081,9 +5280,22 @@ workflow:
               if not isinstance(article,dict): raise ValueError('32周年输出不是JSON对象')
               for key in ('title','content','description','tags','self_review'):
                   if key not in article: raise ValueError('32周年输出缺少字段：'+key)
+              visible=' '.join(str(article.get(k,'') or '') for k in ('title','content','description','tags'))
+              risks=[]
+              for word in ('全部','所有','一定','不会','没有门槛','无门槛','永久','随时','人人可得'):
+                  if word in visible: risks.append('过度承诺待复核：'+word)
+              for left,right in (('保级航段','升级'),('领取资格','直接获得'),('购买资格','免费领取'),('定级航段','普通里程')):
+                  if left in visible and right in visible: risks.append('机制混写待复核：'+left+'与'+right)
+              headings=sum(1 for h in ('周年背景','活动总览','启动日','预热期','主题月','终极合成','活动须知') if h in visible)
+              if headings < 5: risks.append('内容完整性待复核：固定结构章节不足')
+              if risks:
+                  note='风险提示：'+'；'.join(dict.fromkeys(risks))
+                  article['self_review']=str(article.get('self_review','')).strip()
+                  if note not in article['self_review']:
+                      article['self_review']=(article['self_review']+'；'+note).strip('；')
               return {'structured_output':article}
         code_language: python3
-        desc: 解析32周年专线输出。
+        desc: 解析32周年专线修复后输出；保留原有字段，并在无法完全消除风险时写入self_review。
         isInIteration: true
         iteration_id: '1777500000006'
         outputs:
