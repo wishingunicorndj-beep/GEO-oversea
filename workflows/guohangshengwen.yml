@@ -4639,6 +4639,14 @@ workflow:
           
           def main(n7_text, factual_validation=''):
               result = precheck(n7_text, 'brand')
+              try:
+                  article = parse_article(n7_text)
+                  result['structured_output'] = {name: article[name] for name in FIELDS}
+              except ValueError:
+                  result['structured_output'] = {
+                      'title': '', 'content': '', 'description': '',
+                      'tags': [], 'self_review': ''
+                  }
               raw = re.sub(r'<think>.*?</think>', '', str(factual_validation or ''), flags=re.S | re.I).strip()
               fence = re.fullmatch(r'```(?:json)?\s*([\s\S]*?)\s*```', raw, re.I)
               if fence: raw = fence.group(1)
@@ -4658,6 +4666,9 @@ workflow:
         isInIteration: true
         iteration_id: '1777400000006'
         outputs:
+          structured_output:
+            children:
+            type: object
           content_len:
             children:
             type: number
@@ -4975,4 +4986,3 @@ workflow:
       type: custom
       width: 244
       zIndex: 1002
-
