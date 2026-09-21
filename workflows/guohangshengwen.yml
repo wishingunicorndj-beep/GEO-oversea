@@ -462,19 +462,6 @@ workflow:
       type: custom
       zIndex: 1002
     - data:
-        isInIteration: true
-        iteration_id: '1777400000006'
-        sourceType: code
-        targetType: variable-aggregator
-      id: edge-brand-validation-aggregate
-      selected: false
-      source: '17769383496072'
-      sourceHandle: source
-      target: '1780921429793'
-      targetHandle: target
-      type: custom
-      zIndex: 1002
-    - data:
         isInIteration: false
         sourceType: llm
         targetType: code
@@ -4311,8 +4298,8 @@ workflow:
         - '1780900000001'
         - brand_plans
         output_selector:
-        - '1780921429793'
-        - output
+        - '17769383496072'
+        - structured_output
         output_type: array[object]
         parallel_nums: 10
         selected: false
@@ -4710,32 +4697,6 @@ workflow:
       width: 244
       zIndex: 1002
     - data:
-        desc: ''
-        isInIteration: true
-        iteration_id: '1777400000006'
-        output_type: object
-        selected: false
-        title: 文章聚合-品牌
-        type: variable-aggregator
-        variables:
-        - - '17769383496072'
-          - structured_output
-      height: 139
-      id: '1780921429793'
-      parentId: '1777400000006'
-      position:
-        x: 1819.572050291441
-        y: 138.94697985012067
-      positionAbsolute:
-        x: 11879.572050291441
-        y: 777.9469798501207
-      selected: false
-      sourcePosition: right
-      targetPosition: left
-      type: custom
-      width: 244
-      zIndex: 1002
-    - data:
         desc: 32周年关键词独立线路，不进入品牌词或品类词生成器。
         error_handle_mode: terminated
         height: 360
@@ -5014,7 +4975,4 @@ workflow:
       type: custom
       width: 244
       zIndex: 1002
-
-
-
 
