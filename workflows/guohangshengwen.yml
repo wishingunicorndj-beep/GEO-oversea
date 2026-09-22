@@ -701,9 +701,33 @@ workflow:
         isInIteration: true
         iteration_id: '1777500000006'
         sourceType: llm
-        targetType: code
-      id: anniversary-generate-precheck
+        targetType: llm
+      id: anniversary-generate-second-half
       source: '1794000000004'
+      sourceHandle: source
+      target: '1794000000011'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '1777500000006'
+        sourceType: llm
+        targetType: code
+      id: anniversary-second-half-assemble
+      source: '1794000000011'
+      sourceHandle: source
+      target: '1794000000012'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '1777500000006'
+        sourceType: code
+        targetType: code
+      id: anniversary-assemble-precheck
+      source: '1794000000012'
       sourceHandle: source
       target: '1794000000010'
       targetHandle: target
@@ -3439,7 +3463,18 @@ workflow:
                       '文末独立提及凤凰知音32周年数字资产专项活动；只采用明确属于该专项活动的资料，不得把常规会员权益写成活动规则或奖励',
                       '总结：回扣原始品类问题和材料支持的国航场景关联，不作绝对化结论'
                   ]
-                  if any(x in keyword for x in ('32周年', '三十二周年', '周年庆', '数字资产')):
+                  if mode == 'anniversary':
+                      anniversary_sections = [
+                          '周年背景与开篇：介绍32周年节点、活动定位与参与价值',
+                          '活动总览：交代三阶段、资产系列与参与路径',
+                          '启动日活动：依据证据写明航班、舱位、购买资格与资产权益',
+                          '预热期活动：区分传递吉祥与引领群伦的资格、获取方式和航段用途',
+                          '主题月活动：分别写明知音相伴各款的会员等级、舱位与获取条件',
+                          '终极合成：按证据交代合成所需资产、数量、结果及限制',
+                          '活动须知：说明年龄、实名、权益核销、流通与其他已证实限制',
+                          '企业实力与品牌收束：仅依据企业证据介绍国航并回扣周年活动'
+                      ]
+                  elif any(x in keyword for x in ('32周年', '三十二周年', '周年庆', '数字资产')):
                       campaign_sections = [
                           '开篇导语：直接回应用户对凤凰知音32周年专项活动的关注',
                           '活动背景与参与场景：说明本次周年活动面向的用户和使用场景',
@@ -3473,17 +3508,17 @@ workflow:
                       'query_intent': 'brand' if brand else ('anniversary' if mode == 'anniversary' else intent),
                       'audience_scene': scene,
                       'user_pain_points': pain_points,
-                      'content_objective': '围绕国航品牌事实和规则回答关键词。' if brand else objective,
-                      'decision_dimensions': ['航段或里程累积', '会员等级规则', '相关服务权益'] if not brand and intent == 'decision' else [],
-                      'content_scope': content_scope,
+                      'content_objective': '只回答凤凰知音32周年数字资产专项活动的参与方式、门槛、权益差异和限制。' if mode == 'anniversary' else ('围绕国航品牌事实和规则回答关键词。' if brand else objective),
+                      'decision_dimensions': ['航段或里程累积', '会员等级规则', '相关服务权益'] if mode == 'category' and intent == 'decision' else [],
+                      'content_scope': ['32周年活动时间线', '参与资格与获取方式', '资产及航段用途', '合成与使用限制', '企业背景收束'] if mode == 'anniversary' else content_scope,
                       'evidence_scope': retrieval_terms,
                       'retrieval_terms': retrieval_terms,
                       'style_constraints': custom.get('style_constraints', []) if isinstance(custom.get('style_constraints', []), list) else [],
-                      'target_brand_role': '文章主体' if brand else '基于材料客观说明目标方案',
+                      'target_brand_role': '周年活动主体，企业知识仅用于背景与收束' if mode == 'anniversary' else ('文章主体' if brand else '基于材料客观说明目标方案'),
                       'allow_target_brand_in_title': title_decision,
-                      'title_scope': '场景决策型标题可引入国航或凤凰知音' if title_decision else ('原品类关键词为标题主体，国航在正文引入' if not brand else '标题按场景或痛点切入，包含关键词、品牌与有依据的结论'),
-                      'section_plan': brand_sections if brand else category_sections,
-                      'article_type': article_type or ('品牌介绍类' if brand else ('场景决策说明类' if intent == 'decision' else '品类信息说明类')),
+                      'title_scope': '围绕32周年活动与原关键词生成标题' if mode == 'anniversary' else ('场景决策型标题可引入国航或凤凰知音' if title_decision else ('原品类关键词为标题主体，国航在正文引入' if not brand else '标题按场景或痛点切入，包含关键词、品牌与有依据的结论')),
+                      'section_plan': anniversary_sections if mode == 'anniversary' else (brand_sections if brand else category_sections),
+                      'article_type': '32周年活动专项' if mode == 'anniversary' else (article_type or ('品牌介绍类' if brand else ('场景决策说明类' if intent == 'decision' else '品类信息说明类'))),
                       'article_style': article_style or '克制、事实支撑的PR稿件风格',
                       'company_name': company_name or '国航',
                       'region': region or '全国',
@@ -3491,7 +3526,7 @@ workflow:
                       'competitor_names': [],
                       'ranking_allowed': False,
                       'faq_required': False,
-                      'writing_rule': '品牌词只写国航，不出现竞品。' if brand else '允许描述用户场景和判断维度；只有本篇确需比较且材料有明确来源时，才作中性事实并列，不得写竞品优势、优劣、推荐或排名。'
+                      'writing_rule': '只使用32周年活动知识与企业背景知识，不使用产品知识；活动机制须保留条件和限制。' if mode == 'anniversary' else ('品牌词只写国航，不出现竞品。' if brand else '允许描述用户场景和判断维度；只有本篇确需比较且材料有明确来源时，才作中性事实并列，不得写竞品优势、优劣、推荐或排名。')
                   })
               return {
                   'plan': plans,
@@ -5374,7 +5409,7 @@ workflow:
         type: code
         variables:
         - value_selector:
-          - '1794000000004'
+          - '1794000000012'
           - text
           value_type: string
           variable: raw
@@ -5399,7 +5434,7 @@ workflow:
           variable_selector:
           - '1777500000006'
           - item
-        desc: 32周年专项文章独立生成。
+        desc: 32周年文章前四章生成；后四章由下一节点继续写作。
         isInIteration: true
         iteration_id: '1777500000006'
         model:
@@ -5416,20 +5451,20 @@ workflow:
           role: system
           text: |-
             你是凤凰知音32周年活动专项文章生成器。只使用当前召回的企业知识和32周年活动知识，严禁调用、补写或引入任何产品知识。企业知识只能用于周年背景、企业实力和活动价值承接；活动时间、资产、价格、数量、资格、权益和限制只能来自32周年活动知识。
-            文章必须采用固定结构，并且正文必须恰好包含以下8个<h2>章节，标题可在不改变含义的前提下自然润色，但不得合并、删除或改为<h3>：周年背景与开篇、活动总览、启动日活动、预热期活动、主题月活动、终极合成、活动须知、企业实力与品牌收束。第一章必须先用完整导语交代凤凰知音32周年、2026周年节点、活动定位和用户价值，不得只有无标题开场段，也不得一上来直接罗列规则；最后一章必须依据企业背景证据总结国航企业实力、航线网络、机队、业务或联盟信息，并回扣本次周年活动，不得写成常规会员产品介绍。每个章节都必须有实质信息，不得用空话凑篇幅。
-            正文去除HTML标签和空白后必须控制在2800—3500字，目标为3000—3300字。必须按以下最低篇幅完成八个章节，不能把多个章节合并，也不能用一句话带过：周年背景与开篇至少280字；活动总览至少300字；启动日活动至少350字；预热期活动至少500字；主题月活动至少350字；终极合成至少300字；活动须知至少280字；企业实力与品牌收束至少440字。完成全部章节后再检查总字数；如果不足，只能根据对应章节已有证据补充参与条件、时间、资产差异、权益用途、限制和企业信息，不得重复、猜测或用空泛宣传语凑字数。
+            你只负责完整文章的前四章，依次输出且只输出4个<h2>章节：周年背景与开篇、活动总览、启动日活动、预热期活动；标题可自然润色但不能改写章节含义。第一章用完整导语交代凤凰知音32周年、2026周年节点、活动定位和用户价值；预热期须区分传递吉祥与引领群伦，不得合并成一段。不要写后四章，也不要写全文结语。
+            本段正文去除HTML标签和空白后目标为1500—1700字。前四章最低分别为280、300、350、500字；每章至少2个完整<p>段落。若证据不足，只能写已证实内容并在段内保留适用条件，不得重复或虚构事实凑字。
             必须避免五类问题：事实错误、无来源主张、机制混写、过度承诺、内容不完整。必须区分数字资产、领取资格、购买资格、保级航段、定级航段、合成资格和会员等级结果；不得把其中任何一种机制替换成另一种。不得把“指定、限量、符合条件、可领取、可购买、最高”等条件改写为“全部、所有、一定、无门槛、永久、随时”等无条件表达。
-            文章必须回答活动是什么、什么时候参加、谁可以参加、如何参加、参与门槛、可以获得什么、不同资产的区别、权益如何使用以及活动限制。已有证据不足时不得猜测或用“以官方为准”替代具体事实。开头和结尾都必须保留，不得为了压缩字数删除开篇导语或企业收束。
-            只输出完整JSON对象：{"title":"20-38字标题","content":"完整HTML正文","description":"50-150字摘要","tags":["标签1","标签2","标签3"],"self_review":"自检说明"}。不得输出Markdown代码块或解释。
+            前四章要回答活动是什么、什么时候参加、启动日如何获得购买资格、预热期如何领取或购买及对应的航段用途。已有证据不足时不得猜测或用“以官方为准”替代具体事实。
+            只输出这四章连续的HTML正文，不要输出JSON、Markdown代码块、标题候选、解释或字数报告。
         - id: anniversary-generate-user
           role: user
           text: |-
             当前计划：{{#1777500000006.item#}}
-            这是32周年专项线路。若当前计划中的article_type、title_scope、section_plan、content_scope或其他字段与“32周年专项文章、8个固定<h2>章节、企业知识+32周年活动知识”冲突，必须以本系统提示词为准，不得按品类词模板生成，也不得采用计划中6段式section_plan。
+            这是32周年专项线路。若计划字段与32周年专项八章结构冲突，以本系统提示词和大纲为准。
             32周年活动证据：{{#1794000000003.evidence#}}
             企业背景证据：{{#1794000000008.enterprise_evidence#}}
             差异化文章大纲与标题候选：{{#1794000000009.text#}}
-            写作范围：可以使用企业知识和32周年活动知识；不得使用产品知识。文章必须严格按照大纲的差异化主线和8个固定<h2>章节生成，并从title_candidates中选择最匹配本文主线的一个作为title，不得另行创作无关标题。每章按大纲的word_budget展开至少2个完整<p>段落，逐一解释有证据支持的条件、步骤、权益用途和限制，不得用速查式短句替代正文。优先完整回答计划中的活动时间、参与方式、门槛、资产权益和限制。请逐章自检最低字数：周年背景与开篇280字、活动总览300字、启动日350字、预热期500字、主题月350字、终极合成300字、活动须知280字、企业收束440字；任一章节不足、缺少<h2>或八章未完成，都必须继续补写后再输出。只输出完整JSON对象，不要提前结束。
+            只写大纲的前四章，每章按大纲的word_budget展开至少2个完整<p>段落，逐一解释有证据支持的条件、步骤、权益用途和限制，不得用速查式短句替代正文。逐章自检最低字数：周年背景与开篇280字、活动总览300字、启动日350字、预热期500字。只输出四章HTML，不要提前结束。
         selected: false
         title: 32周年专项正文生成
         type: llm
@@ -5444,6 +5479,136 @@ workflow:
         y: 80
       positionAbsolute:
         x: 11040
+        y: 1530
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 1002
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1777500000006'
+          - item
+        desc: 只生成32周年正文后四章，与前四章合并后进入原有预检和事实修复。
+        isInIteration: true
+        iteration_id: '1777500000006'
+        model:
+          completion_params:
+            enable_thinking: false
+            max_tokens: 16384
+            temperature: 0.3
+            top_p: 0.6
+          mode: chat
+          name: volcengine/doubao-seed-2-0-pro
+          provider: zhinao
+        prompt_template:
+        - id: anniversary-second-half-sys
+          role: system
+          text: |-
+            你是凤凰知音32周年活动专项文章的续写器。只使用当前召回的32周年活动证据和企业证据，严禁产品知识。前四章已完成，你只写后四章，依次且只输出4个<h2>章节：主题月活动、终极合成、活动须知、企业实力与品牌收束；标题可自然润色但不能改变章节含义。最后一章仅以企业知识介绍国航实力并回扣周年活动，不写常规会员产品介绍。
+            本段去除HTML标签和空白后目标为1500—1700字。四章最低分别为350、300、280、440字，每章至少2个完整<p>段落。主题月须区分会员等级、舱位、领取与购买；终极合成须写清材料、结果及限制；活动须知须交代资格、权益核销与已证实的限制。对证据不足的项目不要猜测或重复空话凑字。
+            必须区分数字资产、领取资格、购买资格、保级航段、定级航段、合成资格及会员等级结果。不得将指定、限量、符合条件等边界改写成无条件承诺。不要续写前四章，也不要额外增加第九章。
+            只输出这四章连续的HTML正文，不要输出JSON、Markdown代码块、标题候选、解释或字数报告。
+        - id: anniversary-second-half-user
+          role: user
+          text: |-
+            当前计划：{{#1777500000006.item#}}
+            差异化文章大纲与标题候选：{{#1794000000009.text#}}
+            已写前四章（只用于保持主线和避免重复，不要重写）：{{#1794000000004.text#}}
+            32周年活动证据：{{#1794000000003.evidence#}}
+            企业背景证据：{{#1794000000008.enterprise_evidence#}}
+            按大纲只写第五至第八章，每章至少2个完整<p>段落，字数分别至少350、300、280、440字。只写证据能支撑的事实、条件、参与步骤和限制。
+        selected: false
+        title: 32周年专项正文后四章
+        type: llm
+        vision:
+          enabled: false
+        variables: []
+      height: 98
+      id: '1794000000011'
+      parentId: '1777500000006'
+      position:
+        x: 1240
+        y: 80
+      positionAbsolute:
+        x: 11300
+        y: 1530
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 1002
+    - data:
+        code: |
+          import json
+          import re
+
+          def clean_html(value):
+              text = re.sub(r'<think>.*?</think>', '', str(value or ''), flags=re.S | re.I).strip()
+              match = re.fullmatch(r'```(?:html)?\s*([\s\S]*?)\s*```', text, re.I)
+              return match.group(1).strip() if match else text
+
+          def main(outline, first_half, second_half):
+              source = str(outline or '').strip()
+              fenced = re.fullmatch(r'```(?:json)?\s*([\s\S]*?)\s*```', source, re.I)
+              if fenced:
+                  source = fenced.group(1)
+              try:
+                  plan = json.loads(source)
+              except (ValueError, TypeError):
+                  plan = {}
+              candidates = plan.get('title_candidates', []) if isinstance(plan, dict) else []
+              title = next((str(x).strip() for x in candidates if isinstance(x, str) and 20 <= len(x.strip()) <= 38), '')
+              if not title:
+                  title = '国航凤凰知音32周年活动如何参与？数字资产权益与规则解析'
+              content = clean_html(first_half) + '\n' + clean_html(second_half)
+              article = {
+                  'title': title,
+                  'content': content,
+                  'description': '围绕凤凰知音32周年数字资产专项活动，梳理启动日、预热期和主题月的参与方式、适用条件、资产权益、合成路径及使用限制，帮助读者按活动证据核对可参与的环节。',
+                  'tags': ['国航', '凤凰知音', '32周年', '数字资产', '会员活动'],
+                  'self_review': '前后四章已合并，待结构预检与事实复核。'
+              }
+              return {'text': json.dumps(article, ensure_ascii=False)}
+        code_language: python3
+        desc: 合并32周年前后四章并组装原有五字段JSON，保持下游输入输出格式不变。
+        isInIteration: true
+        iteration_id: '1777500000006'
+        outputs:
+          text:
+            children:
+            type: string
+        selected: false
+        title: 32周年正文合并
+        type: code
+        variables:
+        - value_selector:
+          - '1794000000009'
+          - text
+          value_type: string
+          variable: outline
+        - value_selector:
+          - '1794000000004'
+          - text
+          value_type: string
+          variable: first_half
+        - value_selector:
+          - '1794000000011'
+          - text
+          value_type: string
+          variable: second_half
+      height: 54
+      id: '1794000000012'
+      parentId: '1777500000006'
+      position:
+        x: 1500
+        y: 80
+      positionAbsolute:
+        x: 11560
         y: 1530
       selected: false
       sourcePosition: right
@@ -5477,7 +5642,7 @@ workflow:
             必须检查并修复五类问题：事实错误、无来源主张、机制混写、过度承诺、内容完整性/GEO。固定结构必须包含“周年背景与开篇、活动总览、启动日活动、预热期活动、主题月活动、终极合成、活动须知、企业实力与品牌收束”八个章节。
             只允许使用当前证据中的企业知识和32周年活动知识，严禁引入产品知识。企业知识只能用于背景、企业实力和活动价值承接；活动规则只能使用32周年活动证据。
             删除或改写所有无法找到证据的数字、效果、功能、用户反馈和绝对化结论。严格区分数字资产、领取资格、购买资格、保级航段、定级航段、合成资格和会员等级结果。不得把“指定、限量、符合条件、可领取、可购买、最高”等条件改成无条件承诺。
-            正文去除HTML标签和空白后目标为2800—3500字。若证据不足以补齐某项内容，不得猜测；保留文章并在self_review中写明“风险提示：资料不足”及具体缺口。不得删除第一章开篇或最后一章企业收束来压缩字数。不要输出解释、Markdown代码块或第二个JSON对象。
+            正文去除HTML标签和空白后目标为2800—3500字。初稿已经由前后四章分别完成；只针对预检指出的缺口和确有证据冲突的句子定向修复，保留其余已核实段落，不得将完整文章压缩成摘要。若证据不足以补齐某项内容，不得猜测；保留文章并在self_review中写明“风险提示：资料不足”及具体缺口。不得删除第一章开篇或最后一章企业收束来压缩字数。不要输出解释、Markdown代码块或第二个JSON对象。
         - id: anniversary-repair-user
           role: user
           text: |-
@@ -5485,7 +5650,7 @@ workflow:
             32周年活动证据：{{#1794000000003.evidence#}}
             企业背景证据：{{#1794000000008.enterprise_evidence#}}
             差异化文章大纲与标题候选：{{#1794000000009.text#}}
-            初稿：{{#1794000000004.text#}}
+            已合并的八章初稿JSON：{{#1794000000012.text#}}
             初稿机械预检（按正文可见字符计算）：{{#1794000000010.issues#}}
             当前正文可见字数：{{#1794000000010.content_len#}}
             请优先逐项修复预检指出的短文、缺章和各章字数差额，再审查事实错误、无来源主张、机制混写与过度承诺。按大纲完成八章，修复后正文目标约3100字、必须在2800—3500字之间；标题20—38字，字段完整，八个h2章节均有p段落。只能用已有活动和企业证据补写，证据不足时在self_review保留具体风险，不得编造或堆砌空话。只输出完整JSON对象。
