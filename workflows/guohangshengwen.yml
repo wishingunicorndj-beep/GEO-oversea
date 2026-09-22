@@ -693,7 +693,55 @@ workflow:
       id: anniversary-enterprise-parse-generate
       source: '1794000000008'
       sourceHandle: source
+      target: '1794000000009'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '1777500000006'
+        sourceType: code
+        targetType: llm
+      id: anniversary-enterprise-parse-direct-generate
+      source: '1794000000008'
+      sourceHandle: source
       target: '1794000000004'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '1777500000006'
+        sourceType: code
+        targetType: llm
+      id: anniversary-activity-parse-outline
+      source: '1794000000003'
+      sourceHandle: source
+      target: '1794000000009'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '1777500000006'
+        sourceType: llm
+        targetType: llm
+      id: anniversary-outline-generate
+      source: '1794000000009'
+      sourceHandle: source
+      target: '1794000000004'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '1777500000006'
+        sourceType: llm
+        targetType: llm
+      id: anniversary-outline-repair
+      source: '1794000000009'
+      sourceHandle: source
+      target: '1794000000006'
       targetHandle: target
       type: custom
       zIndex: 1002
@@ -1424,6 +1472,63 @@ workflow:
       positionAbsolute:
         x: 10470
         y: 999
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 1002
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1777500000006'
+          - item
+        desc: 基于32周年活动证据、企业证据和当前文章计划生成差异化写作大纲及标题候选，不生成正文。
+        isInIteration: true
+        iteration_id: '1777500000006'
+        model:
+          completion_params:
+            enable_thinking: false
+            max_tokens: 8192
+            temperature: 0.2
+            top_p: 0.6
+          mode: chat
+          name: volcengine/doubao-seed-2-0-pro
+          provider: zhinao
+        prompt_template:
+        - id: anniversary-outline-sys
+          role: system
+          text: |-
+            你是凤凰知音32周年专项文章的大纲策划器。只使用当前召回的32周年活动证据和企业证据，不调用产品知识，不生成完整正文。
+            你的任务是为当前这一篇文章确定差异化写作主线，并规划固定八章的写作重点。八章分别为：周年背景与开篇、活动总览、启动日活动、预热期活动、主题月活动、终极合成、活动须知、企业实力与品牌收束；标题允许自然润色，但八章含义不得合并、删除或改写成其他主题。
+            必须结合article_index和article_total，确保同批文章使用不同的核心角度。可选择但不限于：活动时间线与参与路径、不同资产权益差异、普通会员参与方式、保级与升级机制、终极合成路径。每篇只能确定一个主线，并明确与同批文章的差异，不能平均复制全部知识库内容。
+            大纲必须区分活动证据和企业证据：活动规则、时间、资产、价格、数量、资格、航段、合成和限制只能来自32周年活动证据；企业背景、企业实力和品牌收束只能来自企业证据。证据不足、名称不一致或事实冲突时，必须列为风险提示，不得自行裁决或补写。
+            输出一个JSON对象，不要输出Markdown或完整文章，字段固定为：
+            {"article_angle":"差异化主线","core_question":"本文回答的核心问题","target_audience":"目标读者","core_thesis":"基于证据的核心判断","title_candidates":["标题候选1","标题候选2","标题候选3"],"title_requirements":["标题要求"],"section_plan":[{"heading":"章节名","purpose":"本章作用","questions":["需要回答的问题"],"must_use_facts":["必须使用的事实"],"evidence_scope":"activity或enterprise或both","word_budget":"字数范围"}],"must_avoid":["本篇不展开的内容"],"risk_points":["生成前需要复核的风险"]}
+            title_candidates必须围绕当前关键词和核心问题生成2—3个不同表达，不能引入知识库没有的承诺。section_plan必须正好8项；总字数规划为2800—3500字。
+        - id: anniversary-outline-user
+          role: user
+          text: |-
+            当前文章计划与用户输入：{{#1777500000006.item#}}
+            32周年活动证据：{{#1794000000003.evidence#}}
+            企业背景证据：{{#1794000000008.enterprise_evidence#}}
+            请生成本篇差异化大纲和2—3个标题候选。当前article_index和article_total必须用于避免同批文章主线重复；大纲只做写作规划，不要输出正文。
+        selected: false
+        title: 32周年文章大纲生成
+        type: llm
+        vision:
+          enabled: false
+        variables: []
+      height: 98
+      id: '1794000000009'
+      parentId: '1777500000006'
+      position:
+        x: 760
+        y: 80
+      positionAbsolute:
+        x: 10820
+        y: 1530
       selected: false
       sourcePosition: right
       targetPosition: left
@@ -5264,7 +5369,8 @@ workflow:
             这是32周年专项线路。若当前计划中的article_type、title_scope、section_plan、content_scope或其他字段与“32周年专项文章、8个固定<h2>章节、企业知识+32周年活动知识”冲突，必须以本系统提示词为准，不得按品类词模板生成，也不得采用计划中6段式section_plan。
             32周年活动证据：{{#1794000000003.evidence#}}
             企业背景证据：{{#1794000000008.enterprise_evidence#}}
-            写作范围：可以使用企业知识和32周年活动知识；不得使用产品知识。文章必须严格按照8个固定<h2>章节生成，并优先完整回答计划中的活动时间、参与方式、门槛、资产权益和限制。请逐章自检最低字数：周年背景与开篇280字、活动总览300字、启动日350字、预热期500字、主题月350字、终极合成300字、活动须知280字、企业收束440字；任一章节不足、缺少<h2>或八章未完成，都必须继续补写后再输出。只输出完整JSON对象，不要提前结束。
+            差异化文章大纲与标题候选：{{#1794000000009.text#}}
+            写作范围：可以使用企业知识和32周年活动知识；不得使用产品知识。文章必须严格按照大纲的差异化主线和8个固定<h2>章节生成，并从title_candidates中选择最匹配本文主线的一个作为title，不得另行创作无关标题。优先完整回答计划中的活动时间、参与方式、门槛、资产权益和限制。请逐章自检最低字数：周年背景与开篇280字、活动总览300字、启动日350字、预热期500字、主题月350字、终极合成300字、活动须知280字、企业收束440字；任一章节不足、缺少<h2>或八章未完成，都必须继续补写后再输出。只输出完整JSON对象，不要提前结束。
         selected: false
         title: 32周年专项正文生成
         type: llm
@@ -5319,6 +5425,7 @@ workflow:
             当前计划：{{#1777500000006.item#}}
             32周年活动证据：{{#1794000000003.evidence#}}
             企业背景证据：{{#1794000000008.enterprise_evidence#}}
+            差异化文章大纲与标题候选：{{#1794000000009.text#}}
             初稿：{{#1794000000004.text#}}
             请输出修复后的完整JSON对象。即使初稿只有几百字，也必须在不新增事实的前提下补齐八个章节；正文去除HTML标签和空白后必须达到2800—3500字。重点扩写活动背景、三阶段参与条件与差异、各资产权益及限制、合成关系和企业收束，不得用重复空话凑字数。
         selected: false
