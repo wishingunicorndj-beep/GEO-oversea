@@ -1902,10 +1902,20 @@ workflow:
               ws=words(keyword_pack)
               core=re.sub(r'(股份有限公司|有限责任公司|有限公司|公司|集团)$','',str(company_name or '').strip())
               tokens=[x for x in [core,'中国国航','国航','Air China','凤凰知音','PhoenixMiles'] if len(x)>=2]
-              anniversary_tokens=('32周年','三十二周年','周年礼遇')
+              anniversary_tokens=('32周年','三十二周年','周年礼遇','周年庆','周年活动')
+              category_subjects=('航司','航空会员','航司会员','三大航','会籍','航司服务','航空服务')
+              category_cues=('怎么选','选哪个','哪个好','哪家','推荐','对比','比较','入门','攻略','指南','避坑','注意事项','评价','口碑','体验','更好','含金量','划算','最合适')
+              competitor_tokens=('国航','东航','南航')
+              def _is_category(w):
+                  subject_hit=any(x in w for x in category_subjects)
+                  cue_hit=any(x in w for x in category_cues)
+                  multi_airline=sum(1 for x in competitor_tokens if x in w) >= 2
+                  return (subject_hit and cue_hit) or (multi_airline and cue_hit)
               def _route(w):
                   if any(t in w for t in anniversary_tokens):
                       return 'anniversary'
+                  if _is_category(w):
+                      return 'category'
                   if any(t.lower() in w.lower() for t in tokens):
                       return 'brand'
                   return 'category'
@@ -3027,10 +3037,15 @@ workflow:
             - 关键词包：{{#1776153503356.keyword_pack#}}
 
             ## 分类规则（按优先级）
-            1. **显式含“32周年/三十二周年/周年礼遇”** → `anniversary`
-            2. **含“中国国航/国航/凤凰知音/PhoenixMiles/Air China”或客户公司名** → `brand`
+            1. **显式含“32周年/三十二周年/周年礼遇/周年庆/周年活动”** → `anniversary`
+               - 即使同时含“国航/凤凰知音/会员/金卡/优惠/积分/礼品/抽奖/攻略/时间/促销/特惠机票”等词，也优先进入`anniversary`。
+               - 例如：“国航凤凰知音周年庆活动”“凤凰知音会员周年庆”“凤凰知音周年庆积分活动”“国航凤凰知音金卡周年庆”均属于`anniversary`。
+            2. **泛航司/航司会员/航空会员/会籍/航司服务的选择、比较、推荐、评价、入门或攻略词** → `category`
+               - 即使同时含“国航/东航/南航”，只要表达“三大航或多家航司横向选择”，仍属于`category`。
+               - 例如：“航司会员入会指南推荐”“第一次办航司会员怎么选”“国航东航南航会员怎么选”“三大航会员服务哪家好”“哪家航司服务更好”均属于`category`。
+            3. **含“中国国航/国航/凤凰知音/PhoenixMiles/Air China”或客户公司名** → `brand`
                - “活动、会员日、生日福利、优惠、里程加赠”不会单独改变线路；未显式出现32周年时仍属于品牌词。
-            3. **其余关键词** → `category`
+            4. **其余关键词** → `category`
 
             ## 品牌名匹配方法
             提取公司名的核心部分（去掉"有限公司/门诊部/机构/中心/医院/诊所/集团/科技/教育/服务"等通用后缀），用核心部分去匹配关键词。
@@ -3067,9 +3082,18 @@ workflow:
               ws=[x.strip() for x in re.split(r'[，,、;；\n]+',str(keyword_pack or '')) if x.strip()]
               c=str(company_name or '').replace('有限公司','').replace('公司','').strip()
               ts=[x for x in [c,'中国国航','国航','Air China','凤凰知音','PhoenixMiles'] if len(x)>=2]
-              anniversary_tokens=('32周年','三十二周年','周年礼遇')
+              anniversary_tokens=('32周年','三十二周年','周年礼遇','周年庆','周年活动')
+              category_subjects=('航司','航空会员','航司会员','三大航','会籍','航司服务','航空服务')
+              category_cues=('怎么选','选哪个','哪个好','哪家','推荐','对比','比较','入门','攻略','指南','避坑','注意事项','评价','口碑','体验','更好','含金量','划算','最合适')
+              competitor_tokens=('国航','东航','南航')
+              def is_category(w):
+                  subject_hit=any(x in w for x in category_subjects)
+                  cue_hit=any(x in w for x in category_cues)
+                  multi_airline=sum(1 for x in competitor_tokens if x in w) >= 2
+                  return (subject_hit and cue_hit) or (multi_airline and cue_hit)
               def route(w):
                   if any(x in w for x in anniversary_tokens): return 'anniversary'
+                  if is_category(w): return 'category'
                   if any(t.lower() in w.lower() for t in ts): return 'brand'
                   return 'category'
               return {'text':json.dumps([{'keyword':w,'mode':route(w),'index':i+1} for i,w in enumerate(ws)],ensure_ascii=False)}
