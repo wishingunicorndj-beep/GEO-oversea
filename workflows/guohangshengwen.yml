@@ -5678,14 +5678,34 @@ workflow:
     - data:
         code: |
           import json,re
-          def main(raw):
-              text=re.sub(r'<think>.*?</think>','',str(raw or ''),flags=re.S|re.I).strip()
+          FIELDS=('title','content','description','tags','self_review')
+          def parse_article(value):
+              text=re.sub(r'<think>.*?</think>','',str(value or ''),flags=re.S|re.I).strip()
               fence=re.fullmatch(r'```(?:json)?\s*([\s\S]*?)\s*```',text,re.I)
-              if fence: text=fence.group(1)
-              article=json.loads(text)
-              if not isinstance(article,dict): raise ValueError('32周年输出不是JSON对象')
-              for key in ('title','content','description','tags','self_review'):
-                  if key not in article: raise ValueError('32周年输出缺少字段：'+key)
+              if fence: text=fence.group(1).strip()
+              try:
+                  article=json.loads(text)
+              except (ValueError,TypeError) as exc:
+                  return None,'{}: {}'.format(type(exc).__name__,str(exc))
+              if not isinstance(article,dict):
+                  return None,'输出不是JSON对象'
+              missing=[key for key in FIELDS if key not in article]
+              if missing:
+                  return None,'缺少字段：'+','.join(missing)
+              if not isinstance(article.get('content'),str) or not article['content'].strip():
+                  return None,'content为空或不是字符串'
+              return article,''
+          def main(raw,draft):
+              article,error=parse_article(raw)
+              if error:
+                  article,draft_error=parse_article(draft)
+                  if article is None:
+                      article={'title':'凤凰知音32周年文章生成异常，请核对节点输出',
+                               'content':'<p>风险提示：正文生成与事实修复均未提供可解析的完整文章，本篇不可发布。</p>',
+                               'description':'风险提示：文章生成失败，请检查32周年正文合并与事实修复节点。',
+                               'tags':['凤凰知音','32周年'],
+                               'self_review':'风险提示：32周年正文合并节点也无法解析：'+draft_error}
+                  article['self_review']=(str(article.get('self_review','')).strip()+'；风险提示：事实修复节点输出解析失败（{}）；当前使用未经事实复核的合并初稿，不可直接发布。'.format(error)).strip('；')
               content=str(article.get('content','') or '')
               visible=content
               risks=[]
@@ -5712,7 +5732,7 @@ workflow:
                       article['self_review']=(article['self_review']+'；'+note).strip('；')
               return {'structured_output':article}
         code_language: python3
-        desc: 解析32周年专线修复后输出；保留原有字段，并在无法完全消除风险时写入self_review。
+        desc: 解析32周年修复结果；若修复节点输出无效JSON，退回合并初稿并明确提示未经事实复核，不中断迭代。
         isInIteration: true
         iteration_id: '1777500000006'
         outputs:
@@ -5728,6 +5748,11 @@ workflow:
           - text
           value_type: string
           variable: raw
+        - value_selector:
+          - '1794000000012'
+          - text
+          value_type: string
+          variable: draft
       height: 54
       id: '1794000000005'
       parentId: '1777500000006'
