@@ -5179,6 +5179,7 @@ workflow:
           - '1794000000007'
           - body
           value_type: string
+          variable: body
       height: 54
       id: '1794000000008'
       parentId: '1777500000006'
