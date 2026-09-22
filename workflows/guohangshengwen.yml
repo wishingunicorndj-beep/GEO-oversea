@@ -746,10 +746,10 @@ workflow:
       type: custom
       zIndex: 1002
     - data:
-        isInIteration: true
-        iteration_id: '1777500000006'
-        sourceType: llm
-        targetType: code
+      isInIteration: true
+      iteration_id: '1777500000006'
+      sourceType: llm
+      targetType: llm
       id: anniversary-generate-cleanup
       source: '1794000000004'
       sourceHandle: source
@@ -3415,6 +3415,8 @@ workflow:
               for i in range(total):
                   keyword = words[i % len(words)] if words else '航空服务'
                   mode = mode_map.get(keyword, 'category')
+                  if any(token in keyword for token in ('32周年', '三十二周年', '周年礼遇', '周年庆', '周年活动')):
+                      mode = 'anniversary'
                   if mode not in ('brand','category','anniversary'): mode='category'
                   brand = mode == 'brand'
                   intent, scene, pain_points, objective = _category_profile(keyword)
