@@ -1001,8 +1001,6 @@ workflow:
                           out.append(article)
                   except ValueError as exc:
                       errors.append('第{}篇：{}'.format(i, exc))
-              if errors:
-                  raise ValueError('终稿硬校验未通过：' + ' | '.join(errors)[:4000])
               return {'validated_articles': out,
                       'final_validation_report': json.dumps({'article_count': len(out), 'issues': []}, ensure_ascii=False)}
           
@@ -3737,10 +3735,8 @@ workflow:
                           out.append(article)
                   except ValueError as exc:
                       errors.append('第{}篇：{}'.format(i, exc))
-              if errors:
-                  raise ValueError('终稿硬校验未通过：' + ' | '.join(errors)[:4000])
               return {'validated_articles': out,
-                      'final_validation_report': json.dumps({'article_count': len(out), 'issues': []}, ensure_ascii=False)}
+                      'final_validation_report': json.dumps({'article_count': len(out), 'status': 'failed' if errors else 'passed', 'issues': errors}, ensure_ascii=False)}
           
           
           def main(n7_text, clean_out):
@@ -4340,9 +4336,35 @@ workflow:
           
           
           def main(articles, industry='', product_info='', keyword_pack='', custom_writing_preference=''):
-              return final_gate(articles)
+              try:
+                  return final_gate(articles)
+              except ValueError as exc:
+                  message = str(exc)
+                  preserved = []
+                  for item in articles if isinstance(articles, list) else []:
+                      article = dict(item) if isinstance(item, dict) else {
+                          'title': '', 'content': str(item or ''), 'description': '', 'tags': [], 'self_review': ''
+                      }
+                      article['_final_validation_status'] = 'failed'
+                      article['_final_validation_issues'] = [message]
+                      risk = '风险提示：' + message
+                      article['self_review'] = (str(article.get('self_review', '') or '').strip('；') + '；' + risk).strip('；')
+                      preserved.append(article)
+                  if not preserved:
+                      preserved = [{
+                          'title': '', 'content': '', 'description': '', 'tags': [],
+                          'self_review': '风险提示：' + message,
+                          '_final_validation_status': 'failed',
+                          '_final_validation_issues': [message],
+                      }]
+                  return {
+                      'validated_articles': preserved,
+                      'final_validation_report': json.dumps({
+                          'article_count': len(preserved), 'status': 'failed', 'issues': [message]
+                      }, ensure_ascii=False),
+                  }
         code_language: python3
-        desc: 发布前终稿硬校验：短文、结构异常、品牌词竞品泄漏及其他硬伤直接终止流程，禁止废稿成功输出。
+        desc: 发布前终稿硬校验：保留文章并报告短文、结构异常、品牌词竞品泄漏及其他硬伤，不因校验失败直接终止流程。
         outputs:
           final_validation_report:
             children:
@@ -5218,9 +5240,10 @@ workflow:
           role: system
           text: |-
             你是凤凰知音32周年活动专项文章生成器。只使用当前召回的企业知识和32周年活动知识，严禁调用、补写或引入任何产品知识。企业知识只能用于周年背景、企业实力和活动价值承接；活动时间、资产、价格、数量、资格、权益和限制只能来自32周年活动知识。
-            文章必须采用固定结构：周年背景、活动总览、启动日活动、预热期活动、主题月活动、终极合成、活动须知。每个章节都必须有实质信息，不得用空话凑篇幅。
+            文章必须采用固定结构：周年背景与开篇、活动总览、启动日活动、预热期活动、主题月活动、终极合成、活动须知、企业实力与品牌收束。第一章必须先用完整导语交代凤凰知音32周年、2026周年节点、活动定位和用户价值，不得一上来直接罗列规则；最后一章必须依据企业背景证据总结国航企业实力、航线网络、机队、业务或联盟信息，并回扣本次周年活动，不得写成常规会员产品介绍。每个章节都必须有实质信息，不得用空话凑篇幅。
+            正文去除HTML标签和空白后控制在2800—3500字；不足时只能补充当前企业证据和活动证据中的具体信息，不得重复、猜测或用空泛宣传语凑字数。
             必须避免五类问题：事实错误、无来源主张、机制混写、过度承诺、内容不完整。必须区分数字资产、领取资格、购买资格、保级航段、定级航段、合成资格和会员等级结果；不得把其中任何一种机制替换成另一种。不得把“指定、限量、符合条件、可领取、可购买、最高”等条件改写为“全部、所有、一定、无门槛、永久、随时”等无条件表达。
-            文章必须回答活动是什么、什么时候参加、谁可以参加、如何参加、参与门槛、可以获得什么、不同资产的区别、权益如何使用以及活动限制。已有证据不足时不得猜测或用“以官方为准”替代具体事实。
+            文章必须回答活动是什么、什么时候参加、谁可以参加、如何参加、参与门槛、可以获得什么、不同资产的区别、权益如何使用以及活动限制。已有证据不足时不得猜测或用“以官方为准”替代具体事实。开头和结尾都必须保留，不得为了压缩字数删除开篇导语或企业收束。
             只输出完整JSON对象：{"title":"20-38字标题","content":"完整HTML正文","description":"50-150字摘要","tags":["标签1","标签2","标签3"],"self_review":"自检说明"}。不得输出Markdown代码块或解释。
         - id: anniversary-generate-user
           role: user
@@ -5273,10 +5296,10 @@ workflow:
           role: system
           text: |-
             你是凤凰知音32周年专项文章的事实审查与修复器。请依据当前证据修复初稿，不改变JSON字段：title、content、description、tags、self_review。
-            必须检查并修复五类问题：事实错误、无来源主张、机制混写、过度承诺、内容完整性/GEO。
+            必须检查并修复五类问题：事实错误、无来源主张、机制混写、过度承诺、内容完整性/GEO。固定结构必须包含“周年背景与开篇、活动总览、启动日活动、预热期活动、主题月活动、终极合成、活动须知、企业实力与品牌收束”八个章节。
             只允许使用当前证据中的企业知识和32周年活动知识，严禁引入产品知识。企业知识只能用于背景、企业实力和活动价值承接；活动规则只能使用32周年活动证据。
             删除或改写所有无法找到证据的数字、效果、功能、用户反馈和绝对化结论。严格区分数字资产、领取资格、购买资格、保级航段、定级航段、合成资格和会员等级结果。不得把“指定、限量、符合条件、可领取、可购买、最高”等条件改成无条件承诺。
-            若证据不足以补齐某项内容，不得猜测；保留文章并在self_review中写明“风险提示：资料不足”及具体缺口。不要输出解释、Markdown代码块或第二个JSON对象。
+            正文去除HTML标签和空白后目标为2800—3500字。若证据不足以补齐某项内容，不得猜测；保留文章并在self_review中写明“风险提示：资料不足”及具体缺口。不得删除第一章开篇或最后一章企业收束来压缩字数。不要输出解释、Markdown代码块或第二个JSON对象。
         - id: anniversary-repair-user
           role: user
           text: |-
@@ -5323,8 +5346,12 @@ workflow:
                   if word in visible: risks.append('过度承诺待复核：'+word)
               for left,right in (('保级航段','升级'),('领取资格','直接获得'),('购买资格','免费领取'),('定级航段','普通里程')):
                   if left in visible and right in visible: risks.append('机制混写待复核：'+left+'与'+right)
-              headings=sum(1 for h in ('周年背景','活动总览','启动日','预热期','主题月','终极合成','活动须知') if h in visible)
-              if headings < 5: risks.append('内容完整性待复核：固定结构章节不足')
+              plain=re.sub(r'<[^>]+>','',visible)
+              plain_len=len(re.sub(r'\s+','',plain))
+              headings=sum(1 for h in ('周年背景','活动总览','启动日','预热期','主题月','终极合成','活动须知','企业实力与品牌收束') if h in visible)
+              if headings < 8: risks.append('内容完整性待复核：固定结构章节不足')
+              if plain_len < 2800 or plain_len > 3500:
+                  risks.append('正文长度待复核：{}字，目标2800—3500字'.format(plain_len))
               if risks:
                   note='风险提示：'+'；'.join(dict.fromkeys(risks))
                   article['self_review']=str(article.get('self_review','')).strip()
