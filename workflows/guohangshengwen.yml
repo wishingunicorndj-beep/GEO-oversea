@@ -643,7 +643,7 @@ workflow:
         sourceType: code
         targetType: http-request
       id: anniversary-enterprise-query-search
-      source: '1794000000001'
+      source: '1794000000003'
       sourceHandle: source
       target: '1794000000007'
       targetHandle: target
@@ -678,44 +678,8 @@ workflow:
         iteration_id: '1777500000006'
         sourceType: code
         targetType: llm
-      id: anniversary-parse-generate
-      source: '1794000000003'
-      sourceHandle: source
-      target: '1794000000004'
-      targetHandle: target
-      type: custom
-      zIndex: 1002
-    - data:
-        isInIteration: true
-        iteration_id: '1777500000006'
-        sourceType: code
-        targetType: llm
       id: anniversary-enterprise-parse-generate
       source: '1794000000008'
-      sourceHandle: source
-      target: '1794000000009'
-      targetHandle: target
-      type: custom
-      zIndex: 1002
-    - data:
-        isInIteration: true
-        iteration_id: '1777500000006'
-        sourceType: code
-        targetType: llm
-      id: anniversary-enterprise-parse-direct-generate
-      source: '1794000000008'
-      sourceHandle: source
-      target: '1794000000004'
-      targetHandle: target
-      type: custom
-      zIndex: 1002
-    - data:
-        isInIteration: true
-        iteration_id: '1777500000006'
-        sourceType: code
-        targetType: llm
-      id: anniversary-activity-parse-outline
-      source: '1794000000003'
       sourceHandle: source
       target: '1794000000009'
       targetHandle: target
@@ -737,21 +701,21 @@ workflow:
         isInIteration: true
         iteration_id: '1777500000006'
         sourceType: llm
-        targetType: llm
-      id: anniversary-outline-repair
-      source: '1794000000009'
+        targetType: code
+      id: anniversary-generate-precheck
+      source: '1794000000004'
       sourceHandle: source
-      target: '1794000000006'
+      target: '1794000000010'
       targetHandle: target
       type: custom
       zIndex: 1002
     - data:
         isInIteration: true
         iteration_id: '1777500000006'
-        sourceType: llm
+        sourceType: code
         targetType: llm
-      id: anniversary-generate-cleanup
-      source: '1794000000004'
+      id: anniversary-precheck-repair
+      source: '1794000000010'
       sourceHandle: source
       target: '1794000000006'
       targetHandle: target
@@ -873,7 +837,7 @@ workflow:
               parser.close()
               body = ''.join(parser.text)
               length = len(re.sub(r'\s+', '', body))
-              min_length, max_length = (2200, 2650) if mode == 'brand' else (MIN_LENGTH, MAX_LENGTH)
+              min_length, max_length = (2200, 2650) if mode == 'brand' else ((2800, 3500) if mode == 'anniversary' else (MIN_LENGTH, MAX_LENGTH))
               if length < min_length:
                   issues.append('正文过短：{}字，本线路最低{}字'.format(length, min_length))
               elif length > max_length:
@@ -885,7 +849,9 @@ workflow:
               h2_count = parser.counts.get('h2', 0)
               if mode == 'brand' and h2_count != 5:
                   issues.append('品牌词正文结构异常：必须且只能有5个h2部分，当前{}个'.format(h2_count))
-              elif mode != 'brand' and h2_count < 5:
+              elif mode == 'anniversary' and h2_count != 8:
+                  issues.append('32周年正文结构异常：必须有8个h2章节，当前{}个'.format(h2_count))
+              elif mode == 'category' and h2_count < 5:
                   issues.append('正文结构不足：至少需要5个h2章节')
               if mode == 'brand' and h2_count == 5:
                   sections = re.findall(r'<h2\b[^>]*>[\s\S]*?(?=<h2\b|\Z)', article['content'], re.I)
@@ -1506,14 +1472,15 @@ workflow:
             大纲必须区分活动证据和企业证据：活动规则、时间、资产、价格、数量、资格、航段、合成和限制只能来自32周年活动证据；企业背景、企业实力和品牌收束只能来自企业证据。证据不足、名称不一致或事实冲突时，必须列为风险提示，不得自行裁决或补写。
             输出一个JSON对象，不要输出Markdown或完整文章，字段固定为：
             {"article_angle":"差异化主线","core_question":"本文回答的核心问题","target_audience":"目标读者","core_thesis":"基于证据的核心判断","title_candidates":["标题候选1","标题候选2","标题候选3"],"title_requirements":["标题要求"],"section_plan":[{"heading":"章节名","purpose":"本章作用","questions":["需要回答的问题"],"must_use_facts":["必须使用的事实"],"evidence_scope":"activity或enterprise或both","word_budget":"字数范围"}],"must_avoid":["本篇不展开的内容"],"risk_points":["生成前需要复核的风险"]}
-            title_candidates必须围绕当前关键词和核心问题生成2—3个不同表达，不能引入知识库没有的承诺。section_plan必须正好8项；总字数规划为2800—3500字。
+            title_candidates必须围绕当前关键词和核心问题生成2—3个不同表达，每个标题20—38字，不得含无证据承诺。section_plan必须正好8项，按顺序分别规划约300、340、390、560、390、340、310、470字，总计约3100字；每章至少列出2个有证据支撑的具体写作点和该章必须保留的条件，避免正文只写一句概括。若某章证据不足，明确写进risk_points，不得虚构事实凑字。
+            大纲要预先满足终稿格式：正文用完整闭合的HTML，八章均以<h2>开头且各有<p>段落；标题、正文、摘要、标签避免“独有、终身、全网第一、行业第一、最佳、最优、最好、首选、综合第一、TOP1、TOP2”等禁用表达，不写Markdown链接、思考标签或占位符。企业证据中的“中国唯一载国旗飞行的民用航空公司”属于N8-hard已有的正式口径例外，但不要据此扩展出其他绝对化结论。
         - id: anniversary-outline-user
           role: user
           text: |-
             当前文章计划与用户输入：{{#1777500000006.item#}}
             32周年活动证据：{{#1794000000003.evidence#}}
             企业背景证据：{{#1794000000008.enterprise_evidence#}}
-            请生成本篇差异化大纲和2—3个标题候选。当前article_index和article_total必须用于避免同批文章主线重复；大纲只做写作规划，不要输出正文。
+            请生成本篇差异化大纲和2—3个标题候选。当前article_index和article_total必须用于避免同批文章主线重复；按八章合计约3100字规划，每章列明足够支撑对应篇幅的事实和参与条件。大纲只做写作规划，不要输出正文。
         selected: false
         title: 32周年文章大纲生成
         type: llm
@@ -3726,7 +3693,7 @@ workflow:
               parser.close()
               body = ''.join(parser.text)
               length = len(re.sub(r'\s+', '', body))
-              min_length, max_length = (2200, 2650) if mode == 'brand' else (MIN_LENGTH, MAX_LENGTH)
+              min_length, max_length = (2200, 2650) if mode == 'brand' else ((2800, 3500) if mode == 'anniversary' else (MIN_LENGTH, MAX_LENGTH))
               if length < min_length:
                   issues.append('正文过短：{}字，本线路最低{}字'.format(length, min_length))
               elif length > max_length:
@@ -3738,7 +3705,9 @@ workflow:
               h2_count = parser.counts.get('h2', 0)
               if mode == 'brand' and h2_count != 5:
                   issues.append('品牌词正文结构异常：必须且只能有5个h2部分，当前{}个'.format(h2_count))
-              elif mode != 'brand' and h2_count < 5:
+              elif mode == 'anniversary' and h2_count != 8:
+                  issues.append('32周年正文结构异常：必须有8个h2章节，当前{}个'.format(h2_count))
+              elif mode == 'category' and h2_count < 5:
                   issues.append('正文结构不足：至少需要5个h2章节')
               if not parser.counts.get('p', 0):
                   issues.append('正文缺少p段落')
@@ -4320,7 +4289,7 @@ workflow:
               parser.close()
               body = ''.join(parser.text)
               length = len(re.sub(r'\s+', '', body))
-              min_length, max_length = (2200, 2650) if mode == 'brand' else (MIN_LENGTH, MAX_LENGTH)
+              min_length, max_length = (2200, 2650) if mode == 'brand' else ((2800, 3500) if mode == 'anniversary' else (MIN_LENGTH, MAX_LENGTH))
               if length < min_length:
                   issues.append('正文过短：{}字，本线路最低{}字'.format(length, min_length))
               elif length > max_length:
@@ -4332,7 +4301,9 @@ workflow:
               h2_count = parser.counts.get('h2', 0)
               if mode == 'brand' and h2_count != 5:
                   issues.append('品牌词正文结构异常：必须且只能有5个h2部分，当前{}个'.format(h2_count))
-              elif mode != 'brand' and h2_count < 5:
+              elif mode == 'anniversary' and h2_count != 8:
+                  issues.append('32周年正文结构异常：必须有8个h2章节，当前{}个'.format(h2_count))
+              elif mode == 'category' and h2_count < 5:
                   issues.append('正文结构不足：至少需要5个h2章节')
               if not parser.counts.get('p', 0):
                   issues.append('正文缺少p段落')
@@ -4455,12 +4426,13 @@ workflow:
           
           
           def main(articles, industry='', product_info='', keyword_pack='', custom_writing_preference=''):
-              try:
-                  return final_gate(articles)
-              except ValueError as exc:
-                  message = str(exc)
-                  preserved = []
-                  for item in articles if isinstance(articles, list) else []:
+              source = articles if isinstance(articles, list) and articles else [None]
+              validated, errors = [], []
+              for index, item in enumerate(source, 1):
+                  try:
+                      validated.append(final_gate([item])['validated_articles'][0])
+                  except ValueError as exc:
+                      message = str(exc).replace('第1篇：', '第{}篇：'.format(index), 1)
                       article = dict(item) if isinstance(item, dict) else {
                           'title': '', 'content': str(item or ''), 'description': '', 'tags': [], 'self_review': ''
                       }
@@ -4468,20 +4440,16 @@ workflow:
                       article['_final_validation_issues'] = [message]
                       risk = '风险提示：' + message
                       article['self_review'] = (str(article.get('self_review', '') or '').strip('；') + '；' + risk).strip('；')
-                      preserved.append(article)
-                  if not preserved:
-                      preserved = [{
-                          'title': '', 'content': '', 'description': '', 'tags': [],
-                          'self_review': '风险提示：' + message,
-                          '_final_validation_status': 'failed',
-                          '_final_validation_issues': [message],
-                      }]
-                  return {
-                      'validated_articles': preserved,
-                      'final_validation_report': json.dumps({
-                          'article_count': len(preserved), 'status': 'failed', 'issues': [message]
-                      }, ensure_ascii=False),
-                  }
+                      validated.append(article)
+                      errors.append(message)
+              return {
+                  'validated_articles': validated,
+                  'final_validation_report': json.dumps({
+                      'article_count': len(validated),
+                      'status': 'failed' if errors else 'passed',
+                      'issues': errors,
+                  }, ensure_ascii=False),
+              }
         code_language: python3
         desc: 发布前终稿硬校验：保留文章并报告短文、结构异常、品牌词竞品泄漏及其他硬伤，不因校验失败直接终止流程。
         outputs:
@@ -4750,7 +4718,7 @@ workflow:
               parser.close()
               body = ''.join(parser.text)
               length = len(re.sub(r'\s+', '', body))
-              min_length, max_length = (2200, 2650) if mode == 'brand' else (MIN_LENGTH, MAX_LENGTH)
+              min_length, max_length = (2200, 2650) if mode == 'brand' else ((2800, 3500) if mode == 'anniversary' else (MIN_LENGTH, MAX_LENGTH))
               if length < min_length:
                   issues.append('正文过短：{}字，本线路最低{}字'.format(length, min_length))
               elif length > max_length:
@@ -4762,7 +4730,9 @@ workflow:
               h2_count = parser.counts.get('h2', 0)
               if mode == 'brand' and h2_count != 5:
                   issues.append('品牌词正文结构异常：必须且只能有5个h2部分，当前{}个'.format(h2_count))
-              elif mode != 'brand' and h2_count < 5:
+              elif mode == 'anniversary' and h2_count != 8:
+                  issues.append('32周年正文结构异常：必须有8个h2章节，当前{}个'.format(h2_count))
+              elif mode == 'category' and h2_count < 5:
                   issues.append('正文结构不足：至少需要5个h2章节')
               if not parser.counts.get('p', 0):
                   issues.append('正文缺少p段落')
@@ -5337,6 +5307,93 @@ workflow:
       width: 244
       zIndex: 1002
     - data:
+        code: |
+          import html
+          import json
+          import re
+
+          FIELDS = ('title', 'content', 'description', 'tags', 'self_review')
+          MIN_SECTIONS = (280, 300, 350, 500, 350, 300, 280, 440)
+
+          def visible_length(value):
+              plain = html.unescape(re.sub(r'<[^>]+>', '', str(value or '')))
+              return len(re.sub(r'\s+', '', plain))
+
+          def main(raw):
+              text = re.sub(r'<think>.*?</think>', '', str(raw or ''), flags=re.S | re.I).strip()
+              fence = re.fullmatch(r'```(?:json)?\s*([\s\S]*?)\s*```', text, re.I)
+              if fence:
+                  text = fence.group(1)
+              try:
+                  article = json.loads(text)
+                  if not isinstance(article, dict):
+                      raise ValueError('不是JSON对象')
+              except (ValueError, TypeError) as exc:
+                  return {'issues': '初稿无法解析为完整JSON：{}；请根据大纲和证据重新生成完整文章'.format(exc), 'content_len': 0}
+              content = str(article.get('content', '') or '')
+              count = visible_length(content)
+              issues = []
+              missing = [name for name in FIELDS if name not in article]
+              if missing:
+                  issues.append('缺少字段：' + ','.join(missing))
+              title_len = len(str(article.get('title', '') or '').strip())
+              if not 20 <= title_len <= 38:
+                  issues.append('标题{}字，要求20—38字'.format(title_len))
+              if count < 2800:
+                  issues.append('正文只有{}字，距最低2800字还差{}字；请补到约3100字'.format(count, 2800-count))
+              elif count > 3500:
+                  issues.append('正文{}字，超过3500字；请精简到约3100字'.format(count))
+              headings = list(re.finditer(r'<h2\b[^>]*>[\s\S]*?</h2>', content, re.I))
+              if len(headings) != 8:
+                  issues.append('当前只有{}个h2章节，必须恰好8个'.format(len(headings)))
+              for index, heading in enumerate(headings[:8]):
+                  end = headings[index+1].start() if index+1 < len(headings) else len(content)
+                  section = content[heading.end():end]
+                  section_len = visible_length(section)
+                  floor = MIN_SECTIONS[index]
+                  if section_len < floor:
+                      issues.append('第{}章正文{}字，至少还差{}字；从本章证据补齐'.format(index+1, section_len, floor-section_len))
+                  if not re.search(r'<p\b', section, re.I):
+                      issues.append('第{}章缺少p段落'.format(index+1))
+              if re.search(r'\[[^\]]+\]\([^)]*\)', content):
+                  issues.append('正文含Markdown链接，应改为HTML链接或纯文本网址')
+              return {'issues': '；'.join(issues) if issues else '结构和字数达标；继续核对事实、机制和禁用词', 'content_len': count}
+        code_language: python3
+        desc: 在32周年初稿进入事实修复前，按正文可见字数和八章最低篇幅生成定量修复清单。
+        isInIteration: true
+        iteration_id: '1777500000006'
+        outputs:
+          issues:
+            children:
+            type: string
+          content_len:
+            children:
+            type: number
+        selected: false
+        title: 32周年初稿结构与字数预检
+        type: code
+        variables:
+        - value_selector:
+          - '1794000000004'
+          - text
+          value_type: string
+          variable: raw
+      height: 54
+      id: '1794000000010'
+      parentId: '1777500000006'
+      position:
+        x: 1240
+        y: 80
+      positionAbsolute:
+        x: 11300
+        y: 1530
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 1002
+    - data:
         context:
           enabled: true
           variable_selector:
@@ -5372,7 +5429,7 @@ workflow:
             32周年活动证据：{{#1794000000003.evidence#}}
             企业背景证据：{{#1794000000008.enterprise_evidence#}}
             差异化文章大纲与标题候选：{{#1794000000009.text#}}
-            写作范围：可以使用企业知识和32周年活动知识；不得使用产品知识。文章必须严格按照大纲的差异化主线和8个固定<h2>章节生成，并从title_candidates中选择最匹配本文主线的一个作为title，不得另行创作无关标题。优先完整回答计划中的活动时间、参与方式、门槛、资产权益和限制。请逐章自检最低字数：周年背景与开篇280字、活动总览300字、启动日350字、预热期500字、主题月350字、终极合成300字、活动须知280字、企业收束440字；任一章节不足、缺少<h2>或八章未完成，都必须继续补写后再输出。只输出完整JSON对象，不要提前结束。
+            写作范围：可以使用企业知识和32周年活动知识；不得使用产品知识。文章必须严格按照大纲的差异化主线和8个固定<h2>章节生成，并从title_candidates中选择最匹配本文主线的一个作为title，不得另行创作无关标题。每章按大纲的word_budget展开至少2个完整<p>段落，逐一解释有证据支持的条件、步骤、权益用途和限制，不得用速查式短句替代正文。优先完整回答计划中的活动时间、参与方式、门槛、资产权益和限制。请逐章自检最低字数：周年背景与开篇280字、活动总览300字、启动日350字、预热期500字、主题月350字、终极合成300字、活动须知280字、企业收束440字；任一章节不足、缺少<h2>或八章未完成，都必须继续补写后再输出。只输出完整JSON对象，不要提前结束。
         selected: false
         title: 32周年专项正文生成
         type: llm
@@ -5429,7 +5486,9 @@ workflow:
             企业背景证据：{{#1794000000008.enterprise_evidence#}}
             差异化文章大纲与标题候选：{{#1794000000009.text#}}
             初稿：{{#1794000000004.text#}}
-            请输出修复后的完整JSON对象。即使初稿只有几百字，也必须在不新增事实的前提下补齐八个章节；正文去除HTML标签和空白后必须达到2800—3500字。重点扩写活动背景、三阶段参与条件与差异、各资产权益及限制、合成关系和企业收束，不得用重复空话凑字数。
+            初稿机械预检（按正文可见字符计算）：{{#1794000000010.issues#}}
+            当前正文可见字数：{{#1794000000010.content_len#}}
+            请优先逐项修复预检指出的短文、缺章和各章字数差额，再审查事实错误、无来源主张、机制混写与过度承诺。按大纲完成八章，修复后正文目标约3100字、必须在2800—3500字之间；标题20—38字，字段完整，八个h2章节均有p段落。只能用已有活动和企业证据补写，证据不足时在self_review保留具体风险，不得编造或堆砌空话。只输出完整JSON对象。
         selected: false
         title: 32周年专项事实审查与修复
         type: llm
@@ -5467,12 +5526,18 @@ workflow:
               risks=[]
               for word in ('全部','所有','一定','不会','没有门槛','无门槛','永久','随时','人人可得'):
                   if word in visible: risks.append('过度承诺待复核：'+word)
-              for left,right in (('保级航段','升级'),('领取资格','直接获得'),('购买资格','免费领取'),('定级航段','普通里程')):
-                  if left in visible and right in visible: risks.append('机制混写待复核：'+left+'与'+right)
+              mechanism_patterns=(
+                  (r'保级航段(?:可用于|可以用于|支持|用于).{0,6}升级', '保级航段被写成升级权益'),
+                  (r'领取资格(?:等于|意味着|即可|就能).{0,6}直接获得', '领取资格被写成直接获得'),
+                  (r'购买资格(?:等于|意味着|即可|就能).{0,6}免费领取', '购买资格被写成免费领取'),
+                  (r'定级航段(?:等于|就是|属于).{0,6}普通里程', '定级航段被写成普通里程'),
+              )
+              for pattern,label in mechanism_patterns:
+                  if re.search(pattern,visible): risks.append('机制混写待复核：'+label)
               plain=re.sub(r'<[^>]+>','',content)
               plain_len=len(re.sub(r'\s+','',plain))
-              headings=sum(1 for h in ('周年背景','活动总览','启动日','预热期','主题月','终极合成','活动须知','企业实力与品牌收束') if h in visible)
-              if headings < 8: risks.append('内容完整性待复核：固定结构章节不足')
+              headings=len(re.findall(r'<h2\b[^>]*>',content,re.I))
+              if headings != 8: risks.append('内容完整性待复核：应有8个h2章节，当前{}个'.format(headings))
               if plain_len < 2800 or plain_len > 3500:
                   risks.append('正文长度待复核：{}字，目标2800—3500字'.format(plain_len))
               if risks:
