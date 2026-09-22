@@ -688,6 +688,18 @@ workflow:
     - data:
         isInIteration: true
         iteration_id: '1777500000006'
+        sourceType: code
+        targetType: llm
+      id: anniversary-enterprise-parse-generate
+      source: '1794000000008'
+      sourceHandle: source
+      target: '1794000000004'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '1777500000006'
         sourceType: llm
         targetType: code
       id: anniversary-generate-cleanup
@@ -5126,7 +5138,7 @@ workflow:
                   segment=record.get('segment',{}) if isinstance(record,dict) else {}
                   content=segment.get('content','') if isinstance(segment,dict) else ''
                   if str(content or '').strip(): parts.append(str(content).strip())
-              return {'enterprise_evidence':'\\n\\n'.join(parts)}
+              return {'enterprise_evidence':'\n\n'.join(parts)}
         code_language: python3
         desc: 解析32周年文章允许使用的企业背景证据。
         isInIteration: true
@@ -5137,7 +5149,7 @@ workflow:
             type: string
         selected: false
         title: 32周年企业证据解析
-        type: custom
+        type: code
         variables:
         - value_selector:
           - '1794000000007'
