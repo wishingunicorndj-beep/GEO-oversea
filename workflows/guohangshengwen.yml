@@ -2774,7 +2774,12 @@ workflow:
 
           def main(articles, compliance_mode: str = 'standard', ent_body: str = '', prod_body: str = '', custom_writing_distribution: str = '', custom_writing_preference_raw: str = '', company_name: str = '', verified_competitor_text: str = ''):
               if not isinstance(articles, list) or not articles:
-                  raise ValueError('文章结构闸门未通过：没有可校验的文章')
+                  return {'cleaned_articles': [{
+                      'title': '', 'content': '', 'description': '', 'tags': [],
+                      'self_review': '风险提示：文章结构闸门未通过：没有可校验的文章',
+                      '_structural_validation': 'failed',
+                      '_structural_validation_issues': ['没有可校验的文章'],
+                  }]}
               cleaned_articles = []
               errors = []
               for index, item in enumerate(articles, 1):
@@ -2808,8 +2813,15 @@ workflow:
                       cleaned_articles.append(article)
                   except ValueError as exc:
                       errors.append('第{}篇：{}'.format(index, exc))
-              if errors:
-                  raise ValueError('文章结构闸门未通过：' + ' | '.join(errors)[:4000])
+                      if isinstance(item, dict):
+                          failed_article = dict(item)
+                      else:
+                          failed_article = {'title': '', 'content': str(item or ''), 'description': '', 'tags': [], 'self_review': ''}
+                      failed_article['_structural_validation'] = 'failed'
+                      failed_article['_structural_validation_issues'] = [str(exc)]
+                      risk = '风险提示：文章结构闸门未通过：' + str(exc)
+                      failed_article['self_review'] = (str(failed_article.get('self_review', '') or '').strip('；') + '；' + risk).strip('；')
+                      cleaned_articles.append(failed_article)
               return {'cleaned_articles': cleaned_articles}
         code_language: python3
         desc: "文章结构闸门：检查字段、线路标签、HTML、Markdown链接和占位符，不改写业务内容。"
