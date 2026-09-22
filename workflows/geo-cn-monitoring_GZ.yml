@@ -106,6 +106,17 @@ workflow:
       id: e01
       source: '1766746558986'
       sourceHandle: source
+      target: '1779998000001'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: code
+      id: e01c
+      source: '1779998000001'
+      sourceHandle: source
       target: '1766746641582'
       targetHandle: target
       type: custom
@@ -336,6 +347,78 @@ workflow:
       positionAbsolute:
         x: 60
         y: 340
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        code: |-
+          import html
+          import json
+          import re
+
+          def _decode_transport(value):
+              text = str(value or "")
+              for _ in range(3):
+                  candidate = text.strip()
+                  if not candidate.startswith('"'):
+                      break
+                  try:
+                      restored = json.loads(candidate)
+                  except Exception:
+                      break
+                  if not isinstance(restored, str) or restored == text:
+                      break
+                  text = restored
+              return text
+
+          def _clean_answer(value):
+              text = _decode_transport(value)
+              text = text.replace("\r\n", "\n").replace("\r", "\n")
+              text = html.unescape(text)
+              # 图片保留可见替代文字，普通链接保留链接文字。
+              text = re.sub(r"!\[([^\]]{0,500})\]\([^)]{0,2000}\)", r"\1", text)
+              text = re.sub(r"\[([^\]]{0,500})\]\([^)]{0,2000}\)", r"\1", text)
+              text = re.sub(r"https?://[^\s<>()]{0,2000}", "", text, flags=re.I)
+              text = re.sub(r"<[^>]{0,500}>", "", text)
+              text = re.sub(r"^\\s*```(?:[A-Za-z0-9_+.-]{0,30})?\\s*$", "", text, flags=re.M)
+              text = re.sub(r"^\s*\[[^\]\n]{1,200}\]:\s*\S+\s*$", "", text, flags=re.M)
+              text = re.sub(r"(?m)^\s{0,3}#{1,6}\s*", "", text)
+              text = re.sub(r"(?m)^\s*>\s?", "", text)
+              text = text.replace("**", "").replace("__", "").replace("`", "")
+              text = re.sub(r"\\([.#*+\-])", r"\1", text)
+              text = re.sub(r"[ \t]+\n", "\n", text)
+              text = re.sub(r"\n{3,}", "\n\n", text)
+              text = text.strip()
+              if not text:
+                  raise ValueError("清洗后回答为空，停止本条")
+              return text
+
+          def main(answer_raw: str) -> dict:
+              return {"cleaned_answer_raw": _clean_answer(answer_raw)}
+        code_language: python3
+        desc: 清洗回答中的HTML、链接、Markdown控制符和多余转义；保留标题、编号、列表、表格与正文结构
+        outputs:
+          cleaned_answer_raw:
+            children: null
+            type: string
+        selected: false
+        title: 1a.回答正文清洗（代码）
+        type: code
+        variables:
+        - value_selector:
+          - '1766746558986'
+          - answer_raw
+          variable: answer_raw
+      height: 97
+      id: '1779998000001'
+      position:
+        x: 220
+        y: 160
+      positionAbsolute:
+        x: 220
+        y: 160
       selected: false
       sourcePosition: right
       targetPosition: left
@@ -598,8 +681,8 @@ workflow:
         type: code
         variables:
         - value_selector:
-          - '1766746558986'
-          - answer_raw
+          - '1779998000001'
+          - cleaned_answer_raw
           variable: answer_raw
         - value_selector:
           - '1766746558986'
@@ -2537,8 +2620,8 @@ workflow:
           - ent_dataset_id
           variable: ent_dataset_id
         - value_selector:
-          - '1766746558986'
-          - answer_raw
+          - '1779998000001'
+          - cleaned_answer_raw
           variable: answer_raw
         - value_selector:
           - '1766746558986'
@@ -2665,8 +2748,8 @@ workflow:
           - matched_brand
           variable: matched_brand
         - value_selector:
-          - '1766746558986'
-          - answer_raw
+          - '1779998000001'
+          - cleaned_answer_raw
           variable: answer_raw
         - value_selector:
           - '1766746558986'
