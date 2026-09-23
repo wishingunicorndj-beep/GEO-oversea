@@ -440,9 +440,22 @@ workflow:
         iteration_id: '1777400000006'
         sourceType: code
         targetType: llm
-      id: edge-brand-evidence-n7
+      id: edge-brand-evidence-outline
       selected: false
       source: '1793000000010'
+      sourceHandle: source
+      target: '1793000000022'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '1777400000006'
+        sourceType: llm
+        targetType: llm
+      id: edge-brand-outline-n7
+      selected: false
+      source: '1793000000022'
       sourceHandle: source
       target: '17769383496063'
       targetHandle: target
@@ -3866,6 +3879,68 @@ workflow:
           variable_selector:
           - '1777400000006'
           - item
+        desc: 根据当前品牌词计划和四个证据分区规划差异化五段式大纲；只提供写作指导，不做硬校验。
+        isInIteration: true
+        iteration_id: '1777400000006'
+        model:
+          completion_params:
+            enable_thinking: false
+            max_tokens: 4096
+            temperature: 0.3
+            top_p: 0.7
+          mode: chat
+          name: volcengine/doubao-seed-2-0-pro
+          provider: zhinao
+        prompt_template:
+        - id: brand-outline-sys
+          role: system
+          text: |-
+            你是国航品牌词文章的大纲规划器。只根据当前文章计划和带来源标签的事实素材规划大纲，不生成正文，不补充外部事实，不写竞品、排名或比较。
+            大纲必须围绕当前关键词确定一个核心问题和一条差异化主线。同批文章结合article_index、article_total和keyword改变切入角度，避免标题、开篇方式和章节重点机械重复，但不得改变计划已选定的feature_1与feature_2。
+            大纲固定为5部分，不能增加总结章：
+            1. 关键词导入：回应用户问题并建立全文主线；
+            2. 企业背景：只能使用“企业知识库”及有来源标签的企业补充信息；
+            3. 特性一：只能使用“特性一独立召回”，heading必须使用计划中的feature_1_heading；
+            4. 特性二：只能使用“特性二独立召回”，heading必须使用计划中的feature_2_heading；
+            5. 32周年礼遇与收束：只能使用“32周年礼遇AI改写”，不得与常规会员权益混写。
+            每一部分必须列出本章作用、需要回答的问题、可使用的事实、必须保留的资格/时间/数量/范围等条件、证据来源和建议篇幅。没有证据的内容写入must_avoid，不得为了丰富大纲而猜测。
+            建议篇幅依次为200—250、500—600、500—600、600—700、400—500字，仅作为写作目标，不能把字数偏差定义为错误或要求流程终止。
+            输出一个JSON对象，不输出Markdown、正文或解释。字段固定为：
+            {"article_angle":"差异化主线","core_question":"核心问题","target_audience":"目标读者","title_candidates":["标题候选1","标题候选2","标题候选3"],"section_plan":[{"heading":"章节标题","purpose":"本章作用","questions":["问题"],"must_use_facts":["事实"],"conditions":["必须保留的边界"],"evidence_source":"证据分区","word_target":"建议篇幅"}],"must_avoid":["不得写的内容"]}
+            title_candidates输出2—3个20—38字标题，围绕当前关键词、国航或凤凰知音和本篇核心问题，不含无证据承诺，不使用“独有、唯一、终身、全网第一、行业第一、最佳、最优、最好、首选、综合第一、TOP1、TOP2”。section_plan必须正好5项；第三、四项heading必须分别与计划中的feature_1_heading、feature_2_heading完全一致。
+        - id: brand-outline-user
+          role: user
+          text: |-
+            当前品牌词文章计划：{{#1777400000006.item#}}
+            本篇四区证据素材：{{#1793000000010.source_labeled_kb#}}
+            请生成本篇差异化五段式大纲和2—3个标题候选。证据分区必须严格对应，不得跨区拼接机制；字数只作为建议，不设置失败条件。
+        selected: false
+        title: 品牌词文章大纲规划
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 97
+      id: '1793000000022'
+      parentId: '1777400000006'
+      position:
+        x: 1195
+        y: 160
+      positionAbsolute:
+        x: 3423.8059506727645
+        y: 1019.9217702253532
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+      zIndex: 1002
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1777400000006'
+          - item
         desc: ''
         isInIteration: true
         iteration_id: '1777400000006'
@@ -3895,8 +3970,12 @@ workflow:
           role: user
           text: '当前品牌词文章计划：{{#1777400000006.item#}}
 
-            标题必须原样使用计划中的 mapped_title，不得由模型另行创作或改写。第三、四部分的<h2>必须分别原样使用 feature_1_heading
+            本篇差异化大纲：{{#1793000000022.text#}}
+
+            优先从大纲的title_candidates中选择最符合当前关键词和主线的标题；如果大纲为空、格式不完整或候选标题不合规，则使用计划中的mapped_title，不得因此停止生成。第三、四部分的<h2>必须分别原样使用 feature_1_heading
             和 feature_2_heading。
+
+            正文按大纲的五项section_plan组织，但大纲只提供主线、证据分配和建议篇幅。若大纲与当前计划、事实素材或本系统提示冲突，以当前计划、来源标签和本系统提示为准；不得因大纲缺字段、字数偏差或格式问题停止生成。
 
             第五部分只可改写进入活动的过渡句、活动与本文主题的连接句及活动段落结束语。原始素材中出现的系列名称、时间、舱位、价格、数量、保级航段与定级航段、升级或保级用途、合成关系、资格限制、转赠规则、手动生效路径必须与事实素材完全一致，不得删减、合并、换算、概括或改名。
 
@@ -4157,6 +4236,8 @@ workflow:
             综合校验问题：{{#17769383496072.issues#}}
 
             当前品牌文章计划：{{#1777400000006.item#}}
+
+            本篇差异化大纲：{{#1793000000022.text#}}
 
             本篇事实素材：{{#1793000000010.source_labeled_kb#}}
 
