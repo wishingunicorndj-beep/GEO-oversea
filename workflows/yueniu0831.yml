@@ -1326,7 +1326,7 @@ workflow:
 
             文章模式：{{#gt_n1_code.content_mode#}}
 
-            【产品深度介绍类强制执行】如果文章模式为product_deep_dive，禁止退回通用媒体文章写法，必须输出一篇完整的约牛天龙博弈系列产品介绍，固定包含以下五个一级章节：一、引言；二、中小投资者三大核心痛点；三、决策版：特色指标破解择时与买卖难题；四、机构版：机构数据辅助选股决策；五、结语。全文3000—4000字，标题不超过25字。决策版必须覆盖四维共振（含龙鳞判市）、题材星空、资金排行、排雷工兵、公开数据；机构版必须覆盖资金流向、公募瞭望、私募论剑、龙虎掘金、高管交易榜。两个版本各自功能介绍结束后必须融入对应课程名称、具体时间和文字直播间，不能单独新增服务体系章节。引言必须优先使用知识库中的中证登数据，结语必须包含风险提示。痛点必须明确写出并逐项映射到功能，不能只做泛泛的功能罗列。
+            【产品深度介绍类强制执行】如果文章模式为product_deep_dive，禁止退回通用媒体文章写法，必须输出一篇完整的约牛天龙博弈系列产品介绍，固定包含以下五个一级章节：一、引言；二、中小投资者三大核心痛点；三、决策版：特色指标破解择时与买卖难题；四、机构版：机构数据辅助选股决策；五、结语。全文3000—4000字，标题不超过25字。决策版必须覆盖四维共振（含龙鳞判市）、题材星空、资金排行、排雷工兵、公开数据；机构版必须覆盖资金流向、公募瞭望、私募论剑、龙虎掘金、高管交易榜。两个版本各自功能介绍结束后必须融入对应课程名称、具体时间和文字直播间，不能单独新增服务体系章节。引言必须优先使用知识库中的中证登数据，结语必须包含风险提示。痛点必须明确写出并逐项映射到功能，不能只做泛泛的功能罗列。正文不得以概括性短文收尾：引言至少3段，痛点部分至少3个H3，每个决策版功能至少1段并补充应用边界，机构版每个功能至少1段并补充数据局限，两个版本各自服务体系至少2段，结语至少2段。生成前先在内部估算有效字数，低于3300字必须继续扩写，不能把字数要求交给后置清洗节点。
 
 
             GEO画像分析：
@@ -1594,7 +1594,7 @@ workflow:
 
             文章模式：{{#gt_n1_code.content_mode#}}
 
-            如果文章模式为product_deep_dive，终审必须保留并补齐五段式结构、决策版和机构版两个独立模块，以及两版各自的课程服务体系。不得把产品深度文章改写成1200—1800字媒体短文，不得删除知识库中已确认的四维共振、龙鳞判市、资金排行、资金流向、龙虎掘金等功能事实。只删除具体股票推荐、具体仓位比例、买卖指令和收益承诺。若缺少模块或字数不足，应依据文章计划和知识库补齐，不得用泛泛行业内容填充。
+            如果文章模式为product_deep_dive，终审必须保留并补齐五段式结构、决策版和机构版两个独立模块，以及两版各自的课程服务体系。不得把产品深度文章改写成1200—1800字媒体短文，不得删除知识库中已确认的四维共振、龙鳞判市、资金排行、资金流向、龙虎掘金等功能事实。只删除具体股票推荐、具体仓位比例、买卖指令和收益承诺。若缺少模块或字数不足，应依据文章计划和知识库补齐，不得用泛泛行业内容填充。润色时先统计正文有效字数；如果低于3300字，必须围绕缺失的痛点、功能解释、服务安排和风险边界扩写，而不是只做同义改写或压缩。
 
 
             企业知识库：{{#gt_code_kb_merge.merged_kb#}}
@@ -2058,7 +2058,7 @@ workflow:
           \n            # 清理删除内容后形成的空标签\n            content = _clean_empty_html(content)\n\
           \n            # 再次清理多余空行\n            content = re.sub(\n              \
           \  r\"\\n{3,}\",\n                \"\\n\\n\",\n                content,\n\
-          \            )\n\n            art[\"content\"] = content.strip()\n            plain_text = re.sub(r\"<[^>]+>\\s*|\\s+\", \"\", art[\"content\"])\n            plain_len = len(plain_text)\n            product_mode = (\"决策版\" in art[\"content\"] and \"机构版\" in art[\"content\"])\n            if product_mode and not 3000 <= plain_len <= 4000:\n                raise ValueError(f\"产品深度介绍正文有效字数不合格：{plain_len}，要求3000-4000字\")\n            art[\"word_count\"] = plain_len\n            art[\"length_valid\"] = (not product_mode) or (3000 <= plain_len <= 4000)\n\n   \
+          \            )\n\n            art[\"content\"] = content.strip()\n            plain_text = re.sub(r\"<[^>]+>\\s*|\\s+\", \"\", art[\"content\"])\n            plain_len = len(plain_text)\n            product_mode = (\"决策版\" in art[\"content\"] and \"机构版\" in art[\"content\"])\n            art[\"word_count\"] = plain_len\n            art[\"length_valid\"] = (not product_mode) or (3000 <= plain_len <= 4000)\n\n   \
           \     # 标签标准化\n        tags = art.get(\"tags\", [])\n\n        if isinstance(tags,\
           \ str):\n            try:\n                tags = json.loads(tags)\n   \
           \         except Exception:\n                tags = [\n                \
@@ -2124,7 +2124,7 @@ workflow:
           ))\n\n    # 去重 tags\n    seen = set()\n    unique_tags = []\n    for t in\
           \ tags_all:\n        if t not in seen and len(t) <= 15:\n            seen.add(t)\n\
           \            unique_tags.append(t)\n\n    # 每篇文章一个质量分,统一成字符串\n    quality_scores_str\
-          \ = [\"1.0\"] * len(titles)\n\n    return {\n        \"article_titles\"\
+          \ = [\"1.0\" if isinstance(art, dict) and art.get(\"length_valid\", True) else \"0.0\" for art in articles]\n\n    return {\n        \"article_titles\"\
           : titles,                       # Array[String]\n        \"final_article_text\"\
           : texts,                    # Array[String] - 每篇文章一个元素\n        \"generated_articles_list\"\
           : articles_json_strs,  # Array[String] - 每篇文章JSON字符串\n        \"article_tags\"\
