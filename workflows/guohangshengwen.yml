@@ -1634,14 +1634,10 @@ workflow:
               if fence:
                   text=fence.group(1).strip()
               text=re.sub(r'\s+',' ',text).strip()
-              if not text:
-                  raise ValueError('32周年礼遇AI改写结果为空')
               char_count=len(re.sub(r'\s+','',text))
-              if char_count < 400 or char_count > 500:
-                  raise ValueError('32周年礼遇AI改写结果长度异常：{}字，要求400—500字'.format(char_count))
               return {'content':text, 'char_count':char_count}
         code_language: python3
-        desc: 校验并解析32周年礼遇AI改写结果，去除包装文本并限制为400—500字；最终文章第五部分同步控制为400—500字。
+        desc: 解析32周年礼遇AI改写结果并统计字数；不因内容为空或字数超出目标中断流程。
         isInIteration: true
         iteration_id: '1777400000006'
         outputs:
@@ -2696,6 +2692,10 @@ workflow:
                       gate_score += ' | 终稿硬校验=' + gate_status
                       if isinstance(gate_issues, list) and gate_issues:
                           gate_score += ' | ' + '；'.join(str(x) for x in gate_issues[:4])
+                  review = str(item.get('self_review', '') or '')
+                  marker = '风险提示：品牌修复结果解析失败'
+                  if marker in review:
+                      gate_score = '⚠️ 品牌文章未经修复复核 | ' + gate_score + ' | ' + review[review.find(marker):review.find(marker) + 350]
                   quality_scores.append(gate_score)
 
               expected_totals = []
@@ -5016,21 +5016,47 @@ workflow:
         code: |
           import json
           import re
-          def main(raw):
-              text = re.sub(r'<think>.*?</think>', '', str(raw or ''), flags=re.S | re.I).strip()
+          FIELDS = ('title', 'content', 'description', 'tags', 'self_review')
+          def clean(value):
+              text = re.sub(r'<think>.*?</think>', '', str(value or ''), flags=re.S | re.I).strip()
               fence = re.fullmatch(r'```(?:json)?\s*([\s\S]*?)\s*```', text, re.I)
-              if fence:
-                  text = fence.group(1).strip()
-              article = json.loads(text)
+              return fence.group(1).strip() if fence else text
+          def parse(value):
+              text = clean(value)
+              try:
+                  article = json.loads(text)
+              except (ValueError, TypeError) as exc:
+                  return None, '{}: {}'.format(type(exc).__name__, str(exc))
               if not isinstance(article, dict):
-                  raise ValueError('品牌修复结果不是JSON对象')
-              fields = ('title', 'content', 'description', 'tags', 'self_review')
-              missing = [x for x in fields if x not in article]
+                  return None, '输出不是JSON对象'
+              missing = [name for name in FIELDS if name not in article]
               if missing:
-                  raise ValueError('品牌修复结果缺少字段：' + ','.join(missing))
-              return {'structured_output': {x: article[x] for x in fields}}
+                  return None, '缺少字段：' + ','.join(missing)
+              if not isinstance(article.get('content'), str) or not article['content'].strip():
+                  return None, '正文为空或不是字符串'
+              return {name: article[name] for name in FIELDS}, ''
+          def main(raw, original):
+              article, error = parse(raw)
+              if not error:
+                  return {'structured_output': article}
+              article, original_error = parse(original)
+              if article is None:
+                  source = clean(original) or clean(raw)
+                  title_match = re.search(r'"title"\s*:\s*"([^"\r\n]{1,80})', source)
+                  title = title_match.group(1).strip() if title_match else '国航凤凰知音品牌文章生成结果需人工复核'
+                  html_start = re.search(r'<(?:h2|p)\b', source, re.I)
+                  content = source[html_start.start():] if html_start else source
+                  if not content:
+                      content = '<p>风险提示：品牌文章模型未返回正文，请检查原始生成节点。</p>'
+                  article = {'title': title, 'content': content, 'description': '', 'tags': [], 'self_review': ''}
+                  fallback = '原始初稿也无法解析（{}），已保留可用原文'.format(original_error)
+              else:
+                  fallback = '已保留原始初稿'
+              risk = '风险提示：品牌修复结果解析失败（{}）；{}；未经修复复核，不可直接发布'.format(error, fallback)
+              article['self_review'] = (str(article.get('self_review', '') or '').strip('；') + '；' + risk).strip('；')
+              return {'structured_output': article}
         code_language: python3
-        desc: 解析品牌词自动修复结果，交给终稿硬校验。
+        desc: 品牌修复结果若为无效JSON则保留原始初稿，并在终稿提示解析错误；不中断流程。
         isInIteration: true
         iteration_id: '1777400000006'
         outputs:
@@ -5046,6 +5072,11 @@ workflow:
           - text
           value_type: string
           variable: raw
+        - value_selector:
+          - '17769383496063'
+          - text
+          value_type: string
+          variable: original
       height: 54
       id: '1793000000021'
       parentId: '1777400000006'
