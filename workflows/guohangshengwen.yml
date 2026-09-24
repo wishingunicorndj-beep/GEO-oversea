@@ -1088,7 +1088,7 @@ workflow:
               if not feature_2:
                   feature_2='{} 凤凰知音会员权益 里程累积 里程兑换 候补 值机 登机 行李 休息室 星空联盟 适用条件'.format(keyword)
               if not enterprise:
-                  enterprise='国航 中国国际航空 公司介绍 航线网络 机队 枢纽 运营基地 星空联盟 企业实力'
+                  enterprise='国航 中国国际航空股份有限公司 企业概况 成立时间 总部 上市信息 主营业务 经营数据 机队规模 航线网络 枢纽 运营基地 星空联盟 品牌定位 企业荣誉'
               return {
                   'feature_1_query':feature_1,
                   'feature_2_query':feature_2,
@@ -2114,7 +2114,7 @@ workflow:
           - id: key-value-82
             key: ''
             type: text
-            value: '{"query":"{{#1793000000001.enterprise_query#}}","dataset_ids":["{{#1776153503356.ent_dataset_id#}}"],"top_k":6,"score":0.30}'
+            value: '{"query":"{{#1793000000001.enterprise_query#}}","dataset_ids":["{{#1776153503356.ent_dataset_id#}}"],"top_k":4,"score":0.45}'
           type: json
         desc: 品类文章按当前计划独立召回企业证据。
         headers: Authorization:Bearer dataset-i1hWlKJuVdm4NvyPVWvylhtW
@@ -3081,8 +3081,8 @@ workflow:
           \ if selected_features else '',\n            'feature_2_key': selected_features[1]['key']\
           \ if selected_features else '',\n            'feature_2_heading': heading_2,\n     \
           \       'feature_2_query': selected_features[1]['query'] if selected_features else '',\n\
-          \            'enterprise_query': '国航 中国国际航空 公司介绍 服务 航线网络 机队 联盟 品牌资产' if\
-          \ mode in ('brand','category') else '',\n            'activity_source_text': activity_source_text\
+          \            'enterprise_query': ('国航 中国国际航空股份有限公司 企业概况 成立时间 总部 上市信息 主营业务 经营数据 机队规模 航线网络 枢纽 运营基地 星空联盟 品牌定位 企业荣誉' if mode == 'category' else\
+          \ ('国航 中国国际航空 公司介绍 服务 航线网络 机队 联盟 品牌资产' if brand else '')),\n            'activity_source_text': activity_source_text\
           \ if mode in ('brand','category') else '',\n            'article_angle': angle,\n            'title_guidance':\
           \ title_guidance,\n            'content_mode': 'brand_focus' if brand else\
           \ ('anniversary' if mode == 'anniversary' else ('category_decision' if intent\
@@ -3339,7 +3339,7 @@ workflow:
           \            errors.append('第{}篇：{}'.format(i, exc))\n    return {'validated_articles':\
           \ out,\n            'final_validation_report': json.dumps({'article_count':\
           \ len(out), 'status': 'failed' if errors else 'passed', 'issues': errors},\
-          \ ensure_ascii=False)}\n\n\ndef main(n7_text, clean_out):\n    source = clean_out\n    fallback_note = ''\n    try:\n        article = parse_article(clean_out)\n    except ValueError as exc:\n        source = n7_text\n        fallback_note = '品类词修复结果解析失败：{}；已回退正文初稿'.format(exc)\n        try:\n            article = parse_article(n7_text)\n        except ValueError as original_exc:\n            article = {'title':'品类词文章生成结果需人工复核','content':'<p>风险提示：正文初稿与修复结果均无法解析，本篇不可直接发布。</p>','description':'品类词文章生成异常，请检查正文节点输出。','tags':['国航','凤凰知音'],'self_review':''}\n            fallback_note += '；正文初稿也无法解析：{}'.format(original_exc)\n    issues, _ = inspect_article(article, 'category')\n    notes = []\n    if fallback_note:\n        notes.append(fallback_note)\n    if issues:\n        notes.append('品类词终稿提示：' + '；'.join(issues))\n    if notes:\n        article['self_review'] = (str(article.get('self_review','') or '').strip('；') + '；风险提示：' + '；'.join(notes)).strip('；')\n    for name in FIELDS:\n        if name not in article:\n            article[name] = [] if name == 'tags' else ''\n    return {'structured_output': {name: article[name] for name in FIELDS}}\n"
+          \ ensure_ascii=False)}\n\n\ndef _normalize_activity_text(activity_text):\n    text = re.sub(r'<think>.*?</think>', '', str(activity_text or ''), flags=re.S | re.I).strip()\n    fence = re.fullmatch(r'```(?:text|markdown)?\\s*([\\s\\S]*?)\\s*```', text, re.I)\n    if fence:\n        text = fence.group(1).strip()\n    return re.sub(r'\\s+', ' ', text).strip()\n\n\ndef _freeze_category_activity(article, activity_text):\n    text = _normalize_activity_text(activity_text)\n    if not text:\n        return '32周年固定段落为空，未执行原文回填'\n    content = str(article.get('content', '') or '')\n    matches = list(re.finditer(r'<h2[^>]*>[\\s\\S]*?</h2>', content, re.I))\n    if len(matches) != 5:\n        return '正文h2数量不是5，无法安全回填32周年固定段落'\n    fifth = matches[4]\n    article['content'] = content[:fifth.start()] + fifth.group(0) + '<p>' + html.escape(text, quote=False) + '</p>'\n    return ''\n\n\ndef main(n7_text, clean_out, activity_text=''):\n    fallback_note = ''\n    try:\n        article = parse_article(clean_out)\n    except ValueError as exc:\n        fallback_note = '品类词修复结果解析失败：{}；已回退正文初稿'.format(exc)\n        try:\n            article = parse_article(n7_text)\n        except ValueError as original_exc:\n            article = {'title':'品类词文章生成结果需人工复核','content':'<p>风险提示：正文初稿与修复结果均无法解析，本篇不可直接发布。</p>','description':'品类词文章生成异常，请检查正文节点输出。','tags':['国航','凤凰知音'],'self_review':''}\n            fallback_note += '；正文初稿也无法解析：{}'.format(original_exc)\n    freeze_note = _freeze_category_activity(article, activity_text)\n    issues, _ = inspect_article(article, 'category')\n    notes = []\n    if fallback_note:\n        notes.append(fallback_note)\n    if freeze_note:\n        notes.append(freeze_note)\n    if issues:\n        notes.append('品类词终稿提示：' + '；'.join(issues))\n    if notes:\n        article['self_review'] = (str(article.get('self_review','') or '').strip('；') + '；风险提示：' + '；'.join(notes)).strip('；')\n    for name in FIELDS:\n        if name not in article:\n            article[name] = [] if name == 'tags' else ''\n    return {'structured_output': {name: article[name] for name in FIELDS}}\n"
         code_language: python3
         desc: ''
         isInIteration: true
@@ -3360,6 +3360,11 @@ workflow:
           - '1779970859223'
           - text
           variable: clean_out
+        - value_selector:
+          - '1792000000005'
+          - content
+          value_type: string
+          variable: activity_text
       height: 53
       id: '1779793980326'
       parentId: '1776938309919'
@@ -3395,7 +3400,9 @@ workflow:
           role: system
           text: '你是国航品类词文章生成器。先回答当前品类选择问题，再依据四个带来源标签的证据区说明为什么可以考虑国航凤凰知音。全文只写国航凤凰知音；即使关键词含“三大航、对比、哪家好、排行榜”等表达，也不得出现东航、南航或其他具体竞品名称、数据、排名和优劣比较。
 
-            正文必须遵循差异化大纲的五段结构：第一部分回答品类问题并锁定目标人群；第二部分只用企业知识说明国航实力与服务基础；第三部分只用特性一证据展开会员体系或当前重点；第四部分只用特性二证据展开核心权益或当前重点；第五部分使用与品牌词相同的32周年礼遇写作逻辑并回扣选择问题，不另设总结章。不得把四个证据区的主体、条件、数字或结果拼成一个机制。
+            正文必须遵循差异化大纲的五段结构：第一部分回答品类问题并锁定目标人群；第二部分只用企业知识说明国航实力与服务基础；第三部分只用特性一证据展开会员体系或当前重点；第四部分只用特性二证据展开核心权益或当前重点；第五部分设置一个自然、可发布的<h2>，随后用且只用一个<p>逐字放入用户提示中的“32周年固定段落”，不另设总结章。不得把四个证据区的主体、条件、数字或结果拼成一个机制。
+
+            32周年固定段落是冻结内容块，也是本文所有32周年内容的唯一有效来源。必须完整逐字复制其可见文字，不得改写、扩写、缩写、概括、拆段、调整顺序、增加过渡句或补充任何活动事实；第五部分不得增加<h3>、列表或第二个<p>。企业知识库、特性一、特性二和大纲中如出现其他32周年、周年庆、数字资产或周年资产信息，一律忽略。文章标题、第一至第四部分、description和tags不得出现32周年、周年庆、数字资产及具体周年资产名称。
 
             上述“第一部分至第五部分”仅表示章节职责，不是成稿标题。五个<h2>必须采用自然、完整、可直接发布的PR稿小标题，并结合当前关键词、目标人群和本章事实体现信息点；优先使用大纲section_plan中的heading。严禁把“品类问题与目标人群、企业实力与服务基础、会员体系或特性一、核心权益或特性二、32周年礼遇与选择收束”以及“第一部分、第二部分”等结构说明原样作为<h2>。若大纲给出的heading仍是结构说明，正文生成时必须先将其改写为自然小标题，不得照抄。
 
@@ -3422,7 +3429,11 @@ workflow:
 
             竞品边界：无论原始关键词是否包含具体航司名称、三大航、对比、排行、哪家好或推荐，都只写国航凤凰知音；标题、正文、摘要和标签不得出现东航、南航或其他具体竞品名称、数据和评价。
 
-            五部分证据边界：第二部分只用企业知识库；第三部分只用特性一独立召回；第四部分只用特性二独立召回；第五部分只用32周年礼遇AI改写。第五部分的关键名称、时间、舱位、价格、数量、保级航段与定级航段、用途、合成关系、资格限制、转赠规则和手动生效路径不得自行改写事实。
+            五部分证据边界：第二部分只用企业知识库；第三部分只用特性一独立召回；第四部分只用特性二独立召回；第五部分只用下方“32周年固定段落”。企业知识库、特性一和特性二中出现的任何32周年或周年活动内容均为误召回，标题及第一至第四部分不得采用。
+
+            32周年固定段落原文：{{#1792000000005.content#}}
+
+            第五部分只生成一个自然、可发布的<h2>，其后用一个<p>完整逐字复制上面的固定段落。不得对固定段落做任何改写、扩写、缩写、拆分、重排或衔接；不得在第五部分添加其他句子、列表或子标题。title、description和tags也不得提及32周年活动。
 
             写作时逐项核对以下词不得出现在标题、正文、摘要和标签中：独有、唯一、终身、全网第一、行业第一、最佳、最优、最好、首选、综合第一、TOP1、TOP2。
 
@@ -3471,7 +3482,9 @@ workflow:
         prompt_template:
         - id: air-final-1779970859223-sys
           role: system
-          text: '你是国航品类词文章质量修复器。依据预检问题、五段式大纲、当前文章计划和四区证据修复文章，不得把整份知识库重新搬回正文。全文只写国航凤凰知音，不得出现东航、南航或其他具体竞品名称、数据、排名和评价。必须保留五个<h2>部分及其证据边界：企业知识、特性一、特性二和32周年礼遇不得跨区混写。涉及会员及活动权益时，不得缩略主体、条件、期限、数量、单位和适用范围。正式会员名称可以按材料原文保留，不相关的会员等级不得反复列出。不得按字符截断，必须保持完整句子、完整段落和闭合HTML。正文以2500—3000字为目标，但不得因字数偏差拒绝输出或删除完整章节。
+          text: '你是国航品类词文章质量修复器。依据预检问题、五段式大纲、当前文章计划和四区证据修复文章，不得把整份知识库重新搬回正文。全文只写国航凤凰知音，不得出现东航、南航或其他具体竞品名称、数据、排名和评价。必须保留五个<h2>部分及其证据边界：企业知识、特性一、特性二和32周年礼遇不得跨区混写。涉及会员权益时，不得缩略主体、条件、期限、数量、单位和适用范围。正式会员名称可以按材料原文保留，不相关的会员等级不得反复列出。不得按字符截断，必须保持完整句子、完整段落和闭合HTML。正文以2500—3000字为目标，但不得因字数偏差拒绝输出或删除完整章节。
+
+            第五部分的32周年段落是冻结内容块。必须在一个自然、可发布的<h2>后，用且只用一个<p>逐字放入用户提示中的“32周年固定段落”；不得改写、扩写、缩写、概括、拆段、重排、增加衔接句，不得添加<h3>、列表或第二个<p>。若待修复文章已经改动该段，必须恢复为固定原文；修复其他问题时也不得碰该段。企业知识库、特性一、特性二和大纲中出现的其他32周年或周年活动信息一律忽略。title、第一至第四部分、description和tags不得出现32周年、周年庆、数字资产及具体周年资产名称。
 
             五个<h2>必须是自然、完整、可直接发布的PR稿小标题。发现“品类问题与目标人群、企业实力与服务基础、会员体系或特性一、核心权益或特性二、32周年礼遇与选择收束”或“第一部分、第二部分”等结构说明时，必须结合该章事实改写标题，不得保留内部结构标签；只改标题表达，不改变章节证据边界和正文事实。
 
@@ -3493,9 +3506,13 @@ workflow:
 
             本篇差异化五段式大纲：{{#1792000000006.text#}}
 
-            本篇按照文章计划中的article_angle和大纲修复；大纲异常时按计划和证据继续，不得中断。必须保留五部分，且第五部分继续使用与品牌词一致的32周年礼遇写作逻辑。
+            本篇按照文章计划中的article_angle和大纲修复；大纲异常时按计划和证据继续，不得中断。必须保留五部分。
 
             来源标签知识库：{{#1780900000002.source_labeled_kb#}}
+
+            32周年固定段落原文：{{#1792000000005.content#}}
+
+            第五部分只能逐字使用上面的固定段落。企业知识库、特性一和特性二中出现的任何32周年或周年活动内容均为误召回，不得用于标题、第一至第四部分、description或tags；不得根据大纲或待修复文章对固定段落进行二次改编。
 
             逐条消除预检问题。标题、正文、摘要、标签不得含：独有、唯一、终身、全网第一、行业第一、最佳、最优、最好、首选、综合第一、TOP1、TOP2。标题应回答品类问题并自然引出国航凤凰知音；不得出现具体竞品。
 
@@ -3816,20 +3833,22 @@ workflow:
             2. 结构角色二：只能使用“企业知识库”及有来源标签的企业补充信息，说明与本篇选择问题有关的企业与服务基础；
             3. 结构角色三：只能使用“特性一独立召回”，heading使用计划中的feature_1_heading；
             4. 结构角色四：只能使用“特性二独立召回”，heading使用计划中的feature_2_heading；
-            5. 结构角色五：只能使用“32周年礼遇AI改写”，写作逻辑与品牌词一致，并回扣选择问题，不得与常规会员权益混写。
+            5. 结构角色五：只能放置“32周年固定段落”，由本章heading承担与选择问题的自然衔接；该段落来自“品类32周年礼遇解析”的content，是正文中32周年内容的唯一有效来源，不得与常规会员权益混写。
+            32周年内容属于冻结内容块：大纲只能为第五部分规划一个自然、可发布的heading，并将purpose写为“在该heading下逐字放入32周年固定段落”；不得拆解、摘录、概括、补写、改写或重新排序固定段落中的任何事实，不得把其中事实写入其他章节。若企业知识库、特性一或特性二中也出现32周年、周年庆、数字资产、传递吉祥、引领群伦、知音相伴、超越自我等内容，一律视为误召回，不得用于标题候选和第一至第四部分。
             section_plan中的每个heading都必须是10—24个汉字左右、自然完整、具有传播感且可直接发布的PR稿小标题，标题本身要表达本章信息点，不得只是栏目名称。第一、二、五章应结合当前关键词、目标人群和证据动态生成；第三、四章沿用计划中的feature_1_heading、feature_2_heading，但若其只是结构说明，也要在不改变主题的前提下自然润色。
             禁止输出“品类问题与目标人群、企业实力与服务基础、会员体系或特性一、核心权益或特性二、32周年礼遇与选择收束、第一部分、第二部分、第三部分、第四部分、第五部分”等内部结构标签。可参考“高频出行选会员，更应关注长期价值”“航线与服务基础，为会员体验提供支撑”“周年礼遇加码，升级保级路径更清晰”的表达方式，但不得机械照抄，应按本篇事实生成。
             每部分列出本章作用、需要回答的问题、可使用事实、必须保留的资格/时间/数量/范围、证据来源和建议篇幅。没有证据的内容写入must_avoid，不得猜测。
             全文以2500—3000字为写作目标，五部分建议篇幅依次约200—250、450—550、550—650、700—850、400—500字；字数只作规划，不得定义为错误或要求终止流程。
             输出一个JSON对象，不输出Markdown、正文或解释。字段固定为：
             {"article_angle":"差异化主线","core_question":"核心问题","target_audience":"目标读者","title_candidates":["标题候选1","标题候选2","标题候选3"],"section_plan":[{"heading":"章节标题","purpose":"本章作用","questions":["问题"],"must_use_facts":["事实"],"conditions":["必须保留的边界"],"evidence_source":"证据分区","word_target":"建议篇幅"}],"must_avoid":["不得写的内容"]}
-            title_candidates输出2—3个20—38字标题，使用“品类问题或目标人群＋为什么考虑国航凤凰知音”的表达，不出现具体竞品，不含无来源承诺。section_plan必须正好5项；五个heading都必须达到可直接发布标准，第三、四项heading分别以计划中的feature_1_heading、feature_2_heading为主题生成，不得退化为结构标签。
+            title_candidates输出2—3个20—38字标题，使用“品类问题或目标人群＋为什么考虑国航凤凰知音”的表达，不出现具体竞品，不含无来源承诺，也不得出现“32周年、周年庆、数字资产”或任何周年资产名称。section_plan必须正好5项；五个heading都必须达到可直接发布标准，第三、四项heading分别以计划中的feature_1_heading、feature_2_heading为主题生成，不得退化为结构标签。第五项must_use_facts只能写“整段逐字使用32周年固定段落”，不得重新罗列活动事实。
         - id: category-outline-user
           role: user
           text: |-
             当前品类词文章计划：{{#1776938309919.item#}}
             本篇四区证据素材：{{#1780900000002.source_labeled_kb#}}
-            请生成本篇差异化五段式大纲和2—3个标题候选。证据分区必须严格对应；只写国航凤凰知音；字数只作为目标，不设置失败条件。
+            32周年固定段落（正文必须逐字使用，不得改写）：{{#1792000000005.content#}}
+            请生成本篇差异化五段式大纲和2—3个标题候选。证据分区必须严格对应；只写国航凤凰知音；字数只作为目标，不设置失败条件。除上述固定段落外，忽略四区证据素材中出现的所有32周年及周年活动信息。
         selected: false
         title: 品类词文章大纲规划
         type: llm
