@@ -894,7 +894,7 @@ workflow:
           \        headings = re.findall(r'<h[23][^>]*>(.*?)</h[23]>', article['content'],\
           \ re.I | re.S)\n        heading_text = re.sub(r'<[^>]+>', '', ' '.join(headings))\n\
           \        if not re.search(r'(?:判断|选择|适用|维度|服务|权益|规则|差异|对比|比较)', heading_text):\n\
-          \            issues.append('标题包含选择或比较意图，但正文没有对应的判断维度或事实说明')\n    return\
+          \            issues.append('标题包含选择或比较意图，但正文没有对应的判断维度或事实说明')\n    heading_names = [\n        re.sub(r'<[^>]+>', '', html.unescape(value)).strip()\n        for value in re.findall(r'<h2[^>]*>(.*?)</h2>', article['content'], re.I | re.S)\n    ]\n    structural_labels = {\n        '品类问题与目标人群', '企业实力与服务基础', '会员体系或特性一',\n        '核心权益或特性二', '32周年礼遇与选择收束'\n    }\n    mechanical = [\n        name for name in heading_names\n        if name in structural_labels or re.match(r'^第[一二三四五1-5]+部分(?:[：:、 ]|$)', name)\n    ]\n    if mechanical:\n        issues.append('品类词h2仍使用内部结构说明：{}；请改为可直接发布的PR稿小标题'.format('、'.join(mechanical)))\n    return\
           \ issues\n\n\ndef inspect_article(article, mode):\n    issues = []\n   \
           \ for name in FIELDS:\n        value = article.get(name)\n        if name\
           \ == 'tags':\n            if not isinstance(value, list) or any(not isinstance(x,\
@@ -3058,7 +3058,7 @@ workflow:
           \ '第三部分（500-600字）：{}，只围绕“{}”及其独立召回证据'.format(heading_1, selected_features[0]['key']),\n\
           \                '第四部分（600-700字）：{}，只围绕“{}”及其独立召回证据'.format(heading_2, selected_features[1]['key']),\n\
           \                '第五部分（400-500字）：接入32周年礼遇固定事实模块；只允许改写过渡句、与本文主题的连接句及结束语，不设总结段'\n\
-          \            ]\n        elif mode == 'category':\n            heading_1 = selected_features[0]['headings'][sum(ord(c) for c in keyword) % len(selected_features[0]['headings'])]\n            heading_2 = selected_features[1]['headings'][(sum(ord(c) for c in keyword) + 1) % len(selected_features[1]['headings'])]\n            mapped_title = ''\n        else:\n            heading_1 = heading_2 = mapped_title = ''\n        category_sections = [\n            '第一部分（约200-250字）：先回答品类问题，结合目标人群和场景引出国航凤凰知音，不出现具体竞品',\n            '第二部分（约450-550字）：只依据企业知识介绍国航航线、机队、枢纽、联盟或服务基础',\n            '第三部分（约550-650字）：{}，只围绕“{}”及其独立召回证据'.format(heading_1, selected_features[0]['key'] if selected_features else ''),\n            '第四部分（约700-850字）：{}，只围绕“{}”及其独立召回证据'.format(heading_2, selected_features[1]['key'] if selected_features else ''),\n            '第五部分（约400-500字）：使用与品牌词相同的32周年礼遇事实改写逻辑，并回扣品类选择问题，不另设总结章'\n        ]\n        if mode\
+          \            ]\n        elif mode == 'category':\n            heading_1 = selected_features[0]['headings'][sum(ord(c) for c in keyword) % len(selected_features[0]['headings'])]\n            heading_2 = selected_features[1]['headings'][(sum(ord(c) for c in keyword) + 1) % len(selected_features[1]['headings'])]\n            mapped_title = ''\n        else:\n            heading_1 = heading_2 = mapped_title = ''\n        category_sections = [\n            '结构角色一（约200-250字，不得作为h2原样输出）：先回答品类问题，结合目标人群和场景引出国航凤凰知音，不出现具体竞品',\n            '结构角色二（约450-550字，不得作为h2原样输出）：只依据企业知识介绍国航航线、机队、枢纽、联盟或服务基础',\n            '结构角色三（约550-650字，不得作为h2原样输出）：以“{}”为可发布标题主题，只围绕“{}”及其独立召回证据'.format(heading_1, selected_features[0]['key'] if selected_features else ''),\n            '结构角色四（约700-850字，不得作为h2原样输出）：以“{}”为可发布标题主题，只围绕“{}”及其独立召回证据'.format(heading_2, selected_features[1]['key'] if selected_features else ''),\n            '结构角色五（约400-500字，不得作为h2原样输出）：使用与品牌词相同的32周年礼遇事实改写逻辑，并回扣品类选择问题，不另设总结章'\n        ]\n        if mode\
           \ == 'anniversary':\n            anniversary_sections = [\n            \
           \    '周年背景与开篇：介绍32周年节点、活动定位与参与价值',\n                '活动总览：交代三阶段、资产系列与参与路径',\n\
           \                '启动日活动：依据证据写明航班、舱位、购买资格与资产权益',\n                '预热期活动：区分传递吉祥与引领群伦的资格、获取方式和航段用途',\n\
@@ -3248,7 +3248,7 @@ workflow:
           \        headings = re.findall(r'<h[23][^>]*>(.*?)</h[23]>', article['content'],\
           \ re.I | re.S)\n        heading_text = re.sub(r'<[^>]+>', '', ' '.join(headings))\n\
           \        if not re.search(r'(?:判断|选择|适用|维度|服务|权益|规则|差异|对比|比较)', heading_text):\n\
-          \            issues.append('标题包含选择或比较意图，但正文没有对应的判断维度或事实说明')\n    return\
+          \            issues.append('标题包含选择或比较意图，但正文没有对应的判断维度或事实说明')\n    heading_names = [\n        re.sub(r'<[^>]+>', '', html.unescape(value)).strip()\n        for value in re.findall(r'<h2[^>]*>(.*?)</h2>', article['content'], re.I | re.S)\n    ]\n    structural_labels = {\n        '品类问题与目标人群', '企业实力与服务基础', '会员体系或特性一',\n        '核心权益或特性二', '32周年礼遇与选择收束'\n    }\n    mechanical = [\n        name for name in heading_names\n        if name in structural_labels or re.match(r'^第[一二三四五1-5]+部分(?:[：:、 ]|$)', name)\n    ]\n    if mechanical:\n        issues.append('品类词h2仍使用内部结构说明：{}；请改为可直接发布的PR稿小标题'.format('、'.join(mechanical)))\n    return\
           \ issues\n\n\ndef inspect_article(article, mode):\n    issues = []\n   \
           \ for name in FIELDS:\n        value = article.get(name)\n        if name\
           \ == 'tags':\n            if not isinstance(value, list) or any(not isinstance(x,\
@@ -3397,6 +3397,8 @@ workflow:
 
             正文必须遵循差异化大纲的五段结构：第一部分回答品类问题并锁定目标人群；第二部分只用企业知识说明国航实力与服务基础；第三部分只用特性一证据展开会员体系或当前重点；第四部分只用特性二证据展开核心权益或当前重点；第五部分使用与品牌词相同的32周年礼遇写作逻辑并回扣选择问题，不另设总结章。不得把四个证据区的主体、条件、数字或结果拼成一个机制。
 
+            上述“第一部分至第五部分”仅表示章节职责，不是成稿标题。五个<h2>必须采用自然、完整、可直接发布的PR稿小标题，并结合当前关键词、目标人群和本章事实体现信息点；优先使用大纲section_plan中的heading。严禁把“品类问题与目标人群、企业实力与服务基础、会员体系或特性一、核心权益或特性二、32周年礼遇与选择收束”以及“第一部分、第二部分”等结构说明原样作为<h2>。若大纲给出的heading仍是结构说明，正文生成时必须先将其改写为自然小标题，不得照抄。
+
             可以描述用户场景、出行痛点和通用判断维度，但涉及国航、会员、里程、航线、活动和权益的具体事实必须在对应证据区找到直接依据。会员及活动权益必须保留主体、条件、期限、数量、单位和适用范围；没有依据的数字、比例、等级门槛、有效期、航线数量和服务承诺不得补写。不得使用绝对化或无依据营销结论。
 
             输出必须是一个完整、合法的 JSON 对象，不得输出 Markdown 代码块、解释、前后缀或第二个对象。字段名和类型固定如下，禁止增删或改名：
@@ -3405,7 +3407,7 @@ workflow:
 
             标题长度为20—38字，优先从大纲的title_candidates中选择最符合当前品类问题和目标人群的标题；若大纲为空、格式不完整或候选标题不合规，则根据当前关键词生成“品类问题或目标人群＋为什么考虑国航凤凰知音”的标题，不得因此停止生成。标题不得出现具体竞品。
 
-            content必须是非空完整正文，必须且只能包含5个有实质信息的<h2>部分。全文以2500—3000个中文字符为写作目标，但字数不是输出失败条件；不得因不足或超出目标拒绝输出、截断正文或省略第五部分。使用<h2>、<h3>、<p>、<strong>、<ul>、<li>
+            content必须是非空完整正文，必须且只能包含5个有实质信息且可直接发布的<h2>部分。全文以2500—3000个中文字符为写作目标，但字数不是输出失败条件；不得因不足或超出目标拒绝输出、截断正文或省略第五部分。使用<h2>、<h3>、<p>、<strong>、<ul>、<li>
             等HTML标签，不得使用Markdown，不得包含知识库来源标签、流程说明或占位文字。不得用空话、重复句或大段免责声明凑字数。JSON
             必须闭合；HTML 属性如需引号应使用单引号。'
         - id: air-final-1779969836326-usr
@@ -3470,6 +3472,8 @@ workflow:
         - id: air-final-1779970859223-sys
           role: system
           text: '你是国航品类词文章质量修复器。依据预检问题、五段式大纲、当前文章计划和四区证据修复文章，不得把整份知识库重新搬回正文。全文只写国航凤凰知音，不得出现东航、南航或其他具体竞品名称、数据、排名和评价。必须保留五个<h2>部分及其证据边界：企业知识、特性一、特性二和32周年礼遇不得跨区混写。涉及会员及活动权益时，不得缩略主体、条件、期限、数量、单位和适用范围。正式会员名称可以按材料原文保留，不相关的会员等级不得反复列出。不得按字符截断，必须保持完整句子、完整段落和闭合HTML。正文以2500—3000字为目标，但不得因字数偏差拒绝输出或删除完整章节。
+
+            五个<h2>必须是自然、完整、可直接发布的PR稿小标题。发现“品类问题与目标人群、企业实力与服务基础、会员体系或特性一、核心权益或特性二、32周年礼遇与选择收束”或“第一部分、第二部分”等结构说明时，必须结合该章事实改写标题，不得保留内部结构标签；只改标题表达，不改变章节证据边界和正文事实。
 
             输出必须是一个完整、合法的 JSON 对象，不得输出 Markdown 代码块、解释、前后缀或第二个对象。字段名和类型固定如下，禁止增删或改名：
 
@@ -3807,17 +3811,19 @@ workflow:
             你是国航品类词文章的大纲规划器。只根据当前计划和带来源标签的事实素材规划大纲，不生成正文，不补充外部事实。
             本文必须先回答当前品类选择问题，再用国航企业实力、凤凰知音会员体系、核心权益和32周年礼遇说明为什么可以考虑国航凤凰知音。即使关键词含“三大航、对比、哪家好、排行榜”等表达，也只能写国航凤凰知音，不得出现东航、南航或其他具体竞品名称、数据、排名和优劣比较。
             同批文章结合article_index、article_total和keyword改变核心问题、目标人群、开篇方式及两个重点特性，避免标题和内容机械重复，但不得改变计划已经选定的feature_1与feature_2。
-            大纲固定为5部分，不能增加总结章：
-            1. 品类问题与目标人群：直接回答用户问题，并引出国航凤凰知音；
-            2. 企业实力与服务基础：只能使用“企业知识库”及有来源标签的企业补充信息；
-            3. 会员体系或特性一：只能使用“特性一独立召回”，heading使用计划中的feature_1_heading；
-            4. 核心权益或特性二：只能使用“特性二独立召回”，heading使用计划中的feature_2_heading；
-            5. 32周年礼遇与选择收束：只能使用“32周年礼遇AI改写”，写作逻辑与品牌词一致，不得与常规会员权益混写。
+            大纲固定为5部分，不能增加总结章。下面五项只定义章节职责，绝不能原样作为heading或成稿<h2>：
+            1. 结构角色一：直接回答用户的品类问题，锁定目标人群和出行场景，并自然引出国航凤凰知音；
+            2. 结构角色二：只能使用“企业知识库”及有来源标签的企业补充信息，说明与本篇选择问题有关的企业与服务基础；
+            3. 结构角色三：只能使用“特性一独立召回”，heading使用计划中的feature_1_heading；
+            4. 结构角色四：只能使用“特性二独立召回”，heading使用计划中的feature_2_heading；
+            5. 结构角色五：只能使用“32周年礼遇AI改写”，写作逻辑与品牌词一致，并回扣选择问题，不得与常规会员权益混写。
+            section_plan中的每个heading都必须是10—24个汉字左右、自然完整、具有传播感且可直接发布的PR稿小标题，标题本身要表达本章信息点，不得只是栏目名称。第一、二、五章应结合当前关键词、目标人群和证据动态生成；第三、四章沿用计划中的feature_1_heading、feature_2_heading，但若其只是结构说明，也要在不改变主题的前提下自然润色。
+            禁止输出“品类问题与目标人群、企业实力与服务基础、会员体系或特性一、核心权益或特性二、32周年礼遇与选择收束、第一部分、第二部分、第三部分、第四部分、第五部分”等内部结构标签。可参考“高频出行选会员，更应关注长期价值”“航线与服务基础，为会员体验提供支撑”“周年礼遇加码，升级保级路径更清晰”的表达方式，但不得机械照抄，应按本篇事实生成。
             每部分列出本章作用、需要回答的问题、可使用事实、必须保留的资格/时间/数量/范围、证据来源和建议篇幅。没有证据的内容写入must_avoid，不得猜测。
             全文以2500—3000字为写作目标，五部分建议篇幅依次约200—250、450—550、550—650、700—850、400—500字；字数只作规划，不得定义为错误或要求终止流程。
             输出一个JSON对象，不输出Markdown、正文或解释。字段固定为：
             {"article_angle":"差异化主线","core_question":"核心问题","target_audience":"目标读者","title_candidates":["标题候选1","标题候选2","标题候选3"],"section_plan":[{"heading":"章节标题","purpose":"本章作用","questions":["问题"],"must_use_facts":["事实"],"conditions":["必须保留的边界"],"evidence_source":"证据分区","word_target":"建议篇幅"}],"must_avoid":["不得写的内容"]}
-            title_candidates输出2—3个20—38字标题，使用“品类问题或目标人群＋为什么考虑国航凤凰知音”的表达，不出现具体竞品，不含无来源承诺。section_plan必须正好5项，第三、四项heading分别与计划中的feature_1_heading、feature_2_heading一致。
+            title_candidates输出2—3个20—38字标题，使用“品类问题或目标人群＋为什么考虑国航凤凰知音”的表达，不出现具体竞品，不含无来源承诺。section_plan必须正好5项；五个heading都必须达到可直接发布标准，第三、四项heading分别以计划中的feature_1_heading、feature_2_heading为主题生成，不得退化为结构标签。
         - id: category-outline-user
           role: user
           text: |-
@@ -4012,7 +4018,7 @@ workflow:
           \        headings = re.findall(r'<h[23][^>]*>(.*?)</h[23]>', article['content'],\
           \ re.I | re.S)\n        heading_text = re.sub(r'<[^>]+>', '', ' '.join(headings))\n\
           \        if not re.search(r'(?:判断|选择|适用|维度|服务|权益|规则|差异|对比|比较)', heading_text):\n\
-          \            issues.append('标题包含选择或比较意图，但正文没有对应的判断维度或事实说明')\n    return\
+          \            issues.append('标题包含选择或比较意图，但正文没有对应的判断维度或事实说明')\n    heading_names = [\n        re.sub(r'<[^>]+>', '', html.unescape(value)).strip()\n        for value in re.findall(r'<h2[^>]*>(.*?)</h2>', article['content'], re.I | re.S)\n    ]\n    structural_labels = {\n        '品类问题与目标人群', '企业实力与服务基础', '会员体系或特性一',\n        '核心权益或特性二', '32周年礼遇与选择收束'\n    }\n    mechanical = [\n        name for name in heading_names\n        if name in structural_labels or re.match(r'^第[一二三四五1-5]+部分(?:[：:、 ]|$)', name)\n    ]\n    if mechanical:\n        issues.append('品类词h2仍使用内部结构说明：{}；请改为可直接发布的PR稿小标题'.format('、'.join(mechanical)))\n    return\
           \ issues\n\n\ndef inspect_article(article, mode):\n    issues = []\n   \
           \ for name in FIELDS:\n        value = article.get(name)\n        if name\
           \ == 'tags':\n            if not isinstance(value, list) or any(not isinstance(x,\
@@ -4404,7 +4410,7 @@ workflow:
           \        headings = re.findall(r'<h[23][^>]*>(.*?)</h[23]>', article['content'],\
           \ re.I | re.S)\n        heading_text = re.sub(r'<[^>]+>', '', ' '.join(headings))\n\
           \        if not re.search(r'(?:判断|选择|适用|维度|服务|权益|规则|差异|对比|比较)', heading_text):\n\
-          \            issues.append('标题包含选择或比较意图，但正文没有对应的判断维度或事实说明')\n    return\
+          \            issues.append('标题包含选择或比较意图，但正文没有对应的判断维度或事实说明')\n    heading_names = [\n        re.sub(r'<[^>]+>', '', html.unescape(value)).strip()\n        for value in re.findall(r'<h2[^>]*>(.*?)</h2>', article['content'], re.I | re.S)\n    ]\n    structural_labels = {\n        '品类问题与目标人群', '企业实力与服务基础', '会员体系或特性一',\n        '核心权益或特性二', '32周年礼遇与选择收束'\n    }\n    mechanical = [\n        name for name in heading_names\n        if name in structural_labels or re.match(r'^第[一二三四五1-5]+部分(?:[：:、 ]|$)', name)\n    ]\n    if mechanical:\n        issues.append('品类词h2仍使用内部结构说明：{}；请改为可直接发布的PR稿小标题'.format('、'.join(mechanical)))\n    return\
           \ issues\n\n\ndef inspect_article(article, mode):\n    issues = []\n   \
           \ for name in FIELDS:\n        value = article.get(name)\n        if name\
           \ == 'tags':\n            if not isinstance(value, list) or any(not isinstance(x,\
