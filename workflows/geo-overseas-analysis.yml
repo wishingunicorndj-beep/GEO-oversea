@@ -921,9 +921,9 @@ workflow:
             brand 使用目标品牌规范名，source 固定为 target。
             positive 最多10条，negative 最多10条；超过上限按原文出现顺序保留前10条。
             evidence_text 必须逐字来自回答原文，reason 用一句话说明为什么是正向或负向。
-            没有符合条件的证据时返回 []。
-            只输出 JSON array，不要 Markdown 包装。
-            示例：[{"brand":"Profound","source":"target","sentiment":"positive","evidence_text":"The platform is powerful.","reason":"明确称赞产品能力"}]
+            没有符合条件的证据时返回 {"sentiment_evidence":[]}。
+            只输出 JSON object，必须包含 sentiment_evidence 字段，不要 Markdown 包装。
+            示例：{"sentiment_evidence":[{"brand":"Profound","source":"target","sentiment":"positive","evidence_text":"The platform is powerful.","reason":"明确称赞产品能力"}]}
         - id: a2-user-001
           role: user
           text: |
@@ -933,7 +933,7 @@ workflow:
             # AI 回答
             {{#1766746641582.answer_raw#}}
 
-            请根据规则抽取目标品牌的正负向情感证据。只输出 JSON array，不要 Markdown 包装。
+            请根据规则抽取目标品牌的正负向情感证据。只输出包含 sentiment_evidence 字段的 JSON object，不要 Markdown 包装。
         selected: false
         title: 4a-2.品牌情感分析LLM
         type: llm
