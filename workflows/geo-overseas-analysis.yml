@@ -1337,8 +1337,7 @@ workflow:
           \ if k != key and match in v[\"records\"]), None)\n            if old: group[\"\
           records\"].extend(groups[old][\"records\"]); del groups[old]\n         \
           \   else: group[\"records\"].append(match)\n        group[\"structs\"].append(structural)\n\
-          \n    merged = {}\n    for key, group in groups.items():\n        cfg, recs,\
-          \ structs = group[\"config\"], group[\"records\"], group[\"structs\"]\n\
+          \n    merged = {}\n    for key, group in groups.items():\n        if not isinstance(group, dict):\n            continue\n        cfg = group.get(\"config\")\n        recs = group.get(\"records\") if isinstance(group.get(\"records\"), list) else []\n        structs = group.get(\"structs\") if isinstance(group.get(\"structs\"), list) else []\n\
           \        def weight(r):\n            try: return float(r[\"item\"].get(\"\
           weighted_score\", 0) or 0)\n            except Exception: return 0\n   \
           \     best = max(recs, key=weight, default=None); item = best[\"item\"]\
@@ -2284,8 +2283,7 @@ workflow:
           \    for value in (row.get(\"brand_name\"), row.get(\"brand\")):\n     \
           \           if canonical(value):\n                    legacy_by_key.setdefault(canonical(value),\
           \ row)\n\n    rows = []\n    for key, candidate in candidates.items():\n\
-          \        config, item, hits = candidate[\"config\"], candidate[\"item\"\
-          ], candidate[\"hits\"]\n        display = config[\"display_name\"] if config\
+          \        if not isinstance(candidate, dict):\n            continue\n        config = candidate.get(\"config\")\n        item = candidate.get(\"item\") if isinstance(candidate.get(\"item\"), dict) else {}\n        hits = candidate.get(\"hits\") if isinstance(candidate.get(\"hits\"), list) else []\n        display = config[\"display_name\"] if config\
           \ else candidate[\"display\"]\n        legacy = legacy_by_key.get(canonical(display),\
           \ {})\n        brand_value = str(config.get(\"core_brand\") if config else item.get(\"brand\") or display).strip()\n        if not brand_value:\n            continue\n\n        rank\
           \ = final_rank_by_key.get(key, 0)\n        if rank <= 0:\n            continue\n\
@@ -2438,7 +2436,10 @@ workflow:
                       rank = 0
                   display_order.append(("competitor", index, rank))
               display_order.sort(key=lambda x: (x[2] <= 0, x[2] if x[2] > 0 else 10**9, x[1]))
-              for display_rank, (kind, index, _) in enumerate(display_order, 1):
+              for display_rank, entry in enumerate(display_order, 1):
+                  if not isinstance(entry, (list, tuple)) or len(entry) < 3:
+                      continue
+                  kind, index = entry[0], entry[1]
                   if kind == "target":
                       rank_pos = str(display_rank)
                       is_top_recommend = "true" if display_rank <= 3 else "false"
