@@ -1712,7 +1712,7 @@ workflow:
           \                ),\n                None,\n            )\n\n          \
           \  if competitor:\n                name = competitor[1]\n              \
           \  media_type = 2\n                level = \"L2\"\n\n            elif host in KNOWN:\n                name,\
-          \ media_type, level = KNOWN[host]\n\n            elif (\n    \
+          \ media_type, level, _ = KNOWN[host]\n\n            elif (\n    \
           \            host.endswith(\".gov\")\n                or host.endswith(\"\
           .edu\")\n                or host == \"arxiv.org\"\n                or host.endswith(\"\
           .wikipedia.org\")\n            ):\n                name = supplied_name\
