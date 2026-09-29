@@ -930,6 +930,10 @@ workflow:
             # 上游品牌识别结果
             {{#17774580798580.text#}}
 
+            # 工作流配置的目标品牌（以此为准，不要根据回答中的其他品牌改写目标）
+            配置目标品牌：{{#1766746558986.brand_name#}}
+            配置主体公司：{{#1766746558986.company_name#}}
+
             # AI 回答
             {{#1766746641582.answer_raw#}}
 
@@ -937,7 +941,15 @@ workflow:
         selected: false
         title: 4a-2.品牌情感分析LLM
         type: llm
-        variables: []
+        variables:
+        - value_selector:
+          - '1766746558986'
+          - brand_name
+          variable: configured_brand_name
+        - value_selector:
+          - '1766746558986'
+          - company_name
+          variable: configured_company_name
         vision:
           enabled: false
       height: 157
@@ -956,12 +968,45 @@ workflow:
     - data:
         code: |
           import json
-          def parse(value):
-              try:
-                  result = json.loads(str(value or ""))
-                  return result if isinstance(result, dict) else {}
-              except Exception:
-                  return {}
+          import html
+          import re
+
+          def parse(value, max_depth=4):
+              """解析 LLM 原始输出，兼容 text 包装、重复 JSON 编码和 HTML 实体。"""
+              current = value
+              for _ in range(max_depth):
+                  if isinstance(current, dict):
+                      # Dify/模型节点常见包装：{"text":"{...}", "usage": {...}}
+                      if isinstance(current.get("text"), (dict, list, str)):
+                          inner = current.get("text")
+                          if isinstance(inner, dict):
+                              current = inner
+                              continue
+                          current = inner
+                      else:
+                          return current
+                  if not isinstance(current, str):
+                      return current if isinstance(current, dict) else {}
+                  raw = html.unescape(current).strip()
+                  if not raw:
+                      return {}
+                  # 兼容 ```json ... ``` 包装
+                  raw = re.sub(r"^```(?:json)?\\s*|\\s*```$", "", raw, flags=re.I).strip()
+                  try:
+                      current = json.loads(raw)
+                  except Exception:
+                      return {}
+              return current if isinstance(current, dict) else {}
+
+          def target_aliases(target_entity_json, matched):
+              entity = parse(target_entity_json)
+              values = []
+              if isinstance(entity, dict):
+                  values.extend(entity.get("aliases") or [])
+                  values.append(entity.get("display_name") or "")
+              values.append(matched or "")
+              return {str(v).strip().casefold() for v in values if str(v).strip()}
+
           def main(a1_output="", a2_output="", brand_pattern_hint="", answer_total_len=0, target_desc_text="", answer_raw="", target_entity_json="") -> dict:
               first = parse(a1_output); second = parse(a2_output)
               detected = "true" if str(first.get("brand_detected", "false")).lower() in {"true", "1", "yes"} else "false"
@@ -973,11 +1018,15 @@ workflow:
               rank_type = str(first.get("rank_type") or "none").lower()
               if rank_type not in {"explicit", "mention_order", "none"}: rank_type = "mention_order" if rank > 0 else "none"
               evidence = second.get("sentiment_evidence", []) if isinstance(second.get("sentiment_evidence", []), list) else []
+              aliases = target_aliases(target_entity_json, matched)
               clean = []; counts = {"positive": 0, "negative": 0}
               for item in evidence:
                   if not isinstance(item, dict): continue
                   sentiment = str(item.get("sentiment") or "").lower().strip(); text = str(item.get("evidence_text") or "").strip()
+                  item_brand = str(item.get("brand") or "").strip().casefold()
                   if sentiment not in counts or not text or (answer_raw and text not in str(answer_raw)) or counts[sentiment] >= 10: continue
+                  # 防止上游把其他品牌（如 Youku）的证据误挂到当前目标品牌。
+                  if item_brand and aliases and item_brand not in aliases: continue
                   clean.append({"brand": matched, "source": "target", "sentiment": sentiment, "evidence_text": text, "reason": str(item.get("reason") or "").strip()}); counts[sentiment] += 1
               spans = first.get("target_evidence_spans", []); spans = spans if isinstance(spans, list) else ([spans] if spans else [])
               return {"brand_detected": detected, "brand_mentions": str(mentions), "brand_pattern": str(first.get("brand_pattern") or brand_pattern_hint or "P-单一实体"), "is_top_recommend": "true" if detected == "true" and 1 <= rank <= 3 else "false", "matched_brand": matched, "rank_pos": str(rank), "rank_type": rank_type if detected == "true" else "none", "sentiment_evidence": clean, "target_evidence_spans": json.dumps([str(x) for x in spans if str(x).strip()][:10], ensure_ascii=False)}
