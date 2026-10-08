@@ -1,5 +1,7 @@
 app:
-  description: 'V2.6：更新到自研模型；0916
+  description: 'V2.61：detected = llm_detected and independent_target
+
+    V2.6：更新到自研模型；0916
 
     V2.5：去除输入项：answer_html；0827，20:50
 
@@ -49,7 +51,7 @@ app:
   icon: sos
   icon_background: '#FFEAD5'
   mode: workflow
-  name: GEO数据监控-V2.6
+  name: GEO数据监控-V2.61
   use_icon_as_answer_icon: false
 kind: app
 version: 0.1.3
@@ -758,7 +760,7 @@ workflow:
       positionAbsolute:
         x: 720
         y: 340
-      selected: true
+      selected: false
       sourcePosition: right
       targetPosition: left
       type: custom
@@ -1519,7 +1521,7 @@ workflow:
 
 
             输出前检查：P3/P4/P5业务边界、兄弟产品越界、否定/转折、比较败方、表格列串位、全部正负证据均已覆盖。'
-        selected: false
+        selected: true
         title: 4a-1.目标独立提及与全量情感证据LLM
         type: llm
         variables: []
@@ -1533,7 +1535,7 @@ workflow:
       positionAbsolute:
         x: 1420
         y: 120
-      selected: false
+      selected: true
       sourcePosition: right
       targetPosition: left
       type: custom
@@ -1675,9 +1677,9 @@ workflow:
           }\n        # 上游3v已用brand_name粒度和正文anchor确认了独立目标时，所有模式（含P5产品系列）\n       \
           \ # 都应信任该关系。P5禁止的是母品牌/兄弟产品猜测，而不是阻断已校验的exact_target。\n        if exact_brand\
           \ or exact_llm_product or semantic_family:independent_target=True;break\n\
-          \    # 最终提及判定必须同时满足：上游LLM判断为已提及，且代码确认存在同粒度独立目标实体。\n    detected=llm_detected and independent_target\n   \
-          \ # 多识别词按正文物理位置最早命中；同位置再取最完整别名。\n    matched=\"\";direct_ids=[]\n    if\
-          \ detected:\n        # 目标实体本身是上游已校验的可靠产品/主体名；即使声明别名层因短词歧义过滤，也用实体surface回填正文证据。\n\
+          \    # 最终提及判定必须同时满足：上游LLM判断为已提及，且代码确认存在同粒度独立目标实体。\n    detected=llm_detected\
+          \ and independent_target\n    # 多识别词按正文物理位置最早命中；同位置再取最完整别名。\n    matched=\"\
+          \";direct_ids=[]\n    if detected:\n        # 目标实体本身是上游已校验的可靠产品/主体名；即使声明别名层因短词歧义过滤，也用实体surface回填正文证据。\n\
           \        target_names=[]\n        for e in entities if isinstance(entities,list)\
           \ else []:\n            if isinstance(e,dict) and e.get(\"is_target_entity\"\
           ) and e.get(\"rank_membership\") in {\"ordered_choice\",\"independent_subject\"\
@@ -2671,6 +2673,6 @@ workflow:
       type: custom
       width: 243
     viewport:
-      x: -325.7456280758977
-      y: -45.886754150897104
-      zoom: 0.6564167297328247
+      x: -109.39866684780611
+      y: -60.14247433664917
+      zoom: 0.7071067519725802
