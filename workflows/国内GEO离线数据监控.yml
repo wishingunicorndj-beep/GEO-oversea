@@ -324,218 +324,357 @@ workflow:
       type: custom
       width: 243
     - data:
-        code: "import html\nimport json\nimport re\nfrom typing import Any, Dict,\
-          \ List\n\nLEGAL_SUFFIXES = [\n    \"股份有限公司\", \"有限责任公司\", \"集团有限公司\", \"\
-          有限公司\", \"责任公司\", \"集团\", \"公司\"\n]\nINDUSTRY_SUFFIXES = [\n    \"驾驶员教考中心\"\
-          , \"驾驶员培训中心\", \"教考中心\", \"宠物食品\", \"环保设备\", \"智能设备\",\n    \"数字科技\", \"\
-          品牌设计\", \"机电设备\", \"咨询服务\", \"科技传媒\", \"网络科技\", \"信息技术\",\n    \"电子科技\"\
-          , \"通信科技\", \"给排水设备\", \"玻璃钢设备\", \"肛肠医院\", \"专科医院\", \"医院\",\n    \"电子产品商贸\"\
-          , \"电子产品贸易\", \"电子产品\", \"商贸\", \"贸易\",\n    \"科技发展\", \"驾校\", \"设计\", \"\
-          科技\", \"设备\"\n]\nREGION_PREFIXES = [\n    \"北京市\", \"上海市\", \"天津市\", \"\
-          重庆市\", \"内蒙古自治区\", \"广西壮族自治区\", \"宁夏回族自治区\",\n    \"新疆维吾尔自治区\", \"西藏自治区\"\
-          , \"北京\", \"上海\", \"天津\", \"重庆\", \"广东\", \"浙江\", \"江苏\",\n    \"山东\", \"\
-          河北\", \"河南\", \"湖北\", \"湖南\", \"江西\", \"福建\", \"四川\", \"云南\", \"贵州\", \"\
-          安徽\",\n    \"陕西\", \"山西\", \"辽宁\", \"吉林\", \"黑龙江\", \"甘肃\", \"青海\", \"海南\"\
-          , \"广西\", \"宁夏\", \"新疆\",\n    \"西藏\", \"内蒙古\", \"深圳\", \"广州\", \"杭州\",\
-          \ \"南京\", \"成都\", \"武汉\", \"南昌\", \"呼和浩特\", \"漯河\"\n]\nWEAK_ALIASES = {\"\
-          科技\", \"智能\", \"环保\", \"设备\", \"食品\", \"设计\", \"医院\", \"驾校\", \"服务\", \"\
-          公司\", \"集团\"}\nGENERIC_PARENTHETICAL = {\"中国\", \"中国大陆\", \"大陆\", \"国内\"\
-          , \"全球\", \"国际\", \"总部\", \"官方\"}\n# 明确的母品牌—产品品牌关系用于客户边界硬校验。这里只放所有权稳定、歧义低的家族名；\n\
-          # 其余长尾关系仍由全局实体LLM结合query判断，避免把普通品类词误当客户别名。\nBRAND_FAMILIES = {\n    \"苹果\"\
-          : [\"Apple\", \"iPhone\", \"iPad\", \"Mac\", \"MacBook\", \"AirPods\", \"\
-          Apple Watch\"]\n}\n\ndef visible_text(text: Any) -> str:\n    \"\"\"只移除不可见格式与URL；不改写可见文字、标点或Emoji。\"\
-          \"\"\n    value=html.unescape(str(text or \"\"))\n    value=re.sub(r\"!\\\
-          [([^\\]]*)\\]\\([^)]*\\)\",r\"\\1\",value)\n    value=re.sub(r\"\\[([^\\\
-          ]]+)\\]\\([^)]*\\)\",r\"\\1\",value)\n    value=re.sub(r\"https?://[^\\\
-          s)]+\",\"\",value)\n    value=re.sub(r\"<[^>]+>\",\"\",value)\n    value=re.sub(r\"\
-          (?m)^\\s{0,3}#{1,6}\\s*\",\"\",value)\n    value=re.sub(r\"(?m)^\\s*>\\\
-          s?\",\"\",value)\n    value=value.replace(\"```\",\"\").replace(\"**\",\"\
-          \").replace(\"__\",\"\").replace(\"`\",\"\")\n    value=re.sub(r\"\\\\([.#*+\\\
-          -])\",r\"\\1\",value)\n    return value\n\ndef catalog_text(text: Any) ->\
-          \ str:\n    \"\"\"证据目录移除图片、URL与强调符，但保留Markdown标题/编号结构供切分。\"\"\"\n    value=html.unescape(str(text\
-          \ or \"\"))\n    value=re.sub(r\"!\\[[^\\]]*\\]\\([^)]*\\)\",\"\",value)\n\
-          \    value=re.sub(r\"\\[([^\\]]+)\\]\\([^)]*\\)\",r\"\\1\",value)\n    value=re.sub(r\"\
-          https?://[^\\s)]+\",\"\",value)\n    value=re.sub(r\"<[^>]+>\",\"\",value)\n\
-          \    value=value.replace(\"```\",\"\").replace(\"**\",\"\").replace(\"__\"\
-          ,\"\").replace(\"`\",\"\")\n    value=re.sub(r\"\\\\([.#*+\\-])\",r\"\\\
-          1\",value)\n    return value\n\ndef char_count(text: Any) -> int:\n    #\
-          \ 统一按用户可见正文计数：空白、URL和Markdown控制符不计；可见标点、数字、Emoji均计入。\n    return len(re.sub(r\"\
-          \\s+\", \"\", visible_text(text)))\n\ndef match_text(text: Any) -> str:\n\
-          \    value = visible_text(text).replace(\"　\", \" \")\n    return re.sub(r\"\
-          \\s+\", \" \", value).strip()\n\ndef split_declared(value: Any) -> List[str]:\n\
-          \    if isinstance(value, list):\n        raw = value\n    else:\n     \
-          \   text = str(value or \"\").strip()\n        if not text:\n          \
-          \  return []\n        # 不按普通空格和斜杠拆分，保护English multi-word brand与合法名称。\n \
-          \       raw = re.split(r\"\\|\\||[、，,；;\\n]+\", text)\n    out = []\n  \
-          \  for item in raw:\n        name = re.sub(r\"\\s+\", \" \", str(item or\
-          \ \"\")).strip(\" \\t|,，;；\")\n        if name and name not in out:\n  \
-          \          out.append(name)\n    return out\n\ndef strip_once(text: str,\
-          \ suffixes: List[str]) -> str:\n    for suffix in sorted(suffixes, key=len,\
-          \ reverse=True):\n        if text.endswith(suffix) and len(text) >= len(suffix)\
-          \ + 2:\n            return text[:-len(suffix)].strip()\n    return text\n\
-          \ndef strip_region(text: str) -> str:\n    for prefix in sorted(REGION_PREFIXES,\
-          \ key=len, reverse=True):\n        if text.startswith(prefix) and len(text)\
-          \ >= len(prefix) + 2:\n            return text[len(prefix):].strip()\n \
-          \   return text\n\ndef valid_alias(text: str) -> bool:\n    core = re.sub(r\"\
-          [^0-9A-Za-z\\u4e00-\\u9fff]+\", \"\", text)\n    return len(core) >= 2 and\
-          \ text not in WEAK_ALIASES\n\ndef build_aliases(brand_name: Any, company_name:\
-          \ Any) -> List[Dict[str, Any]]:\n    declared_brand = split_declared(brand_name)\n\
-          \    declared_company = split_declared(company_name)\n    company_fallback\
-          \ = not declared_brand and bool(declared_company)\n    result = []\n   \
-          \ seen = set()\n    def add(alias, alias_type, confidence, source):\n  \
-          \      alias = re.sub(r\"\\s+\", \" \", str(alias or \"\")).strip()\n  \
-          \      key = re.sub(r\"[^0-9A-Za-z\\u4e00-\\u9fff]+\", \"\", alias).casefold()\n\
-          \        if not valid_alias(alias) or not key or key in seen:\n        \
-          \    return\n        seen.add(key)\n        result.append({\"alias\": alias,\
-          \ \"type\": alias_type, \"confidence\": confidence, \"source\": source})\n\
-          \    for name in declared_brand + declared_company:\n        add(name, \"\
-          declared\", 1.0, name)\n        for inner in re.findall(r\"[（(]([^）)]{2,30})[）)]\"\
-          ,name):\n            inner=inner.strip()\n            if inner not in REGION_PREFIXES\
-          \ and inner not in GENERIC_PARENTHETICAL:add(inner,\"parenthetical_alias\"\
-          ,0.90,name)\n        bracketless = re.sub(r\"[（(][^）)]*[）)]\", \"\", name).strip()\n\
-          \        add(bracketless, \"bracketless\", 0.95, name)\n        legal_core\
-          \ = bracketless\n        for _ in range(2):\n            nxt = strip_once(legal_core,\
-          \ LEGAL_SUFFIXES)\n            if nxt == legal_core: break\n           \
-          \ legal_core = nxt\n        add(legal_core, \"legal_core\", 0.92, name)\n\
-          \        industry_core = legal_core\n        for _ in range(2):\n      \
-          \      nxt = strip_once(industry_core, INDUSTRY_SUFFIXES)\n            if\
-          \ nxt == industry_core: break\n            industry_core = nxt\n       \
-          \ # brand_name为空时，公司名是唯一目标来源。剥除法律/行业后缀得到的独特品牌核心\n        # 应进入硬匹配层，例如“香奈儿(中国)贸易有限公司”→“香奈儿”。\n\
-          \        add(industry_core, \"industry_core\", 0.93 if company_fallback\
-          \ else 0.82, name)\n        no_region = strip_region(industry_core)\n  \
-          \      # 公司名回退时，去掉注册地后的独特核心同样是目标硬别名；\n        # brand_name非空时仍保持低置信，仅作辅助理解，避免改变显式品牌粒度。\n\
-          \        add(no_region, \"distinctive_core\", 0.93 if company_fallback else\
-          \ 0.78, name)\n    declared_scope=\" \".join(declared_brand+declared_company+[str(x.get(\"\
-          alias\") or \"\") for x in result])\n    declared_norm=re.sub(r\"[^0-9A-Za-z\\\
-          u4e00-\\u9fff]+\",\"\",declared_scope).casefold()\n    for owner,family\
-          \ in BRAND_FAMILIES.items():\n        owner_norm=re.sub(r\"[^0-9A-Za-z\\\
-          u4e00-\\u9fff]+\",\"\",owner).casefold()\n        if owner_norm and owner_norm\
-          \ in declared_norm:\n            add(owner,\"brand_family_owner\",0.98,owner)\n\
-          \            for member in family:add(member,\"brand_family_member\",0.96,owner)\n\
-          \    return result\n\ndef parse_hints(value: Any) -> List[Dict[str, Any]]:\n\
-          \    text = str(value or \"\").strip()\n    if not text:\n        return\
-          \ []\n    try: data = json.loads(text)\n    except Exception: data = None\n\
-          \    if isinstance(data, dict): data = data.get(\"competitors\", data.get(\"\
-          items\", [data]))\n    out = []\n    if isinstance(data, list):\n      \
-          \  for item in data:\n            if isinstance(item, dict):\n         \
-          \       canonical = str(item.get(\"brand\") or item.get(\"name\") or \"\"\
-          ).strip()\n                aliases = item.get(\"aliases\", [])\n       \
-          \         aliases = split_declared(aliases) if isinstance(aliases, str)\
-          \ else [str(x).strip() for x in aliases if str(x).strip()]\n           \
-          \ else:\n                canonical = str(item or \"\").strip(); aliases\
-          \ = []\n            if canonical: out.append({\"canonical\": canonical,\
-          \ \"aliases\": list(dict.fromkeys([canonical] + aliases))})\n    else:\n\
-          \        for name in split_declared(text): out.append({\"canonical\": name,\
-          \ \"aliases\": [name]})\n    return out\n\nQUERY_NOISE = (\n    \"推荐\",\
-          \ \"排行榜\", \"排名\", \"哪个好\", \"哪家\", \"怎么样\", \"怎么选\", \"价格\", \"多少钱\",\n\
-          \    \"官网\", \"品牌\", \"公司\", \"厂家\", \"服务商\", \"男士\", \"女士\", \"香水\", \"\
-          产品\", \"测评\",\n    \"评测\", \"好用吗\", \"值得买吗\", \"选择\", \"分级\", \"推荐清单\",\
-          \ \"哪款\"\n)\n\ndef derive_query_target_aliases(query: Any, brand_aliases:\
-          \ List[Dict[str, Any]]) -> List[Dict[str, Any]]:\n    \"\"\"当brand_name是公司法定全称、query却是具体产品/品牌词时，补齐查询语义目标。\n\
-          \    只在query中已经出现声明品牌核心且清除通用查询词后仍有明确剩余词时生成，\n    不凭空从正文或模型输出创造别名。\"\"\"\n\
-          \    q = re.sub(r\"\\s+\", \" \", str(query or \"\")).strip()\n    if not\
-          \ q:\n        return []\n    result=[];seen={re.sub(r\"[^0-9A-Za-z\\u4e00-\\\
-          u9fff]+\", \"\", str(x.get(\"alias\") or \"\")).casefold() for x in brand_aliases}\n\
-          \    compact_q = re.sub(r\"[^0-9A-Za-z\\u4e00-\\u9fff]+\", \"\", q).casefold()\n\
-          \    for row in brand_aliases:\n        alias = str(row.get(\"alias\") or\
-          \ \"\").strip(); an = re.sub(r\"[^0-9A-Za-z\\u4e00-\\u9fff]+\", \"\", alias).casefold()\n\
-          \        if len(an) < 2 or an not in compact_q:\n            continue\n\
-          \        candidate = q\n        for noise in sorted(QUERY_NOISE, key=len,\
-          \ reverse=True):\n            candidate = candidate.replace(noise, \"\"\
-          )\n        candidate = re.sub(r\"[\\s、，,：:？！!?（）()]+\", \"\", candidate)\n\
-          \        cn = re.sub(r\"[^0-9A-Za-z\\u4e00-\\u9fff]+\", \"\", candidate).casefold()\n\
-          \        if len(cn) <= len(an) or an not in cn:\n            continue\n\
-          \        if len(cn) < len(an) + 2:\n            continue\n        if cn\
-          \ not in seen:\n            result.append({\"alias\": candidate, \"type\"\
-          : \"query_product_alias\", \"confidence\": 0.98, \"source\": q})\n     \
-          \       seen.add(cn)\n    return result\n\ndef exact_units(line: str) ->\
-          \ List[tuple]:\n    \"\"\"按标点、Markdown标题/编号项和转折切成互不重叠的最小证据单元。\n    搜索结果与模型回答经常被压成一行，不能只按换行切分；标题/编号边界必须\n\
-          \    先切开，否则一条“缺点”会吞掉后续多个产品模块。\"\"\"\n    boundaries = {0, len(line)}\n \
-          \   for m in re.finditer(r\"[。！？!?；;]\", line):\n        boundaries.add(m.end())\n\
-          \    # 支持“### 3\\\\. 产品”“## 模块”以及未转义的Markdown标题。\n    for m in re.finditer(r\"\
-          (?<!\\S)#{1,6}\\s+\", line):\n        if m.start()>0:boundaries.add(m.start())\n\
-          \    # 产品卡片常用“香调/气质/适合/缺点/✅/⚠️”作为无标点字段边界，\n    # 这些边界必须拆开，避免把中性参数和后面的正负评价合并。\n\
-          \    # 字段标签即使与前一短语粘连（如“插件缺点：默认推送”）也必须切开；\n    # 否定语境“并不适合”不作为字段标签处理。\n \
-          \   for m in re.finditer(r\"(?:✅|⚠️|❌|(?:优点|缺点|香调|气质|优势|劣势)[：:]|(?<!不)适合[：:])\"\
-          , line):\n        if m.start()>0:boundaries.add(m.start())\n    # 支持同一物理行中的编号/项目符号；\\\
-          \\. 是 answer_raw 常见的转义写法。\n    for m in re.finditer(r\"(?<![0-9A-Za-z\\\
-          u4e00-\\u9fff])(?:\\d{1,2}\\\\?[.)、：:]|[①②③④⑤⑥⑦⑧⑨⑩])\\s*|(?<!\\S)[*•·▪◦]\\\
-          s+\", line):\n        open_paren=max(line.rfind(\"(\",0,m.start()),line.rfind(\"\
-          （\",0,m.start()))\n        close_paren=max(line.rfind(\")\",0,m.start()),line.rfind(\"\
-          ）\",0,m.start()))\n        if open_paren>close_paren and re.search(r\"[A-Za-z\\\
-          u4e00-\\u9fff]\",line[open_paren+1:m.start()]):continue\n     # “### 1\\\
-          \\. 产品”中的1\\\\.属于标题内容，不再额外切出孤立的“###”。\n        prefix=line[max(0,m.start()-8):m.start()]\n\
-          \        if re.search(r\"#{1,6}\\s+$\",prefix):continue\n        if m.start()>0:boundaries.add(m.start())\n\
-          \    # 转折词归入后一单元，使“但亮度不足”可独立判负；不切“而且”。\n    for m in re.finditer(r\"然而|但是|不过|反而|但|而(?!且)|却\"\
-          , line):\n        if m.start() > 0:\n            boundaries.add(m.start())\n\
-          \    points = sorted(boundaries); out = []\n    for left, right in zip(points,\
-          \ points[1:]):\n        piece = line[left:right]\n        if piece.strip():\n\
-          \            # 去掉切分边界两侧的空白，但保留正文字符及可回填offset。\n            ltrim=len(piece)-len(piece.lstrip());rtrim=len(piece.rstrip())\n\
-          \            out.append((left+ltrim,left+rtrim,piece.strip()))\n    return\
-          \ out\n\ndef make_catalog(answer: str) -> List[Dict[str, Any]]:\n    records\
-          \ = []; heading = \"\"; cursor = 0; recent_lines=[]\n    lines = answer.splitlines(keepends=True)\n\
-          \    if answer and not lines: lines = [answer]\n    for line_no, raw_with_end\
-          \ in enumerate(lines, 1):\n        raw = raw_with_end[:-2] if raw_with_end.endswith(\"\
-          \\r\\n\") else (raw_with_end[:-1] if raw_with_end.endswith((\"\\n\", \"\\\
-          r\")) else raw_with_end)\n        line_start = cursor; cursor += len(raw_with_end)\n\
-          \        evidence_raw = catalog_text(raw)\n        stripped = evidence_raw.strip()\n\
-          \        if not stripped or re.match(r\"^\\s*\\|?[\\-:|\\s]{3,}\\|?\\s*$\"\
-          , stripped): continue\n        is_heading = bool(re.match(r\"^\\s{0,3}#{1,6}\\\
-          s+\", evidence_raw))\n        is_table = (stripped.count(\"|\") >= 2 and\
-          \ len([cell for cell in stripped.split(\"|\") if cell.strip()]) >= 3) or\
-          \ stripped == \"表格\"\n        is_list = bool(re.match(r\"^\\s*(?:[*•·▪◦]\\\
-          s+|\\d+\\\\?[.)、]\\s*|[①②③④⑤⑥⑦⑧⑨⑩]\\s*)\", evidence_raw))\n        if is_heading:\
-          \ heading = evidence_raw\n        context_before=\"\\n\".join(recent_lines[-4:])\n\
-          \        for left, right, piece in exact_units(evidence_raw):\n        \
-          \    # 同一raw行内各单元可能分别是标题、编号项或段落，不能沿用整行block。\n            unit_stripped=piece.strip()\n\
-          \            unit_heading=bool(re.match(r\"^#{1,6}\\s+\",unit_stripped))\n\
-          \            unit_table=(unit_stripped.count(\"|\") >= 2 and len([cell for\
-          \ cell in unit_stripped.split(\"|\") if cell.strip()]) >= 3) or unit_stripped==\"\
-          表格\"\n            unit_list=bool(re.match(r\"^(?:[*•·▪◦]\\s+|\\d+\\\\?[.)、]\\\
-          s*|[①②③④⑤⑥⑦⑧⑨⑩]\\s*)\",unit_stripped))\n            unit_block=\"heading\"\
-          \ if unit_heading else (\"table_row\" if unit_table else (\"list_item\"\
-          \ if unit_list else \"paragraph\"))\n            if unit_heading: heading=piece\n\
-          \            records.append({\n                \"id\": f\"S{len(records)+1:04d}\"\
-          , \"text\": piece, \"match_text\": match_text(piece),\n                \"\
-          char_count\": char_count(piece), \"line_no\": line_no, \"block_type\": unit_block,\n\
-          \                # answer_raw常被压成单一物理行；line_text必须限定为当前最小单元，\n         \
-          \       # 否则序号识别和实体归属会把整篇回答当成同一产品作用域。\n                \"context_heading\"\
-          : heading, \"line_text\": piece,\n                \"context_before\": context_before,\n\
-          \                \"start\": line_start + left, \"end\": line_start + right\n\
-          \            })\n        recent_lines.append(evidence_raw)\n    return records\n\
-          \ndef main(answer_raw: str, brand_name: str, company_name: str = \"\", comps_list:\
-          \ str = \"\", query: str = \"\") -> dict:\n    # answer_text必须保留answer_raw逐字符原文，禁止清洗、strip或压缩空格。\n\
-          \    answer = str(answer_raw or \"\")\n    aliases = build_aliases(brand_name,\
-          \ company_name)\n    brand_aliases = build_aliases(brand_name, \"\") if\
-          \ split_declared(brand_name) else build_aliases(\"\", company_name)\n  \
-          \  brand_aliases.extend(derive_query_target_aliases(query, brand_aliases))\n\
-          \    # 查询本身是具体产品词时，query-derived alias属于同粒度硬别名；公司法定全称只保留所有权辅助作用。\n    brand_strict_aliases\
-          \ = [x for x in brand_aliases if float(x.get(\"confidence\", 0)) >= 0.90]\n\
-          \    company_fallback_aliases = [x[\"alias\"] for x in brand_aliases\n \
-          \                               if x.get(\"type\") in {\"industry_core\"\
-          ,\"distinctive_core\"}\n                                and float(x.get(\"\
-          confidence\", 0)) >= (0.78 if split_declared(brand_name) else 0.90)\n  \
-          \                              and len(re.sub(r\"[^0-9A-Za-z\\u4e00-\\u9fff]+\"\
-          , \"\", str(x.get(\"alias\") or \"\"))) >= 3]\n    catalog = make_catalog(answer)\n\
-          \    block_codes = {\"heading\": \"H\", \"table_row\": \"T\", \"list_item\"\
-          : \"L\", \"paragraph\": \"P\"}\n    llm_catalog = []\n    for x in catalog:\n\
-          \        text = str(x.get(\"text\", \"\"));code = block_codes.get(x.get(\"\
-          block_type\"), \"P\")\n        if code == \"P\" and re.match(r\"^\\s*(?:[一二三四五六七八九十]+[、.．]|第[一二三四五六七八九十0-9]+(?:部分|章|类|模块))\"\
-          , text):code = \"H\"\n        llm_catalog.append([x[\"id\"], code, text])\n\
-          \    return {\n        \"answer_text\": answer,\n        \"analysis_text\"\
-          : visible_text(answer),\n        \"answer_total_len\": char_count(answer),\n\
-          \        \"sentence_catalog\": json.dumps(catalog, ensure_ascii=False),\n\
-          \        \"llm_sentence_catalog\": json.dumps(llm_catalog, ensure_ascii=False,\
-          \ separators=(\",\", \":\")),\n        \"target_aliases\": json.dumps(aliases,\
-          \ ensure_ascii=False),\n        \"brand_aliases\": json.dumps(brand_aliases,\
-          \ ensure_ascii=False),\n        \"brand_alias_strings\": json.dumps([x[\"\
-          alias\"] for x in brand_aliases], ensure_ascii=False),\n        \"brand_strict_alias_strings\"\
-          : json.dumps([x[\"alias\"] for x in brand_strict_aliases], ensure_ascii=False),\n\
-          \        \"company_fallback_alias_strings\": json.dumps(company_fallback_aliases,\
-          \ ensure_ascii=False),\n        \"target_alias_strings\": json.dumps([x[\"\
-          alias\"] for x in aliases], ensure_ascii=False),\n        \"competitor_hints\"\
-          : json.dumps(parse_hints(comps_list), ensure_ascii=False),\n        \"query\"\
-          : re.sub(r\"\\s+\", \" \", str(query or \"\")).strip()\n    }"
+        code: |-
+          import html
+          import json
+          import re
+          from typing import Any, Dict, List
+          
+          LEGAL_SUFFIXES = [
+              "股份有限公司", "有限责任公司", "集团有限公司", "有限公司", "责任公司", "集团", "公司"
+          ]
+          INDUSTRY_SUFFIXES = [
+              "驾驶员教考中心", "驾驶员培训中心", "教考中心", "宠物食品", "环保设备", "智能设备",
+              "数字科技", "品牌设计", "机电设备", "咨询服务", "科技传媒", "网络科技", "信息技术",
+              "电子科技", "通信科技", "给排水设备", "玻璃钢设备", "肛肠医院", "专科医院", "医院",
+              "电子产品商贸", "电子产品贸易", "电子产品", "商贸", "贸易",
+              "科技发展", "驾校", "设计", "科技", "设备"
+          ]
+          REGION_PREFIXES = [
+              "北京市", "上海市", "天津市", "重庆市", "内蒙古自治区", "广西壮族自治区", "宁夏回族自治区",
+              "新疆维吾尔自治区", "西藏自治区", "北京", "上海", "天津", "重庆", "广东", "浙江", "江苏",
+              "山东", "河北", "河南", "湖北", "湖南", "江西", "福建", "四川", "云南", "贵州", "安徽",
+              "陕西", "山西", "辽宁", "吉林", "黑龙江", "甘肃", "青海", "海南", "广西", "宁夏", "新疆",
+              "西藏", "内蒙古", "深圳", "广州", "杭州", "南京", "成都", "武汉", "南昌", "呼和浩特", "漯河"
+          ]
+          WEAK_ALIASES = {"科技", "智能", "环保", "设备", "食品", "设计", "医院", "驾校", "服务", "公司", "集团"}
+          GENERIC_PARENTHETICAL = {"中国", "中国大陆", "大陆", "国内", "全球", "国际", "总部", "官方"}
+          # 明确的母品牌—产品品牌关系用于客户边界硬校验。这里只放所有权稳定、歧义低的家族名；
+          # 其余长尾关系仍由全局实体LLM结合query判断，避免把普通品类词误当客户别名。
+          BRAND_FAMILIES = {
+              "苹果": ["Apple", "iPhone", "iPad", "Mac", "MacBook", "AirPods", "Apple Watch"]
+          }
+          
+          def visible_text(text: Any) -> str:
+              """只移除不可见格式与URL；不改写可见文字、标点或Emoji。"""
+              value=html.unescape(str(text or ""))
+              value=re.sub(r"!\[([^\]]*)\]\([^)]*\)",r"\1",value)
+              value=re.sub(r"\[([^\]]+)\]\([^)]*\)",r"\1",value)
+              value=re.sub(r"https?://[^\s)]+","",value)
+              value=re.sub(r"<[^>]+>","",value)
+              value=re.sub(r"(?m)^\s{0,3}#{1,6}\s*","",value)
+              value=re.sub(r"(?m)^\s*>\s?","",value)
+              value=value.replace("```","").replace("**","").replace("__","").replace("`","")
+              value=re.sub(r"\\([.#*+\-])",r"\1",value)
+              return value
+          
+          def catalog_text(text: Any) -> str:
+              """证据目录移除图片、URL与强调符，但保留Markdown标题/编号结构供切分。"""
+              value=html.unescape(str(text or ""))
+              value=re.sub(r"!\[[^\]]*\]\([^)]*\)","",value)
+              value=re.sub(r"\[([^\]]+)\]\([^)]*\)",r"\1",value)
+              value=re.sub(r"https?://[^\s)]+","",value)
+              value=re.sub(r"<[^>]+>","",value)
+              # answer_raw 可能把整张 Markdown 表格压成一行。保留加粗单元格边界，
+              # 供 exact_units 将“**需求方向** | 推荐对象 | 说明”逐行恢复；写入目录前再移除标记。
+              value=re.sub(r"\*\*\s*([^*\n]{1,160}?)\s*\*\*",lambda m:"\ue000"+m.group(1)+"\ue001",value)
+              value=value.replace("```","").replace("**","").replace("__","").replace("`","")
+              value=re.sub(r"\\([.#*+\-])",r"\1",value)
+              return value
+          
+          def char_count(text: Any) -> int:
+              # 统一按用户可见正文计数：空白、URL和Markdown控制符不计；可见标点、数字、Emoji均计入。
+              return len(re.sub(r"\s+", "", visible_text(text)))
+          
+          def match_text(text: Any) -> str:
+              value = visible_text(text).replace("　", " ")
+              return re.sub(r"\s+", " ", value).strip()
+          
+          def split_declared(value: Any) -> List[str]:
+              if isinstance(value, list):
+                  raw = value
+              else:
+                  text = str(value or "").strip()
+                  if not text:
+                      return []
+                  # 不按普通空格和斜杠拆分，保护English multi-word brand与合法名称。
+                  raw = re.split(r"\|\||[、，,；;\n]+", text)
+              out = []
+              for item in raw:
+                  name = re.sub(r"\s+", " ", str(item or "")).strip(" \t|,，;；")
+                  if name and name not in out:
+                      out.append(name)
+              return out
+          
+          def strip_once(text: str, suffixes: List[str]) -> str:
+              for suffix in sorted(suffixes, key=len, reverse=True):
+                  if text.endswith(suffix) and len(text) >= len(suffix) + 2:
+                      return text[:-len(suffix)].strip()
+              return text
+          
+          def strip_region(text: str) -> str:
+              for prefix in sorted(REGION_PREFIXES, key=len, reverse=True):
+                  if text.startswith(prefix) and len(text) >= len(prefix) + 2:
+                      return text[len(prefix):].strip()
+              return text
+          
+          def valid_alias(text: str) -> bool:
+              core = re.sub(r"[^0-9A-Za-z\u4e00-\u9fff]+", "", text)
+              return len(core) >= 2 and text not in WEAK_ALIASES
+          
+          def build_aliases(brand_name: Any, company_name: Any) -> List[Dict[str, Any]]:
+              declared_brand = split_declared(brand_name)
+              declared_company = split_declared(company_name)
+              company_fallback = not declared_brand and bool(declared_company)
+              result = []
+              seen = set()
+              def add(alias, alias_type, confidence, source):
+                  alias = re.sub(r"\s+", " ", str(alias or "")).strip()
+                  key = re.sub(r"[^0-9A-Za-z\u4e00-\u9fff]+", "", alias).casefold()
+                  if not valid_alias(alias) or not key or key in seen:
+                      return
+                  seen.add(key)
+                  result.append({"alias": alias, "type": alias_type, "confidence": confidence, "source": source})
+              for name in declared_brand + declared_company:
+                  add(name, "declared", 1.0, name)
+                  for inner in re.findall(r"[（(]([^）)]{2,30})[）)]",name):
+                      inner=inner.strip()
+                      if inner not in REGION_PREFIXES and inner not in GENERIC_PARENTHETICAL:add(inner,"parenthetical_alias",0.90,name)
+                  bracketless = re.sub(r"[（(][^）)]*[）)]", "", name).strip()
+                  add(bracketless, "bracketless", 0.95, name)
+                  legal_core = bracketless
+                  for _ in range(2):
+                      nxt = strip_once(legal_core, LEGAL_SUFFIXES)
+                      if nxt == legal_core: break
+                      legal_core = nxt
+                  add(legal_core, "legal_core", 0.92, name)
+                  industry_core = legal_core
+                  for _ in range(2):
+                      nxt = strip_once(industry_core, INDUSTRY_SUFFIXES)
+                      if nxt == industry_core: break
+                      industry_core = nxt
+                  # brand_name为空时，公司名是唯一目标来源。剥除法律/行业后缀得到的独特品牌核心
+                  # 应进入硬匹配层，例如“香奈儿(中国)贸易有限公司”→“香奈儿”。
+                  add(industry_core, "industry_core", 0.93 if company_fallback else 0.82, name)
+                  no_region = strip_region(industry_core)
+                  # 公司名回退时，去掉注册地后的独特核心同样是目标硬别名；
+                  # brand_name非空时仍保持低置信，仅作辅助理解，避免改变显式品牌粒度。
+                  add(no_region, "distinctive_core", 0.93 if company_fallback else 0.78, name)
+              declared_scope=" ".join(declared_brand+declared_company+[str(x.get("alias") or "") for x in result])
+              declared_norm=re.sub(r"[^0-9A-Za-z\u4e00-\u9fff]+","",declared_scope).casefold()
+              for owner,family in BRAND_FAMILIES.items():
+                  owner_norm=re.sub(r"[^0-9A-Za-z\u4e00-\u9fff]+","",owner).casefold()
+                  if owner_norm and owner_norm in declared_norm:
+                      add(owner,"brand_family_owner",0.98,owner)
+                      for member in family:add(member,"brand_family_member",0.96,owner)
+              return result
+          
+          def parse_hints(value: Any) -> List[Dict[str, Any]]:
+              text = str(value or "").strip()
+              if not text:
+                  return []
+              try: data = json.loads(text)
+              except Exception: data = None
+              if isinstance(data, dict): data = data.get("competitors", data.get("items", [data]))
+              out = []
+              if isinstance(data, list):
+                  for item in data:
+                      if isinstance(item, dict):
+                          canonical = str(item.get("brand") or item.get("name") or "").strip()
+                          aliases = item.get("aliases", [])
+                          aliases = split_declared(aliases) if isinstance(aliases, str) else [str(x).strip() for x in aliases if str(x).strip()]
+                      else:
+                          canonical = str(item or "").strip(); aliases = []
+                      if canonical: out.append({"canonical": canonical, "aliases": list(dict.fromkeys([canonical] + aliases))})
+              else:
+                  for name in split_declared(text): out.append({"canonical": name, "aliases": [name]})
+              return out
+          
+          QUERY_NOISE = (
+              "推荐", "排行榜", "排名", "哪个好", "哪家", "怎么样", "怎么选", "价格", "多少钱",
+              "官网", "品牌", "公司", "厂家", "服务商", "男士", "女士", "香水", "产品", "测评",
+              "评测", "好用吗", "值得买吗", "选择", "分级", "推荐清单", "哪款"
+          )
+          
+          def derive_query_target_aliases(query: Any, brand_aliases: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+              """当brand_name是公司法定全称、query却是具体产品/品牌词时，补齐查询语义目标。
+              只在query中已经出现声明品牌核心且清除通用查询词后仍有明确剩余词时生成，
+              不凭空从正文或模型输出创造别名。"""
+              q = re.sub(r"\s+", " ", str(query or "")).strip()
+              if not q:
+                  return []
+              result=[];seen={re.sub(r"[^0-9A-Za-z\u4e00-\u9fff]+", "", str(x.get("alias") or "")).casefold() for x in brand_aliases}
+              compact_q = re.sub(r"[^0-9A-Za-z\u4e00-\u9fff]+", "", q).casefold()
+              for row in brand_aliases:
+                  alias = str(row.get("alias") or "").strip(); an = re.sub(r"[^0-9A-Za-z\u4e00-\u9fff]+", "", alias).casefold()
+                  if len(an) < 2 or an not in compact_q:
+                      continue
+                  candidate = q
+                  for noise in sorted(QUERY_NOISE, key=len, reverse=True):
+                      candidate = candidate.replace(noise, "")
+                  candidate = re.sub(r"[\s、，,：:？！!?（）()]+", "", candidate)
+                  cn = re.sub(r"[^0-9A-Za-z\u4e00-\u9fff]+", "", candidate).casefold()
+                  if len(cn) <= len(an) or an not in cn:
+                      continue
+                  if len(cn) < len(an) + 2:
+                      continue
+                  if cn not in seen:
+                      result.append({"alias": candidate, "type": "query_product_alias", "confidence": 0.98, "source": q})
+                      seen.add(cn)
+              return result
+          
+          def exact_units(line: str) -> List[tuple]:
+              """按标点、Markdown标题/编号项和转折切成互不重叠的最小证据单元。
+              搜索结果与模型回答经常被压成一行，不能只按换行切分；标题/编号边界必须
+              先切开，否则一条“缺点”会吞掉后续多个产品模块。"""
+              boundaries = {0, len(line)}
+              for m in re.finditer(r"[。！？!?；;]", line):
+                  boundaries.add(m.end())
+              # 支持“### 3\\. 产品”“## 模块”以及未转义的Markdown标题。
+              for m in re.finditer(r"(?<!\S)#{1,6}\s+", line):
+                  if m.start()>0:boundaries.add(m.start())
+              # 单行压缩表格中，每个加粗的首列单元格都是新数据行。只在加粗内容后紧跟
+              # 管道符时切分，避免普通正文加粗或列表项被误拆成表格。
+              for m in re.finditer(r"\ue000[^\ue001\n]{1,160}\ue001\s*\|",line):
+                  if m.start()>0:boundaries.add(m.start())
+              # 产品卡片常用“香调/气质/适合/缺点/✅/⚠️”作为无标点字段边界，
+              # 这些边界必须拆开，避免把中性参数和后面的正负评价合并。
+              # 字段标签即使与前一短语粘连（如“插件缺点：默认推送”）也必须切开；
+              # 否定语境“并不适合”不作为字段标签处理。
+              for m in re.finditer(r"(?:✅|⚠️|❌|(?:优点|缺点|香调|气质|优势|劣势)[：:]|(?<!不)适合[：:])", line):
+                  if m.start()>0:boundaries.add(m.start())
+              # 支持同一物理行中的编号/项目符号；\\. 是 answer_raw 常见的转义写法。
+              for m in re.finditer(r"(?<![0-9A-Za-z\u4e00-\u9fff])(?:\d{1,2}\\?[.)、：:]|[①②③④⑤⑥⑦⑧⑨⑩])\s*|(?<!\S)[*•·▪◦]\s+", line):
+                  table_start=line.rfind("\ue000",0,m.start())
+                  if table_start>=0:
+                      table_end=line.find("\ue000",table_start+1)
+                      if table_end<0:table_end=len(line)
+                      # 推荐单元格内部的“1.品牌、2.品牌”属于同一表格行，保留给分榜解析，
+                      # 不能按普通编号列表切断管道结构。
+                      if table_start<=m.start()<table_end and line[table_start:table_end].count("|")>=2:continue
+                  open_paren=max(line.rfind("(",0,m.start()),line.rfind("（",0,m.start()))
+                  close_paren=max(line.rfind(")",0,m.start()),line.rfind("）",0,m.start()))
+                  if open_paren>close_paren and re.search(r"[A-Za-z\u4e00-\u9fff]",line[open_paren+1:m.start()]):continue
+               # “### 1\\. 产品”中的1\\.属于标题内容，不再额外切出孤立的“###”。
+                  prefix=line[max(0,m.start()-8):m.start()]
+                  if re.search(r"#{1,6}\s+$",prefix):continue
+                  if m.start()>0:boundaries.add(m.start())
+              # 转折词归入后一单元，使“但亮度不足”可独立判负；不切“而且”。
+              for m in re.finditer(r"然而|但是|不过|反而|但|而(?!且)|却", line):
+                  if m.start() > 0:
+                      boundaries.add(m.start())
+              points = sorted(boundaries); out = []
+              for left, right in zip(points, points[1:]):
+                  piece = line[left:right]
+                  if piece.strip():
+                      # 去掉切分边界两侧的空白，但保留正文字符及可回填offset。
+                      ltrim=len(piece)-len(piece.lstrip());rtrim=len(piece.rstrip())
+                      clean=piece.strip().replace("\ue000","").replace("\ue001","")
+                      out.append((left+ltrim,left+rtrim,clean))
+              return out
+          
+          SUBLIST_AXIS_RE=re.compile(r"需求方向|适用场景|使用场景|目标人群|适用人群|预算(?:方向|档位)?|风格(?:方向)?|用途|使用空间|装修需求|选购需求")
+          SUBLIST_ITEM_HEADER_RE=re.compile(r"推荐(?:品牌|产品|机构|平台|服务商|供应商|方案|对象)?|可选(?:品牌|产品|机构|平台|方案)?|选择")
+          
+          def split_rank_items(value: Any):
+              """拆出推荐单元格中的有序实体；不从说明列或普通正文猜测品牌。"""
+              out=[];ranks=[]
+              for item in re.split(r"[、，,；;]+",str(value or "")):
+                  item=re.sub(r"^[\s*•·▪◦\-]+|[\s*•·▪◦\-]+$","",item)
+                  rank=0
+                  m=re.match(r"^(?:Top|No\.?)\s*([1-9]\d*)\s*[:：.、)）-]?\s*",item,re.I)
+                  if not m:m=re.match(r"^第\s*([1-9]\d*)\s*(?:名|位)\s*[:：.、)）-]?\s*",item)
+                  if not m:m=re.match(r"^([1-9]\d*)\s*[.、)）:：-]\s*",item)
+                  if m:
+                      rank=int(m.group(1));item=item[m.end():].strip()
+                  if 1 < len(re.sub(r"[^0-9A-Za-z\u4e00-\u9fff]+","",item)) <= 60 and item not in out:
+                      out.append(item);ranks.append(rank)
+              return out,ranks
+          
+          def make_catalog(answer: str) -> List[Dict[str, Any]]:
+              records = []; heading = ""; cursor = 0; recent_lines=[]; table_seq=0; table_row_seq=0; sublist_table=False
+              lines = answer.splitlines(keepends=True)
+              if answer and not lines: lines = [answer]
+              for line_no, raw_with_end in enumerate(lines, 1):
+                  raw = raw_with_end[:-2] if raw_with_end.endswith("\r\n") else (raw_with_end[:-1] if raw_with_end.endswith(("\n", "\r")) else raw_with_end)
+                  line_start = cursor; cursor += len(raw_with_end)
+                  evidence_raw = catalog_text(raw)
+                  stripped = evidence_raw.strip()
+                  if not stripped or re.match(r"^\s*\|?[\-:|\s]{3,}\|?\s*$", stripped): continue
+                  is_heading = bool(re.match(r"^\s{0,3}#{1,6}\s+", evidence_raw))
+                  is_table = (stripped.count("|") >= 2 and len([cell for cell in stripped.split("|") if cell.strip()]) >= 3) or stripped == "表格"
+                  is_list = bool(re.match(r"^\s*(?:[*•·▪◦]\s+|\d+\\?[.)、]\s*|[①②③④⑤⑥⑦⑧⑨⑩]\s*)", evidence_raw))
+                  if is_heading: heading = evidence_raw
+                  context_before="\n".join(recent_lines[-4:])
+                  for left, right, piece in exact_units(evidence_raw):
+                      # 同一raw行内各单元可能分别是标题、编号项或段落，不能沿用整行block。
+                      unit_stripped=piece.strip()
+                      unit_heading=bool(re.match(r"^#{1,6}\s+",unit_stripped))
+                      unit_table=(unit_stripped.count("|") >= 2 and len([cell for cell in unit_stripped.split("|") if cell.strip()]) >= 3) or unit_stripped=="表格"
+                      unit_list=bool(re.match(r"^(?:[*•·▪◦]\s+|\d+\\?[.)、]\s*|[①②③④⑤⑥⑦⑧⑨⑩]\s*)",unit_stripped))
+                      unit_block="heading" if unit_heading else ("table_row" if unit_table else ("list_item" if unit_list else "paragraph"))
+                      if unit_heading:
+                          heading=piece
+                          if piece.count("|")>=4:
+                              table_seq+=1;table_row_seq=0
+                              sublist_table=bool(SUBLIST_AXIS_RE.search(piece) and SUBLIST_ITEM_HEADER_RE.search(piece))
+                      row={
+                          "id": f"S{len(records)+1:04d}", "text": piece, "match_text": match_text(piece),
+                          "char_count": char_count(piece), "line_no": line_no, "block_type": unit_block,
+                          # answer_raw常被压成单一物理行；line_text必须限定为当前最小单元，
+                          # 否则序号识别和实体归属会把整篇回答当成同一产品作用域。
+                          "context_heading": heading, "line_text": piece,
+                          "context_before": context_before,
+                          "start": line_start + left, "end": line_start + right
+                      }
+                      if unit_table and not unit_heading:
+                          cells=[re.sub(r"\s+"," ",x).strip(" |") for x in piece.split("|")]
+                          cells=[x for x in cells if x]
+                          if len(cells)>=3:
+                              table_row_seq+=1
+                              items,ranks=split_rank_items(cells[1]) if sublist_table else ([],[])
+                              row.update({"table_id":f"T{table_seq:03d}","table_row_id":f"R{table_row_seq:03d}",
+                                          "table_cells":cells[:3],"sublist_label":cells[0] if len(items)>=2 else "",
+                                          "sublist_items":items if len(items)>=2 else [],
+                                          "sublist_ranks":ranks if len(items)>=2 else [],"is_sublist":len(items)>=2})
+                      records.append(row)
+                  recent_lines.append(evidence_raw)
+              return records
+          
+          def main(answer_raw: str, brand_name: str, company_name: str = "", comps_list: str = "", query: str = "") -> dict:
+              # answer_text必须保留answer_raw逐字符原文，禁止清洗、strip或压缩空格。
+              answer = str(answer_raw or "")
+              aliases = build_aliases(brand_name, company_name)
+              brand_aliases = build_aliases(brand_name, "") if split_declared(brand_name) else build_aliases("", company_name)
+              brand_aliases.extend(derive_query_target_aliases(query, brand_aliases))
+              # 查询本身是具体产品词时，query-derived alias属于同粒度硬别名；公司法定全称只保留所有权辅助作用。
+              brand_strict_aliases = [x for x in brand_aliases if float(x.get("confidence", 0)) >= 0.90]
+              company_fallback_aliases = [x["alias"] for x in brand_aliases
+                                          if x.get("type") in {"industry_core","distinctive_core"}
+                                          and float(x.get("confidence", 0)) >= (0.78 if split_declared(brand_name) else 0.90)
+                                          and len(re.sub(r"[^0-9A-Za-z\u4e00-\u9fff]+", "", str(x.get("alias") or ""))) >= 3]
+              catalog = make_catalog(answer)
+              block_codes = {"heading": "H", "table_row": "T", "list_item": "L", "paragraph": "P"}
+              llm_catalog = []
+              for x in catalog:
+                  text = str(x.get("text", ""));code = block_codes.get(x.get("block_type"), "P")
+                  if code == "P" and re.match(r"^\s*(?:[一二三四五六七八九十]+[、.．]|第[一二三四五六七八九十0-9]+(?:部分|章|类|模块))", text):code = "H"
+                  llm_catalog.append([x["id"], code, text])
+              return {
+                  "answer_text": answer,
+                  "analysis_text": visible_text(answer),
+                  "answer_total_len": char_count(answer),
+                  "sentence_catalog": json.dumps(catalog, ensure_ascii=False),
+                  "llm_sentence_catalog": json.dumps(llm_catalog, ensure_ascii=False, separators=(",", ":")),
+                  "target_aliases": json.dumps(aliases, ensure_ascii=False),
+                  "brand_aliases": json.dumps(brand_aliases, ensure_ascii=False),
+                  "brand_alias_strings": json.dumps([x["alias"] for x in brand_aliases], ensure_ascii=False),
+                  "brand_strict_alias_strings": json.dumps([x["alias"] for x in brand_strict_aliases], ensure_ascii=False),
+                  "company_fallback_alias_strings": json.dumps(company_fallback_aliases, ensure_ascii=False),
+                  "target_alias_strings": json.dumps([x["alias"] for x in aliases], ensure_ascii=False),
+                  "competitor_hints": json.dumps(parse_hints(comps_list), ensure_ascii=False),
+                  "query": re.sub(r"\s+", " ", str(query or "")).strip()
+              }
         code_language: python3
         desc: 保留完整原文证据目录供代码回填；额外生成ID/结构/原文三列的LLM紧凑目录，避免重复上下文与offset元数据进入模型
         outputs:
@@ -679,7 +818,16 @@ workflow:
             单一independent_subject详评、官网介绍、影响力/好用吗分析，即使正文顺带比较多个竞品，也不自动变成排名；此时is_ranking=false，但目标与明确同业竞品仍须保留供情感分析。纯参数/价格/步骤说明、只有类别没有具名实体、只有来源区编号同样为false。structure_type从numbered_list、table、parallel_modules、sequential_paragraphs、comparison、no_ranking中选择最贴近者。
 
 
-            【六、真实排名与模块】
+            【六、分榜概念】
+
+            分榜是同一回答中按需求、场景、人群、预算、风格、用途等维度形成的并列推荐组，各组之间没有上下级或先后高低关系。每个有效分榜至少包含两个不同的合格ordered_choice实体，并必须独立设置module、从第1名开始排名；禁止把不同分榜中的品牌按全文首次出现顺序串成一张总榜。
+
+            表格中“需求方向/适用场景/目标人群/预算/风格/用途”等每一行对应一个分榜时，第一列是分榜名称，推荐对象所在列的实体顺序就是该分榜顺序，说明/适合情况列不参与排名。并列小标题或列表形成相同结构时也按此处理。总榜与分榜可以同时存在；同一实体进入多个有效榜单时，保留各module实体行，后置代码会取最优有效名次。
+
+            总结、结论、快速选型区域若只是复述前文同一分榜，只补充sentence_ids，不新建重复module；只有出现前文没有的新维度和新推荐组时才建立新分榜。单个推荐对象、普通属性分类、品牌特点说明、适合情况、来源列表、客户案例及存在明确父子层级的章节均不构成分榜。没有分榜时完全沿用原有总榜和模块排名规则。
+
+
+            【七、真实排名与模块】
 
             排名事实由后置代码根据anchor确定，但你必须给正确module和anchor：
 
@@ -697,7 +845,7 @@ workflow:
             6. 同一实体跨模块独立推荐可按模块分别输出实体行，代码会合并并保留最优有效模块名次。比较胜负只影响情感，不改变排名。
 
 
-            【七、证据锚点和完整性】
+            【八、证据锚点和完整性】
 
             anchor必须是正式回答核心结构中直接出现该实体surface或可靠同产品别名的sentence_id，不能选来源区、相关视频、相邻竞品或只出现母品牌的句子。每个order名称必须有对应entities行；每个ordered_choice实体必须出现在order中。eligible=false只用于明确不合格项，不要因字段不确定而漏实体。
 
@@ -766,542 +914,678 @@ workflow:
       type: custom
       width: 243
     - data:
-        code: "import json\nimport re\nfrom typing import Any\n\nALLOWED_TYPES={\"\
-          brand\",\"company\",\"merchant\",\"service_provider\",\"institution\",\"\
-          platform\",\"independent_product\"}\nALLOWED_ROLES={\"competitor\",\"recommended\"\
-          ,\"alternative\",\"comparison\"}\nALLOWED_MEMBERSHIPS={\"ordered_choice\"\
-          ,\"independent_subject\",\"comparison_only\"}\nFORBIDDEN_HINTS=(\"低价档\"\
-          ,\"中端档\",\"高端档\",\"价格梯队\",\"个人设计师\",\"小工作室\",\"ai模板\",\"正规专业设计公司\",\"头部品牌机构\"\
-          ,\"申请渠道\",\"服务热线\")\n\ndef extract_json(value: Any):\n    text=re.sub(r\"\
-          ```(?:json)?|```\",\"\",str(value or \"\"),flags=re.I).strip(); starts=[x\
-          \ for x in (text.find(\"{\"),text.find(\"[\")) if x>=0]\n    if not starts:return\
-          \ {}\n    start=min(starts);stack=[];quote=None;escaped=False;pairs={\"\
-          }\":\"{\",\"]\":\"[\"}\n    for i in range(start,len(text)):\n        ch=text[i]\n\
-          \        if quote:\n            if escaped:escaped=False\n            elif\
-          \ ch==\"\\\\\":escaped=True\n            elif ch==quote:quote=None\n   \
-          \         continue\n        if ch in ('\"',\"'\"):quote=ch\n        elif\
-          \ ch in \"{[\":stack.append(ch)\n        elif ch in \"}]\":\n          \
-          \  if not stack or stack[-1]!=pairs[ch]:return {}\n            stack.pop()\n\
-          \            if not stack:\n                try:return json.loads(text[start:i+1])\n\
-          \                except Exception:return {}\n    return {}\n\ndef norm(v:\
-          \ Any)->str:return re.sub(r\"[^0-9a-z\\u4e00-\\u9fff]+\",\"\",str(v or \"\
-          \").lower())\ndef contains(name: str,text: str)->bool:\n    name=str(name\
-          \ or \"\").strip();text=str(text or \"\")\n    if not name:return False\n\
-          \    if re.fullmatch(r\"[A-Za-z0-9 ._+&-]+\",name):\n        return re.search(r\"\
-          (?<![A-Za-z0-9])\"+re.escape(name)+r\"(?![A-Za-z0-9])\",text,flags=re.I)\
-          \ is not None\n    return norm(name) in norm(text)\ndef looks_invalid(name:\
-          \ str)->bool:\n    s=str(name or \"\").strip();low=s.lower().replace(\"\
-          \ \",\"\")\n    if re.fullmatch(r\"p\\s*\\d+(?:\\.\\d+)?(?:\\s*[/、-]\\s*p?\\\
-          d+(?:\\.\\d+)?)*\",s,flags=re.I):return True\n    if any(x in low for x\
-          \ in FORBIDDEN_HINTS):return True\n    if norm(s) in {norm(x) for x in (\"\
-          LOGO设计\",\"商标设计\",\"口才培训\",\"专利申报服务\",\"线上自助申请渠道\")}:return True\n    return\
-          \ False\ndef safe_tags(value):\n    if isinstance(value,str):value=re.split(r\"\
-          [,，、;；|]+\",value)\n    if not isinstance(value,list):return []\n    out=[]\n\
-          \    for x in value:\n        x=re.sub(r\"\\s+\",\" \",str(x or \"\")).strip()[:24]\n\
-          \        if x and x not in out:out.append(x)\n    return out[:5]\ndef explicit_false(value)->bool:\n\
-          \    return value is False or (isinstance(value,str) and value.strip().lower()\
-          \ in {\"false\",\"0\",\"no\",\"否\"})\ndef as_bool(value)->bool:\n    if\
-          \ isinstance(value,bool):return value\n    if isinstance(value,(int,float)):return\
-          \ value!=0\n    return str(value or \"\").strip().lower() in {\"true\",\"\
-          1\",\"yes\",\"是\"}\ndef target_alias_match(alias: str, name: str)->bool:\n\
-          \    \"\"\"目标实体匹配必须是精确或足够完整的产品/品牌别名；拒绝‘360’等歧义短词的子串命中。\"\"\"\n    a=norm(alias);\
-          \ n=norm(name)\n    if not a or not n:return False\n    if a==n:return True\n\
-          \    if len(a)<4:return False\n    # 允许声明别名与同一产品的常见规格/人群后缀互相命中（如“香奈儿蔚蓝男士”\n\
-          \    # 与“香奈儿蔚蓝”），但不允许把“360安全浏览器”扩成兄弟产品“360安全浏览器X”。\n    qualifiers=(\"男士\"\
-          ,\"女士\",\"香水\",\"系列\",\"经典\",\"同名\",\"edt\",\"edp\")\n    if a in n:\n \
-          \       return n[len(a):] in qualifiers\n    if n in a:\n        return\
-          \ a[len(n):] in qualifiers\n    return False\ndef explicit_position(item):\n\
-          \    line=str(item.get(\"line_text\") or item.get(\"text\") or \"\")\n \
-          \   line=re.sub(r\"\\\\([.#*+\\-])\",r\"\\1\",line)\n    prefix=re.sub(r\"\
-          ^\\s{0,3}#{1,6}\\s*\",\"\",line).strip()\n    patterns=(r\"^(?:Top|No\\\
-          .?)[ \\t]*([1-9]\\d*)\\b\",r\"^第[ \\t]*([1-9]\\d*)[ \\t]*(?:名|位)\",r\"^([1-9]\\\
-          d*)[ \\t]*[.、)）:：]\")\n    for pattern in patterns:\n        m=re.search(pattern,prefix,flags=re.I)\n\
-          \        if m:return int(m.group(1))\n    circled=\"①②③④⑤⑥⑦⑧⑨⑩\"\n    if\
-          \ prefix and prefix[0] in circled:return circled.index(prefix[0])+1\n  \
-          \  chinese={\"一\":1,\"二\":2,\"三\":3,\"四\":4,\"五\":5,\"六\":6,\"七\":7,\"八\"\
-          :8,\"九\":9,\"十\":10}\n    m=re.match(r\"^([一二三四五六七八九十])[、.．:：]\",prefix)\n\
-          \    return chinese.get(m.group(1),0) if m else 0\ndef product_key(value:\
-          \ Any)->str:\n    \"\"\"同一产品的括号说明、英文香名和EDT/EDP后缀不应生成重复竞品。\n    不删除核心中文产品名，避免把兄弟产品合并。\"\
-          \"\"\n    s=str(value or \"\")\n    s=re.sub(r\"[（(][^）)]*[）)]\",\"\",s)\n\
-          \    s=re.sub(r\"(?i)(?:^|\\s)(?:edt|edp)(?:\\s|$)\",\" \",s)\n    return\
-          \ norm(s)\n\nTARGET_QUERY_NOISE=(\"推荐\",\"排行榜\",\"排名\",\"哪个好\",\"哪家\",\"\
-          怎么样\",\"怎么选\",\"价格\",\"多少钱\",\"官网\",\"品牌\",\"公司\",\"厂家\",\"服务商\",\"男士\"\
-          ,\"女士\",\"香水\",\"产品\",\"测评\",\"评测\",\"好用吗\",\"值得买吗\",\"选择\",\"分级\",\"哪款\"\
-          )\n\ndef derive_target_terms(query: Any, answer_text: Any, aliases: list)->list:\n\
-          \    \"\"\"补齐公司法定brand_name对应的正文产品词，解决“香奈儿(中国)贸易有限公司”\n    与“香奈儿蔚蓝”粒度不一致。只从声明别名核心、query和answer_raw可验证文本推导。\"\
-          \"\"\n    q=re.sub(r\"\\s+\",\" \",str(query or \"\")).strip(); answer=str(answer_text\
-          \ or \"\")\n    terms=[];seen={norm(x) for x in aliases if norm(x)}\n  \
-          \  cores=[]\n    for alias in aliases:\n        a=str(alias or \"\").strip()\n\
-          \        core=re.sub(r\"(?:中国)?贸易有限公司$|贸易有限公司$|有限公司$|公司$|集团$|贸易$\",\"\"\
-          ,a).strip()\n        if len(norm(core))>=2 and norm(core) not in {norm(x)\
-          \ for x in cores}:cores.append(core)\n    def add(value, kind):\n      \
-          \  value=re.sub(r\"\\s+\",\" \",str(value or \"\")).strip(\" ，,。；;：:\")\n\
-          \        if len(norm(value))<4 or norm(value) in seen:return\n        if\
-          \ contains(value,answer):terms.append({\"alias\":value,\"type\":kind,\"\
-          confidence\":0.98,\"source\":\"query_answer\"});seen.add(norm(value))\n\
-          \    compact_q=norm(q)\n    query_candidate=q\n    for noise in sorted(TARGET_QUERY_NOISE,key=len,reverse=True):query_candidate=query_candidate.replace(noise,\"\
-          \")\n    query_candidate=re.sub(r\"[\\s、，,：:？！!?（）()]+\",\"\",query_candidate)\n\
-          \    for core in cores:\n        if norm(core) in compact_q and len(norm(query_candidate))>=len(norm(core))+2:add(query_candidate,\"\
-          query_product_alias\")\n        # 正文中紧接品牌核心的产品词是已展示的独立产品名，不是模型猜测。\n    \
-          \    if norm(core):\n            pattern=re.escape(core)+r\"[\\u4e00-\\\
-          u9fffA-Za-z0-9]{1,10}\"\n            for m in re.finditer(pattern,answer):\n\
-          \                phrase=m.group(0)\n                if len(norm(phrase))>=len(norm(core))+2:add(phrase,\"\
-          answer_product_alias\")\n    return terms\n\ndef main(llm_output: str, sentence_catalog:\
-          \ str, answer_text: str, query: str, target_alias_strings: str, company_fallback_alias_strings:\
-          \ str = \"[]\") -> dict:\n    data=extract_json(llm_output)\n    # 兼容V2.2紧凑协议，同时保留对旧协议的解析能力。\n\
-          \    if isinstance(data,dict):\n        compact=data.get(\"entities\",[])\n\
-          \        expanded=[]\n        for idx,e in enumerate(compact if isinstance(compact,list)\
-          \ else [],1):\n            if not isinstance(e,dict):continue\n        \
-          \    if \"canonical_name\" in e or \"entity_type\" in e:\n             \
-          \   expanded.append(e);continue\n            eligible=e.get(\"eligible\"\
-          ,True)\n            expanded.append({\n                \"entity_id\":str(e.get(\"\
-          entity_id\") or f\"E{idx:03d}\"),\n                \"surface\":e.get(\"\
-          surface\",e.get(\"name\",\"\")),\n                \"canonical_name\":e.get(\"\
-          canonical\",e.get(\"surface\",\"\")),\n                \"parent_brand\"\
-          :e.get(\"parent\",e.get(\"canonical\",e.get(\"surface\",\"\"))),\n     \
-          \           \"entity_type\":e.get(\"type\",\"brand\"),\n               \
-          \ \"competition_role\":e.get(\"role\",\"competitor\"),\n               \
-          \ \"target_relation\":e.get(\"target\",\"none\"),\n                \"rank_membership\"\
-          :e.get(\"membership\",\"ordered_choice\"),\n                \"rank_anchor_sentence_id\"\
-          :e.get(\"anchor\",\"\"),\n                \"module_id\":str(e.get(\"module\"\
-          ) or \"M1\"),\"local_position\":0,\n                \"eligible_for_ranking\"\
-          :eligible,\"answers_user_choice\":eligible,\n                \"is_named_entity\"\
-          :eligible,\"is_independent_entity\":eligible,\n                \"sentence_ids\"\
-          :[]})\n        data[\"entities\"]=expanded\n        ordered=data.get(\"\
-          order\",[])\n        if isinstance(ordered,list) and ordered:\n        \
-          \    rows=[]\n            for pos,item in enumerate(ordered,1):\n      \
-          \          name=item.get(\"name\",item.get(\"surface\",\"\")) if isinstance(item,dict)\
-          \ else item\n                if str(name or \"\").strip():rows.append({\"\
-          name\":str(name).strip(),\"pos\":pos})\n            data[\"ranking_analysis\"\
-          ]={\"all_brands_in_ranking\":rows}\n    try:catalog=json.loads(sentence_catalog\
-          \ or \"[]\")\n    except Exception:catalog=[]\n    smap={str(x.get(\"id\"\
-          )):x for x in catalog if isinstance(x,dict) and x.get(\"id\")};order={sid:i\
-          \ for i,sid in enumerate(smap)}\n    source_background=set()\n    reference_count=0;reference_intro=-1\n\
-          \    for sid,item in smap.items():\n        text=str(item.get(\"text\")\
-          \ or \"\")\n        m=re.search(r\"搜索.{0,30}参考\\s*([1-9]\\d*)\\s*篇\",text)\n\
-          \        if m:\n            reference_count=int(m.group(1));reference_intro=order.get(sid,-1);break\n\
-          \    if reference_count>0 and reference_intro>=0:\n        last_candidates=[]\n\
-          \        for sid,item in smap.items():\n            idx=order.get(sid,-1)\n\
-          \            if idx>reference_intro and explicit_position(item)==reference_count:last_candidates.append((idx,sid,item))\n\
-          \        if last_candidates:\n            last_idx,last_sid,last_item=min(last_candidates,key=lambda\
-          \ x:x[0])\n            last_line=int(last_item.get(\"line_no\",0) or 0)\n\
-          \            marker_only=bool(re.fullmatch(r\"\\s*\"+str(reference_count)+r\"\
-          [.、)）:：]?\\s*\",str(last_item.get(\"text\") or \"\")))\n            end_idx=last_idx\n\
-          \            if marker_only:\n                following=[order.get(sid,99999)\
-          \ for sid,item in smap.items() if int(item.get(\"line_no\",0) or 0)==last_line+1]\n\
-          \                if following:end_idx=max(following)\n            source_background.update(sid\
-          \ for sid in smap if reference_intro<=order.get(sid,-1)<=end_idx)\n    video_start=min((order.get(sid,99999)\
-          \ for sid,item in smap.items() if re.fullmatch(r\"\\s*相关视频\\s*\",str(item.get(\"\
-          text\") or \"\"))),default=99999)\n    if video_start<99999:source_background.update(sid\
-          \ for sid in smap if order.get(sid,99999)>=video_start)\n    try:target_aliases=json.loads(target_alias_strings\
-          \ or \"[]\")\n    except Exception:target_aliases=[]\n    target_aliases=[str(x).strip()\
-          \ for x in target_aliases if str(x).strip()]\n    derived_target_terms=derive_target_terms(query,\
-          \ answer_text, target_aliases)\n    target_aliases=list(dict.fromkeys(target_aliases\
-          \ + [x.get(\"alias\") for x in derived_target_terms if x.get(\"alias\")]))\n\
-          \    # 有明确的query产品词时，公司核心词只能证明所有权，不能把同母品牌的\n    # EDT/EDP/Parfum或兄弟产品全部升级成目标实体。\n\
-          \    has_query_product_alias=bool(derived_target_terms)\n    try:company_fallback_aliases=json.loads(company_fallback_alias_strings\
-          \ or \"[]\")\n    except Exception:company_fallback_aliases=[]\n    company_fallback_aliases=[str(x).strip()\
-          \ for x in company_fallback_aliases if str(x).strip()]\n    candidates=[]\n\
-          \    requested=as_bool(data.get(\"is_ranking\")) if isinstance(data,dict)\
-          \ else False\n    structure=str(data.get(\"structure_type\") or \"no_ranking\"\
-          ) if isinstance(data,dict) else \"no_ranking\"\n    raw=data.get(\"entities\"\
-          ,[]) if isinstance(data,dict) else []\n    if not isinstance(raw,list):raw=[]\n\
-          \    raw=[x for x in raw if isinstance(x,dict)]\n    # 高召回兜底：模型偶尔在ranking_analysis列出实体却漏出entities。\n\
-          \    # 仅补录能够在answer_raw证据目录中逐字检索到的名称，绝不使用comps_list制造实体。\n    ranking_analysis=data.get(\"\
-          ranking_analysis\",{}) if isinstance(data,dict) else {}\n    ranked_rows=ranking_analysis.get(\"\
-          all_brands_in_ranking\",[]) if isinstance(ranking_analysis,dict) else []\n\
-          \    if not isinstance(ranked_rows,list):ranked_rows=[]\n    def declared_position(names):\n\
-          \        found=[]\n        for row in ranked_rows:\n            if isinstance(row,str):rname=row;pos=0\n\
-          \            elif isinstance(row,dict):rname=str(row.get(\"name\") or row.get(\"\
-          surface\") or row.get(\"brand\") or \"\");pos=row.get(\"pos\",0)\n     \
-          \       else:continue\n            if not norm(rname) or not any(contains(rname,n)\
-          \ or contains(n,rname) for n in names if norm(n)):continue\n           \
-          \ try:p=int(pos)\n            except Exception:p=0\n            if p>0:found.append(p)\n\
-          \        return min(found) if found else 0\n    existing={norm(x.get(\"\
-          surface\") or x.get(\"name\") or x.get(\"canonical_name\")) for x in raw}\n\
-          \    for ridx,row in enumerate(ranked_rows,1):\n        if isinstance(row,str):name=row\n\
-          \        elif isinstance(row,dict):name=str(row.get(\"name\") or row.get(\"\
-          surface\") or row.get(\"brand\") or \"\")\n        else:continue\n     \
-          \   name=re.sub(r\"\\s+\",\" \",name).strip()[:120]\n        if len(norm(name))<2\
-          \ or norm(name) in existing or looks_invalid(name):continue\n        evidence=[sid\
-          \ for sid,item in smap.items() if contains(name,item.get(\"text\",\"\"))]\n\
-          \        if not evidence:continue\n        raw.append({\"entity_id\":f\"\
-          ER{ridx:03d}\",\"surface\":name,\"canonical_name\":name,\"parent_brand\"\
-          :name,\n                    \"entity_type\":\"brand\",\"competition_role\"\
-          :\"recommended\",\"rank_membership\":\"ordered_choice\",\n             \
-          \       \"rank_anchor_sentence_id\":evidence[0],\"sentence_ids\":evidence,\"\
-          _recovered_from_ranking_analysis\":True})\n        existing.add(norm(name))\n\
-          \    for idx,e in enumerate(raw[:100],1):\n        if not isinstance(e,dict):continue\n\
-          \        surface=re.sub(r\"\\s+\",\" \",str(e.get(\"surface\") or e.get(\"\
-          name\") or \"\")).strip()[:120]\n        canonical=re.sub(r\"\\s+\",\" \"\
-          ,str(e.get(\"canonical_name\") or surface)).strip()[:120]\n        parent=re.sub(r\"\
-          \\s+\",\" \",str(e.get(\"parent_brand\") or canonical)).strip()[:120]\n\
-          \        etype=str(e.get(\"entity_type\") or \"\").strip()\n        if not\
-          \ etype:etype=\"brand\"\n        role=str(e.get(\"competition_role\") or\
-          \ \"\").strip()\n        if not role and structure!=\"no_ranking\":role=\"\
-          recommended\"\n        ids=e.get(\"sentence_ids\",[]);ids=[ids] if isinstance(ids,str)\
-          \ else ids;ids=list(dict.fromkeys(str(x) for x in ids if str(x) in smap))\n\
-          \        # 不再依赖LLM完整返回sentence_ids：对surface/canonical/parent执行全文逐句搜索并补齐。\n\
-          \        search_names=[surface,canonical] if etype==\"independent_product\"\
-          \ else [surface,canonical,parent]\n        recovered=[sid for sid,item in\
-          \ smap.items() if sid not in source_background and any(\n            contains(n,item.get(\"\
-          text\",\"\") )\n            for n in search_names if len(norm(n))>=2)]\n\
-          \        direct=list(dict.fromkeys(ids+recovered))\n        direct=[sid\
-          \ for sid in direct if sid not in source_background and any(\n         \
-          \   contains(n,smap[sid].get(\"text\",\"\") )\n            for n in search_names\
-          \ if len(norm(n))>=2)]\n        membership=str(e.get(\"rank_membership\"\
-          ) or \"\").strip()\n        if not membership and structure!=\"no_ranking\"\
-          :membership=\"ordered_choice\"\n        relation=str(e.get(\"target_relation\"\
-          ) or \"none\").strip()\n        # 布尔字段使用三态容错：只有明确false才否决；字段缺失由原文证据、类型和角色兜底判断。\n\
-          \        denied=any(explicit_false(e.get(k)) for k in (\"answers_user_choice\"\
-          ,\"eligible_for_ranking\",\"is_named_entity\",\"is_independent_entity\"\
-          ))\n        # comparison主对象可能被LLM标成competition_role=none；只要它明确是ordered_choice且其余门禁通过，不能因此删除。\n\
-          \        role_ok=role in ALLOWED_ROLES or (structure==\"comparison\" and\
-          \ membership==\"ordered_choice\" and role in {\"\",\"none\"})\n        eligible=not\
-          \ denied and membership in ALLOWED_MEMBERSHIPS and etype in ALLOWED_TYPES\
-          \ and role_ok and not looks_invalid(surface)\n        if not eligible or\
-          \ not direct or len(norm(canonical))<2:continue\n        anchor=str(e.get(\"\
-          rank_anchor_sentence_id\") or \"\")\n        structural=[x for x in direct\
-          \ if str(smap[x].get(\"block_type\") or \"\") in {\"heading\",\"table_row\"\
-          ,\"list_item\"}]\n        sid=anchor if anchor in direct else min(structural\
-          \ or direct,key=lambda x:order.get(x,99999));text=str(smap[sid].get(\"text\"\
-          ,\"\"));positions=[p for p in (text.lower().find(surface.lower()),text.lower().find(canonical.lower()))\
-          \ if p>=0]\n        offset=min(positions) if positions else 9999\n     \
-          \   explicit=explicit_position(smap[sid])\n        try:local=int(e.get(\"\
-          local_position\",0))\n        except Exception:local=0\n        # 预算参考、送礼公式、快速选型/提醒等后置板块只重复已有产品，\n\
-          \        # 不能把其中首次出现的名称升级成新的排名实体（例如“万宝龙传奇”）。\n        anchor_heading=str(smap[sid].get(\"\
-          context_heading\") or \"\")\n        supplement_heading=bool(re.search(r\"\
-          预算参考|预算档|送礼小建议|实用小贴士|快速选型|选购快速建议|重要提醒|小提示|避雷|总结|结论\",anchor_heading))\n\
-          \        if supplement_heading and membership==\"ordered_choice\":\n   \
-          \         membership=\"comparison_only\";role=\"comparison\";explicit=0;local=0\n\
-          \        entity_names=[surface,canonical,parent]\n        primary_names=[surface,canonical]\n\
-          \        alias_target=any(target_alias_match(t,n) for t in target_aliases\
-          \ if norm(t) for n in primary_names if norm(n))\n        if not alias_target\
-          \ and company_fallback_aliases and not has_query_product_alias:\n      \
-          \      for fallback in company_fallback_aliases:\n                fb=norm(fallback)\n\
-          \                if not fb:continue\n                if norm(parent)==fb\
-          \ or any(norm(name)==fb or norm(name).startswith(fb) for name in primary_names):\n\
-          \                    alias_target=True;break\n        # 母品牌只能在目标别名与parent完全一致时命中；禁止“香奈儿(中国)贸易有限公司”\n\
-          \        # 通过模糊子串把香奈儿的所有兄弟产品都升级为目标。产品/二级品牌则允许\n        # 声明的完整别名与surface/canonical存在包含关系（如“香奈儿蔚蓝男士”→“香奈儿蔚蓝”）。\n\
-          \        if not alias_target and norm(parent):\n            alias_target=any(norm(t)==norm(parent)\
-          \ for t in target_aliases if norm(t))\n        semantic_relation=relation\
-          \ in {\"exact_target\",\"target_product\",\"target_subbrand\",\"target_service\"\
-          }\n        # target_relation是LLM辅助字段，不能绕过声明别名粒度。\n        # 例如目标为“360安全浏览器”时，“360极速浏览器”的target_product\n\
-          \        # 必须降回普通竞品；只有正文实体自身与目标别名精确/可靠匹配才可成为目标。\n        semantic_target=semantic_relation\
-          \ and alias_target\n        if semantic_relation and not alias_target:relation=\"\
-          none\"\n        # LLM经常已经识别到目标实体，但target字段保守地留为none。只要声明别名\n        # 与该独立实体命中，就把关系补成exact_target，供4a使用；这不是新增实体，\n\
-          \        # 也不会把比较宾语升级，因为comparison_only在eligible门禁后不会进入此处。\n        if alias_target\
-          \ and relation==\"none\":relation=\"exact_target\"\n        is_target=alias_target\n\
-          \        candidates.append({\"entity_id\":str(e.get(\"entity_id\") or f\"\
-          E{idx:03d}\"),\"surface\":surface,\"canonical_name\":canonical,\"parent_brand\"\
-          :parent,\n                           \"entity_type\":etype,\"competition_role\"\
-          :role,\"target_relation\":relation,\"is_target_entity\":is_target,\n   \
-          \                        \"rank_membership\":membership,\"rank_anchor_sentence_id\"\
-          :sid,\n                           \"module_id\":str(e.get(\"module_id\"\
-          ) or \"M1\"),\"local_position\":max(0,local),\n                        \
-          \   \"sentence_ids\":direct,\"_explicit_rank\":explicit,\"_declared_rank\"\
-          :declared_position(entity_names),\n                           \"_order\"\
-          :order.get(sid,99999),\"_offset\":offset})\n    # v7单点修复：全局LLM可能识别到目标品牌，却把跨模块中的目标误标为background/不合格，\n\
-          \    # 导致后续4a虽然brand_detected=true但只能复制到rank_pos=0。\n    # 当目标别名直接出现在“带明确序号的标题/列表/表格实体行”时，以原文证据确定性补入/升级为ordered_choice。\n\
-          \    def target_line_match(alias,unit):\n        a=norm(alias);u=norm(unit)\n\
-          \        if not a or not u or a not in u:return False\n        qualifiers=(\"\
-          男士\",\"女士\",\"香水\",\"系列\",\"经典\",\"同名\",\"edt\",\"edp\")\n        start=u.find(a);suffix=u[start+len(a):]\n\
-          \        # 行首序号/标点属于前缀，不影响命中；目标后若紧接X等兄弟产品后缀则拒绝。\n        return not suffix\
-          \ or any(suffix.startswith(q) for q in qualifiers)\n    target_rank_hits=[]\n\
-          \    for sid,item in smap.items():\n        if sid in source_background\
-          \ or explicit_position(item)<=0:continue\n        unit=str(item.get(\"text\"\
-          ) or \"\")\n        matched_aliases=[str(a) for a in target_aliases if len(norm(a))>=4\
-          \ and target_line_match(str(a),unit)]\n        if not matched_aliases and\
-          \ str(item.get(\"block_type\") or \"\") in {\"heading\",\"table_row\",\"\
-          list_item\"}:\n            matched_aliases=[a for a in company_fallback_aliases\
-          \ if norm(a) and norm(a) in norm(unit)]\n        if matched_aliases:\n \
-          \           matched_aliases.sort(key=lambda a:len(norm(a)),reverse=True)\n\
-          \            target_rank_hits.append((order.get(sid,99999),sid,matched_aliases[0]))\n\
-          \    if target_rank_hits:\n        _,target_sid,target_alias=min(target_rank_hits,key=lambda\
-          \ x:(x[0],-len(norm(x[2]))))\n        existing_target=next((x for x in candidates\
-          \ if x.get(\"is_target_entity\")),None)\n        if existing_target:\n \
-          \           existing_target[\"rank_membership\"]=\"ordered_choice\"\n  \
-          \          existing_target[\"competition_role\"]=\"recommended\"\n     \
-          \       existing_target[\"rank_anchor_sentence_id\"]=target_sid\n      \
-          \      existing_target[\"sentence_ids\"]=list(dict.fromkeys(existing_target.get(\"\
-          sentence_ids\",[])+[target_sid]))\n            existing_target[\"_explicit_rank\"\
-          ]=explicit_position(smap[target_sid])\n            existing_target[\"_order\"\
-          ]=order.get(target_sid,99999)\n            existing_target[\"_offset\"]=str(smap[target_sid].get(\"\
-          text\",\"\")).lower().find(target_alias.lower())\n        else:\n      \
-          \      candidates.append({\"entity_id\":\"ETARGET\",\"surface\":target_alias,\"\
-          canonical_name\":target_alias,\"parent_brand\":target_alias,\n         \
-          \                      \"entity_type\":\"institution\",\"competition_role\"\
-          :\"recommended\",\"target_relation\":\"exact_target\",\"is_target_entity\"\
-          :True,\n                               \"rank_membership\":\"ordered_choice\"\
-          ,\"rank_anchor_sentence_id\":target_sid,\"module_id\":\"TARGET_RECOVERY\"\
-          ,\"local_position\":0,\n                               \"sentence_ids\"\
-          :[target_sid],\"_explicit_rank\":explicit_position(smap[target_sid]),\"\
-          _declared_rank\":declared_position([target_alias]),\n                  \
-          \             \"_order\":order.get(target_sid,99999),\"_offset\":0})\n \
-          \   # 单一品牌/公司详评没有实体序号时，query本身若明确包含目标完整品牌，补建independent_subject。\n    #\
-          \ 这只在上游尚未建立目标实体时触发，且要求正文存在同一完整别名；不会把比较宾语或视频标签升级为目标。\n    if not any(e.get(\"\
-          is_target_entity\") and e.get(\"rank_membership\") in {\"ordered_choice\"\
-          ,\"independent_subject\"} for e in candidates if isinstance(e,dict)):\n\
-          \        query_target=any(target_alias_match(str(a),query) for a in target_aliases\
-          \ if norm(a))\n        if query_target:\n            subject_hits=[]\n \
-          \           for sid,item in smap.items():\n                if sid in source_background:continue\n\
-          \                unit=str(item.get(\"text\") or \"\")\n                aliases=[str(a)\
-          \ for a in target_aliases if len(norm(a))>=4 and target_line_match(str(a),unit)]\n\
-          \                if not aliases:continue\n                structural=str(item.get(\"\
-          block_type\") or \"\") in {\"heading\",\"paragraph\"} or any(contains(a,str(item.get(\"\
-          context_heading\") or \"\")) for a in aliases)\n                if structural:subject_hits.append((order.get(sid,99999),sid,max(aliases,key=lambda\
-          \ a:len(norm(a)))))\n            heading_hits=[x for x in subject_hits if\
-          \ str(smap.get(x[1],{}).get(\"block_type\") or \"\")==\"heading\" or any(contains(x[2],str(smap.get(x[1],{}).get(\"\
-          context_heading\") or \"\")) for _ in [0])]\n            mention_total=len(subject_hits)\n\
-          \            # 无标题主体时至少需要多处正文重复，防止“比A便宜于目标”单句比较宾语被升级为independent_subject。\n\
-          \            if heading_hits or (len(subject_hits)>=2 and mention_total>=2):\n\
-          \                _,subject_sid,subject_alias=min(heading_hits or subject_hits,key=lambda\
-          \ x:(x[0],-len(norm(x[2]))))\n                existing_target=next((e for\
-          \ e in candidates if e.get(\"is_target_entity\") or any(target_alias_match(str(a),str(e.get(\"\
-          surface\") or \"\")) for a in target_aliases if norm(a))),None)\n      \
-          \          if existing_target:\n                    existing_target[\"surface\"\
-          ]=subject_alias;existing_target[\"canonical_name\"]=subject_alias;existing_target[\"\
-          parent_brand\"]=subject_alias\n                    existing_target[\"competition_role\"\
-          ]=\"recommended\";existing_target[\"target_relation\"]=\"exact_target\"\
-          ;existing_target[\"is_target_entity\"]=True\n                    existing_target[\"\
-          rank_membership\"]=\"independent_subject\";existing_target[\"rank_anchor_sentence_id\"\
-          ]=subject_sid;existing_target[\"module_id\"]=\"TARGET_SUBJECT\";existing_target[\"\
-          local_position\"]=0\n                    existing_target[\"sentence_ids\"\
-          ]=list(dict.fromkeys(existing_target.get(\"sentence_ids\",[])+[subject_sid]));existing_target[\"\
-          _explicit_rank\"]=0;existing_target[\"_declared_rank\"]=0;existing_target[\"\
-          _order\"]=order.get(subject_sid,99999);existing_target[\"_offset\"]=0\n\
-          \                else:\n                    candidates.append({\"entity_id\"\
-          :\"ETARGET\",\"surface\":subject_alias,\"canonical_name\":subject_alias,\"\
-          parent_brand\":subject_alias,\n                                       \"\
-          entity_type\":\"brand\",\"competition_role\":\"recommended\",\"target_relation\"\
-          :\"exact_target\",\"is_target_entity\":True,\n                         \
-          \              \"rank_membership\":\"independent_subject\",\"rank_anchor_sentence_id\"\
-          :subject_sid,\"module_id\":\"TARGET_SUBJECT\",\"local_position\":0,\n  \
-          \                                     \"sentence_ids\":[subject_sid],\"\
-          _explicit_rank\":0,\"_declared_rank\":0,\n                             \
-          \          \"_order\":order.get(subject_sid,99999),\"_offset\":0})\n   \
-          \ # 公司/品牌按主体去重；可独立选择的产品按标准产品名去重，避免P5兄弟产品被母品牌合并。\n    candidates.sort(key=lambda\
-          \ x:(x[\"_order\"],x[\"_offset\"]))\n    unique=[];seen=set()\n    for e\
-          \ in candidates:\n        module=str(e.get(\"module_id\") or \"M1\")\n \
-          \       if e.get(\"entity_type\")==\"independent_product\":key=\"product:\"\
-          +product_key(e.get(\"canonical_name\") or e.get(\"surface\"))+\":\"+module\n\
-          \        else:key=\"entity:\"+norm(e.get(\"parent_brand\") or e.get(\"canonical_name\"\
-          ))+\":\"+module\n        if not key or key in seen:continue\n        seen.add(key);unique.append(e)\n\
-          \    # 非“核心对比”结构中，若产品只在其他实体描述里的比较宾语位置出现，确定性降级为comparison_only。\n    # 例如“360极速X内存优化比老360安全浏览器好”不能把360安全浏览器变成独立推荐项。\n\
-          \    comparison_prefix=re.compile(r\"(?:比(?:老|旧|新版|老版)?|优于|胜过|超过|超越|领先于|相较于|相比于|对比)\\\
-          s*$\",re.I)\n    for e in unique:\n        if structure==\"comparison\"\
-          \ or e.get(\"entity_type\")!=\"independent_product\" or e.get(\"rank_membership\"\
-          )!=\"ordered_choice\":continue\n        names=[str(e.get(\"surface\") or\
-          \ \"\"),str(e.get(\"canonical_name\") or \"\")]\n        exact_units=[];has_independent_anchor=False\n\
-          \        for sid in e.get(\"sentence_ids\",[]):\n            item=smap.get(sid,{});unit=str(item.get(\"\
-          text\") or \"\")\n            matched=[name for name in names if len(norm(name))>=2\
-          \ and contains(name,unit)]\n            if not matched:continue\n      \
-          \      exact_units.append((unit,matched))\n            structural=str(item.get(\"\
-          block_type\") or \"\") in {\"heading\",\"table_row\",\"list_item\"} or explicit_position(item)>0\n\
-          \            starts=any(re.match(r\"^\\s*\"+re.escape(name)+r\"(?:\\s|[（(:：]|$)\"\
-          ,unit,re.I) for name in matched)\n            if structural or starts:has_independent_anchor=True\n\
-          \        if not exact_units or has_independent_anchor:continue\n       \
-          \ object_only=True\n        for unit,matched in exact_units:\n         \
-          \   unit_object=False\n            for name in matched:\n              \
-          \  for m in re.finditer(re.escape(name),unit,re.I):\n                  \
-          \  before=unit[max(0,m.start()-12):m.start()]\n                    after=unit[m.end():m.end()+4]\n\
-          \                    if comparison_prefix.search(before) or re.match(r\"\
-          \\s*(?:相比|比较)\",after):unit_object=True\n            if not unit_object:object_only=False;break\n\
-          \        if object_only:\n            e[\"rank_membership\"]=\"comparison_only\"\
-          ;e[\"competition_role\"]=\"comparison\";e[\"_explicit_rank\"]=0;e[\"local_position\"\
-          ]=0\n    # 对比结构中，模型若把主比较对象误标comparison_only，而没有足够ordered_choice，则按全文顺序提升为核心成员。\n\
-          \    ordered=[e for e in unique if e.get(\"rank_membership\")==\"ordered_choice\"\
-          ]\n    if structure==\"comparison\" and len(ordered)<2:\n        for e in\
-          \ unique:\n            if e.get(\"rank_membership\")==\"comparison_only\"\
-          \ and e.get(\"competition_role\")==\"comparison\":e[\"rank_membership\"\
-          ]=\"ordered_choice\"\n    # 正式推荐分类表中的品牌实例属于可执行推荐，不应因“如A、B”写法被永久降级为\n   \
-          \ # comparison_only。仅对已校验目标实体生效，并要求：\n    # 1) 上游确认存在排名结构；2) 目标别名直接出现在正文的表格/列表/推荐标题锚点；\n\
-          \    # 3) 当前句不是比较、背景或来源区。这样“区域深耕机构（如龙文教育、天津学信教育）”\n    # 可按该分类在模块内取得名次，而“优于龙文教育/与龙文教育相比”等比较宾语仍保持原状。\n\
-          \    # 通用推荐分类上下文，不绑定教育行业；覆盖机构、品牌、产品、平台、服务商、方案等。\n    recommendation_markers=(\"\
-          推荐\",\"选购\",\"选型\",\"榜单\",\"排行\",\"排名\",\"哪个好\",\"哪家\",\"分类\",\"类别\",\"\
-          类型\",\"常见机构\",\"机构特点\",\"品牌特点\",\"产品对比\",\"方案\",\"品牌\",\"机构\",\"平台\",\"\
-          服务商\",\"供应商\",\"产品线\",\"可选\",\"适合\")\n    example_markers=(\"如\",\"例如\"\
-          ,\"包括\",\"代表\",\"典型\",\"常见有\",\"可选\",\"首选\",\"推荐\")\n    forbidden_category_markers=(\"\
-          客户\",\"合作方\",\"合作伙伴\",\"供应商名单\",\"案例\",\"来源\",\"资料\",\"媒体报道\",\"参考资料\",\"\
-          比较\",\"对比\",\"相比\",\"优于\",\"胜过\",\"超过\",\"不如\",\"低于\",\"少于\",\"差于\")\n \
-          \   comparison_markers=(\"相比\",\"比较\",\"对比\",\"优于\",\"胜过\",\"超过\",\"不如\"\
-          ,\"低于\",\"少于\",\"差于\")\n    query_recommendation_intent=bool(re.search(r\"\
-          推荐|排行|排名|哪个好|哪家|怎么选|选购|机构|品牌\",str(query or \"\")))\n    def category_recommendation_anchor(e):\n\
-          \        if not isinstance(e,dict) or e.get(\"rank_membership\")!=\"comparison_only\"\
-          :return None\n        if not requested and not query_recommendation_intent:return\
-          \ None\n        names=[str(e.get(\"surface\") or \"\"),str(e.get(\"canonical_name\"\
-          ) or \"\")]\n        names=[x for x in names if len(norm(x))>=2]\n     \
-          \   if not names:return None\n        hits=[]\n        for sid in e.get(\"\
-          sentence_ids\",[]):\n            item=smap.get(str(sid),{});unit=str(item.get(\"\
-          text\") or \"\")\n            if not unit or str(sid) in source_background:continue\n\
-          \            # 仅在当前最小证据单元内检索实体，避免压缩为单行的answer_raw发生跨项串联。\n            scope_text=unit\n\
-          \            block=str(item.get(\"block_type\") or \"\")\n            structural=block\
-          \ in {\"heading\",\"table_row\",\"list_item\"} or \"|\" in scope_text\n\
-          \            if not structural:continue\n            if not any(contains(name,scope_text)\
-          \ for name in names):continue\n            context=\" \".join((scope_text,str(item.get(\"\
-          context_heading\") or \"\")))\n            if any(marker in context for\
-          \ marker in forbidden_category_markers):continue\n            has_category=any(marker\
-          \ in context for marker in recommendation_markers)\n            has_example=any(marker\
-          \ in context for marker in example_markers)\n            if not (has_category\
-          \ and has_example):continue\n            hits.append((order.get(str(sid),99999),str(sid),scope_text))\n\
-          \        return min(hits,key=lambda x:x[0]) if hits else None\n    for e\
-          \ in unique:\n        hit=category_recommendation_anchor(e)\n        if\
-          \ not hit:continue\n        _,sid,unit=hit\n        e[\"rank_membership\"\
-          ]=\"ordered_choice\";e[\"competition_role\"]=\"recommended\"\n        e[\"\
-          rank_anchor_sentence_id\"]=sid;e[\"local_position\"]=0\n        e[\"_explicit_rank\"\
-          ]=explicit_position(smap[sid]);e[\"_order\"]=order.get(sid,99999)\n    \
-          \    e[\"_offset\"]=min([p for p in (unit.lower().find(str(e.get(\"surface\"\
-          ) or \"\").lower()),unit.lower().find(str(e.get(\"canonical_name\") or \"\
-          \").lower())) if p>=0] or [9999])\n    # 目标实体漏出时的通用恢复：只从query推荐意图 + 正式推荐分类行\
-          \ + 目标完整别名\n    # 三重可验证条件建ETARGET，不从正文任意品牌名扩张，避免把普通背景/比较宾语升级。\n    if query_recommendation_intent:\n\
-          \        target_alias_candidates=[str(a).strip() for a in target_aliases\
-          \ if len(norm(a))>=2]\n        existing_target=next((e for e in unique if\
-          \ e.get(\"is_target_entity\")),None)\n        for sid,item in smap.items():\n\
-          \            if sid in source_background:continue\n            scope_text=str(item.get(\"\
-          text\") or \"\")\n            context=\" \".join((scope_text,str(item.get(\"\
-          context_heading\") or \"\")))\n            if not any(contains(a,scope_text)\
-          \ for a in target_alias_candidates):continue\n            if not any(marker\
-          \ in context for marker in recommendation_markers):continue\n          \
-          \  if not any(marker in context for marker in example_markers):continue\n\
-          \            if any(marker in context for marker in forbidden_category_markers):continue\n\
-          \            matched_alias=max((a for a in target_alias_candidates if contains(a,scope_text)),key=lambda\
-          \ a:len(norm(a)),default=\"\")\n            if not matched_alias:continue\n\
-          \            if existing_target:\n                existing_target[\"surface\"\
-          ]=matched_alias;existing_target[\"canonical_name\"]=matched_alias;existing_target[\"\
-          parent_brand\"]=matched_alias\n                existing_target[\"entity_type\"\
-          ]=\"brand\";existing_target[\"competition_role\"]=\"recommended\";existing_target[\"\
-          target_relation\"]=\"exact_target\";existing_target[\"is_target_entity\"\
-          ]=True\n                existing_target[\"rank_membership\"]=\"ordered_choice\"\
-          ;existing_target[\"rank_anchor_sentence_id\"]=str(sid);existing_target[\"\
-          sentence_ids\"]=list(dict.fromkeys(existing_target.get(\"sentence_ids\"\
-          ,[])+[str(sid)]));existing_target[\"_explicit_rank\"]=explicit_position(item);existing_target[\"\
-          _order\"]=order.get(str(sid),99999);existing_target[\"_offset\"]=scope_text.lower().find(matched_alias.lower())\n\
-          \            else:\n                existing_target={\"entity_id\":\"ETARGET\"\
-          ,\"surface\":matched_alias,\"canonical_name\":matched_alias,\"parent_brand\"\
-          :matched_alias,\"entity_type\":\"brand\",\"competition_role\":\"recommended\"\
-          ,\"target_relation\":\"exact_target\",\"is_target_entity\":True,\"rank_membership\"\
-          :\"ordered_choice\",\"rank_anchor_sentence_id\":str(sid),\"module_id\":\"\
-          M1\",\"local_position\":0,\"sentence_ids\":[str(sid)],\"_explicit_rank\"\
-          :explicit_position(item),\"_declared_rank\":0,\"_order\":order.get(str(sid),99999),\"\
-          _offset\":scope_text.lower().find(matched_alias.lower())}\n            \
-          \    unique.append(existing_target)\n            break\n    # 若上游LLM把正式推荐分类误报成no_ranking，只要query本身是推荐意图，且\n\
-          \    # 分类行中存在至少两个可执行品牌实例，确定性恢复排名结构；不会影响单主体详评。\n    query_recommendation_intent=bool(re.search(r\"\
-          推荐|排行|排名|哪个好|哪家|怎么选|选购|机构|品牌\",str(query or \"\")))\n    category_ordered=[e\
-          \ for e in unique if isinstance(e,dict) and e.get(\"rank_membership\")==\"\
-          ordered_choice\"]\n    if query_recommendation_intent and len(category_ordered)>=2\
-          \ and structure==\"no_ranking\":\n        requested=True\n        structure=\"\
-          table\"\n    # 排名只认独立核心推荐实体。显式序号优先；无序号按模块内出现顺序补最小未占用正整数。\n    ordered_groups={}\n\
-          \    for e in unique:\n        if e.get(\"rank_membership\")!=\"ordered_choice\"\
-          :continue\n        module=str(e.get(\"module_id\") or \"M1\")\n        ordered_groups.setdefault(module,[]).append(e)\n\
-          \    for module,rows in ordered_groups.items():\n        # 显式序号永远优先保留；没有序号的实体按品牌/实体名称排序，\n\
-          \        # 再填入本模块最小可用排名，避免把正文出现顺序误当排名。\n        used={int(e.get(\"_explicit_rank\"\
-          ,0)) for e in rows if int(e.get(\"_explicit_rank\",0))>0}\n        explicit_rows=[e\
-          \ for e in rows if int(e.get(\"_explicit_rank\",0))>0]\n        implicit_rows=[e\
-          \ for e in rows if int(e.get(\"_explicit_rank\",0))<=0]\n        implicit_rows.sort(key=lambda\
-          \ e:(e.get(\"_order\",99999),e.get(\"_offset\",999999999),norm(e.get(\"\
-          canonical_name\") or e.get(\"surface\") or \"\"),norm(e.get(\"surface\"\
-          ) or \"\")))\n        for e in explicit_rows:\n            rank=int(e.get(\"\
-          _explicit_rank\",0));e[\"local_position\"]=rank;e[\"global_position\"]=rank;e[\"\
-          rank_position\"]=rank\n        cursor=1\n        unit_rank={}\n        for\
-          \ e in implicit_rows:\n            unit=(str(e.get(\"rank_anchor_sentence_id\"\
-          ) or \"\"),norm(e.get(\"parent_brand\") or \"\"))\n            if unit not\
-          \ in unit_rank:\n                while cursor in used:cursor+=1\n      \
-          \          unit_rank[unit]=cursor;used.add(cursor);cursor+=1\n         \
-          \   rank=unit_rank[unit]\n            e[\"local_position\"]=rank;e[\"global_position\"\
-          ]=rank;e[\"rank_position\"]=rank\n    for e in unique:\n        if e.get(\"\
-          rank_membership\")!=\"ordered_choice\":\n            e[\"global_position\"\
-          ]=0;e[\"rank_position\"]=0\n    # 同一实体跨平行模块出现时合并为一个业务实体，并保留最优有效模块内排名。\n\
-          \    merged=[];merged_by_key={}\n    for e in unique:\n        if e.get(\"\
-          entity_type\")==\"independent_product\":logical=\"product:\"+product_key(e.get(\"\
-          canonical_name\") or e.get(\"surface\"))\n        else:logical=\"entity:\"\
-          +norm(e.get(\"parent_brand\") or e.get(\"canonical_name\"))\n        old=merged_by_key.get(logical)\n\
-          \        if not old:\n            merged_by_key[logical]=e;merged.append(e);continue\n\
-          \        old_rank=int(old.get(\"rank_position\",0) or 0);new_rank=int(e.get(\"\
-          rank_position\",0) or 0)\n        if new_rank>0 and (old_rank<=0 or new_rank<old_rank):\n\
-          \            for key in (\"rank_position\",\"global_position\",\"local_position\"\
-          ,\"rank_anchor_sentence_id\",\"module_id\"):\n                old[key]=e.get(key)\n\
-          \        old[\"sentence_ids\"]=list(dict.fromkeys(old.get(\"sentence_ids\"\
-          ,[])+e.get(\"sentence_ids\",[])))\n        old[\"is_target_entity\"]=bool(old.get(\"\
-          is_target_entity\") or e.get(\"is_target_entity\"))\n        if old.get(\"\
-          target_relation\")==\"none\" and e.get(\"target_relation\")!=\"none\":old[\"\
-          target_relation\"]=e.get(\"target_relation\")\n    unique=merged\n    for\
-          \ e in unique:\n        e.pop(\"_explicit_rank\",None);e.pop(\"_declared_rank\"\
-          ,None);e.pop(\"_order\",None);e.pop(\"_offset\",None)\n    structured=requested\
-          \ or structure in {\"numbered_list\",\"table\",\"parallel_modules\",\"sequential_paragraphs\"\
-          ,\"comparison\"}\n    # 品牌词/具体产品词直询的单主体回答不能被版本编号误升格为品牌排名。\n    # 例如 query=“香奈儿蔚蓝男士香水”时，EDT/EDP/Parfum\
-          \ 是同一目标产品的版本，\n    # 即使模型将版本标题填成 ordered_choice，也没有第二个独立品牌，必须保持\n    # independent_subject、is_ranking=false、rank_position=0。只有存在另一个\n\
-          \    # 非目标独立推荐实体时，才允许沿用上游的排名结论。\n    is_ranking=requested\n    query_focus=any(target_alias_match(str(a),str(query))\
-          \ for a in target_aliases if norm(a))\n    target_rows=[e for e in unique\
-          \ if isinstance(e,dict) and e.get(\"is_target_entity\")]\n    # 同一目标产品的规格/浓度版本（如\
-          \ EDT、EDP、Parfum）不是第二个品牌。\n    # 当query已经锁定具体产品时，把这类版本并入目标主体，避免版本编号触发排名。\n\
-          \    version_markers=(\"edt\",\"edp\",\"parfum\",\"淡香\",\"浓香\",\"香精\",\"\
-          版本\",\"男士\",\"女士\")\n    def is_target_version(e):\n        if not query_focus\
-          \ or not isinstance(e,dict) or e.get(\"is_target_entity\"):return False\n\
-          \        names=[str(e.get(\"surface\") or \"\"),str(e.get(\"canonical_name\"\
-          ) or \"\")]\n        if not any(any(marker in norm(name) for marker in version_markers)\
-          \ for name in names):return False\n        parent=norm(e.get(\"parent_brand\"\
-          ) or \"\")\n        if not parent:return False\n        for t in target_rows:\n\
-          \            tnames=[norm(t.get(\"surface\") or \"\"),norm(t.get(\"canonical_name\"\
-          ) or \"\"),norm(t.get(\"parent_brand\") or \"\")]\n            if any(x\
-          \ and (x.startswith(parent) or parent.startswith(x)) for x in tnames):return\
-          \ True\n        return False\n    for e in unique:\n        if is_target_version(e):\n\
-          \            e[\"is_target_entity\"]=True;e[\"target_relation\"]=\"target_product\"\
-          \n            e[\"rank_membership\"]=\"independent_subject\";e[\"competition_role\"\
-          ]=\"recommended\"\n            e[\"rank_position\"]=0;e[\"local_position\"\
-          ]=0;e[\"global_position\"]=0\n    target_rows=[e for e in unique if isinstance(e,dict)\
-          \ and e.get(\"is_target_entity\")]\n    other_ordered=[]\n    for e in unique:\n\
-          \        if not isinstance(e,dict) or e.get(\"rank_membership\")!=\"ordered_choice\"\
-          \ or e.get(\"is_target_entity\"):continue\n        other_ordered.append(e)\n\
-          \    if is_ranking and query_focus and target_rows and not other_ordered:\n\
-          \        is_ranking=False\n        structure=\"no_ranking\"\n        for\
-          \ e in unique:\n            if e.get(\"is_target_entity\"):\n          \
-          \      e[\"rank_membership\"]=\"independent_subject\"\n                e[\"\
-          competition_role\"]=\"recommended\"\n            e[\"global_position\"]=0;e[\"\
-          rank_position\"]=0;e[\"local_position\"]=0\n    if not is_ranking:\n   \
-          \     for e in unique:e[\"global_position\"]=0;e[\"rank_position\"]=0\n\
-          \        structure=\"no_ranking\"\n    summary=str(data.get(\"summary\"\
-          ) or \"\").strip()[:240] if isinstance(data,dict) else \"\"\n    if not\
-          \ summary:\n        fallback=re.sub(r\"\\s+\",\" \",str(answer_text or \"\
-          \")).strip()\n        cut=re.search(r\"^.{40,120}?[。！？!?]\",fallback)\n\
-          \        summary=cut.group(0) if cut else fallback[:120]\n    tags=safe_tags(data.get(\"\
-          key_tags\",[]) if isinstance(data,dict) else [])\n    if len(tags)<3:\n\
-          \        seeds=[str(query).strip()[:20]]+re.findall(r\"[\\u4e00-\\u9fffA-Za-z0-9]{2,12}\"\
-          ,str(answer_text or \"\"))\n        for seed in seeds:\n            if seed\
-          \ and seed not in tags and seed not in {\"回答\",\"用户\",\"问题\",\"需要\",\"可以\"\
-          ,\"相关\"}:tags.append(seed)\n            if len(tags)>=3:break\n    tags=tags[:5]\n\
-          \    competitor_inventory=[]\n    ranking_enabled=str(is_ranking).lower()==\"\
-          true\"\n    for e in unique:\n        names=[e.get(\"surface\",\"\"),e.get(\"\
-          canonical_name\",\"\"),e.get(\"parent_brand\",\"\")]\n        primary=names[:2];parent=names[2]\n\
-          \        alias_hit=any(target_alias_match(t,n) for t in target_aliases if\
-          \ norm(t) for n in primary if norm(n))\n        if not alias_hit and norm(parent):alias_hit=any(norm(t)==norm(parent)\
-          \ for t in target_aliases if norm(t))\n        if e.get(\"is_target_entity\"\
-          ) or alias_hit:continue\n        membership=e.get(\"rank_membership\")\n\
-          \        # 排名回答只分析进入有效推荐结构的竞品；非排名的独立主体/比较文章仍需分析明确同业竞品。\n        if ranking_enabled:\n\
-          \            if membership!=\"ordered_choice\" or int(e.get(\"rank_position\"\
-          ,0))<=0:continue\n        else:\n            if membership not in {\"independent_subject\"\
-          ,\"comparison_only\",\"ordered_choice\"}:continue\n            if e.get(\"\
-          competition_role\") not in {\"competitor\",\"recommended\",\"alternative\"\
-          ,\"comparison\"}:continue\n        competitor_inventory.append(e)\n    def\
-          \ llm_row(e):\n        aliases=[]\n        for value in (e.get(\"canonical_name\"\
-          ,\"\"),e.get(\"parent_brand\",\"\")):\n            value=str(value or \"\
-          \").strip()\n            if value and value!=e.get(\"surface\") and value\
-          \ not in aliases:aliases.append(value)\n        return {\"id\":e.get(\"\
-          entity_id\",\"\"),\"name\":e.get(\"surface\",\"\"),\"aliases\":aliases,\n\
-          \                \"target\":e.get(\"target_relation\",\"none\"),\"rank\"\
-          :int(e.get(\"rank_position\",0) or 0),\n                \"membership\":e.get(\"\
-          rank_membership\",\"\"),\"module\":e.get(\"module_id\",\"M1\"),\n      \
-          \          \"anchor\":e.get(\"rank_anchor_sentence_id\",\"\")}\n    llm_target_inventory=[llm_row(e)\
-          \ for e in unique if e.get(\"is_target_entity\")]\n    llm_competitor_inventory=[llm_row(e)\
-          \ for e in competitor_inventory]\n    context={\"is_ranking\":is_ranking,\"\
-          structure_type\":structure,\"reason\":str(data.get(\"reason\") or \"\")[:120]\
-          \ if isinstance(data,dict) else \"\",\"entities\":unique}\n    return {\"\
-          is_ranking\":\"true\" if is_ranking else \"false\",\"is_ranking_reason\"\
-          :context[\"reason\"],\n            \"ranking_context\":json.dumps(context,ensure_ascii=False),\"\
-          entity_inventory\":json.dumps(unique,ensure_ascii=False),\n            \"\
-          competitor_inventory\":json.dumps(competitor_inventory,ensure_ascii=False),\n\
-          \            \"llm_target_inventory\":json.dumps(llm_target_inventory,ensure_ascii=False,separators=(\"\
-          ,\",\":\")),\n            \"llm_competitor_inventory\":json.dumps(llm_competitor_inventory,ensure_ascii=False,separators=(\"\
-          ,\",\":\")),\n            \"summary\":summary,\"word_cloud_tags\":tags}"
+        code: |-
+          import json
+          import re
+          from typing import Any
+          
+          ALLOWED_TYPES={"brand","company","merchant","service_provider","institution","platform","independent_product"}
+          ALLOWED_ROLES={"competitor","recommended","alternative","comparison"}
+          ALLOWED_MEMBERSHIPS={"ordered_choice","independent_subject","comparison_only"}
+          FORBIDDEN_HINTS=("低价档","中端档","高端档","价格梯队","个人设计师","小工作室","ai模板","正规专业设计公司","头部品牌机构","申请渠道","服务热线")
+          
+          def extract_json(value: Any):
+              text=re.sub(r"```(?:json)?|```","",str(value or ""),flags=re.I).strip(); starts=[x for x in (text.find("{"),text.find("[")) if x>=0]
+              if not starts:return {}
+              start=min(starts);stack=[];quote=None;escaped=False;pairs={"}":"{","]":"["}
+              for i in range(start,len(text)):
+                  ch=text[i]
+                  if quote:
+                      if escaped:escaped=False
+                      elif ch=="\\":escaped=True
+                      elif ch==quote:quote=None
+                      continue
+                  if ch in ('"',"'"):quote=ch
+                  elif ch in "{[":stack.append(ch)
+                  elif ch in "}]":
+                      if not stack or stack[-1]!=pairs[ch]:return {}
+                      stack.pop()
+                      if not stack:
+                          try:return json.loads(text[start:i+1])
+                          except Exception:return {}
+              return {}
+          
+          def norm(v: Any)->str:return re.sub(r"[^0-9a-z\u4e00-\u9fff]+","",str(v or "").lower())
+          def contains(name: str,text: str)->bool:
+              name=str(name or "").strip();text=str(text or "")
+              if not name:return False
+              if re.fullmatch(r"[A-Za-z0-9 ._+&-]+",name):
+                  return re.search(r"(?<![A-Za-z0-9])"+re.escape(name)+r"(?![A-Za-z0-9])",text,flags=re.I) is not None
+              return norm(name) in norm(text)
+          def looks_invalid(name: str)->bool:
+              s=str(name or "").strip();low=s.lower().replace(" ","")
+              if re.fullmatch(r"p\s*\d+(?:\.\d+)?(?:\s*[/、-]\s*p?\d+(?:\.\d+)?)*",s,flags=re.I):return True
+              if any(x in low for x in FORBIDDEN_HINTS):return True
+              if norm(s) in {norm(x) for x in ("LOGO设计","商标设计","口才培训","专利申报服务","线上自助申请渠道")}:return True
+              return False
+          def safe_tags(value):
+              if isinstance(value,str):value=re.split(r"[,，、;；|]+",value)
+              if not isinstance(value,list):return []
+              out=[]
+              for x in value:
+                  x=re.sub(r"\s+"," ",str(x or "")).strip()[:24]
+                  if x and x not in out:out.append(x)
+              return out[:5]
+          def explicit_false(value)->bool:
+              return value is False or (isinstance(value,str) and value.strip().lower() in {"false","0","no","否"})
+          def as_bool(value)->bool:
+              if isinstance(value,bool):return value
+              if isinstance(value,(int,float)):return value!=0
+              return str(value or "").strip().lower() in {"true","1","yes","是"}
+          def target_alias_match(alias: str, name: str)->bool:
+              """目标实体匹配必须是精确或足够完整的产品/品牌别名；拒绝‘360’等歧义短词的子串命中。"""
+              a=norm(alias); n=norm(name)
+              if not a or not n:return False
+              if a==n:return True
+              if len(a)<4:return False
+              # 允许声明别名与同一产品的常见规格/人群后缀互相命中（如“香奈儿蔚蓝男士”
+              # 与“香奈儿蔚蓝”），但不允许把“360安全浏览器”扩成兄弟产品“360安全浏览器X”。
+              qualifiers=("男士","女士","香水","系列","经典","同名","edt","edp")
+              if a in n:
+                  return n[len(a):] in qualifiers
+              if n in a:
+                  return a[len(n):] in qualifiers
+              return False
+          def explicit_position(item):
+              line=str(item.get("line_text") or item.get("text") or "")
+              line=re.sub(r"\\([.#*+\-])",r"\1",line)
+              prefix=re.sub(r"^\s{0,3}#{1,6}\s*","",line).strip()
+              patterns=(r"^(?:Top|No\.?)[ \t]*([1-9]\d*)\b",r"^第[ \t]*([1-9]\d*)[ \t]*(?:名|位)",r"^([1-9]\d*)[ \t]*[.、)）:：]")
+              for pattern in patterns:
+                  m=re.search(pattern,prefix,flags=re.I)
+                  if m:return int(m.group(1))
+              circled="①②③④⑤⑥⑦⑧⑨⑩"
+              if prefix and prefix[0] in circled:return circled.index(prefix[0])+1
+              chinese={"一":1,"二":2,"三":3,"四":4,"五":5,"六":6,"七":7,"八":8,"九":9,"十":10}
+              m=re.match(r"^([一二三四五六七八九十])[、.．:：]",prefix)
+              return chinese.get(m.group(1),0) if m else 0
+          def product_key(value: Any)->str:
+              """同一产品的括号说明、英文香名和EDT/EDP后缀不应生成重复竞品。
+              不删除核心中文产品名，避免把兄弟产品合并。"""
+              s=str(value or "")
+              s=re.sub(r"[（(][^）)]*[）)]","",s)
+              s=re.sub(r"(?i)(?:^|\s)(?:edt|edp)(?:\s|$)"," ",s)
+              return norm(s)
+          
+          TARGET_QUERY_NOISE=("推荐","排行榜","排名","哪个好","哪家","怎么样","怎么选","价格","多少钱","官网","品牌","公司","厂家","服务商","男士","女士","香水","产品","测评","评测","好用吗","值得买吗","选择","分级","哪款")
+          
+          def derive_target_terms(query: Any, answer_text: Any, aliases: list)->list:
+              """补齐公司法定brand_name对应的正文产品词，解决“香奈儿(中国)贸易有限公司”
+              与“香奈儿蔚蓝”粒度不一致。只从声明别名核心、query和answer_raw可验证文本推导。"""
+              q=re.sub(r"\s+"," ",str(query or "")).strip(); answer=str(answer_text or "")
+              terms=[];seen={norm(x) for x in aliases if norm(x)}
+              cores=[]
+              for alias in aliases:
+                  a=str(alias or "").strip()
+                  core=re.sub(r"(?:中国)?贸易有限公司$|贸易有限公司$|有限公司$|公司$|集团$|贸易$","",a).strip()
+                  if len(norm(core))>=2 and norm(core) not in {norm(x) for x in cores}:cores.append(core)
+              def add(value, kind):
+                  value=re.sub(r"\s+"," ",str(value or "")).strip(" ，,。；;：:")
+                  if len(norm(value))<4 or norm(value) in seen:return
+                  if contains(value,answer):terms.append({"alias":value,"type":kind,"confidence":0.98,"source":"query_answer"});seen.add(norm(value))
+              compact_q=norm(q)
+              query_candidate=q
+              for noise in sorted(TARGET_QUERY_NOISE,key=len,reverse=True):query_candidate=query_candidate.replace(noise,"")
+              query_candidate=re.sub(r"[\s、，,：:？！!?（）()]+","",query_candidate)
+              for core in cores:
+                  if norm(core) in compact_q and len(norm(query_candidate))>=len(norm(core))+2:add(query_candidate,"query_product_alias")
+                  # 正文中紧接品牌核心的产品词是已展示的独立产品名，不是模型猜测。
+                  if norm(core):
+                      pattern=re.escape(core)+r"[\u4e00-\u9fffA-Za-z0-9]{1,10}"
+                      for m in re.finditer(pattern,answer):
+                          phrase=m.group(0)
+                          if len(norm(phrase))>=len(norm(core))+2:add(phrase,"answer_product_alias")
+              return terms
+          
+          def main(llm_output: str, sentence_catalog: str, answer_text: str, query: str, target_alias_strings: str, company_fallback_alias_strings: str = "[]") -> dict:
+              data=extract_json(llm_output)
+              # 兼容V2.2紧凑协议，同时保留对旧协议的解析能力。
+              if isinstance(data,dict):
+                  compact=data.get("entities",[])
+                  expanded=[]
+                  for idx,e in enumerate(compact if isinstance(compact,list) else [],1):
+                      if not isinstance(e,dict):continue
+                      if "canonical_name" in e or "entity_type" in e:
+                          expanded.append(e);continue
+                      eligible=e.get("eligible",True)
+                      expanded.append({
+                          "entity_id":str(e.get("entity_id") or f"E{idx:03d}"),
+                          "surface":e.get("surface",e.get("name","")),
+                          "canonical_name":e.get("canonical",e.get("surface","")),
+                          "parent_brand":e.get("parent",e.get("canonical",e.get("surface",""))),
+                          "entity_type":e.get("type","brand"),
+                          "competition_role":e.get("role","competitor"),
+                          "target_relation":e.get("target","none"),
+                          "rank_membership":e.get("membership","ordered_choice"),
+                          "rank_anchor_sentence_id":e.get("anchor",""),
+                          "module_id":str(e.get("module") or "M1"),"local_position":0,
+                          "eligible_for_ranking":eligible,"answers_user_choice":eligible,
+                          "is_named_entity":eligible,"is_independent_entity":eligible,
+                          "sentence_ids":[]})
+                  data["entities"]=expanded
+                  ordered=data.get("order",[])
+                  if isinstance(ordered,list) and ordered:
+                      rows=[]
+                      for pos,item in enumerate(ordered,1):
+                          name=item.get("name",item.get("surface","")) if isinstance(item,dict) else item
+                          if str(name or "").strip():rows.append({"name":str(name).strip(),"pos":pos})
+                      data["ranking_analysis"]={"all_brands_in_ranking":rows}
+              try:catalog=json.loads(sentence_catalog or "[]")
+              except Exception:catalog=[]
+              smap={str(x.get("id")):x for x in catalog if isinstance(x,dict) and x.get("id")};order={sid:i for i,sid in enumerate(smap)}
+              source_background=set()
+              reference_count=0;reference_intro=-1
+              for sid,item in smap.items():
+                  text=str(item.get("text") or "")
+                  m=re.search(r"搜索.{0,30}参考\s*([1-9]\d*)\s*篇",text)
+                  if m:
+                      reference_count=int(m.group(1));reference_intro=order.get(sid,-1);break
+              if reference_count>0 and reference_intro>=0:
+                  last_candidates=[]
+                  for sid,item in smap.items():
+                      idx=order.get(sid,-1)
+                      if idx>reference_intro and explicit_position(item)==reference_count:last_candidates.append((idx,sid,item))
+                  if last_candidates:
+                      last_idx,last_sid,last_item=min(last_candidates,key=lambda x:x[0])
+                      last_line=int(last_item.get("line_no",0) or 0)
+                      marker_only=bool(re.fullmatch(r"\s*"+str(reference_count)+r"[.、)）:：]?\s*",str(last_item.get("text") or "")))
+                      end_idx=last_idx
+                      if marker_only:
+                          following=[order.get(sid,99999) for sid,item in smap.items() if int(item.get("line_no",0) or 0)==last_line+1]
+                          if following:end_idx=max(following)
+                      source_background.update(sid for sid in smap if reference_intro<=order.get(sid,-1)<=end_idx)
+              video_start=min((order.get(sid,99999) for sid,item in smap.items() if re.fullmatch(r"\s*相关视频\s*",str(item.get("text") or ""))),default=99999)
+              if video_start<99999:source_background.update(sid for sid in smap if order.get(sid,99999)>=video_start)
+              try:target_aliases=json.loads(target_alias_strings or "[]")
+              except Exception:target_aliases=[]
+              target_aliases=[str(x).strip() for x in target_aliases if str(x).strip()]
+              derived_target_terms=derive_target_terms(query, answer_text, target_aliases)
+              target_aliases=list(dict.fromkeys(target_aliases + [x.get("alias") for x in derived_target_terms if x.get("alias")]))
+              # 有明确的query产品词时，公司核心词只能证明所有权，不能把同母品牌的
+              # EDT/EDP/Parfum或兄弟产品全部升级成目标实体。
+              has_query_product_alias=bool(derived_target_terms)
+              try:company_fallback_aliases=json.loads(company_fallback_alias_strings or "[]")
+              except Exception:company_fallback_aliases=[]
+              company_fallback_aliases=[str(x).strip() for x in company_fallback_aliases if str(x).strip()]
+              candidates=[]
+              requested=as_bool(data.get("is_ranking")) if isinstance(data,dict) else False
+              structure=str(data.get("structure_type") or "no_ranking") if isinstance(data,dict) else "no_ranking"
+              raw=data.get("entities",[]) if isinstance(data,dict) else []
+              if not isinstance(raw,list):raw=[]
+              raw=[x for x in raw if isinstance(x,dict)]
+              # 高召回兜底：模型偶尔在ranking_analysis列出实体却漏出entities。
+              # 仅补录能够在answer_raw证据目录中逐字检索到的名称，绝不使用comps_list制造实体。
+              ranking_analysis=data.get("ranking_analysis",{}) if isinstance(data,dict) else {}
+              ranked_rows=ranking_analysis.get("all_brands_in_ranking",[]) if isinstance(ranking_analysis,dict) else []
+              if not isinstance(ranked_rows,list):ranked_rows=[]
+              def declared_position(names):
+                  found=[]
+                  for row in ranked_rows:
+                      if isinstance(row,str):rname=row;pos=0
+                      elif isinstance(row,dict):rname=str(row.get("name") or row.get("surface") or row.get("brand") or "");pos=row.get("pos",0)
+                      else:continue
+                      if not norm(rname) or not any(contains(rname,n) or contains(n,rname) for n in names if norm(n)):continue
+                      try:p=int(pos)
+                      except Exception:p=0
+                      if p>0:found.append(p)
+                  return min(found) if found else 0
+              existing={norm(x.get("surface") or x.get("name") or x.get("canonical_name")) for x in raw}
+              for ridx,row in enumerate(ranked_rows,1):
+                  if isinstance(row,str):name=row
+                  elif isinstance(row,dict):name=str(row.get("name") or row.get("surface") or row.get("brand") or "")
+                  else:continue
+                  name=re.sub(r"\s+"," ",name).strip()[:120]
+                  if len(norm(name))<2 or norm(name) in existing or looks_invalid(name):continue
+                  evidence=[sid for sid,item in smap.items() if contains(name,item.get("text",""))]
+                  if not evidence:continue
+                  raw.append({"entity_id":f"ER{ridx:03d}","surface":name,"canonical_name":name,"parent_brand":name,
+                              "entity_type":"brand","competition_role":"recommended","rank_membership":"ordered_choice",
+                              "rank_anchor_sentence_id":evidence[0],"sentence_ids":evidence,"_recovered_from_ranking_analysis":True})
+                  existing.add(norm(name))
+              for idx,e in enumerate(raw[:100],1):
+                  if not isinstance(e,dict):continue
+                  surface=re.sub(r"\s+"," ",str(e.get("surface") or e.get("name") or "")).strip()[:120]
+                  canonical=re.sub(r"\s+"," ",str(e.get("canonical_name") or surface)).strip()[:120]
+                  parent=re.sub(r"\s+"," ",str(e.get("parent_brand") or canonical)).strip()[:120]
+                  etype=str(e.get("entity_type") or "").strip()
+                  if not etype:etype="brand"
+                  role=str(e.get("competition_role") or "").strip()
+                  if not role and structure!="no_ranking":role="recommended"
+                  ids=e.get("sentence_ids",[]);ids=[ids] if isinstance(ids,str) else ids;ids=list(dict.fromkeys(str(x) for x in ids if str(x) in smap))
+                  # 不再依赖LLM完整返回sentence_ids：对surface/canonical/parent执行全文逐句搜索并补齐。
+                  search_names=[surface,canonical] if etype=="independent_product" else [surface,canonical,parent]
+                  recovered=[sid for sid,item in smap.items() if sid not in source_background and any(
+                      contains(n,item.get("text","") )
+                      for n in search_names if len(norm(n))>=2)]
+                  direct=list(dict.fromkeys(ids+recovered))
+                  direct=[sid for sid in direct if sid not in source_background and any(
+                      contains(n,smap[sid].get("text","") )
+                      for n in search_names if len(norm(n))>=2)]
+                  membership=str(e.get("rank_membership") or "").strip()
+                  if not membership and structure!="no_ranking":membership="ordered_choice"
+                  relation=str(e.get("target_relation") or "none").strip()
+                  # 布尔字段使用三态容错：只有明确false才否决；字段缺失由原文证据、类型和角色兜底判断。
+                  denied=any(explicit_false(e.get(k)) for k in ("answers_user_choice","eligible_for_ranking","is_named_entity","is_independent_entity"))
+                  # comparison主对象可能被LLM标成competition_role=none；只要它明确是ordered_choice且其余门禁通过，不能因此删除。
+                  role_ok=role in ALLOWED_ROLES or (structure=="comparison" and membership=="ordered_choice" and role in {"","none"})
+                  eligible=not denied and membership in ALLOWED_MEMBERSHIPS and etype in ALLOWED_TYPES and role_ok and not looks_invalid(surface)
+                  if not eligible or not direct or len(norm(canonical))<2:continue
+                  anchor=str(e.get("rank_anchor_sentence_id") or "")
+                  structural=[x for x in direct if str(smap[x].get("block_type") or "") in {"heading","table_row","list_item"}]
+                  sid=anchor if anchor in direct else min(structural or direct,key=lambda x:order.get(x,99999));text=str(smap[sid].get("text",""));positions=[p for p in (text.lower().find(surface.lower()),text.lower().find(canonical.lower())) if p>=0]
+                  offset=min(positions) if positions else 9999
+                  explicit=explicit_position(smap[sid])
+                  try:local=int(e.get("local_position",0))
+                  except Exception:local=0
+                  # 预算参考、送礼公式、快速选型/提醒等后置板块只重复已有产品，
+                  # 不能把其中首次出现的名称升级成新的排名实体（例如“万宝龙传奇”）。
+                  anchor_heading=str(smap[sid].get("context_heading") or "")
+                  supplement_heading=bool(re.search(r"预算参考|预算档|送礼小建议|实用小贴士|快速选型|选购快速建议|重要提醒|小提示|避雷|总结|结论",anchor_heading))
+                  if supplement_heading and membership=="ordered_choice":
+                      membership="comparison_only";role="comparison";explicit=0;local=0
+                  entity_names=[surface,canonical,parent]
+                  primary_names=[surface,canonical]
+                  alias_target=any(target_alias_match(t,n) for t in target_aliases if norm(t) for n in primary_names if norm(n))
+                  if not alias_target and company_fallback_aliases and not has_query_product_alias:
+                      for fallback in company_fallback_aliases:
+                          fb=norm(fallback)
+                          if not fb:continue
+                          if norm(parent)==fb or any(norm(name)==fb or norm(name).startswith(fb) for name in primary_names):
+                              alias_target=True;break
+                  # 母品牌只能在目标别名与parent完全一致时命中；禁止“香奈儿(中国)贸易有限公司”
+                  # 通过模糊子串把香奈儿的所有兄弟产品都升级为目标。产品/二级品牌则允许
+                  # 声明的完整别名与surface/canonical存在包含关系（如“香奈儿蔚蓝男士”→“香奈儿蔚蓝”）。
+                  if not alias_target and norm(parent):
+                      alias_target=any(norm(t)==norm(parent) for t in target_aliases if norm(t))
+                  semantic_relation=relation in {"exact_target","target_product","target_subbrand","target_service"}
+                  # target_relation是LLM辅助字段，不能绕过声明别名粒度。
+                  # 例如目标为“360安全浏览器”时，“360极速浏览器”的target_product
+                  # 必须降回普通竞品；只有正文实体自身与目标别名精确/可靠匹配才可成为目标。
+                  semantic_target=semantic_relation and alias_target
+                  if semantic_relation and not alias_target:relation="none"
+                  # LLM经常已经识别到目标实体，但target字段保守地留为none。只要声明别名
+                  # 与该独立实体命中，就把关系补成exact_target，供4a使用；这不是新增实体，
+                  # 也不会把比较宾语升级，因为comparison_only在eligible门禁后不会进入此处。
+                  if alias_target and relation=="none":relation="exact_target"
+                  is_target=alias_target
+                  candidates.append({"entity_id":str(e.get("entity_id") or f"E{idx:03d}"),"surface":surface,"canonical_name":canonical,"parent_brand":parent,
+                                     "entity_type":etype,"competition_role":role,"target_relation":relation,"is_target_entity":is_target,
+                                     "rank_membership":membership,"rank_anchor_sentence_id":sid,
+                                     "module_id":str(e.get("module_id") or "M1"),"local_position":max(0,local),
+                                     "sentence_ids":direct,"_explicit_rank":explicit,"_declared_rank":declared_position(entity_names),
+                                     "_order":order.get(sid,99999),"_offset":offset})
+              # v7单点修复：全局LLM可能识别到目标品牌，却把跨模块中的目标误标为background/不合格，
+              # 导致后续4a虽然brand_detected=true但只能复制到rank_pos=0。
+              # 当目标别名直接出现在“带明确序号的标题/列表/表格实体行”时，以原文证据确定性补入/升级为ordered_choice。
+              def target_line_match(alias,unit):
+                  a=norm(alias);u=norm(unit)
+                  if not a or not u or a not in u:return False
+                  qualifiers=("男士","女士","香水","系列","经典","同名","edt","edp")
+                  start=u.find(a);suffix=u[start+len(a):]
+                  # 行首序号/标点属于前缀，不影响命中；目标后若紧接X等兄弟产品后缀则拒绝。
+                  return not suffix or any(suffix.startswith(q) for q in qualifiers)
+              target_rank_hits=[]
+              for sid,item in smap.items():
+                  if sid in source_background or explicit_position(item)<=0:continue
+                  unit=str(item.get("text") or "")
+                  matched_aliases=[str(a) for a in target_aliases if len(norm(a))>=4 and target_line_match(str(a),unit)]
+                  if not matched_aliases and str(item.get("block_type") or "") in {"heading","table_row","list_item"}:
+                      matched_aliases=[a for a in company_fallback_aliases if norm(a) and norm(a) in norm(unit)]
+                  if matched_aliases:
+                      matched_aliases.sort(key=lambda a:len(norm(a)),reverse=True)
+                      target_rank_hits.append((order.get(sid,99999),sid,matched_aliases[0]))
+              if target_rank_hits:
+                  _,target_sid,target_alias=min(target_rank_hits,key=lambda x:(x[0],-len(norm(x[2]))))
+                  existing_target=next((x for x in candidates if x.get("is_target_entity")),None)
+                  if existing_target:
+                      existing_target["rank_membership"]="ordered_choice"
+                      existing_target["competition_role"]="recommended"
+                      existing_target["rank_anchor_sentence_id"]=target_sid
+                      existing_target["sentence_ids"]=list(dict.fromkeys(existing_target.get("sentence_ids",[])+[target_sid]))
+                      existing_target["_explicit_rank"]=explicit_position(smap[target_sid])
+                      existing_target["_order"]=order.get(target_sid,99999)
+                      existing_target["_offset"]=str(smap[target_sid].get("text","")).lower().find(target_alias.lower())
+                  else:
+                      candidates.append({"entity_id":"ETARGET","surface":target_alias,"canonical_name":target_alias,"parent_brand":target_alias,
+                                         "entity_type":"institution","competition_role":"recommended","target_relation":"exact_target","is_target_entity":True,
+                                         "rank_membership":"ordered_choice","rank_anchor_sentence_id":target_sid,"module_id":"TARGET_RECOVERY","local_position":0,
+                                         "sentence_ids":[target_sid],"_explicit_rank":explicit_position(smap[target_sid]),"_declared_rank":declared_position([target_alias]),
+                                         "_order":order.get(target_sid,99999),"_offset":0})
+              # 单一品牌/公司详评没有实体序号时，query本身若明确包含目标完整品牌，补建independent_subject。
+              # 这只在上游尚未建立目标实体时触发，且要求正文存在同一完整别名；不会把比较宾语或视频标签升级为目标。
+              if not any(e.get("is_target_entity") and e.get("rank_membership") in {"ordered_choice","independent_subject"} for e in candidates if isinstance(e,dict)):
+                  query_target=any(target_alias_match(str(a),query) for a in target_aliases if norm(a))
+                  if query_target:
+                      subject_hits=[]
+                      for sid,item in smap.items():
+                          if sid in source_background:continue
+                          unit=str(item.get("text") or "")
+                          aliases=[str(a) for a in target_aliases if len(norm(a))>=4 and target_line_match(str(a),unit)]
+                          if not aliases:continue
+                          structural=str(item.get("block_type") or "") in {"heading","paragraph"} or any(contains(a,str(item.get("context_heading") or "")) for a in aliases)
+                          if structural:subject_hits.append((order.get(sid,99999),sid,max(aliases,key=lambda a:len(norm(a)))))
+                      heading_hits=[x for x in subject_hits if str(smap.get(x[1],{}).get("block_type") or "")=="heading" or any(contains(x[2],str(smap.get(x[1],{}).get("context_heading") or "")) for _ in [0])]
+                      mention_total=len(subject_hits)
+                      # 无标题主体时至少需要多处正文重复，防止“比A便宜于目标”单句比较宾语被升级为independent_subject。
+                      if heading_hits or (len(subject_hits)>=2 and mention_total>=2):
+                          _,subject_sid,subject_alias=min(heading_hits or subject_hits,key=lambda x:(x[0],-len(norm(x[2]))))
+                          existing_target=next((e for e in candidates if e.get("is_target_entity") or any(target_alias_match(str(a),str(e.get("surface") or "")) for a in target_aliases if norm(a))),None)
+                          if existing_target:
+                              existing_target["surface"]=subject_alias;existing_target["canonical_name"]=subject_alias;existing_target["parent_brand"]=subject_alias
+                              existing_target["competition_role"]="recommended";existing_target["target_relation"]="exact_target";existing_target["is_target_entity"]=True
+                              existing_target["rank_membership"]="independent_subject";existing_target["rank_anchor_sentence_id"]=subject_sid;existing_target["module_id"]="TARGET_SUBJECT";existing_target["local_position"]=0
+                              existing_target["sentence_ids"]=list(dict.fromkeys(existing_target.get("sentence_ids",[])+[subject_sid]));existing_target["_explicit_rank"]=0;existing_target["_declared_rank"]=0;existing_target["_order"]=order.get(subject_sid,99999);existing_target["_offset"]=0
+                          else:
+                              candidates.append({"entity_id":"ETARGET","surface":subject_alias,"canonical_name":subject_alias,"parent_brand":subject_alias,
+                                                 "entity_type":"brand","competition_role":"recommended","target_relation":"exact_target","is_target_entity":True,
+                                                 "rank_membership":"independent_subject","rank_anchor_sentence_id":subject_sid,"module_id":"TARGET_SUBJECT","local_position":0,
+                                                 "sentence_ids":[subject_sid],"_explicit_rank":0,"_declared_rank":0,
+                                                 "_order":order.get(subject_sid,99999),"_offset":0})
+              # 公司/品牌按主体去重；可独立选择的产品按标准产品名去重，避免P5兄弟产品被母品牌合并。
+              candidates.sort(key=lambda x:(x["_order"],x["_offset"]))
+              unique=[];seen=set()
+              for e in candidates:
+                  module=str(e.get("module_id") or "M1")
+                  if e.get("entity_type")=="independent_product":key="product:"+product_key(e.get("canonical_name") or e.get("surface"))+":"+module
+                  else:key="entity:"+norm(e.get("parent_brand") or e.get("canonical_name"))+":"+module
+                  if not key or key in seen:continue
+                  seen.add(key);unique.append(e)
+              # 非“核心对比”结构中，若产品只在其他实体描述里的比较宾语位置出现，确定性降级为comparison_only。
+              # 例如“360极速X内存优化比老360安全浏览器好”不能把360安全浏览器变成独立推荐项。
+              comparison_prefix=re.compile(r"(?:比(?:老|旧|新版|老版)?|优于|胜过|超过|超越|领先于|相较于|相比于|对比)\s*$",re.I)
+              for e in unique:
+                  if structure=="comparison" or e.get("entity_type")!="independent_product" or e.get("rank_membership")!="ordered_choice":continue
+                  names=[str(e.get("surface") or ""),str(e.get("canonical_name") or "")]
+                  exact_units=[];has_independent_anchor=False
+                  for sid in e.get("sentence_ids",[]):
+                      item=smap.get(sid,{});unit=str(item.get("text") or "")
+                      matched=[name for name in names if len(norm(name))>=2 and contains(name,unit)]
+                      if not matched:continue
+                      exact_units.append((unit,matched))
+                      structural=str(item.get("block_type") or "") in {"heading","table_row","list_item"} or explicit_position(item)>0
+                      starts=any(re.match(r"^\s*"+re.escape(name)+r"(?:\s|[（(:：]|$)",unit,re.I) for name in matched)
+                      if structural or starts:has_independent_anchor=True
+                  if not exact_units or has_independent_anchor:continue
+                  object_only=True
+                  for unit,matched in exact_units:
+                      unit_object=False
+                      for name in matched:
+                          for m in re.finditer(re.escape(name),unit,re.I):
+                              before=unit[max(0,m.start()-12):m.start()]
+                              after=unit[m.end():m.end()+4]
+                              if comparison_prefix.search(before) or re.match(r"\s*(?:相比|比较)",after):unit_object=True
+                      if not unit_object:object_only=False;break
+                  if object_only:
+                      e["rank_membership"]="comparison_only";e["competition_role"]="comparison";e["_explicit_rank"]=0;e["local_position"]=0
+              # 对比结构中，模型若把主比较对象误标comparison_only，而没有足够ordered_choice，则按全文顺序提升为核心成员。
+              ordered=[e for e in unique if e.get("rank_membership")=="ordered_choice"]
+              if structure=="comparison" and len(ordered)<2:
+                  for e in unique:
+                      if e.get("rank_membership")=="comparison_only" and e.get("competition_role")=="comparison":e["rank_membership"]="ordered_choice"
+              # 正式推荐分类表中的品牌实例属于可执行推荐，不应因“如A、B”写法被永久降级为
+              # comparison_only。仅对已校验目标实体生效，并要求：
+              # 1) 上游确认存在排名结构；2) 目标别名直接出现在正文的表格/列表/推荐标题锚点；
+              # 3) 当前句不是比较、背景或来源区。这样“区域深耕机构（如龙文教育、天津学信教育）”
+              # 可按该分类在模块内取得名次，而“优于龙文教育/与龙文教育相比”等比较宾语仍保持原状。
+              # 通用推荐分类上下文，不绑定教育行业；覆盖机构、品牌、产品、平台、服务商、方案等。
+              recommendation_markers=("推荐","选购","选型","榜单","排行","排名","哪个好","哪家","分类","类别","类型","常见机构","机构特点","品牌特点","产品对比","方案","品牌","机构","平台","服务商","供应商","产品线","可选","适合")
+              example_markers=("如","例如","包括","代表","典型","常见有","可选","首选","推荐")
+              forbidden_category_markers=("客户","合作方","合作伙伴","供应商名单","案例","来源","资料","媒体报道","参考资料","比较","对比","相比","优于","胜过","超过","不如","低于","少于","差于")
+              comparison_markers=("相比","比较","对比","优于","胜过","超过","不如","低于","少于","差于")
+              query_recommendation_intent=bool(re.search(r"推荐|排行|排名|哪个好|哪家|怎么选|选购|机构|品牌",str(query or "")))
+              def category_recommendation_anchor(e):
+                  if not isinstance(e,dict) or e.get("rank_membership")!="comparison_only":return None
+                  if not requested and not query_recommendation_intent:return None
+                  names=[str(e.get("surface") or ""),str(e.get("canonical_name") or "")]
+                  names=[x for x in names if len(norm(x))>=2]
+                  if not names:return None
+                  hits=[]
+                  for sid in e.get("sentence_ids",[]):
+                      item=smap.get(str(sid),{});unit=str(item.get("text") or "")
+                      if not unit or str(sid) in source_background:continue
+                      # 仅在当前最小证据单元内检索实体，避免压缩为单行的answer_raw发生跨项串联。
+                      scope_text=unit
+                      block=str(item.get("block_type") or "")
+                      structural=block in {"heading","table_row","list_item"} or "|" in scope_text
+                      if not structural:continue
+                      if not any(contains(name,scope_text) for name in names):continue
+                      context=" ".join((scope_text,str(item.get("context_heading") or "")))
+                      if any(marker in context for marker in forbidden_category_markers):continue
+                      has_category=any(marker in context for marker in recommendation_markers)
+                      has_example=any(marker in context for marker in example_markers)
+                      if not (has_category and has_example):continue
+                      hits.append((order.get(str(sid),99999),str(sid),scope_text))
+                  return min(hits,key=lambda x:x[0]) if hits else None
+              for e in unique:
+                  hit=category_recommendation_anchor(e)
+                  if not hit:continue
+                  _,sid,unit=hit
+                  e["rank_membership"]="ordered_choice";e["competition_role"]="recommended"
+                  e["rank_anchor_sentence_id"]=sid;e["local_position"]=0
+                  e["_explicit_rank"]=explicit_position(smap[sid]);e["_order"]=order.get(sid,99999)
+                  e["_offset"]=min([p for p in (unit.lower().find(str(e.get("surface") or "").lower()),unit.lower().find(str(e.get("canonical_name") or "").lower())) if p>=0] or [9999])
+              # 目标实体漏出时的通用恢复：只从query推荐意图 + 正式推荐分类行 + 目标完整别名
+              # 三重可验证条件建ETARGET，不从正文任意品牌名扩张，避免把普通背景/比较宾语升级。
+              if query_recommendation_intent:
+                  target_alias_candidates=[str(a).strip() for a in target_aliases if len(norm(a))>=2]
+                  existing_target=next((e for e in unique if e.get("is_target_entity")),None)
+                  for sid,item in smap.items():
+                      if sid in source_background:continue
+                      scope_text=str(item.get("text") or "")
+                      context=" ".join((scope_text,str(item.get("context_heading") or "")))
+                      if not any(contains(a,scope_text) for a in target_alias_candidates):continue
+                      if not any(marker in context for marker in recommendation_markers):continue
+                      if not any(marker in context for marker in example_markers):continue
+                      if any(marker in context for marker in forbidden_category_markers):continue
+                      matched_alias=max((a for a in target_alias_candidates if contains(a,scope_text)),key=lambda a:len(norm(a)),default="")
+                      if not matched_alias:continue
+                      if existing_target:
+                          existing_target["surface"]=matched_alias;existing_target["canonical_name"]=matched_alias;existing_target["parent_brand"]=matched_alias
+                          existing_target["entity_type"]="brand";existing_target["competition_role"]="recommended";existing_target["target_relation"]="exact_target";existing_target["is_target_entity"]=True
+                          existing_target["rank_membership"]="ordered_choice";existing_target["rank_anchor_sentence_id"]=str(sid);existing_target["sentence_ids"]=list(dict.fromkeys(existing_target.get("sentence_ids",[])+[str(sid)]));existing_target["_explicit_rank"]=explicit_position(item);existing_target["_order"]=order.get(str(sid),99999);existing_target["_offset"]=scope_text.lower().find(matched_alias.lower())
+                      else:
+                          existing_target={"entity_id":"ETARGET","surface":matched_alias,"canonical_name":matched_alias,"parent_brand":matched_alias,"entity_type":"brand","competition_role":"recommended","target_relation":"exact_target","is_target_entity":True,"rank_membership":"ordered_choice","rank_anchor_sentence_id":str(sid),"module_id":"M1","local_position":0,"sentence_ids":[str(sid)],"_explicit_rank":explicit_position(item),"_declared_rank":0,"_order":order.get(str(sid),99999),"_offset":scope_text.lower().find(matched_alias.lower())}
+                          unique.append(existing_target)
+                      break
+              # 分榜确定性恢复：节点2会把“需求/场景/人群/预算/风格/用途 × 推荐对象”类
+              # 并列表格的每个数据行标为独立分榜。各行没有层级关系，必须分别从1开始；
+              # 不能把整张表按品牌首次出现顺序压成一张总榜。
+              sublist_rows=[(sid,item) for sid,item in smap.items() if isinstance(item,dict)
+                            and item.get("is_sublist") is True and isinstance(item.get("sublist_items"),list)
+                            and len(item.get("sublist_items"))>=2]
+              sublist_entities=[];valid_sublist_modules=set()
+              for sid,row in sublist_rows:
+                  table_id=str(row.get("table_id") or "T")
+                  row_id=str(row.get("table_row_id") or sid)
+                  module=f"SUBLIST:{table_id}:{row_id}"
+                  label=str(row.get("sublist_label") or "").strip()
+                  items=[str(x).strip() for x in row.get("sublist_items",[]) if str(x).strip()]
+                  ranks=row.get("sublist_ranks",[]) if isinstance(row.get("sublist_ranks"),list) else []
+                  if len(items)<2:continue
+                  valid_sublist_modules.add(module)
+                  for pos,item_name in enumerate(items,1):
+                      item_norm=norm(item_name)
+                      matches=[]
+                      for e in unique:
+                          if not isinstance(e,dict):continue
+                          names=[str(e.get("surface") or ""),str(e.get("canonical_name") or "")]
+                          if any(norm(name)==item_norm for name in names if norm(name)):matches.append(e)
+                      alias_target=any(target_alias_match(str(a),item_name) for a in target_aliases if norm(a))
+                      if matches:
+                          clone=dict(matches[0]);clone["sentence_ids"]=list(matches[0].get("sentence_ids",[]))
+                      else:
+                          clone={"entity_id":f"ESUB_{table_id}_{row_id}_{pos}","surface":item_name,
+                                 "canonical_name":item_name,"parent_brand":item_name,"entity_type":"brand",
+                                 "competition_role":"recommended","target_relation":"none","is_target_entity":False,
+                                 "sentence_ids":[]}
+                      if alias_target:
+                          clone["target_relation"]="exact_target";clone["is_target_entity"]=True
+                      clone["entity_id"]=str(clone.get("entity_id") or "ESUB")+f"_{table_id}_{row_id}_{pos}"
+                      clone["surface"]=item_name;clone["canonical_name"]=item_name
+                      if not str(clone.get("parent_brand") or "").strip():clone["parent_brand"]=item_name
+                      clone["competition_role"]="recommended";clone["rank_membership"]="ordered_choice"
+                      clone["rank_anchor_sentence_id"]=sid;clone["module_id"]=module;clone["sublist_label"]=label
+                      clone["sentence_ids"]=list(dict.fromkeys(clone.get("sentence_ids",[])+[sid]))
+                      # 单元格内有显式名次时优先；否则物理顺序就是该分榜名次。
+                      try:declared_rank=int(ranks[pos-1]) if pos-1<len(ranks) else 0
+                      except Exception:declared_rank=0
+                      final_rank=declared_rank if declared_rank>0 else pos
+                      clone["_explicit_rank"]=final_rank;clone["_declared_rank"]=final_rank
+                      clone["_order"]=order.get(sid,99999);clone["_offset"]=pos
+                      sublist_entities.append(clone)
+              if valid_sublist_modules:
+                  sublist_sids={sid for sid,_ in sublist_rows}
+                  # 同一表格行此前可能被LLM或通用恢复放进M1；清掉这个伪总榜身份，避免
+                  # 某品牌因M1中只有自己而错误取得第1名。随后只保留按行生成的分榜副本。
+                  for e in unique:
+                      if not isinstance(e,dict):continue
+                      if str(e.get("rank_anchor_sentence_id") or "") in sublist_sids and not str(e.get("module_id") or "").startswith("SUBLIST:"):
+                          e["rank_membership"]="comparison_only";e["competition_role"]="comparison"
+                          e["_explicit_rank"]=0;e["local_position"]=0
+                  unique.extend(sublist_entities)
+                  requested=True
+                  structure="parallel_modules"
+              # 若上游LLM把正式推荐分类误报成no_ranking，只要query本身是推荐意图，且
+              # 分类行中存在至少两个可执行品牌实例，确定性恢复排名结构；不会影响单主体详评。
+              query_recommendation_intent=bool(re.search(r"推荐|排行|排名|哪个好|哪家|怎么选|选购|机构|品牌",str(query or "")))
+              category_ordered=[e for e in unique if isinstance(e,dict) and e.get("rank_membership")=="ordered_choice"]
+              if query_recommendation_intent and len(category_ordered)>=2 and structure=="no_ranking":
+                  requested=True
+                  structure="table"
+              # 排名只认独立核心推荐实体。显式序号优先；无序号按模块内出现顺序补最小未占用正整数。
+              ordered_groups={}
+              for e in unique:
+                  if e.get("rank_membership")!="ordered_choice":continue
+                  module=str(e.get("module_id") or "M1")
+                  ordered_groups.setdefault(module,[]).append(e)
+              for module,rows in ordered_groups.items():
+                  # 显式序号永远优先保留；没有序号的实体按品牌/实体名称排序，
+                  # 再填入本模块最小可用排名，避免把正文出现顺序误当排名。
+                  used={int(e.get("_explicit_rank",0)) for e in rows if int(e.get("_explicit_rank",0))>0}
+                  explicit_rows=[e for e in rows if int(e.get("_explicit_rank",0))>0]
+                  implicit_rows=[e for e in rows if int(e.get("_explicit_rank",0))<=0]
+                  implicit_rows.sort(key=lambda e:(e.get("_order",99999),e.get("_offset",999999999),norm(e.get("canonical_name") or e.get("surface") or ""),norm(e.get("surface") or "")))
+                  for e in explicit_rows:
+                      rank=int(e.get("_explicit_rank",0));e["local_position"]=rank;e["global_position"]=rank;e["rank_position"]=rank
+                  cursor=1
+                  unit_rank={}
+                  for e in implicit_rows:
+                      unit=(str(e.get("rank_anchor_sentence_id") or ""),norm(e.get("parent_brand") or ""))
+                      if unit not in unit_rank:
+                          while cursor in used:cursor+=1
+                          unit_rank[unit]=cursor;used.add(cursor);cursor+=1
+                      rank=unit_rank[unit]
+                      e["local_position"]=rank;e["global_position"]=rank;e["rank_position"]=rank
+              for e in unique:
+                  if e.get("rank_membership")!="ordered_choice":
+                      e["global_position"]=0;e["rank_position"]=0
+              # 同一实体跨平行模块出现时合并为一个业务实体，并保留最优有效模块内排名。
+              merged=[];merged_by_key={}
+              for e in unique:
+                  if e.get("entity_type")=="independent_product":logical="product:"+product_key(e.get("canonical_name") or e.get("surface"))
+                  else:logical="entity:"+norm(e.get("parent_brand") or e.get("canonical_name"))
+                  old=merged_by_key.get(logical)
+                  if not old:
+                      merged_by_key[logical]=e;merged.append(e);continue
+                  old_rank=int(old.get("rank_position",0) or 0);new_rank=int(e.get("rank_position",0) or 0)
+                  if new_rank>0 and (old_rank<=0 or new_rank<old_rank):
+                      for key in ("rank_position","global_position","local_position","rank_anchor_sentence_id","module_id","sublist_label","rank_membership","competition_role"):
+                          old[key]=e.get(key)
+                  old["sentence_ids"]=list(dict.fromkeys(old.get("sentence_ids",[])+e.get("sentence_ids",[])))
+                  old["is_target_entity"]=bool(old.get("is_target_entity") or e.get("is_target_entity"))
+                  if old.get("target_relation")=="none" and e.get("target_relation")!="none":old["target_relation"]=e.get("target_relation")
+              unique=merged
+              for e in unique:
+                  e.pop("_explicit_rank",None);e.pop("_declared_rank",None);e.pop("_order",None);e.pop("_offset",None)
+              structured=requested or structure in {"numbered_list","table","parallel_modules","sequential_paragraphs","comparison"}
+              # 品牌词/具体产品词直询的单主体回答不能被版本编号误升格为品牌排名。
+              # 例如 query=“香奈儿蔚蓝男士香水”时，EDT/EDP/Parfum 是同一目标产品的版本，
+              # 即使模型将版本标题填成 ordered_choice，也没有第二个独立品牌，必须保持
+              # independent_subject、is_ranking=false、rank_position=0。只有存在另一个
+              # 非目标独立推荐实体时，才允许沿用上游的排名结论。
+              is_ranking=requested
+              query_focus=any(target_alias_match(str(a),str(query)) for a in target_aliases if norm(a))
+              target_rows=[e for e in unique if isinstance(e,dict) and e.get("is_target_entity")]
+              # 同一目标产品的规格/浓度版本（如 EDT、EDP、Parfum）不是第二个品牌。
+              # 当query已经锁定具体产品时，把这类版本并入目标主体，避免版本编号触发排名。
+              version_markers=("edt","edp","parfum","淡香","浓香","香精","版本","男士","女士")
+              def is_target_version(e):
+                  if not query_focus or not isinstance(e,dict) or e.get("is_target_entity"):return False
+                  names=[str(e.get("surface") or ""),str(e.get("canonical_name") or "")]
+                  if not any(any(marker in norm(name) for marker in version_markers) for name in names):return False
+                  parent=norm(e.get("parent_brand") or "")
+                  if not parent:return False
+                  for t in target_rows:
+                      tnames=[norm(t.get("surface") or ""),norm(t.get("canonical_name") or ""),norm(t.get("parent_brand") or "")]
+                      if any(x and (x.startswith(parent) or parent.startswith(x)) for x in tnames):return True
+                  return False
+              for e in unique:
+                  if is_target_version(e):
+                      e["is_target_entity"]=True;e["target_relation"]="target_product"
+                      e["rank_membership"]="independent_subject";e["competition_role"]="recommended"
+                      e["rank_position"]=0;e["local_position"]=0;e["global_position"]=0
+              target_rows=[e for e in unique if isinstance(e,dict) and e.get("is_target_entity")]
+              other_ordered=[]
+              for e in unique:
+                  if not isinstance(e,dict) or e.get("rank_membership")!="ordered_choice" or e.get("is_target_entity"):continue
+                  other_ordered.append(e)
+              if is_ranking and query_focus and target_rows and not other_ordered:
+                  is_ranking=False
+                  structure="no_ranking"
+                  for e in unique:
+                      if e.get("is_target_entity"):
+                          e["rank_membership"]="independent_subject"
+                          e["competition_role"]="recommended"
+                      e["global_position"]=0;e["rank_position"]=0;e["local_position"]=0
+              if not is_ranking:
+                  for e in unique:e["global_position"]=0;e["rank_position"]=0
+                  structure="no_ranking"
+              summary=str(data.get("summary") or "").strip()[:240] if isinstance(data,dict) else ""
+              if not summary:
+                  fallback=re.sub(r"\s+"," ",str(answer_text or "")).strip()
+                  cut=re.search(r"^.{40,120}?[。！？!?]",fallback)
+                  summary=cut.group(0) if cut else fallback[:120]
+              tags=safe_tags(data.get("key_tags",[]) if isinstance(data,dict) else [])
+              if len(tags)<3:
+                  seeds=[str(query).strip()[:20]]+re.findall(r"[\u4e00-\u9fffA-Za-z0-9]{2,12}",str(answer_text or ""))
+                  for seed in seeds:
+                      if seed and seed not in tags and seed not in {"回答","用户","问题","需要","可以","相关"}:tags.append(seed)
+                      if len(tags)>=3:break
+              tags=tags[:5]
+              competitor_inventory=[]
+              ranking_enabled=str(is_ranking).lower()=="true"
+              for e in unique:
+                  names=[e.get("surface",""),e.get("canonical_name",""),e.get("parent_brand","")]
+                  primary=names[:2];parent=names[2]
+                  alias_hit=any(target_alias_match(t,n) for t in target_aliases if norm(t) for n in primary if norm(n))
+                  if not alias_hit and norm(parent):alias_hit=any(norm(t)==norm(parent) for t in target_aliases if norm(t))
+                  if e.get("is_target_entity") or alias_hit:continue
+                  membership=e.get("rank_membership")
+                  # 排名回答只分析进入有效推荐结构的竞品；非排名的独立主体/比较文章仍需分析明确同业竞品。
+                  if ranking_enabled:
+                      if membership!="ordered_choice" or int(e.get("rank_position",0))<=0:continue
+                  else:
+                      if membership not in {"independent_subject","comparison_only","ordered_choice"}:continue
+                      if e.get("competition_role") not in {"competitor","recommended","alternative","comparison"}:continue
+                  competitor_inventory.append(e)
+              def llm_row(e):
+                  aliases=[]
+                  for value in (e.get("canonical_name",""),e.get("parent_brand","")):
+                      value=str(value or "").strip()
+                      if value and value!=e.get("surface") and value not in aliases:aliases.append(value)
+                  return {"id":e.get("entity_id",""),"name":e.get("surface",""),"aliases":aliases,
+                          "target":e.get("target_relation","none"),"rank":int(e.get("rank_position",0) or 0),
+                          "membership":e.get("rank_membership",""),"module":e.get("module_id","M1"),
+                          "anchor":e.get("rank_anchor_sentence_id","")}
+              llm_target_inventory=[llm_row(e) for e in unique if e.get("is_target_entity")]
+              llm_competitor_inventory=[llm_row(e) for e in competitor_inventory]
+              context={"is_ranking":is_ranking,"structure_type":structure,"reason":str(data.get("reason") or "")[:120] if isinstance(data,dict) else "","entities":unique}
+              return {"is_ranking":"true" if is_ranking else "false","is_ranking_reason":context["reason"],
+                      "ranking_context":json.dumps(context,ensure_ascii=False),"entity_inventory":json.dumps(unique,ensure_ascii=False),
+                      "competitor_inventory":json.dumps(competitor_inventory,ensure_ascii=False),
+                      "llm_target_inventory":json.dumps(llm_target_inventory,ensure_ascii=False,separators=(",",":")),
+                      "llm_competitor_inventory":json.dumps(llm_competitor_inventory,ensure_ascii=False,separators=(",",":")),
+                      "summary":summary,"word_cloud_tags":tags}
         code_language: python3
         desc: 校验实体资格、品牌粒度和模块内排名；保留完整业务清单，并生成目标/竞品LLM紧凑清单
         outputs:
