@@ -1200,13 +1200,7 @@ workflow:
           \ sentence) and not (_has_cycle_price_evidence(evidence) or _is_conditional_monthly_sentence(sentence)):\n\
           \            return False\n    if re.search(PRICE_CLAIM_RE, sentence) and\
           \ not _has_price_evidence(evidence):\n        return False\n    return True\n\
-          \ndef _clean_price_text_body(body, evidence):\n    allowed_numbers = _allowed_price_numbers(evidence)\n\
-          \    parts = re.split(r'(?<=[。！？!?])', str(body or \"\"))\n    cleaned =\
-          \ []\n    inserted_fallback = False\n    for part in parts:\n        if\
-          \ _price_sentence_supported(part, evidence, allowed_numbers):\n        \
-          \    cleaned.append(part)\n        elif not inserted_fallback:\n       \
-          \     cleaned.append(\"相关费用以官方页面或实际购买页面展示为准。\")\n            inserted_fallback\
-          \ = True\n    return \"\".join(cleaned).strip()\n\ndef _scrub_unverified_prices(text,\
+          \ndef _clean_price_text_body(body, evidence):\n    # 产品深度介绍不保留价格、费用或购买页面内容，也不添加兜底句。\n    cleaned = []\n    for part in re.split(r'(?<=[。！？!?])', str(body or '')):\n        if re.search(PRICE_CONTEXT_RE, part):\n            continue\n        cleaned.append(part)\n    return ''.join(cleaned).strip()\n\ndef _scrub_unverified_prices(text,\
           \ evidence):\n    text = str(text or \"\")\n    evidence = str(evidence\
           \ or \"\")\n    if \"<p>\" in text:\n        def repl(match):\n        \
           \    return match.group(1) + _clean_price_text_body(match.group(2), evidence)\
