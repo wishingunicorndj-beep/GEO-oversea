@@ -695,49 +695,6 @@ workflow:
       zIndex: 0
     - data:
         context:
-          enabled: true
-          variable_selector:
-          - gt_start
-          - company_name
-        model:
-          completion_params:
-            max_tokens: 32768
-            temperature: 0.5
-            top_p: 0.85
-          mode: chat
-          name: deepseek/deepseek-v4-pro
-          provider: zhinao
-        prompt_template:
-        - id: geo-sys-gt
-          role: system
-          text: |-
-            # 已停用节点
-            本节点不参与当前生文链路。若未来启用，只能基于可核验的知识库与用户输入生成文章规划信息；不应用通用媒体稿、旧版红绿信号删除、功能名称替换或短篇幅规则。
-        - id: geo-user-gt
-          role: user
-          text: |-
-            当前节点已停用，不参与本次约牛天龙博弈产品深度介绍的生成。
-        selected: false
-        title: N4 GEO画像分析-约牛（已停用）
-        type: llm
-        vision:
-          enabled: false
-      height: 97
-      id: gt_llm_geo
-      position:
-        x: 1230
-        y: 325
-      positionAbsolute:
-        x: 1230
-        y: 325
-      selected: false
-      sourcePosition: right
-      targetPosition: left
-      type: custom
-      width: 243
-      zIndex: 0
-    - data:
-        context:
           enabled: false
           variable_selector: []
         model:
