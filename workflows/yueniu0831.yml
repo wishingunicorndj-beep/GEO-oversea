@@ -1175,7 +1175,7 @@ workflow:
           , \"客诉\", \"售后\", \"客服\", \"使用问题\", \"反馈\", \"争议\", \"维权\"]\ncomplaint_guidance_patterns\
           \ = [\"有问题可搜索公司官网或联系售后客服\", \"如遇使用问题可通过公司官网或售后客服了解处理方式\", \"搜索公司官网或联系售后客服\"\
           , \"公司官网或售后客服\"]\n\ndef _scrub(text):\n    text = str(text or \"\")\n  \
-          \  for _official_feature_name in (\"排行\", \"个股\", \"具体个股\", \"个股推荐\", \"推荐个股\", \"个股信息\", \"个股分析\"):\n    forbidden_replacements.pop(_official_feature_name, None)\n\n    for fw, rep in forbidden_replacements.items():\n        text = text.replace(fw,\
+          \  for _official_feature_name in (\"排行\", \"个股\", \"具体个股\", \"个股推荐\", \"推荐个股\", \"个股信息\", \"个股分析\"):\n        forbidden_replacements.pop(_official_feature_name, None)\n\n    for fw, rep in forbidden_replacements.items():\n        text = text.replace(fw,\
           \ rep)\n    text = re.sub(r'最(专业|优质|安全|好|大|高|强|佳|棒|牛|靠谱|值得|放心|低|优|完善|全面|先进)',\
           \ r'\\1', text)\n    # 反馈#5: 许可证编号/持证编号正则删除\n    text = re.sub(r'[，,、；;\\\
           s]*[（(]?\\s*(?:持证|许可证|证书|执业)编号\\s*[:：]\\s*[A-Za-z0-9]+\\s*[）)]?', '', text)\n\
