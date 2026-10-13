@@ -729,30 +729,6 @@ workflow:
       zIndex: 0
     - data:
         isInIteration: false
-        sourceType: code
-        targetType: http-request
-      id: 1792000000000-source-1792000000001-target
-      selected: false
-      source: '1792000000000'
-      sourceHandle: source
-      target: '1792000000001'
-      targetHandle: target
-      type: custom
-      zIndex: 0
-    - data:
-        isInIteration: false
-        sourceType: code
-        targetType: code
-      id: 1782726056531-source-1792000000000-target
-      selected: false
-      source: '1782726056531'
-      sourceHandle: source
-      target: '1792000000000'
-      targetHandle: target
-      type: custom
-      zIndex: 0
-    - data:
-        isInIteration: false
         sourceType: http-request
         targetType: code
       id: 9201000000004-source-9201000000010-target
@@ -873,54 +849,6 @@ workflow:
       zIndex: 0
     - data:
         isInIteration: false
-        sourceType: http-request
-        targetType: code
-      id: 1792000000001-source-1792000000003-target
-      selected: false
-      source: '1792000000001'
-      sourceHandle: source
-      target: '1792000000003'
-      targetHandle: target
-      type: custom
-      zIndex: 0
-    - data:
-        isInIteration: false
-        sourceType: code
-        targetType: http-request
-      id: 1792000000003-source-1792000000004-target
-      selected: false
-      source: '1792000000003'
-      sourceHandle: source
-      target: '1792000000004'
-      targetHandle: target
-      type: custom
-      zIndex: 0
-    - data:
-        isInIteration: false
-        sourceType: http-request
-        targetType: code
-      id: 1792000000004-source-9201000000016-target
-      selected: false
-      source: '1792000000004'
-      sourceHandle: source
-      target: '9201000000016'
-      targetHandle: target
-      type: custom
-      zIndex: 0
-    - data:
-        isInIteration: false
-        sourceType: code
-        targetType: code
-      id: 9201000000016-source-1776938365563-target
-      selected: false
-      source: '9201000000016'
-      sourceHandle: source
-      target: '1776938365563'
-      targetHandle: target
-      type: custom
-      zIndex: 0
-    - data:
-        isInIteration: false
         sourceType: code
         targetType: code
       id: 9201000000013-source-1782726056531-target
@@ -1012,6 +940,30 @@ workflow:
       source: '1787000000002'
       sourceHandle: source
       target: '9201000000013'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: code
+      id: 1782726056531-source-9201000000016-target
+      selected: false
+      source: '1782726056531'
+      sourceHandle: source
+      target: '9201000000016'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: code
+      id: 9201000000016-source-1776938365563-target
+      selected: false
+      source: '9201000000016'
+      sourceHandle: source
+      target: '1776938365563'
       targetHandle: target
       type: custom
       zIndex: 0
@@ -2413,16 +2365,6 @@ workflow:
           - custom_writing_preference
           value_type: string
           variable: custom_writing_preference_raw
-        - value_selector:
-          - '9201000000016'
-          - verified_text
-          value_type: string
-          variable: verified_competitor_names
-        - value_selector:
-          - '9201000000016'
-          - verified_count
-          value_type: number
-          variable: competitor_count
       height: 53
       id: '1776938365563'
       position:
@@ -13686,196 +13628,6 @@ workflow:
       width: 243
       zIndex: 0
     - data:
-        code: "import hashlib\nimport json\nimport uuid\n\ndef main(task_id='', company_name='',\
-          \ industry='', keyword_pack='', product_info='', company_intro='', region='',\
-          \ compliance_mode='', known_competitors='', customer_requirements='', ent_dataset_id='',\
-          \ prod_dataset_id=''):\n    def q(value):\n        return json.dumps(''\
-          \ if value is None else str(value), ensure_ascii=False)\n\n    payload =\
-          \ {\n        'task_id': str(task_id or 'geo-task'),\n        'company_name':\
-          \ str(company_name or ''),\n        'industry': str(industry or ''),\n \
-          \       'keyword_pack': str(keyword_pack or ''),\n        'product_info':\
-          \ str(product_info or ''),\n        'company_intro': str(company_intro or\
-          \ ''),\n        'region': str(region or '全国'),\n        'compliance_mode':\
-          \ str(compliance_mode or 'standard'),\n        'known_competitors': str(known_competitors\
-          \ or ''),\n        'customer_requirements': str(customer_requirements or\
-          \ ''),\n        'ent_dataset_id': str(ent_dataset_id or ''),\n        'prod_dataset_id':\
-          \ str(prod_dataset_id or '')\n    }\n    canonical = json.dumps(payload,\
-          \ ensure_ascii=False, sort_keys=True, separators=(',', ':'))\n    digest\
-          \ = hashlib.sha256(canonical.encode('utf-8')).hexdigest()[:24]\n    nonce\
-          \ = uuid.uuid4().hex[:16]\n    stable_task = 'geo-competitor-v3-' + digest\
-          \ + '-' + nonce\n    return {\n        'task_id_json': q(stable_task), 'company_name_json':\
-          \ q(company_name),\n        'industry_json': q(industry), 'keyword_pack_json':\
-          \ q(keyword_pack),\n        'product_info_json': q(product_info), 'company_intro_json':\
-          \ q(company_intro),\n        'region_json': q(region or '全国'), 'compliance_mode_json':\
-          \ q(compliance_mode or 'standard'),\n        'known_competitors_json': q(known_competitors),\n\
-          \        'customer_requirements_json': q(customer_requirements),\n     \
-          \   'ent_dataset_id_json': q(ent_dataset_id), 'prod_dataset_id_json': q(prod_dataset_id),\n\
-          \        'user_json': q(company_name or stable_task or 'geo-main-workflow')\n\
-          \    }\n"
-        code_language: python3
-        desc: 使用json.dumps构建完整请求体，避免客户输入中的引号、换行和反斜杠破坏外层JSON。
-        outputs:
-          company_intro_json:
-            children: null
-            type: string
-          company_name_json:
-            children: null
-            type: string
-          compliance_mode_json:
-            children: null
-            type: string
-          customer_requirements_json:
-            children: null
-            type: string
-          ent_dataset_id_json:
-            children: null
-            type: string
-          industry_json:
-            children: null
-            type: string
-          keyword_pack_json:
-            children: null
-            type: string
-          known_competitors_json:
-            children: null
-            type: string
-          prod_dataset_id_json:
-            children: null
-            type: string
-          product_info_json:
-            children: null
-            type: string
-          region_json:
-            children: null
-            type: string
-          task_id_json:
-            children: null
-            type: string
-          user_json:
-            children: null
-            type: string
-        selected: false
-        title: 外置竞品请求体安全构建
-        type: code
-        variables:
-        - value_selector:
-          - '1776153503356'
-          - task_name
-          value_type: string
-          variable: task_id
-        - value_selector:
-          - '1776153503356'
-          - company_name
-          value_type: string
-          variable: company_name
-        - value_selector:
-          - '1776153503356'
-          - industry
-          value_type: string
-          variable: industry
-        - value_selector:
-          - '1776153503356'
-          - keyword_pack
-          value_type: string
-          variable: keyword_pack
-        - value_selector:
-          - '1776153503356'
-          - product_info
-          value_type: string
-          variable: product_info
-        - value_selector:
-          - '1776153503356'
-          - company_intro
-          value_type: string
-          variable: company_intro
-        - value_selector:
-          - '9201000000012'
-          - region
-          value_type: string
-          variable: region
-        - value_selector:
-          - '9201000000012'
-          - compliance_mode
-          value_type: string
-          variable: compliance_mode
-        - value_selector:
-          - '9201000000012'
-          - known_competitors
-          value_type: string
-          variable: known_competitors
-        - value_selector:
-          - '1787000000002'
-          - customer_profile_text
-          value_type: string
-          variable: customer_requirements
-        - value_selector:
-          - '1776153503356'
-          - ent_dataset_id
-          value_type: string
-          variable: ent_dataset_id
-        - value_selector:
-          - '1776153503356'
-          - prod_dataset_id
-          value_type: string
-          variable: prod_dataset_id
-      height: 114
-      id: '1792000000000'
-      position:
-        x: 5178.201009854113
-        y: 2613.499990965833
-      positionAbsolute:
-        x: 5178.201009854113
-        y: 2613.499990965833
-      selected: true
-      sourcePosition: right
-      targetPosition: left
-      type: custom
-      width: 244
-      zIndex: 0
-    - data:
-        authorization:
-          config: null
-          type: no-auth
-        body:
-          data:
-          - id: competitor-agent-body
-            key: ''
-            type: text
-            value: '{"task_id":{{#1792000000000.task_id_json#}},"company_name":{{#1792000000000.company_name_json#}},"industry":{{#1792000000000.industry_json#}},"keyword_pack":{{#1792000000000.keyword_pack_json#}},"product_info":{{#1792000000000.product_info_json#}},"company_intro":{{#1792000000000.company_intro_json#}},"region":{{#1792000000000.region_json#}},"compliance_mode":{{#1792000000000.compliance_mode_json#}},"known_competitors":{{#1792000000000.known_competitors_json#}},"customer_requirements":{{#1792000000000.customer_requirements_json#}},"ent_dataset_id":{{#1792000000000.ent_dataset_id_json#}},"prod_dataset_id":{{#1792000000000.prod_dataset_id_json#}}}'
-          type: json
-        desc: 调用已上线竞品研究接口；重复请求命中运行中任务时由接口复用并等待原任务结果，旧版本409响应也允许继续进入桥接节点。
-        error_handle_mode: continue-on-error
-        headers: Content-Type:application/json
-        method: post
-        params: ''
-        retry_config:
-          max_retries: 0
-          retry_enabled: false
-          retry_interval: 0
-        selected: true
-        timeout:
-          connect: 300
-          read: 1800
-          write: 600
-        title: 外置竞品研究Agent调用
-        type: http-request
-        url: https://geo-competitor-api.ship.zhinao.qihoo.net/geo-competitor/research
-        variables: []
-      height: 202
-      id: '1792000000001'
-      position:
-        x: 5502
-        y: 2621.3994950729434
-      positionAbsolute:
-        x: 5502
-        y: 2621.3994950729434
-      selected: false
-      sourcePosition: right
-      targetPosition: left
-      type: custom
-      width: 244
-      zIndex: 0
-    - data:
         authorization:
           config: null
           type: no-auth
@@ -14389,211 +14141,6 @@ workflow:
       width: 243
       zIndex: 0
     - data:
-        code: "import json\n\ndef _parse(v):\n    if isinstance(v, dict):\n      \
-          \  b=v.get('body')\n        if isinstance(b,str):\n            try:return\
-          \ json.loads(b)\n            except:return {}\n        return b if isinstance(b,dict)\
-          \ else v\n    if isinstance(v,str):\n        try:return json.loads(v)\n\
-          \        except:return {}\n    return {}\n\ndef main(http_body=None):\n\
-          \    obj=_parse(http_body)\n    job_id=str(obj.get('job_id') or (obj.get('data')\
-          \ or {}).get('job_id') or '') if isinstance(obj,dict) else ''\n    status=str(obj.get('status')\
-          \ or (obj.get('data') or {}).get('status') or '') if isinstance(obj,dict)\
-          \ else ''\n    status_url=str(obj.get('status_url') or '') if isinstance(obj,dict)\
-          \ else ''\n    if status_url.startswith('/'):\n        status_url='https://geo-competitor-api.ship.zhinao.qihoo.net'\
-          \ + status_url\n    if not status_url and job_id:\n        status_url='https://geo-competitor-api.ship.zhinao.qihoo.net/geo-competitor/research/'\
-          \ + job_id\n    return {\n        'job_id': job_id,\n        'status': status,\n\
-          \        'status_url': status_url,\n        'post_body': str(http_body or\
-          \ '')\n    }\n"
-        code_language: python3
-        desc: 提取竞品异步研究 job_id，构造状态查询地址；兼容 POST 409 running。
-        outputs:
-          job_id:
-            children: null
-            type: string
-          post_body:
-            children: null
-            type: string
-          status:
-            children: null
-            type: string
-          status_url:
-            children: null
-            type: string
-        selected: false
-        title: 竞品异步任务桥接
-        type: code
-        variables:
-        - value_selector:
-          - '1792000000001'
-          - body
-          value_type: string
-          variable: http_body
-      height: 98
-      id: '1792000000003'
-      position:
-        x: 5806
-        y: 2628.5
-      positionAbsolute:
-        x: 5806
-        y: 2628.5
-      selected: false
-      sourcePosition: right
-      targetPosition: left
-      type: custom
-      width: 244
-      zIndex: 0
-    - data:
-        authorization:
-          config: ''
-          type: no-auth
-        body:
-          data: []
-          type: none
-        desc: 查询竞品异步研究任务状态；接口会对运行中任务短轮询，旧版本异常响应也保持可解析，不重复创建研究任务。
-        error_handle_mode: continue-on-error
-        headers: ''
-        method: get
-        params: ''
-        retry_config:
-          max_retries: 12
-          retry_enabled: true
-          retry_interval: 5000
-        selected: false
-        timeout:
-          connect: 300
-          read: 1800
-          write: 300
-        title: 外置竞品研究任务状态查询
-        type: http-request
-        url: '{{#1792000000003.status_url#}}'
-        variables: []
-      height: 157
-      id: '1792000000004'
-      position:
-        x: 6110
-        y: 2628.5
-      positionAbsolute:
-        x: 6110
-        y: 2628.5
-      selected: false
-      sourcePosition: right
-      targetPosition: left
-      type: custom
-      width: 244
-      zIndex: 0
-    - data:
-        code: "import json\n\ndef _parse(v):\n    if isinstance(v,dict):\n       \
-          \ b=v.get('body')\n        if isinstance(b,str):\n            try:return\
-          \ json.loads(b)\n            except:return {}\n        return b if isinstance(b,(dict,list))\
-          \ else v\n    if isinstance(v,str):\n        try:return json.loads(v)\n\
-          \        except:return {}\n    return {}\n\ndef _unwrap(obj):\n    if isinstance(obj,dict)\
-          \ and isinstance(obj.get('data'),dict):\n        data=obj['data']\n    \
-          \    if isinstance(data.get('outputs'),dict):\n            merged=dict(data['outputs'])\n\
-          \            for key in ('status','error','job_id'):\n                if\
-          \ key in data and key not in merged: merged[key]=data[key]\n           \
-          \ return merged\n        if isinstance(data.get('result'),dict):\n     \
-          \       merged=dict(data['result'])\n            for key in ('status','error','job_id'):\n\
-          \                if key in data and key not in merged: merged[key]=data[key]\n\
-          \            return merged\n    if isinstance(obj,dict) and isinstance(obj.get('outputs'),dict):\
-          \ return obj['outputs']\n    if isinstance(obj,dict) and isinstance(obj.get('result'),dict):\n\
-          \        merged=dict(obj['result'])\n        for key in ('status','error','job_id'):\n\
-          \            if key in obj and key not in merged: merged[key]=obj[key]\n\
-          \        return merged\n    return obj\n\ndef _has_result(obj):\n    if\
-          \ not isinstance(obj,dict):\n        return False\n    status=str(obj.get('status')\
-          \ or '').lower()\n    return bool(obj.get('verified_text') or obj.get('verified_competitors')\
-          \ or obj.get('competitors') or obj.get('competitor_detail_text') or status\
-          \ in {'succeeded','success','failed','error','empty','degraded'})\n\ndef\
-          \ main(post_body=None, status_body=None, bridge_job_id=''):\n    post=_unwrap(_parse(post_body))\n\
-          \    status=_unwrap(_parse(status_body))\n    obj=status if _has_result(status)\
-          \ else post\n    if not isinstance(obj,dict): obj={}\n    child_status=str(obj.get('status')\
-          \ or (obj.get('data') or {}).get('status') or '') if isinstance(obj,dict)\
-          \ else ''\n    child_error=str(obj.get('error') or (obj.get('data') or {}).get('error')\
-          \ or '') if isinstance(obj,dict) else ''\n    job_id=str(obj.get('job_id')\
-          \ or bridge_job_id or '') if isinstance(obj,dict) else str(bridge_job_id\
-          \ or '')\n    comps=(obj.get('verified_competitors') or obj.get('competitors')\
-          \ or []) if isinstance(obj,dict) else []\n    verified=obj.get('verified_text')\
-          \ if isinstance(obj,dict) else ''\n    detail=obj.get('competitor_detail_text')\
-          \ if isinstance(obj,dict) else ''\n    if not verified and isinstance(comps,list):\n\
-          \        verified='\\\\n'.join(str(x.get('brand') or x.get('name') or x)\
-          \ for x in comps if isinstance(x,dict))\n    if not detail and isinstance(comps,list):\n\
-          \        detail='\\\\n'.join(json.dumps(x,ensure_ascii=False) for x in comps)\n\
-          \    count=obj.get('verified_count') if isinstance(obj,dict) else None\n\
-          \    if isinstance(count,str):\n        try: count=int(count)\n        except\
-          \ Exception: count=None\n    if count is None: count=len(comps) if isinstance(comps,list)\
-          \ else 0\n    return {\n        'child_status':child_status or 'unknown',\n\
-          \        'child_error':child_error,\n        'job_id':job_id,\n        'status_code':str(obj.get('status_code')\
-          \ or obj.get('http_status') or ''),\n        'competitor_detail_text':str(detail\
-          \ or ''),\n        'competitor_evidence':str(obj.get('evidence_text') or\
-          \ obj.get('evidence') or '') if isinstance(obj,dict) else '',\n        'competitors_json':json.dumps(comps,ensure_ascii=False),\n\
-          \        'search_log':json.dumps(obj.get('search_log') or [],ensure_ascii=False)\
-          \ if isinstance(obj,dict) else '[]',\n        'verified_count':int(count\
-          \ or 0),\n        'verified_text':str(verified or '')\n    }\n"
-        code_language: python3
-        desc: 解析竞品接口结果；兼容200成功、200+data.status=failed和504网关超时，并把状态写入独立诊断字段。
-        outputs:
-          child_error:
-            children: null
-            type: string
-          child_status:
-            children: null
-            type: string
-          competitor_detail_text:
-            children: null
-            type: string
-          competitor_evidence:
-            children: null
-            type: string
-          competitors_json:
-            children: null
-            type: string
-          job_id:
-            children: null
-            type: string
-          search_log:
-            children: null
-            type: string
-          status_code:
-            children: null
-            type: string
-          verified_count:
-            children: null
-            type: number
-          verified_text:
-            children: null
-            type: string
-        selected: false
-        title: 竞品结果聚合
-        type: code
-        variables:
-        - value_selector:
-          - '1792000000001'
-          - body
-          value_type: string
-          variable: post_body
-        - value_selector:
-          - '1792000000004'
-          - body
-          value_type: string
-          variable: status_body
-        - value_selector:
-          - '1792000000003'
-          - job_id
-          value_type: string
-          variable: bridge_job_id
-      height: 114
-      id: '9201000000016'
-      position:
-        x: 6416.378414148119
-        y: 2628.5
-      positionAbsolute:
-        x: 6416.378414148119
-        y: 2628.5
-      selected: false
-      sourcePosition: right
-      targetPosition: left
-      type: custom
-      width: 244
-      zIndex: 0
-    - data:
         code: "import json\ndef main(keyword_pack='', company_name='', industry='',\
           \ company_intro='', core_qualifications='', awards='', advantages='', ent_dataset_id='',\
           \ product_info='', prod_dataset_id='', task_name='', task_description='',\
@@ -14886,6 +14433,58 @@ workflow:
       positionAbsolute:
         x: 2445.99998688944
         y: 2613.499990965833
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        code: "def main():\n    return {\n        'child_status': 'disabled',\n        'child_error': 'external competitor agent removed',\n        'job_id': '',\n        'status_code': '',\n        'verified_text': '',\n        'verified_count': 0,\n        'competitor_detail_text': '',\n        'competitor_evidence': '',\n        'competitors_json': '[]',\n        'search_log': '[]'\n    }\n"
+        code_language: python3
+        desc: 外置竞品 Agent 已移除；保留空值契约，供下游按无已验证竞品处理。
+        outputs:
+          child_error:
+            children: null
+            type: string
+          child_status:
+            children: null
+            type: string
+          competitor_detail_text:
+            children: null
+            type: string
+          competitor_evidence:
+            children: null
+            type: string
+          competitors_json:
+            children: null
+            type: string
+          job_id:
+            children: null
+            type: string
+          search_log:
+            children: null
+            type: string
+          status_code:
+            children: null
+            type: string
+          verified_count:
+            children: null
+            type: number
+          verified_text:
+            children: null
+            type: string
+        selected: false
+        title: 竞品上下文空值适配
+        type: code
+        variables: []
+      height: 81
+      id: '9201000000016'
+      position:
+        x: 5800
+        y: 2628.5
+      positionAbsolute:
+        x: 5800
+        y: 2628.5
       selected: false
       sourcePosition: right
       targetPosition: left
