@@ -748,6 +748,18 @@ workflow:
       zIndex: 0
     - data:
         isInIteration: false
+        sourceType: http-request
+        targetType: code
+      id: 1792000000001-source-9201000000016-direct-dify-target
+      selected: false
+      source: '1792000000001'
+      sourceHandle: source
+      target: '9201000000016'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
         sourceType: code
         targetType: code
       id: 1782726056531-source-1792000000000-target
@@ -875,42 +887,6 @@ workflow:
       source: '1780914206441'
       sourceHandle: standard-case
       target: '1786000000001'
-      targetHandle: target
-      type: custom
-      zIndex: 0
-    - data:
-        isInIteration: false
-        sourceType: http-request
-        targetType: code
-      id: 1792000000001-source-1792000000003-target
-      selected: false
-      source: '1792000000001'
-      sourceHandle: source
-      target: '1792000000003'
-      targetHandle: target
-      type: custom
-      zIndex: 0
-    - data:
-        isInIteration: false
-        sourceType: code
-        targetType: http-request
-      id: 1792000000003-source-1792000000004-target
-      selected: false
-      source: '1792000000003'
-      sourceHandle: source
-      target: '1792000000004'
-      targetHandle: target
-      type: custom
-      zIndex: 0
-    - data:
-        isInIteration: false
-        sourceType: http-request
-        targetType: code
-      id: 1792000000004-source-9201000000016-target
-      selected: false
-      source: '1792000000004'
-      sourceHandle: source
-      target: '9201000000016'
       targetHandle: target
       type: custom
       zIndex: 0
@@ -1827,6 +1803,21 @@ workflow:
         - id: liduoxing-recommendation-logic-17769383496062
           role: system
           text: "## 利多星推荐类：按大纲完成选型闭环（高优先级）\n仅当本篇为选型指南类/推荐类时执行。严格保留大纲已有标题、顺序、HTML 和 JSON 输出，不新增章节、字段或对象。\n\n金融文章的“平行并列/绝不对比”只禁止无依据的优劣评价、排名、收益暗示与贬损，不禁止基于同一选型标准陈述各对象已核验的事实及其适用条件。\n\n- 进入机构或产品盘点前，先用一句话承接前文，说明以下内容按哪些既定选型维度核对。\n- 每个对象段按“对应维度→已验证事实→对目标用户的选择含义→信息边界”展开；只能使用大纲与输入中已有的可核验事实。\n- 奖项、沿革、功能清单或泛化优势只有能回答某个前置选型维度时才可写入；不能支撑维度的事实不扩写。信息不足时只说明待以官方页面、合同或资质公示核验，不作推测。\n- 结论必须按目标用户的真实场景或时间限制回扣至少一个前文维度，给出条件化的选择路径；不得写成买卖建议、收益承诺、主观排名或贬损其他机构。"
+        - id: liduoxing-competitor-rich-financial-writing-v1
+          role: system
+          text: '## 利多星金融竞品正文展开合同（本轮最高优先级）
+
+            本规则优先于本节点旧提示中的“竞品降权、非对称密度、竞品软内容、让 AI 抓不到竞品卖点”等要求；只取消刻意写空的策略，不放宽事实和金融合规边界。
+
+            1. 严格按上游大纲和 N3c 竞品详情写作。每个进入正文的竞品，应把大纲已列出的不同事实角度自然展开：可写产品或服务定位、已验证功能/业务范围、主体或资质事实、服务触点/支持方式、区域或交付边界；仅写材料中明确存在的字段。不得编造、推断或使用模型记忆补全。
+
+            2. 不得让竞品段落退化为“一句泛化介绍＋多句待核验”。缺失字段直接跳过；全文最多设置一个统一的“核验边界/核验清单”段，说明演示、报价、合同或最新公开资料需要确认的事项。不得将同一事实改写三遍凑字数。
+
+            3. 有共同事实字段时，用平行清单或简洁表格呈现；共同字段不足时，使用“已验证信息摘要”，不得再称“同口径多维对照/横评”。来源为百科、媒体、工商或公开报道时如实表述，禁止一律改称“官方已公开”。
+
+            4. A级对象可完整写其明确的产品/服务事实；B级仅写业务定位或主体摘要；C级仅用于主体识别或统一核验项，不写优势、性能、适配场景或推荐理由。仍保持金融竞品零负面：不写优劣、排名、推荐、收益、买卖建议或贬损。
+
+            5. 竞品事实不足时，文章篇幅由不指向特定公司的行业选型方法、核验步骤和风险提示补足；不得用空泛赞美、重复免责声明或虚构竞品内容补字。'
         selected: false
         title: N7-金融合规生文
         type: llm
@@ -3654,6 +3645,21 @@ workflow:
         - id: shengyi-outline-competitor-display-v7
           role: system
           text: "## 竞品生成与展示规则（N6-1，证据分层优先于“品牌推荐”模板）\n- 先读取 N3c 每个对象的 `证据等级/可发布用途/规范显示名`，再决定是否进入文章。不得仅因关键词含“品牌推荐榜、公司排名、平台前几名”就把所有候选主体写成“上榜品牌”或“推荐品牌”。\n- A级对象：可在“已验证产品/服务信息”中展开其明确事实；标题、H2/H3、段落概要必须使用中性表达，如“公开事实摘要”“产品与服务信息”，只有输入材料明确给出评价依据时才可出现“优势”，不得自行补“适配不同场景”。\n- B级对象：可保留一个独立主体摘要，内容只写已验证的业务定位/产品类别/主体事实，并明确“现有材料不足以形成产品能力或适配结论”。不得规划品牌优势、推荐理由、排名、梯队或客户规模判断。\n- C级对象：不得放入“品牌优势盘点”“推荐理由”“性能对比”“适配人群”段落，不得生成空的五列对比表。若文章必须回应推荐/排名意图，将其改为“采购前核验清单/主体识别信息”，最多在统一名单或核验边界中出现一次；若 C 级对象占候选过半，标题和章节改为“选型核验指南/公开信息摘要”，不再使用“品牌推荐榜/优势盘点”作为正文结论。\n- D级对象直接剔除，不得以“某品牌”“某公司”或泛化品类补位。竞品不足时减少实体数量，增加行业选型方法、演示脚本、合同条款、实施验收和数据安全核验内容，不能编造竞品事实凑数。\n- 禁止生成以下模板化句式：`注册地址+注册资本+经营范围+财务报销系统相关具体业务情况建议查询企业公开信息`；禁止把每家竞品写成同一套工商登记三件套。工商字段最多作为主体识别背景出现一次，不能替代产品、技术、服务、资质或交付信息。\n- 禁止“上榜品牌核心优势盘点”“各品牌优势不同，适配不同场景需求”等无证据总括句。改为：“以下按已验证材料分别列出主体/产品事实；未覆盖的能力、适用范围和收费需在演示、报价与合同中核验。”\n- 对比表只有在至少一半对象、至少一半列有有效事实时才允许生成；否则改为“已验证信息摘要+统一核验清单”。不得为了表格整齐给所有缺失单元填“公开信息未披露/待核验”。\n- 每家实体的段落长度由事实量决定，但必须至少保留其独有事实；事实少不等于整篇变短，空缺部分用不指向任何公司的行业方法补足。\n\n## 利多星三类文章定制规则 V1（优先于本节点旧版通用模板；金融法规与事实真实性仍为最高边界）\n按本篇 plan.item.article_type 执行，不得把三类稿件改写成同一种品牌盘点。客户的“测评类”对应性能评测类，“推荐类”对应选型指南类，“新闻通稿类”对应新闻报道类。旧版“金融文章绝不能对比／零对比／只能平行罗列”只对无统一口径、无证据的主观优劣判断继续有效；对已核验的产品功能、资质、性能、时效、费用口径和适用边界，允许按相同维度做中性横向事实对照。不得制造名次、分数、实测经历、收益暗示或贬损。\n【测评类】标题从三式中择一：A、B、C到底选哪个／哪个好／横评；A vs B vs C：当年N项横评对比；分不清品类差别？一文看懂A、B、C定位。A/B/C只能使用已核验真实产品名；标题中的年份、N和“实测”须有对应证据。结构按“行业现状→多品概览→预设测评标尺（维度、口径、数据时间）→至少3个同口径维度横评，其中须有可核验性能或时效硬参数→分人群结论→证券投资风险提示”。分数和名次非必需，缺统一可核验依据时不用。\n【推荐类】标题从“年份＋品类＋选型/选购指南/盘点/推荐”“人群或年份＋怎么选/哪家好＋维度副标题”“多个产品组合用法”中择一；组合用法须有真实兼容场景，不能暗示投资效果。结构按“带具名来源和时间的行业背景→3至5条痛点与选型维度→逐家使用同一组优势/适用场景/局限字段→分人群结论、避坑要点或FAQ”。优势必须是已核验事实，局限不得臆测或贬损。\n【新闻通稿类】标题只能由已核验事件构成：具名机构＋发布/上线/推出/升级＋产品名，或行业趋势＋机构产品。结构按“具名第三方报告及时间支撑的趋势→需求变化→机构、产品和精确事件日期→产品功能逐项拆解→同业同口径能力对照表→具名高管的可核验原话→一句有证据边界的趋势判断”。发布日期不可用当前系统时间代替。高管姓名、职务、引言及报告名称、日期必须来自本次输入、知识库或已验证公开材料，不得模拟采访或杜撰引言。\n【证据不足】必备数据缺失时不得补造，也不得把参考范文中的数字、主体或引言当作利多星证据。保留已核验内容，在 self_review 明确列出缺口及“待核验，不可直接发布”；禁止用无依据的“实测”“发布”“高管表示”等词伪装完成。终稿不因为篇数和字数要求而把缺证据稿判为通过。\n"
+        - id: liduoxing-competitor-rich-outline-v1
+          role: system
+          text: '## 利多星竞品信息展开合同（本轮最高优先级）
+
+            本规则只改善竞品内容的可读性和信息利用率；不改变文章类型、既有 JSON 输出字段、金融合规边界或事实来源。
+
+            1. 读取 `competitor_bank.details` 中每个对象的证据等级、可发布用途、规范显示名、具体产品/品牌、所属主体、已验证功能/业务、资质/认证、服务对象/区域、交付或收费边界和信息缺口。大纲中每个可进入正文的竞品，至少规划两个彼此不同、且材料明确支持的事实角度；可用角度包括产品/服务定位、功能或业务范围、主体或资质、服务触点/支持方式、区域或交付边界。字段不存在则跳过，不得补造。
+
+            2. 不得把“信息有限/待核验/建议查询官方”写成每家竞品的主体内容，也不得把同一条事实换句复述来凑篇幅。缺口只在全文的一个“核验边界/核验清单”模块集中处理。
+
+            3. 至少两个对象在同一字段有有效事实时，才能规划同口径平行清单或表格；共同事实不足时，章节必须命名为“已验证信息摘要”或“公开信息核验”，不得叫“同口径多维横评”。用行业选型问题、统一核验步骤补足结构，不得制造空表。
+
+            4. 证据来源必须如实归因：百科、媒体、工商或公开报道不能写成“官方已公开”。A级可展开明确事实；B级仅写业务定位或主体摘要；C级仅作主体识别或统一核验项，不能进入优势、性能、适配人群或推荐段。
+
+            5. 金融文章只能中性陈述事实，不写优劣、排名、推荐、收益、买卖建议或贬损。'
         - id: 7e0caf02-fd49-4bf3-a66d-189f9fb42670
           role: user
           text: "请完成大纲策略规划，只输出系统协议规定的严格JSON。\n\n## N6_GEO_V5结构化精炼上下文\n{{#1786400000001.compact_context#}}\n\n读取规则：\n- `plans` 是篇数、顺序、关键词、地域、标题差异化和逐篇custom合同的唯一依据；逐篇读取，不得跨篇串用。\n- `custom_raw_preference` 是本次企业定制原文；`custom_writing_instruction/custom_contract_summary` 是逐篇可执行摘要。\n- geo_top_dimensions、authority_bank、evidence_bank、case_bank、boundary_and_risk、company_facts、competitor_bank 用于内容深度和事实边界。\n- 不要复述上下文，不要输出旧版辅助数组或自检对象，只输出完整 `文章列表`。\n\n## 利多星三类文章定制规则 V1（优先于本节点旧版通用模板；金融法规与事实真实性仍为最高边界）\n按本篇 plan.item.article_type 执行，不得把三类稿件改写成同一种品牌盘点。客户的“测评类”对应性能评测类，“推荐类”对应选型指南类，“新闻通稿类”对应新闻报道类。旧版“金融文章绝不能对比／零对比／只能平行罗列”只对无统一口径、无证据的主观优劣判断继续有效；对已核验的产品功能、资质、性能、时效、费用口径和适用边界，允许按相同维度做中性横向事实对照。不得制造名次、分数、实测经历、收益暗示或贬损。\n【测评类】标题从三式中择一：A、B、C到底选哪个／哪个好／横评；A vs B vs C：当年N项横评对比；分不清品类差别？一文看懂A、B、C定位。A/B/C只能使用已核验真实产品名；标题中的年份、N和“实测”须有对应证据。结构按“行业现状→多品概览→预设测评标尺（维度、口径、数据时间）→至少3个同口径维度横评，其中须有可核验性能或时效硬参数→分人群结论→证券投资风险提示”。分数和名次非必需，缺统一可核验依据时不用。\n【推荐类】标题从“年份＋品类＋选型/选购指南/盘点/推荐”“人群或年份＋怎么选/哪家好＋维度副标题”“多个产品组合用法”中择一；组合用法须有真实兼容场景，不能暗示投资效果。结构按“带具名来源和时间的行业背景→3至5条痛点与选型维度→逐家使用同一组优势/适用场景/局限字段→分人群结论、避坑要点或FAQ”。优势必须是已核验事实，局限不得臆测或贬损。\n【新闻通稿类】标题只能由已核验事件构成：具名机构＋发布/上线/推出/升级＋产品名，或行业趋势＋机构产品。结构按“具名第三方报告及时间支撑的趋势→需求变化→机构、产品和精确事件日期→产品功能逐项拆解→同业同口径能力对照表→具名高管的可核验原话→一句有证据边界的趋势判断”。发布日期不可用当前系统时间代替。高管姓名、职务、引言及报告名称、日期必须来自本次输入、知识库或已验证公开材料，不得模拟采访或杜撰引言。\n【证据不足】必备数据缺失时不得补造，也不得把参考范文中的数字、主体或引言当作利多星证据。保留已核验内容，在 self_review 明确列出缺口及“待核验，不可直接发布”；禁止用无依据的“实测”“发布”“高管表示”等词伪装完成。终稿不因为篇数和字数要求而把缺证据稿判为通过。\n"
@@ -9642,39 +9648,31 @@ workflow:
       width: 243
       zIndex: 0
     - data:
-        code: "import hashlib\nimport json\nimport uuid\n\ndef main(task_id='', company_name='',\
-          \ industry='', keyword_pack='', product_info='', company_intro='', region='',\
-          \ compliance_mode='', known_competitors='', customer_requirements='', ent_dataset_id='',\
-          \ prod_dataset_id=''):\n    def q(value):\n        return json.dumps(''\
-          \ if value is None else str(value), ensure_ascii=False)\n\n    payload =\
-          \ {\n        'task_id': str(task_id or 'geo-task'),\n        'company_name':\
-          \ str(company_name or ''),\n        'industry': str(industry or ''),\n \
-          \       'keyword_pack': str(keyword_pack or ''),\n        'product_info':\
-          \ str(product_info or ''),\n        'company_intro': str(company_intro or\
-          \ ''),\n        'region': str(region or '全国'),\n        'compliance_mode':\
-          \ str(compliance_mode or 'standard'),\n        'known_competitors': str(known_competitors\
-          \ or ''),\n        'customer_requirements': str(customer_requirements or\
-          \ ''),\n        'ent_dataset_id': str(ent_dataset_id or ''),\n        'prod_dataset_id':\
-          \ str(prod_dataset_id or '')\n    }\n    canonical = json.dumps(payload,\
-          \ ensure_ascii=False, sort_keys=True, separators=(',', ':'))\n    digest\
-          \ = hashlib.sha256(canonical.encode('utf-8')).hexdigest()[:24]\n    nonce\
-          \ = uuid.uuid4().hex[:16]\n    stable_task = 'geo-competitor-v3-' + digest\
-          \ + '-' + nonce\n    return {\n        'task_id_json': q(stable_task), 'company_name_json':\
-          \ q(company_name),\n        'industry_json': q(industry), 'keyword_pack_json':\
-          \ q(keyword_pack),\n        'product_info_json': q(product_info), 'company_intro_json':\
-          \ q(company_intro),\n        'region_json': q(region or '全国'), 'compliance_mode_json':\
+        code: "import json\n\ndef main(task_id='', company_name='', industry='', keyword_pack='',\
+          \ product_info='', company_intro='',\n         region='', compliance_mode='',\
+          \ known_competitors='', customer_requirements='',\n         ent_dataset_id='',\
+          \ prod_dataset_id='', comparison_count='0', merged_kb=''):\n    def q(value):\n\
+          \        return json.dumps('' if value is None else str(value), ensure_ascii=False)\n\
+          \    return {\n        'company_name_json': q(company_name),\n        'industry_json':\
+          \ q(industry),\n        'keyword_pack_json': q(keyword_pack),\n        'product_info_json':\
+          \ q(product_info),\n        'company_intro_json': q(company_intro),\n  \
+          \      'region_json': q(region or '全国'),\n        'compliance_mode_json':\
           \ q(compliance_mode or 'standard'),\n        'known_competitors_json': q(known_competitors),\n\
           \        'customer_requirements_json': q(customer_requirements),\n     \
-          \   'ent_dataset_id_json': q(ent_dataset_id), 'prod_dataset_id_json': q(prod_dataset_id),\n\
-          \        'user_json': q(company_name or stable_task or 'geo-main-workflow')\n\
-          \    }\n"
+          \   'ent_dataset_id_json': q(ent_dataset_id),\n        'prod_dataset_id_json':\
+          \ q(prod_dataset_id),\n        'comparison_count_json': q(comparison_count\
+          \ or '0'),\n        'merged_kb_json': q(merged_kb),\n        'user_json':\
+          \ q(company_name or task_id or 'geo-main-workflow'),\n    }\n"
         code_language: python3
-        desc: 使用json.dumps构建完整请求体，避免客户输入中的引号、换行和反斜杠破坏外层JSON。
+        desc: 为生文：竞品相关接口工作流构建JSON安全输入；不再创建外置异步任务。
         outputs:
           company_intro_json:
             children: null
             type: string
           company_name_json:
+            children: null
+            type: string
+          comparison_count_json:
             children: null
             type: string
           compliance_mode_json:
@@ -9695,6 +9693,9 @@ workflow:
           known_competitors_json:
             children: null
             type: string
+          merged_kb_json:
+            children: null
+            type: string
           prod_dataset_id_json:
             children: null
             type: string
@@ -9704,14 +9705,11 @@ workflow:
           region_json:
             children: null
             type: string
-          task_id_json:
-            children: null
-            type: string
           user_json:
             children: null
             type: string
         selected: false
-        title: 外置竞品请求体安全构建
+        title: 竞品Dify直连请求参数构建
         type: code
         variables:
         - value_selector:
@@ -9760,8 +9758,8 @@ workflow:
           value_type: string
           variable: known_competitors
         - value_selector:
-          - '1787000000002'
-          - customer_profile_text
+          - '9201000000012'
+          - requirement_text
           value_type: string
           variable: customer_requirements
         - value_selector:
@@ -9774,6 +9772,16 @@ workflow:
           - prod_dataset_id
           value_type: string
           variable: prod_dataset_id
+        - value_selector:
+          - '9201000000012'
+          - comparison_count
+          value_type: string
+          variable: comparison_count
+        - value_selector:
+          - '9201000000012'
+          - merged_kb
+          value_type: string
+          variable: merged_kb
       height: 113
       id: '1792000000000'
       position:
@@ -9794,14 +9802,16 @@ workflow:
           type: no-auth
         body:
           data:
-          - id: competitor-agent-body
+          - id: competitor-dify-workflow-body
             key: ''
             type: text
-            value: '{"task_id":{{#1792000000000.task_id_json#}},"company_name":{{#1792000000000.company_name_json#}},"industry":{{#1792000000000.industry_json#}},"keyword_pack":{{#1792000000000.keyword_pack_json#}},"product_info":{{#1792000000000.product_info_json#}},"company_intro":{{#1792000000000.company_intro_json#}},"region":{{#1792000000000.region_json#}},"compliance_mode":{{#1792000000000.compliance_mode_json#}},"known_competitors":{{#1792000000000.known_competitors_json#}},"customer_requirements":{{#1792000000000.customer_requirements_json#}},"ent_dataset_id":{{#1792000000000.ent_dataset_id_json#}},"prod_dataset_id":{{#1792000000000.prod_dataset_id_json#}}}'
+            value: '{"inputs":{"keyword_pack":{{#1792000000000.keyword_pack_json#}},"company_name":{{#1792000000000.company_name_json#}},"industry":{{#1792000000000.industry_json#}},"company_intro":{{#1792000000000.company_intro_json#}},"ent_dataset_id":{{#1792000000000.ent_dataset_id_json#}},"product_info":{{#1792000000000.product_info_json#}},"prod_dataset_id":{{#1792000000000.prod_dataset_id_json#}},"region":{{#1792000000000.region_json#}},"compliance_mode":{{#1792000000000.compliance_mode_json#}},"known_competitors":{{#1792000000000.known_competitors_json#}},"customer_requirements":{{#1792000000000.customer_requirements_json#}},"comparison_count":{{#1792000000000.comparison_count_json#}},"merged_kb":{{#1792000000000.merged_kb_json#}}},"response_mode":"blocking","user":"geo-main"}'
           type: json
-        desc: 调用已上线竞品研究接口；重复请求命中运行中任务时由接口复用并等待原任务结果，旧版本409响应也允许继续进入桥接节点。
+        desc: blocking模式直连已发布的“生文：竞品相关接口”Dify工作流；请替换为该App真实API Key。
         error_handle_mode: continue-on-error
-        headers: Content-Type:application/json
+        headers: 'Content-Type:application/json
+
+          Authorization:Bearer app-proTLEWKB9QEJU2GBcvaXgBk'
         method: post
         params: ''
         retry_config:
@@ -9810,12 +9820,12 @@ workflow:
           retry_interval: 0
         selected: false
         timeout:
-          connect: 300
-          read: 1800
-          write: 600
-        title: 外置竞品研究Agent调用
+          connect: 30
+          read: 1000
+          write: 30
+        title: HTTP调用Dify竞品相关接口
         type: http-request
-        url: https://geo-competitor-api.ship.zhinao.qihoo.net/geo-competitor/research
+        url: http://ops.rag.qihoo.net/v1/workflows/run
         variables: []
       height: 201
       id: '1792000000001'
@@ -10345,146 +10355,30 @@ workflow:
       width: 243
       zIndex: 0
     - data:
-        code: "import json\n\ndef _parse(v):\n    if isinstance(v, dict):\n      \
-          \  b=v.get('body')\n        if isinstance(b,str):\n            try:return\
-          \ json.loads(b)\n            except:return {}\n        return b if isinstance(b,dict)\
-          \ else v\n    if isinstance(v,str):\n        try:return json.loads(v)\n\
-          \        except:return {}\n    return {}\n\ndef main(http_body=None):\n\
-          \    obj=_parse(http_body)\n    job_id=str(obj.get('job_id') or (obj.get('data')\
-          \ or {}).get('job_id') or '') if isinstance(obj,dict) else ''\n    status=str(obj.get('status')\
-          \ or (obj.get('data') or {}).get('status') or '') if isinstance(obj,dict)\
-          \ else ''\n    status_url=str(obj.get('status_url') or '') if isinstance(obj,dict)\
-          \ else ''\n    if status_url.startswith('/'):\n        status_url='https://geo-competitor-api.ship.zhinao.qihoo.net'\
-          \ + status_url\n    if not status_url and job_id:\n        status_url='https://geo-competitor-api.ship.zhinao.qihoo.net/geo-competitor/research/'\
-          \ + job_id\n    return {\n        'job_id': job_id,\n        'status': status,\n\
-          \        'status_url': status_url,\n        'post_body': str(http_body or\
-          \ '')\n    }\n"
+        code: "import json\n\ndef _parse(raw):\n    if isinstance(raw, dict):\n  \
+          \      return raw\n    try:\n        return json.loads(str(raw or '{}'))\n\
+          \    except Exception:\n        return {}\n\ndef main(dify_body=None, http_status_code=0):\n\
+          \    root = _parse(dify_body)\n    data = root.get('data') if isinstance(root.get('data'),\
+          \ dict) else {}\n    outputs = data.get('outputs') if isinstance(data.get('outputs'),\
+          \ dict) else {}\n    run_status = str(data.get('status') or root.get('status')\
+          \ or '')\n    error = str(data.get('error') or root.get('error') or '')\n\
+          \    verified_text = str(outputs.get('verified_text') or '')\n    detail\
+          \ = str(outputs.get('competitor_detail_text') or '')\n    try:\n       \
+          \ count = int(outputs.get('verified_count') or 0)\n    except Exception:\n\
+          \        count = 0\n    stats = outputs.get('verified_competitors')\n  \
+          \  if not isinstance(stats, (dict, list)):\n        stats = {}\n    rejected\
+          \ = str(outputs.get('rejected_text') or '')\n    if run_status != 'succeeded'\
+          \ and not error:\n        error = 'competitor workflow status=' + (run_status\
+          \ or 'unknown')\n    return {\n        'child_status': run_status or ('succeeded'\
+          \ if verified_text else 'unknown'),\n        'child_error': error,\n   \
+          \     'job_id': str(root.get('workflow_run_id') or data.get('id') or ''),\n\
+          \        'status_code': str(http_status_code or ''),\n        'competitor_detail_text':\
+          \ detail,\n        'competitor_evidence': verified_text,\n        'competitors_json':\
+          \ json.dumps(stats, ensure_ascii=False),\n        'search_log': json.dumps({'rejected_text':\
+          \ rejected}, ensure_ascii=False),\n        'verified_count': count,\n  \
+          \      'verified_text': verified_text,\n    }\n"
         code_language: python3
-        desc: 提取竞品异步研究 job_id，构造状态查询地址；兼容 POST 409 running。
-        outputs:
-          job_id:
-            children: null
-            type: string
-          post_body:
-            children: null
-            type: string
-          status:
-            children: null
-            type: string
-          status_url:
-            children: null
-            type: string
-        selected: false
-        title: 竞品异步任务桥接
-        type: code
-        variables:
-        - value_selector:
-          - '1792000000001'
-          - body
-          value_type: string
-          variable: http_body
-      height: 97
-      id: '1792000000003'
-      position:
-        x: 5806
-        y: 2628.5
-      positionAbsolute:
-        x: 5806
-        y: 2628.5
-      selected: true
-      sourcePosition: right
-      targetPosition: left
-      type: custom
-      width: 243
-      zIndex: 0
-    - data:
-        authorization:
-          config: ''
-          type: no-auth
-        body:
-          data: []
-          type: none
-        desc: 查询竞品异步研究任务状态；接口会对运行中任务短轮询，旧版本异常响应也保持可解析，不重复创建研究任务。
-        error_handle_mode: continue-on-error
-        headers: ''
-        method: get
-        params: ''
-        retry_config:
-          max_retries: 12
-          retry_enabled: true
-          retry_interval: 5000
-        selected: false
-        timeout:
-          connect: 300
-          read: 1800
-          write: 300
-        title: 外置竞品研究任务状态查询
-        type: http-request
-        url: '{{#1792000000003.status_url#}}'
-        variables: []
-      height: 155
-      id: '1792000000004'
-      position:
-        x: 6110
-        y: 2628.5
-      positionAbsolute:
-        x: 6110
-        y: 2628.5
-      selected: false
-      sourcePosition: right
-      targetPosition: left
-      type: custom
-      width: 243
-      zIndex: 0
-    - data:
-        code: "import json\n\ndef _parse(v):\n    if isinstance(v,dict):\n       \
-          \ b=v.get('body')\n        if isinstance(b,str):\n            try:return\
-          \ json.loads(b)\n            except:return {}\n        return b if isinstance(b,(dict,list))\
-          \ else v\n    if isinstance(v,str):\n        try:return json.loads(v)\n\
-          \        except:return {}\n    return {}\n\ndef _unwrap(obj):\n    if isinstance(obj,dict)\
-          \ and isinstance(obj.get('data'),dict):\n        data=obj['data']\n    \
-          \    if isinstance(data.get('outputs'),dict):\n            merged=dict(data['outputs'])\n\
-          \            for key in ('status','error','job_id'):\n                if\
-          \ key in data and key not in merged: merged[key]=data[key]\n           \
-          \ return merged\n        if isinstance(data.get('result'),dict):\n     \
-          \       merged=dict(data['result'])\n            for key in ('status','error','job_id'):\n\
-          \                if key in data and key not in merged: merged[key]=data[key]\n\
-          \            return merged\n    if isinstance(obj,dict) and isinstance(obj.get('outputs'),dict):\
-          \ return obj['outputs']\n    if isinstance(obj,dict) and isinstance(obj.get('result'),dict):\n\
-          \        merged=dict(obj['result'])\n        for key in ('status','error','job_id'):\n\
-          \            if key in obj and key not in merged: merged[key]=obj[key]\n\
-          \        return merged\n    return obj\n\ndef _has_result(obj):\n    if\
-          \ not isinstance(obj,dict):\n        return False\n    status=str(obj.get('status')\
-          \ or '').lower()\n    return bool(obj.get('verified_text') or obj.get('verified_competitors')\
-          \ or obj.get('competitors') or obj.get('competitor_detail_text') or status\
-          \ in {'succeeded','success','failed','error','empty','degraded'})\n\ndef\
-          \ main(post_body=None, status_body=None, bridge_job_id=''):\n    post=_unwrap(_parse(post_body))\n\
-          \    status=_unwrap(_parse(status_body))\n    obj=status if _has_result(status)\
-          \ else post\n    if not isinstance(obj,dict): obj={}\n    child_status=str(obj.get('status')\
-          \ or (obj.get('data') or {}).get('status') or '') if isinstance(obj,dict)\
-          \ else ''\n    child_error=str(obj.get('error') or (obj.get('data') or {}).get('error')\
-          \ or '') if isinstance(obj,dict) else ''\n    job_id=str(obj.get('job_id')\
-          \ or bridge_job_id or '') if isinstance(obj,dict) else str(bridge_job_id\
-          \ or '')\n    comps=(obj.get('verified_competitors') or obj.get('competitors')\
-          \ or []) if isinstance(obj,dict) else []\n    verified=obj.get('verified_text')\
-          \ if isinstance(obj,dict) else ''\n    detail=obj.get('competitor_detail_text')\
-          \ if isinstance(obj,dict) else ''\n    if not verified and isinstance(comps,list):\n\
-          \        verified='\\\\n'.join(str(x.get('brand') or x.get('name') or x)\
-          \ for x in comps if isinstance(x,dict))\n    if not detail and isinstance(comps,list):\n\
-          \        detail='\\\\n'.join(json.dumps(x,ensure_ascii=False) for x in comps)\n\
-          \    count=obj.get('verified_count') if isinstance(obj,dict) else None\n\
-          \    if isinstance(count,str):\n        try: count=int(count)\n        except\
-          \ Exception: count=None\n    if count is None: count=len(comps) if isinstance(comps,list)\
-          \ else 0\n    return {\n        'child_status':child_status or 'unknown',\n\
-          \        'child_error':child_error,\n        'job_id':job_id,\n        'status_code':str(obj.get('status_code')\
-          \ or obj.get('http_status') or ''),\n        'competitor_detail_text':str(detail\
-          \ or ''),\n        'competitor_evidence':str(obj.get('evidence_text') or\
-          \ obj.get('evidence') or '') if isinstance(obj,dict) else '',\n        'competitors_json':json.dumps(comps,ensure_ascii=False),\n\
-          \        'search_log':json.dumps(obj.get('search_log') or [],ensure_ascii=False)\
-          \ if isinstance(obj,dict) else '[]',\n        'verified_count':int(count\
-          \ or 0),\n        'verified_text':str(verified or '')\n    }\n"
-        code_language: python3
-        desc: 解析竞品接口结果；兼容200成功、200+data.status=failed和504网关超时，并把状态写入独立诊断字段。
+        desc: 解析Dify blocking workflow响应，并保持原9201000000016下游输出契约。
         outputs:
           child_error:
             children: null
@@ -10517,24 +10411,19 @@ workflow:
             children: null
             type: string
         selected: false
-        title: 竞品结果聚合
+        title: Dify竞品流程结果解析与适配
         type: code
         variables:
         - value_selector:
           - '1792000000001'
           - body
           value_type: string
-          variable: post_body
+          variable: dify_body
         - value_selector:
-          - '1792000000004'
-          - body
-          value_type: string
-          variable: status_body
-        - value_selector:
-          - '1792000000003'
-          - job_id
-          value_type: string
-          variable: bridge_job_id
+          - '1792000000001'
+          - status_code
+          value_type: number
+          variable: http_status_code
       height: 113
       id: '9201000000016'
       position:
