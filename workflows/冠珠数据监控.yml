@@ -962,20 +962,19 @@ workflow:
           \       else:continue\n            if not norm(rname) or not any(contains(rname,n)\
           \ or contains(n,rname) for n in names if norm(n)):continue\n           \
           \ try:p=int(pos)\n            except Exception:p=0\n            if p>0:found.append(p)\n\
-          \        return min(found) if found else 0\n    existing={norm(x.get(\"\
-          surface\") or x.get(\"name\") or x.get(\"canonical_name\")) for x in raw}\n\
+          \        return min(found) if found else 0\n    existing=[str(value).strip() for x in raw for value in (x.get(\"surface\"),x.get(\"name\"),x.get(\"canonical_name\")) if norm(value)]\n\
           \    for ridx,row in enumerate(ranked_rows,1):\n        if isinstance(row,str):name=row\n\
           \        elif isinstance(row,dict):name=str(row.get(\"name\") or row.get(\"\
           surface\") or row.get(\"brand\") or \"\")\n        else:continue\n     \
           \   name=re.sub(r\"\\s+\",\" \",name).strip()[:120]\n        if len(norm(name))<2\
-          \ or norm(name) in existing or looks_invalid(name):continue\n        evidence=[sid\
+          \ or any(contains(name,current) or contains(current,name) for current in existing) or looks_invalid(name):continue\n        evidence=[sid\
           \ for sid,item in smap.items() if contains(name,item.get(\"text\",\"\"))]\n\
           \        if not evidence:continue\n        raw.append({\"entity_id\":f\"\
           ER{ridx:03d}\",\"surface\":name,\"canonical_name\":name,\"parent_brand\"\
           :name,\n                    \"entity_type\":\"brand\",\"competition_role\"\
           :\"recommended\",\"rank_membership\":\"ordered_choice\",\n             \
           \       \"rank_anchor_sentence_id\":evidence[0],\"sentence_ids\":evidence,\"\
-          _recovered_from_ranking_analysis\":True})\n        existing.add(norm(name))\n\
+          _recovered_from_ranking_analysis\":True})\n        existing.append(name)\n\
           \    for idx,e in enumerate(raw[:100],1):\n        if not isinstance(e,dict):continue\n\
           \        surface=re.sub(r\"\\s+\",\" \",str(e.get(\"surface\") or e.get(\"\
           name\") or \"\")).strip()[:120]\n        canonical=re.sub(r\"\\s+\",\" \"\
