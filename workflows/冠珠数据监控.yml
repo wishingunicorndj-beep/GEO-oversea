@@ -1124,7 +1124,7 @@ workflow:
           \                                     \"sentence_ids\":[subject_sid],\"\
           _explicit_rank\":0,\"_declared_rank\":0,\n                             \
           \          \"_order\":order.get(subject_sid,99999),\"_offset\":0})\n   \
-          \ # 公司/品牌按主体去重；可独立选择的产品按标准产品名去重，避免P5兄弟产品被母品牌合并。\n    candidates.sort(key=lambda\
+          \ # 公司/品牌按主体去重；可独立选择的产品按标准产品名去重，避免P5兄弟产品被母品牌合并。\n    # 排名锚点必须包含品牌自身；集团/母公司名只能补充归属证据，不能借用兄弟品牌的名次。\n    for candidate in candidates:\n        if candidate.get(\"rank_membership\")!=\"ordered_choice\":continue\n        names=[str(candidate.get(\"surface\") or \"\"),str(candidate.get(\"canonical_name\") or \"\")]\n        own_hits=[sid for sid in candidate.get(\"sentence_ids\",[]) if explicit_position(smap.get(sid,{}))>0 and any(contains(name,smap.get(sid,{}).get(\"text\",\"\")) for name in names if len(norm(name))>=2)]\n        if own_hits:\n            own_sid=min(own_hits,key=lambda x:order.get(x,99999))\n            candidate[\"rank_anchor_sentence_id\"]=own_sid;candidate[\"_explicit_rank\"]=explicit_position(smap[own_sid]);candidate[\"_order\"]=order.get(own_sid,99999)\n    candidates.sort(key=lambda\
           \ x:(x[\"_order\"],x[\"_offset\"]))\n    unique=[];seen=set()\n    for e\
           \ in candidates:\n        module=str(e.get(\"module_id\") or \"M1\")\n \
           \       if e.get(\"entity_type\")==\"independent_product\":key=\"product:\"\
