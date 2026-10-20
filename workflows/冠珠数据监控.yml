@@ -456,16 +456,14 @@ workflow:
           \    先切开，否则一条“缺点”会吞掉后续多个产品模块。\"\"\"\n    boundaries = {0, len(line)}\n \
           \   for m in re.finditer(r\"[。！？!?；;]\", line):\n        boundaries.add(m.end())\n\
           \    # 支持“### 3\\\\. 产品”“## 模块”以及未转义的Markdown标题。\n    for m in re.finditer(r\"\
-          (?<!\\S)#{1,6}\\s+\", line):\n        if m.start()>0:boundaries.add(m.start())\n\
+          #{1,6}(?=\\s|[✅⚠️❌]|[^#])\", line):\n        if m.start()>0:boundaries.add(m.start())\n\
           \    # 单行压缩表格中，每个加粗的首列单元格都是新数据行。只在加粗内容后紧跟\n    # 管道符时切分，避免普通正文加粗或列表项被误拆成表格。\n\
           \    for m in re.finditer(r\"\\ue000[^\\ue001\\n]{1,160}\\ue001\\s*\\|\"\
           ,line):\n        if m.start()>0:boundaries.add(m.start())\n    # 产品卡片常用“香调/气质/适合/缺点/✅/⚠️”作为无标点字段边界，\n\
           \    # 这些边界必须拆开，避免把中性参数和后面的正负评价合并。\n    # 字段标签即使与前一短语粘连（如“插件缺点：默认推送”）也必须切开；\n\
           \    # 否定语境“并不适合”不作为字段标签处理。\n    for m in re.finditer(r\"(?:✅|⚠️|❌|(?:优点|缺点|香调|气质|优势|劣势)[：:]|(?<!不)适合[：:])\"\
-          , line):\n        if m.start()>0:boundaries.add(m.start())\n    # 支持同一物理行中的编号/项目符号；\\\
-          \\. 是 answer_raw 常见的转义写法。\n    for m in re.finditer(r\"(?<![0-9A-Za-z\\\
-          u4e00-\\u9fff])(?:\\d{1,2}\\\\?[.)、：:]|[①②③④⑤⑥⑦⑧⑨⑩])\\s*|(?<!\\S)[*•·▪◦]\\\
-          s+\", line):\n        table_start=line.rfind(\"\\ue000\",0,m.start())\n\
+          , line):\n        # Markdown标题后的图标属于标题本身，不能拆成独立段落。\n        if m.start()>0 and re.search(r\"#{1,6}\\s*$\",line[:m.start()]):continue\n        if m.start()>0:boundaries.add(m.start())\n    # 支持同一物理行中的编号/项目符号；\\\
+          \\. 是 answer_raw 常见的转义写法。\n    # 支持压缩在同一物理行的编号/项目符号，如“说明4.冠珠”“标题*萨米特”；排除小数和连续数字。\n    for m in re.finditer(r\"(?<![0-9.])(?:[1-9]\\d?\\\\?[.)、：:]|[①②③④⑤⑥⑦⑧⑨⑩])\\s*|(?<![*•·▪◦])[*•·▪◦](?![*•·▪◦])\\s*\", line):\n        table_start=line.rfind(\"\\ue000\",0,m.start())\n\
           \        if table_start>=0:\n            table_end=line.find(\"\\ue000\"\
           ,table_start+1)\n            if table_end<0:table_end=len(line)\n      \
           \      # 推荐单元格内部的“1.品牌、2.品牌”属于同一表格行，保留给分榜解析，\n            # 不能按普通编号列表切断管道结构。\n\
@@ -503,15 +501,14 @@ workflow:
           r\")) else raw_with_end)\n        line_start = cursor; cursor += len(raw_with_end)\n\
           \        evidence_raw = catalog_text(raw)\n        stripped = evidence_raw.strip()\n\
           \        if not stripped or re.match(r\"^\\s*\\|?[\\-:|\\s]{3,}\\|?\\s*$\"\
-          , stripped): continue\n        is_heading = bool(re.match(r\"^\\s{0,3}#{1,6}\\\
-          s+\", evidence_raw))\n        is_table = (stripped.count(\"|\") >= 2 and\
+          , stripped): continue\n        # 压缩 Markdown 标题可为“##✅一线品牌”或“#快速选品牌”。\n        is_heading = bool(re.match(r\"^\\s{0,3}#{1,6}\\s*(?:[✅⚠️❌]\\s*)?\\S+\", evidence_raw))\n        is_table = (stripped.count(\"|\") >= 2 and\
           \ len([cell for cell in stripped.split(\"|\") if cell.strip()]) >= 3) or\
           \ stripped == \"表格\"\n        is_list = bool(re.match(r\"^\\s*(?:[*•·▪◦]\\\
           s+|\\d+\\\\?[.)、]\\s*|[①②③④⑤⑥⑦⑧⑨⑩]\\s*)\", evidence_raw))\n        if is_heading:\
           \ heading = evidence_raw\n        context_before=\"\\n\".join(recent_lines[-4:])\n\
           \        for left, right, piece in exact_units(evidence_raw):\n        \
           \    # 同一raw行内各单元可能分别是标题、编号项或段落，不能沿用整行block。\n            unit_stripped=piece.strip()\n\
-          \            unit_heading=bool(re.match(r\"^#{1,6}\\s+\",unit_stripped))\n\
+          \            unit_heading=bool(re.match(r\"^#{1,6}\\s*(?:[✅⚠️❌]\\s*)?\\S+\",unit_stripped))\n\
           \            unit_table=(unit_stripped.count(\"|\") >= 2 and len([cell for\
           \ cell in unit_stripped.split(\"|\") if cell.strip()]) >= 3) or unit_stripped==\"\
           表格\"\n            unit_list=bool(re.match(r\"^(?:[*•·▪◦]\\s+|\\d+\\\\?[.)、]\\\
@@ -834,7 +831,7 @@ workflow:
           \ or \"\").strip();text=str(text or \"\")\n    if not name:return False\n\
           \    if re.fullmatch(r\"[A-Za-z0-9 ._+&-]+\",name):\n        return re.search(r\"\
           (?<![A-Za-z0-9])\"+re.escape(name)+r\"(?![A-Za-z0-9])\",text,flags=re.I)\
-          \ is not None\n    return norm(name) in norm(text)\ndef looks_invalid(name:\
+          \ is not None\n    return norm(name) in norm(text)\ndef rank_item_subject_match(name: str,text: str)->bool:\n    \"\"\"排名条目的编号后主语必须匹配，避免同集团说明里的品牌借走名次。\"\"\"\n    line=re.sub(r\"\\\\([.#*+\\-])\",r\"\\1\",str(text or \"\"))\n    line=re.sub(r\"^\\s{0,3}#{1,6}\\s*\", \"\", line)\n    line=re.sub(r\"^(?:(?:Top|No\\.?)\\s*[1-9]\\d*|第\\s*[1-9]\\d*\\s*(?:名|位)|[1-9]\\d*\\s*[.、)）:：]|[①②③④⑤⑥⑦⑧⑨⑩])\\s*\", \"\", line, flags=re.I)\n    return bool(norm(name) and norm(line).startswith(norm(name)))\ndef looks_invalid(name:\
           \ str)->bool:\n    s=str(name or \"\").strip();low=s.lower().replace(\"\
           \ \",\"\")\n    if re.fullmatch(r\"p\\s*\\d+(?:\\.\\d+)?(?:\\s*[/、-]\\s*p?\\\
           d+(?:\\.\\d+)?)*\",s,flags=re.I):return True\n    if any(x in low for x\
@@ -855,7 +852,7 @@ workflow:
           \    # 与“香奈儿蔚蓝”），但不允许把“360安全浏览器”扩成兄弟产品“360安全浏览器X”。\n    qualifiers=(\"男士\"\
           ,\"女士\",\"香水\",\"系列\",\"经典\",\"同名\",\"edt\",\"edp\")\n    if a in n:\n \
           \       return n[len(a):] in qualifiers\n    if n in a:\n        return\
-          \ a[len(n):] in qualifiers\n    return False\ndef explicit_position(item):\n\
+          \ a[len(n):] in qualifiers\n    return False\ndef is_atomic_rank_item(item):\n    \"\"\"排名锚点必须是一条独立编号项；压缩脏证据含多个编号时不采信。\"\"\"\n    line=str(item.get(\"line_text\") or item.get(\"text\") or \"\")\n    line=re.sub(r\"\\\\([.#*+\\-])\",r\"\\1\",line)\n    return len(re.findall(r\"(?:^|(?<![0-9.]))[1-9]\\d?\\s*[.、)）:：]\",line))==1\ndef explicit_position(item):\n\
           \    line=str(item.get(\"line_text\") or item.get(\"text\") or \"\")\n \
           \   line=re.sub(r\"\\\\([.#*+\\-])\",r\"\\1\",line)\n    prefix=re.sub(r\"\
           ^\\s{0,3}#{1,6}\\s*\",\"\",line).strip()\n    patterns=(r\"^(?:Top|No\\\
@@ -1046,11 +1043,7 @@ workflow:
           :declared_position(entity_names),\n                           \"_order\"\
           :order.get(sid,99999),\"_offset\":offset})\n    # v7单点修复：全局LLM可能识别到目标品牌，却把跨模块中的目标误标为background/不合格，\n\
           \    # 导致后续4a虽然brand_detected=true但只能复制到rank_pos=0。\n    # 当目标别名直接出现在“带明确序号的标题/列表/表格实体行”时，以原文证据确定性补入/升级为ordered_choice。\n\
-          \    def target_line_match(alias,unit):\n        a=norm(alias);u=norm(unit)\n\
-          \        if not a or not u or a not in u:return False\n        qualifiers=(\"\
-          男士\",\"女士\",\"香水\",\"系列\",\"经典\",\"同名\",\"edt\",\"edp\")\n        start=u.find(a);suffix=u[start+len(a):]\n\
-          \        # 行首序号/标点属于前缀，不影响命中；目标后若紧接X等兄弟产品后缀则拒绝。\n        return not suffix\
-          \ or any(suffix.startswith(q) for q in qualifiers)\n    target_rank_hits=[]\n\
+          \    def target_line_match(alias,unit):\n        # 排名证据要求“编号后的主语”就是目标；同集团、对比、说明中的品牌提及不能借走名次。\n        a=norm(alias);line=re.sub(r\"\\\\([.#*+\\-])\",r\"\\1\",str(unit or \"\"))\n        line=re.sub(r\"^\\s{0,3}#{1,6}\\s*\", \"\", line)\n        line=re.sub(r\"^(?:(?:Top|No\\.?)\\s*[1-9]\\d*|第\\s*[1-9]\\d*\\s*(?:名|位)|[1-9]\\d*\\s*[.、)）:：]|[①②③④⑤⑥⑦⑧⑨⑩])\\s*\", \"\", line, flags=re.I)\n        u=norm(line)\n        if not a or not u or not u.startswith(a):return False\n        qualifiers=(\"男士\",\"女士\",\"香水\",\"系列\",\"经典\",\"同名\",\"edt\",\"edp\")\n        suffix=u[len(a):]\n        return not suffix or any(suffix.startswith(q) for q in qualifiers) or suffix.startswith(\"新明珠\")\n    target_rank_hits=[]\n\
           \    for sid,item in smap.items():\n        if sid in source_background or re.search(postscript_re,str(item.get(\"context_heading\") or \"\"))\
           \ or explicit_position(item)<=0:continue\n        unit=str(item.get(\"text\"\
           ) or \"\")\n        matched_aliases=[str(a) for a in target_aliases if len(norm(a))>=4\
@@ -1123,7 +1116,7 @@ workflow:
           \                                     \"sentence_ids\":[subject_sid],\"\
           _explicit_rank\":0,\"_declared_rank\":0,\n                             \
           \          \"_order\":order.get(subject_sid,99999),\"_offset\":0})\n   \
-          \ # 公司/品牌按主体去重；可独立选择的产品按标准产品名去重，避免P5兄弟产品被母品牌合并。\n    # 排名锚点必须包含品牌自身；集团/母公司名只能补充归属证据，不能借用兄弟品牌的名次。\n    for candidate in candidates:\n        if candidate.get(\"rank_membership\")!=\"ordered_choice\":continue\n        names=[str(candidate.get(\"surface\") or \"\"),str(candidate.get(\"canonical_name\") or \"\")]\n        own_hits=[sid for sid in candidate.get(\"sentence_ids\",[]) if explicit_position(smap.get(sid,{}))>0 and any(contains(name,smap.get(sid,{}).get(\"text\",\"\")) for name in names if len(norm(name))>=2)]\n        if own_hits:\n            own_sid=min(own_hits,key=lambda x:order.get(x,99999))\n            candidate[\"rank_anchor_sentence_id\"]=own_sid;candidate[\"_explicit_rank\"]=explicit_position(smap[own_sid]);candidate[\"_order\"]=order.get(own_sid,99999)\n    candidates.sort(key=lambda\
+          \ # 公司/品牌按主体去重；可独立选择的产品按标准产品名去重，避免P5兄弟产品被母品牌合并。\n    # 排名锚点必须以品牌自身为编号后主语；集团/母公司名只能补充归属证据，不能借用兄弟品牌的名次。\n    for candidate in candidates:\n        if candidate.get(\"rank_membership\")!=\"ordered_choice\":continue\n        names=[str(candidate.get(\"surface\") or \"\"),str(candidate.get(\"canonical_name\") or \"\")]\n        own_hits=[sid for sid in candidate.get(\"sentence_ids\",[]) if explicit_position(smap.get(sid,{}))>0 and any(rank_item_subject_match(name,smap.get(sid,{}).get(\"text\",\"\")) for name in names if len(norm(name))>=2)]\n        if own_hits:\n            own_sid=min(own_hits,key=lambda x:order.get(x,99999))\n            candidate[\"rank_anchor_sentence_id\"]=own_sid;candidate[\"_explicit_rank\"]=explicit_position(smap[own_sid]);candidate[\"_order\"]=order.get(own_sid,99999)\n    candidates.sort(key=lambda\
           \ x:(x[\"_order\"],x[\"_offset\"]))\n    unique=[];seen=set()\n    for e\
           \ in candidates:\n        module=str(e.get(\"module_id\") or \"M1\")\n \
           \       if e.get(\"entity_type\")==\"independent_product\":key=\"product:\"\
@@ -1199,7 +1192,7 @@ workflow:
           \ + 目标完整别名\n    # 三重可验证条件建ETARGET，不从正文任意品牌名扩张，避免把普通背景/比较宾语升级。\n    if query_recommendation_intent:\n\
           \        target_alias_candidates=[str(a).strip() for a in target_aliases\
           \ if len(norm(a))>=2]\n        existing_target=next((e for e in unique if\
-          \ e.get(\"is_target_entity\")),None)\n        for sid,item in smap.items():\n\
+          \ e.get(\"is_target_entity\")),None)\n        # 仅恢复完全漏出的目标；已有正式目标时，后续“同集团”提及不能覆盖其锚点。\n        for sid,item in ([] if existing_target else smap.items()):\n\
           \            if sid in source_background:continue\n            if re.search(postscript_re,str(item.get(\"context_heading\") or \"\")):continue\n            scope_text=str(item.get(\"\
           text\") or \"\")\n            context=\" \".join((scope_text,str(item.get(\"\
           context_heading\") or \"\")))\n            if not any(contains(a,scope_text)\
@@ -1302,10 +1295,9 @@ workflow:
           ]=rank;e[\"rank_position\"]=rank\n    for e in unique:\n        if e.get(\"\
           rank_membership\")!=\"ordered_choice\":\n            e[\"global_position\"\
           ]=0;e[\"rank_position\"]=0\n    # 同一实体跨平行模块出现时合并为一个业务实体，并保留最优有效模块内排名。\n\
-          \    merged=[];merged_by_key={}\n    for e in unique:\n        if e.get(\"\
+          \    merged=[];merged_by_key={}\n    def target_rank_quality(row):\n        # 目标重复实体只信任正式编号条目；同集团说明、总结复述均不能提供排名。\n        anchor=str(row.get(\"rank_anchor_sentence_id\") or \"\");item=smap.get(anchor,{})\n        return 1 if explicit_position(item)>0 and any(contains(n,item.get(\"text\",\"\")) for n in (row.get(\"surface\",\"\"),row.get(\"canonical_name\",\"\")) if len(norm(n))>=2) else 0\n    for e in unique:\n        if e.get(\"\
           entity_type\")==\"independent_product\":logical=\"product:\"+product_key(e.get(\"\
-          canonical_name\") or e.get(\"surface\"))\n        else:logical=\"entity:\"\
-          +norm(e.get(\"parent_brand\") or e.get(\"canonical_name\"))\n        old=merged_by_key.get(logical)\n\
+          canonical_name\") or e.get(\"surface\"))\n        else:\n            # 母集团只表示归属，不能作为品牌去重键：冠珠与萨米特同属新明珠但必须保留为两个实体。\n            logical=\"entity:\"+norm(e.get(\"canonical_name\") or e.get(\"surface\") or e.get(\"parent_brand\"))\n        old=merged_by_key.get(logical)\n\
           \        if not old:\n            merged_by_key[logical]=e;merged.append(e);continue\n\
           \        old_rank=int(old.get(\"rank_position\",0) or 0);new_rank=int(e.get(\"\
           rank_position\",0) or 0)\n        if new_rank>0 and (old_rank<=0 or new_rank<old_rank):\n\
@@ -1808,9 +1800,7 @@ workflow:
           \ for a in alias_names for n in primary if a and n)\n            if not\
           \ entity_match and norm(parent):entity_match=any(target_alias_match(a,parent)\
           \ for a in alias_names if norm(a))\n            if entity_match:\n     \
-          \           try:p=int(e.get(\"rank_position\",0))\n                except\
-          \ Exception:p=0\n                if p>0:candidates.append(p)\n        if\
-          \ candidates:rank=min(candidates)\n        # 目标未进入entity_inventory时，按目标证据句所在核心表格/列表的物理位置补排。\n\
+          \           anchor=str(e.get(\"rank_anchor_sentence_id\") or \"\");anchor_item=smap.get(anchor,{})\n                # rank_position 只能来自同一条有显式编号的正式条目，不能借同集团说明或总结复述。\n                line=str(anchor_item.get(\"line_text\") or anchor_item.get(\"text\") or \"\")\n                line=re.sub(r\"\\\\([.#*+\\-])\",r\"\\1\",line);prefix=re.sub(r\"^\\s{0,3}#{1,6}\\s*\",\"\",line).strip()\n                numbered=bool(re.match(r\"^(?:Top|No\\.?)[ \\t]*[1-9]\\d*\\b|^第[ \\t]*[1-9]\\d*[ \\t]*(?:名|位)|^[1-9]\\d*[ \\t]*[.、)）:：]\",prefix,re.I))\n                try:p=int(e.get(\"rank_position\",0))\n                except Exception:p=0\n                if p>0 and numbered:candidates.append(p)\n        if candidates:rank=min(candidates)\n        # 目标未进入entity_inventory时，按目标证据句所在核心表格/列表的物理位置补排。\n\
           \        if rank<=0:\n            anchor_candidates=[]\n            for\
           \ sid in list(dict.fromkeys(llm_evidence_ids+direct_ids)):\n           \
           \     item=smap.get(sid,{})\n                line=\" \".join(str(item.get(k)\
