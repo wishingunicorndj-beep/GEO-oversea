@@ -1799,6 +1799,36 @@ workflow:
             若转折已被目录拆成两个sentence_id，前后分别判断；若仍在同一ID，只按转折后重点与整体主导方向放入pos或neg之一。同一sentence_id在目标内只能出现一次，pos与neg必须互斥。
 
 
+            【五点五、中性证据（neu）】
+
+            除正负证据外，还要穷举属于目标的全部中性事实句：参数、规格、成分、材质、工艺、价格区间、适用人群、使用方法、渠道地址、资质荣誉、品类归属等客观陈述。中性句必须只含事实或属性描述，不包含褒贬评价；一旦该句有明确正/负语义，只能进入pos/neg，不得重复进入neu。
+
+            neu格式与pos/neg相同，为[id,keywords]；每句keywords最多2个，且与pos、neg合计每句不超过2个。keywords必须是该句原文中逐字符连续出现的片段，长度不超过10个字符，不得改写、缩写或同义替换。若一句无法切出合格的原文短词，则不要为该句输出关键词。
+
+            neu与pos/neg互斥：同一个sentence_id不得同时出现在三类中。
+
+            关键词必须语义完整：不得把更长的短语截断成相反或无关含义。例如“偏高性价比”中的“偏高”属于正向短语“性价比偏高”，不能作为负向关键词输出；应输出“性价比高”这类完整片段，或该句不输出关键词。同理“不足半小时”“难度不高”等不得只截取“不足”“不高”。
+
+
+            【五点六、关键词挑选粒度（三类通用，必须严格遵守）】
+
+            keywords是给词云展示的“评价词/属性词”，不是句子摘要。按以下优先级挑选：
+
+            1. 优选“属性词+评价”或“评价短语”：如“性价比高、密度高、硬度强、防滑好、口碑好、吸水率较低、耐磨性一般、价格偏高、施工要求高”。这类词是首选。
+
+            2. 次选单个有信息量的属性名词：如“吸水率、耐磨度、平整度、检测报告、泡水处理”。
+
+            3. 禁止选整段陈述、从句或说明性长片段：如“因产品类型不同、新明珠集团旗下、属于瓷质砖、接近玻化砖水平、10%-20% 之间、0.5% 的瓷质砖”等。这类词只是事实陈述，不构成可展示的词云词条，禁止输出。
+
+            4. 禁止选以“因/但/而/并/所以/如果/建议/属于/作为/包括/涵盖/通常/一般”等连接词、介词或谓语动词开头的片段；禁止选“XX且XX”这类用连词拼接的复合片段，应拆成两个独立词或只取其中一个。
+
+            5. 同一句最多2个词，优先挑最短、最独立、最像词云词条的那个；宁可少输出，也不要输出长陈述片段。
+
+            6. 每条证据句优先给出可用于词云的短词；若整句只有纯事实罗列、无法切出3-10字的评价词或属性词，则不要为该句输出关键词。
+
+            负面词同样按上述粒度挑选，且必须是原文中对目标明确表达缺点、风险或落败的短词。
+
+
             【六、原文精确与输出】
 
             只返回sentence_id和该句中的原文keywords，不要改写句子。keywords必须逐字符存在于对应text，禁止改标点、空格、大小写或同义替换。brand填写输入声明别名，mention填写正文真实、最完整写法。
@@ -1827,11 +1857,11 @@ workflow:
 
             仅输出严格紧凑JSON：
 
-            {"detected":true,"brand":"声明别名","mention":"正文写法","pattern":"P5","evidence":["S0001"],"score":0.3,"reason":"不超过100字","words":["原文词"],"pos":[["S0001",["关键词"]]],"neg":[["S0002",["关键词"]]]}
+            {"detected":true,"brand":"声明别名","mention":"正文写法","pattern":"P5","evidence":["S0001"],"score":0.3,"reason":"不超过100字","words":["原文词"],"pos":[["S0001",["关键词"]]],"neg":[["S0002",["关键词"]]],"neu":[["S0003",["关键词"]]]}
 
-            若未识别：{"detected":false,"brand":"","mention":"","pattern":"P5","evidence":[],"score":0,"reason":"品牌未被提及","words":[],"pos":[],"neg":[]}。
+            若未识别：{"detected":false,"brand":"","mention":"","pattern":"P5","evidence":[],"score":0,"reason":"品牌未被提及","words":[],"pos":[],"neg":[],"neu":[]}。
 
-            不要Markdown、代码围栏、推理过程或额外字段。输出前检查：独立推荐门禁、P3/P4/P5边界、兄弟产品、否定/转折、比较败方、表格串位、全部正负证据和JSON闭合。'
+            不要Markdown、代码围栏、推理过程或额外字段。输出前检查：独立推荐门禁、P3/P4/P5边界、兄弟产品、否定/转折、比较败方、表格串位、全部正负证据、中性证据neu无遗漏且与pos/neg互斥、keywords逐字来自原文且不超过10字、关键词为评价词/属性词而非整段陈述、JSON闭合。'
         - id: 5181dce1-1d70-4d9c-a143-d82b51804a70
           role: user
           text: 'query：{{#1766746641582.query#}}
@@ -1936,14 +1966,15 @@ workflow:
           mention\",\"\"),\"brand_pattern\":compact.get(\"pattern\",\"\"),\n     \
           \       \"evidence_sentence_ids\":compact.get(\"evidence\",[]),\"sentiment_score\"\
           :compact.get(\"score\",0),\n            \"sentiment_reasoning\":compact.get(\"\
-          reason\",\"\"),\"sentiment_classic_words\":compact.get(\"words\",[]),\n\
-          \            \"positive_sentences\":expand(compact.get(\"pos\",[])),\"negative_sentences\"\
-          :expand(compact.get(\"neg\",[]))}\n    catalog=parse_list(sentence_catalog)\n\
-          \    aliases=parse_list(target_aliases)\n    entities=parse_list(entity_inventory)\n\
-          \    smap={str(x.get(\"id\")):x for x in catalog if isinstance(x,dict) and\
-          \ x.get(\"id\")};order={sid:i for i,sid in enumerate(smap)}\n    subject_entities=[e\
-          \ for e in entities if isinstance(e,dict) and e.get(\"is_target_entity\"\
-          ) and e.get(\"rank_membership\")==\"independent_subject\"]\n    subject_start=min((order.get(str(e.get(\"\
+          reason\",\"\"),\"sentiment_classic_words\":compact.get(\"words\",[]),\"\
+          neutral_sentences\":expand(compact.get(\"neu\",[])),\n            \"positive_sentences\"\
+          :expand(compact.get(\"pos\",[])),\"negative_sentences\":expand(compact.get(\"\
+          neg\",[]))}\n    catalog=parse_list(sentence_catalog)\n    aliases=parse_list(target_aliases)\n\
+          \    entities=parse_list(entity_inventory)\n    smap={str(x.get(\"id\")):x\
+          \ for x in catalog if isinstance(x,dict) and x.get(\"id\")};order={sid:i\
+          \ for i,sid in enumerate(smap)}\n    subject_entities=[e for e in entities\
+          \ if isinstance(e,dict) and e.get(\"is_target_entity\") and e.get(\"rank_membership\"\
+          )==\"independent_subject\"]\n    subject_start=min((order.get(str(e.get(\"\
           rank_anchor_sentence_id\") or \"\"),99999) for e in subject_entities),default=99999)\n\
           \    subject_end=min((order.get(sid,99999) for sid,item in smap.items()\
           \ if re.fullmatch(r\"\\s*相关视频\\s*\",str(item.get(\"text\") or \"\"))),default=99999)\n\
@@ -2181,17 +2212,70 @@ workflow:
           \ if neg else pos):pool.extend(row.get(\"keywords\",[]))\n            classic=words(pool,3)\
           \ or ([\"仅提及\"] if detected else [])\n        if not reason:\n         \
           \   reason=f\"{matched or '目标品牌'}：正向证据{len(pos)}条，负向证据{len(neg)}条\"\n  \
-          \  label=\"positive\" if score>=0.1 else (\"negative\" if score<=-0.1 else\
-          \ \"neutral\")\n    detail={\"char_count\":{\"total\":total,\"positive\"\
-          :sum(x[\"char_count\"] for x in pos),\"negative\":sum(x[\"char_count\"]\
-          \ for x in neg)},\"positive_sentences\":pos,\"negative_sentences\":neg}\n\
-          \    # 业务固定口径：是否重点推荐 = 是否位于全文排名前三；强推荐词但无排名不能置true。\n    top3=detected and\
-          \ str(is_ranking).lower()==\"true\" and 1<=rank<=3\n    return {\"brand_detected\"\
+          \  # ---------------- 情感词云（新增） ----------------\n    WC_MAX=10\n    wc_target_names=[];wc_other_names=[]\n\
+          \    for e in (entities if isinstance(entities,list) else []):\n       \
+          \ if not isinstance(e,dict):continue\n        names=[str(e.get(k) or \"\"\
+          ).strip() for k in (\"surface\",\"canonical_name\",\"parent_brand\")]\n\
+          \        names=[n for n in dict.fromkeys(names) if n]\n        if e.get(\"\
+          is_target_entity\") and e.get(\"rank_membership\") in {\"ordered_choice\"\
+          ,\"independent_subject\"}:\n            wc_target_names.extend(names)\n\
+          \        else:\n            wc_other_names.extend(names)\n    wc_target_names=list(dict.fromkeys(wc_target_names))\n\
+          \    wc_other_names=[n for n in dict.fromkeys(wc_other_names)\n        \
+          \            if not any(contains(t,n) or contains(n,t) for t in wc_target_names\
+          \ if t)]\n    text_start={str(x.get(\"text\") or \"\"):int(x.get(\"start\"\
+          ,0)) for x in smap.values()}\n\n    def wc_owned(unit):\n        if not\
+          \ unit:return False\n        if any(contains(n,unit) for n in wc_target_names\
+          \ if n):return True\n        # 点名的竞品句一律排除，避免竞品评价计入本品词云\n        if any(contains(n,unit)\
+          \ for n in wc_other_names if n):return False\n        # 围绕本品提问的形态下，未点名竞品的句子视为承接主语\n\
+          \        return not wc_other_names\n\n    # 负面词根可能只是更长正向短语的一部分，如“偏高性价比”中的“偏高”。\n\
+          \    WC_POS_TAIL=(\"性价比\",\"口碑\",\"品质\",\"评分\",\"评价\",\"满意度\",\"关注度\",\"\
+          知名度\",\"复购率\",\n                 \"销量\",\"热度\",\"颜值\",\"配置\",\"性能\",\"档次\"\
+          ,\"频率\",\"占比\")\n    def wc_occ(term,unit,negative):\n        \"\"\"返回有效出现位置；负向词若紧接正向属性词，则该次出现视为误切并跳过。\"\
+          \"\"\n        out=[];cur=0\n        while True:\n            i=unit.find(term,cur)\n\
+          \            if i<0:break\n            if not (negative and any(unit[i+len(term):].startswith(a)\
+          \ for a in WC_POS_TAIL)):\n                out.append(i)\n            cur=i+len(term)\n\
+          \        return out\n    def wc_pick(row,negative=False):\n        unit=str(row.get(\"\
+          text\") or \"\")\n        if not wc_owned(unit):return None\n        kws=[]\n\
+          \        for w in (row.get(\"keywords\") or []):\n            t=str(w or\
+          \ \"\").strip()\n            if not t or len(t)>WC_MAX or t not in unit\
+          \ or t in kws:continue\n            if not wc_occ(t,unit,negative):continue\
+          \   # 该词全部出现均为误切，丢弃\n            kws.append(t)\n            if len(kws)>=2:break\
+          \   # 每句三类合计最多2个\n        if not kws:return None\n        return {\"text\"\
+          :unit,\"keywords\":kws,\"start\":text_start.get(unit,999999999)}\n\n   \
+          \ def wc_cloud(rows,negative=False):\n        terms={}\n        for row\
+          \ in rows:\n            unit=row[\"text\"]\n            for t in row[\"\
+          keywords\"]:\n                occ=wc_occ(t,unit,negative)\n            \
+          \    if not occ:continue\n                at=row[\"start\"]+occ[0]\n   \
+          \             if t not in terms:terms[t]={\"term\":t,\"count\":0,\"first\"\
+          :at}\n                elif at<terms[t][\"first\"]:terms[t][\"first\"]=at\n\
+          \                terms[t][\"count\"]+=len(occ)\n        return [{\"term\"\
+          :x[\"term\"],\"count\":x[\"count\"]}\n                for x in sorted(terms.values(),key=lambda\
+          \ z:(-z[\"count\"],z[\"first\"],z[\"term\"]))]\n\n    if detected:\n   \
+          \     wc_pos=[r for r in (wc_pick(x) for x in pos) if r]\n        wc_neg=[r\
+          \ for r in (wc_pick(x,True) for x in neg) if r]\n        neu_rows,_=details(data.get(\"\
+          neutral_sentences\",[]) if isinstance(data,dict) else [])\n        used_text={x[\"\
+          text\"] for x in pos+neg}\n        wc_neu=[r for r in (wc_pick(x) for x\
+          \ in neu_rows if x[\"text\"] not in used_text) if r]\n    else:\n      \
+          \  wc_pos=[];wc_neg=[];wc_neu=[]\n    word_clouds={\"positive\":wc_cloud(wc_pos),\"\
+          neutral\":wc_cloud(wc_neu),\"negative\":wc_cloud(wc_neg,True)}\n    word_cloud_summary={\n\
+          \        \"positive_count\":sum(x[\"count\"] for x in word_clouds[\"positive\"\
+          ]),\n        \"neutral_count\":sum(x[\"count\"] for x in word_clouds[\"\
+          neutral\"]),\n        \"negative_count\":sum(x[\"count\"] for x in word_clouds[\"\
+          negative\"]),\n    }\n    word_cloud_summary[\"total_count\"]=(word_cloud_summary[\"\
+          positive_count\"]\n        +word_cloud_summary[\"neutral_count\"]+word_cloud_summary[\"\
+          negative_count\"])\n\n    label=\"positive\" if score>=0.1 else (\"negative\"\
+          \ if score<=-0.1 else \"neutral\")\n    detail={\"char_count\":{\"total\"\
+          :total,\"positive\":sum(x[\"char_count\"] for x in pos),\"negative\":sum(x[\"\
+          char_count\"] for x in neg)},\"positive_sentences\":pos,\"negative_sentences\"\
+          :neg}\n    # 业务固定口径：是否重点推荐 = 是否位于全文排名前三；强推荐词但无排名不能置true。\n    top3=detected\
+          \ and str(is_ranking).lower()==\"true\" and 1<=rank<=3\n    return {\"brand_detected\"\
           :\"true\" if detected else \"false\",\"matched_brand\":matched if detected\
           \ else \"\",\"rank_pos\":str(rank if rank>0 else 0),\n            \"is_top_recommend\"\
           :\"true\" if top3 else \"false\",\"sentiment_score\":f\"{score:.3f}\",\"\
           sentiment_label\":label,\n            \"sentiment_reasoning\":reason,\"\
-          sentiment_classic_words\":classic,\"brand_sentiment_analysis\":detail}"
+          sentiment_classic_words\":classic,\"brand_sentiment_analysis\":detail,\n\
+          \            \"sentiment_word_clouds\":word_clouds,\"sentiment_word_cloud_summary\"\
+          :word_cloud_summary}"
         code_language: python3
         desc: 兼容紧凑目标LLM协议；按完整目录校验证据并回填原文；排名、Top3与中正率由代码确定性计算
         outputs:
@@ -2222,6 +2306,12 @@ workflow:
           sentiment_score:
             children: null
             type: string
+          sentiment_word_clouds:
+            children: null
+            type: object
+          sentiment_word_cloud_summary:
+            children: null
+            type: object
         selected: false
         title: 4a-2.目标证据、排名前三与中正率计算（代码）
         type: code
@@ -2648,27 +2738,31 @@ workflow:
           \ word_cloud_tags: list,\n         sentiment_classic_words: list, references:\
           \ str, task_id: str, model_id: str,\n         company_name: str, brand_name:\
           \ str, ent_dataset_id: str, answer_raw: str,\n         query: str, search_results:\
-          \ str, latency_ms: Any, tokens_count: Any,\n         comps_list: str) ->\
-          \ dict:\n    return {\n        \"brand_detected\":str(brand_detected or\
-          \ \"false\"), \"matched_brand\":str(matched_brand or \"\"),\n        \"\
-          rank_pos\":str(rank_pos or \"\"), \"is_top_recommend\":str(is_top_recommend\
-          \ or \"false\"),\n        \"sentiment_score\":str(sentiment_score or \"\
-          0.000\"), \"sentiment_label\":str(sentiment_label or \"neutral\"),\n   \
-          \     \"sentiment_reasoning\":str(sentiment_reasoning or \"\"), \"brand_sentiment_analysis\"\
-          :brand_sentiment_analysis or {},\n        \"is_ranking\":str(is_ranking\
-          \ or \"false\"), \"competitor_mentions\":competitor_mentions or [],\n  \
-          \      \"competitor_pos\":str(competitor_pos or \"\"), \"competitor_count\"\
-          :str(competitor_count or \"0\"),\n        \"summary\":str(summary or \"\"\
-          ), \"word_cloud_tags\":word_cloud_tags or [],\n        \"sentiment_classic_words\"\
-          :sentiment_classic_words or [], \"referenced_urls\":urls(references),\n\
-          \        \"task_id\":str(task_id or \"\"), \"model_id\":str(model_id or\
-          \ \"\"), \"company_name\":str(company_name or \"\"),\n        \"brand_name\"\
-          :str(brand_name or \"\"), \"ent_dataset_id\":str(ent_dataset_id or \"\"\
-          ),\n        \"answer_raw\":str(answer_raw or \"\"), \"query\":str(query\
-          \ or \"\"), \"search_results\":str(search_results or \"\"),\n        \"\
-          latency_ms\":str(latency_ms if latency_ms is not None else \"\"), \"tokens_count\"\
-          :str(tokens_count if tokens_count is not None else \"\"),\n        \"comps_list\"\
-          :str(comps_list or \"\")\n    }\n"
+          \ str, latency_ms: Any, tokens_count: Any,\n         comps_list: str, sentiment_word_clouds:\
+          \ Any = None,\n         sentiment_word_cloud_summary: Any = None) -> dict:\n\
+          \    return {\n        \"brand_detected\":str(brand_detected or \"false\"\
+          ), \"matched_brand\":str(matched_brand or \"\"),\n        \"rank_pos\":str(rank_pos\
+          \ or \"\"), \"is_top_recommend\":str(is_top_recommend or \"false\"),\n \
+          \       \"sentiment_score\":str(sentiment_score or \"0.000\"), \"sentiment_label\"\
+          :str(sentiment_label or \"neutral\"),\n        \"sentiment_reasoning\":str(sentiment_reasoning\
+          \ or \"\"), \"brand_sentiment_analysis\":brand_sentiment_analysis or {},\n\
+          \        \"is_ranking\":str(is_ranking or \"false\"), \"competitor_mentions\"\
+          :competitor_mentions or [],\n        \"competitor_pos\":str(competitor_pos\
+          \ or \"\"), \"competitor_count\":str(competitor_count or \"0\"),\n     \
+          \   \"summary\":str(summary or \"\"), \"word_cloud_tags\":word_cloud_tags\
+          \ or [],\n        \"sentiment_classic_words\":sentiment_classic_words or\
+          \ [], \"referenced_urls\":urls(references),\n        \"task_id\":str(task_id\
+          \ or \"\"), \"model_id\":str(model_id or \"\"), \"company_name\":str(company_name\
+          \ or \"\"),\n        \"brand_name\":str(brand_name or \"\"), \"ent_dataset_id\"\
+          :str(ent_dataset_id or \"\"),\n        \"answer_raw\":str(answer_raw or\
+          \ \"\"), \"query\":str(query or \"\"), \"search_results\":str(search_results\
+          \ or \"\"),\n        \"latency_ms\":str(latency_ms if latency_ms is not\
+          \ None else \"\"), \"tokens_count\":str(tokens_count if tokens_count is\
+          \ not None else \"\"),\n        \"comps_list\":str(comps_list or \"\"),\n\
+          \        \"sentiment_word_clouds\":sentiment_word_clouds or {\"positive\"\
+          :[],\"neutral\":[],\"negative\":[]},\n        \"sentiment_word_cloud_summary\"\
+          :sentiment_word_cloud_summary or {\"positive_count\":0,\"neutral_count\"\
+          :0,\"negative_count\":0,\"total_count\":0}\n    }\n"
         code_language: python3
         desc: 外部契约不变；summary/key_tags取全局节点；目标与竞品取校验分支
         outputs:
@@ -2753,6 +2847,12 @@ workflow:
           word_cloud_tags:
             children: null
             type: array[string]
+          sentiment_word_clouds:
+            children: null
+            type: object
+          sentiment_word_cloud_summary:
+            children: null
+            type: object
         selected: false
         title: 5.最终指标合并（代码）
         type: code
@@ -2865,6 +2965,14 @@ workflow:
           - '1766746558986'
           - comps_list
           variable: comps_list
+        - value_selector:
+          - '17774583588430'
+          - sentiment_word_clouds
+          variable: sentiment_word_clouds
+        - value_selector:
+          - '17774583588430'
+          - sentiment_word_cloud_summary
+          variable: sentiment_word_cloud_summary
       height: 98
       id: '17774728161280'
       position:
@@ -2981,6 +3089,14 @@ workflow:
           - '1792051864333'
           - sentiment_classic_words
           variable: sentiment_classic_words
+        - value_selector:
+          - '1792051864333'
+          - sentiment_word_clouds
+          variable: sentiment_word_clouds
+        - value_selector:
+          - '1792051864333'
+          - sentiment_word_cloud_summary
+          variable: sentiment_word_cloud_summary
         selected: false
         title: 结束
         type: end
@@ -3003,8 +3119,9 @@ workflow:
           \ Any, sentiment_reasoning: Any,\n         brand_sentiment_analysis: Any,\
           \ is_ranking: Any,\n         competitor_mentions: Any, competitor_pos: Any,\
           \ competitor_count: Any,\n         summary: Any, word_cloud_tags: Any, matched_brand:\
-          \ Any,\n         sentiment_classic_words: Any) -> dict:\n    return {\n\
-          \        \"branch_result\": {\n            \"brand_detected\": brand_detected,\n\
+          \ Any,\n         sentiment_classic_words: Any,\n         sentiment_word_clouds:\
+          \ Any = None, sentiment_word_cloud_summary: Any = None) -> dict:\n    return\
+          \ {\n        \"branch_result\": {\n            \"brand_detected\": brand_detected,\n\
           \            \"rank_pos\": rank_pos,\n            \"is_top_recommend\":\
           \ is_top_recommend,\n            \"sentiment_score\": sentiment_score,\n\
           \            \"sentiment_label\": sentiment_label,\n            \"sentiment_reasoning\"\
@@ -3014,7 +3131,10 @@ workflow:
           \            \"competitor_count\": competitor_count,\n            \"summary\"\
           : summary,\n            \"key_tags\": word_cloud_tags,\n            \"matched_brand\"\
           : matched_brand,\n            \"sentiment_classic_words\": sentiment_classic_words,\n\
-          \        }\n    }"
+          \            \"sentiment_word_clouds\": sentiment_word_clouds or {\"positive\"\
+          : [], \"neutral\": [], \"negative\": []},\n            \"sentiment_word_cloud_summary\"\
+          : sentiment_word_cloud_summary or {\"positive_count\": 0, \"neutral_count\"\
+          : 0, \"negative_count\": 0, \"total_count\": 0},\n        }\n    }"
         code_language: python3
         desc: 将现有逻辑的计算结果整理为单 End 节点可读取的统一对象，不改变任何业务计算。
         outputs:
@@ -3085,6 +3205,14 @@ workflow:
           - '17774728161280'
           - sentiment_classic_words
           variable: sentiment_classic_words
+        - value_selector:
+          - '17774728161280'
+          - sentiment_word_clouds
+          variable: sentiment_word_clouds
+        - value_selector:
+          - '17774728161280'
+          - sentiment_word_cloud_summary
+          variable: sentiment_word_cloud_summary
       height: 114
       id: '1792051864331'
       position:
@@ -3140,7 +3268,11 @@ workflow:
           summary\", \"\")),\n        \"key_tags\": branch_result.get(\"key_tags\"\
           ) or [],\n        \"matched_brand\": str(branch_result.get(\"matched_brand\"\
           , \"\")),\n        \"sentiment_classic_words\": branch_result.get(\"sentiment_classic_words\"\
-          ) or [],\n    }"
+          ) or [],\n        \"sentiment_word_clouds\": branch_result.get(\"sentiment_word_clouds\"\
+          ) or {\"positive\": [], \"neutral\": [], \"negative\": []},\n        \"\
+          sentiment_word_cloud_summary\": branch_result.get(\"sentiment_word_cloud_summary\"\
+          ) or {\"positive_count\": 0, \"neutral_count\": 0, \"negative_count\": 0,\
+          \ \"total_count\": 0},\n    }"
         code_language: python3
         desc: 将本次路径的统一结果拆为 End 节点所需的固定字段与类型。
         outputs:
@@ -3189,6 +3321,12 @@ workflow:
           summary:
             children: null
             type: string
+          sentiment_word_clouds:
+            children: null
+            type: object
+          sentiment_word_cloud_summary:
+            children: null
+            type: object
         selected: false
         title: 5.3 发布本次路径结果
         type: code
@@ -3284,7 +3422,11 @@ workflow:
           ), \"0\"),\n        \"summary\": text(outputs.get(\"summary\")),\n     \
           \   \"key_tags\": as_list(tags),\n        \"matched_brand\": text(outputs.get(\"\
           matched_brand\")),\n        \"sentiment_classic_words\": as_list(outputs.get(\"\
-          sentiment_classic_words\")),\n    }}"
+          sentiment_classic_words\")),\n        \"sentiment_word_clouds\": as_object(outputs.get(\"\
+          sentiment_word_clouds\")) or {\"positive\": [], \"neutral\": [], \"negative\"\
+          : []},\n        \"sentiment_word_cloud_summary\": as_object(outputs.get(\"\
+          sentiment_word_cloud_summary\")) or {\"positive_count\": 0, \"neutral_count\"\
+          : 0, \"negative_count\": 0, \"total_count\": 0},\n    }}"
         code_language: python3
         desc: 兼容 Dify blocking 响应的 data.outputs、outputs 及 JSON 字符串形式；调用失败或缺少业务输出时显式报错。
         outputs:
