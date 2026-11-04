@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f7f7f8">
+  <meta name="description" content="客户规则包评审">
+  <title>规则包评审 · GEO 交付工作台</title>
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M5 4.5h9.6L19 8.9v10.6H5z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M14.4 4.5v4.4H19M8.2 12h7.6M8.2 15.4h5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span class="brand-name">GEO 交付工作台</span>
+      </div>
+      <nav class="nav" aria-label="主导航">
+        <a class="nav-item" href="../index.html"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M4.5 19.5V9.8L12 4.5l7.5 5.3v9.7z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M9.5 19.5v-5.8h5v5.8" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span><span>验收报告</span></a>
+        <a class="nav-item active" href="./index.html"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M6 3.5h8.5L18 7v13.5H6z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M14 3.5V7h3.5M9 11.5h6M9 15h4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span><span>规则包评审</span></a>
+        <a class="nav-item" href="../upload.html"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M12 16.5v-13M7.5 8 12 3.5 16.5 8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M4.5 14.5v4a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span><span>导入客户资料</span></a>
+      </nav>
+      <div class="sidebar-foot">
+        <div class="status-line"><span class="dot"></span><span id="sideStatus">规则包 · 草稿</span></div>
+        <p id="sideNote">抽取结果需人工复核：确认冲突、剔除不适用的规则后转正。</p>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <nav class="breadcrumb" aria-label="当前位置">
+          <span>GEO 交付</span><span class="slash">/</span><span id="crumbClient">客户</span><span class="slash">/</span><b>规则包评审</b>
+        </nav>
+        <div class="top-actions">
+          <span class="storage-indicator"><span></span>已完成抽取</span>
+          <button class="button small" id="exportBtn">导出规则包</button>
+        </div>
+      </header>
+
+      <div class="content">
+        <div class="page-head">
+          <div>
+            <div class="eyebrow">RULE REVIEW</div>
+            <h1>规则包评审</h1>
+            <p>以下是系统从客户资料中抽取的写作规则。逐条确认后生成定制工作流；标为「交付流程」的规则不写入工作流，仅作为流程提醒保留。</p>
+          </div>
+          <div class="head-actions">
+            <button class="button" id="toggleAll">只看待确认</button>
+            <button class="button primary" id="buildBtn">生成定制工作流</button>
+          </div>
+        </div>
+
+        <section class="stats" id="stats"></section>
+
+        <div id="alerts"></div>
+
+        <section class="section-card">
+          <div class="section-head">
+            <div><h2>来源资料</h2><p id="srcSub"></p></div>
+          </div>
+          <div class="section-body">
+            <ul class="source-list" id="sources"></ul>
+          </div>
+        </section>
+
+        <section class="section-card">
+          <div class="section-head">
+            <div><h2>待裁决的冲突</h2><p>客户资料之间互相矛盾，系统不做自动裁决</p></div>
+            <span class="section-count" id="conflictCount"></span>
+          </div>
+          <div class="section-body" id="conflicts"></div>
+        </section>
+
+        <section class="section-card">
+          <div class="section-head">
+            <div><h2>写作规则</h2><p id="ruleSub"></p></div>
+            <div class="filter-row">
+              <select class="select" id="catFilter" aria-label="按类别筛选">
+                <option value="">全部类别</option>
+              </select>
+            </div>
+          </div>
+          <div class="rule-list" id="rules"></div>
+        </section>
+
+        <section class="section-card">
+          <div class="section-head">
+            <div><h2>未抽成规则的内容</h2><p>这些内容被判定为企业事实或素材，归知识库管理，不进入写作规则</p></div>
+            <span class="section-count" id="notRuleCount"></span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>内容</th><th>为什么不算规则</th></tr></thead>
+              <tbody id="notRules"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <p class="foot-note">规则包版本 <span id="verText"></span>。转正前请确认全部冲突已裁决、不适用的规则已取消勾选。</p>
+      </div>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="./app.js"></script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+# 客户原始资料：体积大、含客户隐私，不入库
+clients/*/_raw/
+# 资料转出的纯文本：可由 _raw 重新生成
+clients/*/_docs/
+# 抽取中间产物：可重新跑
+clients/*/_draft.json.raw.txt
+# 生成产物：可由规则包重新生成
+output/
+# Python
+__pycache__/
+*.pyc
+.DS_Store

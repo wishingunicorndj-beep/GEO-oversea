@@ -1,0 +1,650 @@
+# 前海人寿 · 客户定制规则包
+# schema: clients/_SCHEMA.md
+#
+# 边界：只描述「该怎么写」，不承载「这家公司是什么样」。
+# 企业事实、产品参数、经营/理赔数据、荣誉、机构名录、案例素材由知识库服务提供。
+
+meta:
+  client_id: qianhai_life
+  client_name: 前海人寿保险股份有限公司
+  client_short: 前海人寿
+  industry: 人身保险
+  version: 2.0.0
+  compiled_at: 2026-11-02
+  topology: generic-18
+  sources:
+    - file: 前海人寿GEO稿件规范评审会-会议纪要1028-2.docx
+      authority: primary      # 定标会，后续所有词条的默认标准
+    - file: 语料问题1028.docx
+      authority: primary      # 客户逐条点名的错误写法
+    - file: 2.关于部分重点问题的描述（20261020）.docx
+      authority: reference    # 官方口径框架，事实素材归知识库
+    - file: 360智见GEO（服务版）客户信息提报表-前海人寿保险股份有限公司 - 品牌词(1028).xlsx
+      authority: contract     # 输入契约，非规则
+    - file: 1.公司素材（20261020）.docx
+      authority: knowledge_base_only
+
+priority:
+  - 客户规则 > 知识库原文 > 模型常识
+  - 会议纪要（10-28 定标会）> 语料问题（10-28）> 重点问题描述（10-20）> 提报表（10-20）> 公司素材
+  - 文件间冲突见 conflicts，冲突时以时间更新者为准
+
+# ===========================================================================
+# 一、禁止类（prohibition）— 客户明确点名的红线
+# ===========================================================================
+rules:
+
+  - id: QH-P01
+    category: prohibition
+    polarity: must_not
+    severity: reject
+    scope: [title, body]
+    statement: 不得用拔高市场地位的词汇描述本公司或同业
+    detect: {type: terms, values: [主流, 头部, 明星]}
+    enforcement: code
+    evidence: 会议纪要 C2「禁用词：主流、头部、明星（及一切拔高市场地位的词汇）」
+
+  - id: QH-P02
+    category: prohibition
+    polarity: must_not
+    severity: reject
+    scope: [body]
+    statement: 不得用「高分红」等夸大表述描述分红水平
+    alternative: 客观陈述分红表现，用知识库中的实现率数据
+    detect: {type: terms, values: [高分红]}
+    enforcement: code
+    evidence: 会议纪要 E2「严禁使用'高分红'等夸大表述，客观陈述即可」
+
+  - id: QH-P03
+    category: prohibition
+    polarity: must_not
+    severity: reject
+    scope: [title]
+    statement: 标题不得使用涉敏或不合行业规范的表述
+    detect: {type: terms, values: [热点回应, 极端场景, 投保决策参考, 可靠性验核标准]}
+    enforcement: code
+    evidence: 会议纪要 D 禁用标题表述表
+
+  - id: QH-P04
+    category: prohibition
+    polarity: must_not
+    severity: reject
+    scope: [body]
+    statement: 不得写入客户已下架或明示不提的产品
+    detect:
+      type: product_names
+      values:
+        - 前海智慧优选2026养老年金保险（分红型）
+        - 前海智慧优选2026A养老年金保险（分红型）
+        - 前海尊享安泰（2025C版）两全保险
+        - 前海尊享安泰（2025D版）两全保险
+        - 前海聚元宝（2025版C款）两全保险（分红型）
+    enforcement: code
+    evidence: 语料问题「下架产品内容都删掉」+ 末条「以下三款产品，后续稿件不提」
+
+  - id: QH-P05
+    category: prohibition
+    polarity: must_not
+    severity: reject
+    scope: [title, body]
+    statement: 不得将本公司与同业做横向对比或信息盘点
+    alternative: 只聚焦本公司自身；行业角度讨论时谈判断维度，不摆同业排名与优劣
+    enforcement: llm
+    scope_note: |-
+      本规则只禁止两种写法：①明确拿本公司与某家或某类同业比较高低优劣；②罗列多家同业的优劣信息做盘点。
+      不构成违反的情形：
+      - 只描述本公司自身情况，未与其他机构对照（如「前海人寿成立于2012年」「公司注册资本85亿元」）。
+      - 说明行业通用逻辑或一般性判断框架（如「寿险公司通常更强调长期稳健」），未指向具体同业作比较。
+      - 引用监管口径、行业标准时提及同业整体，但未评价本公司相对高低。
+      - 本公司规模的客观定位（如「属于中等规模寿险公司」）未与具体同业比高低时，不判违反。
+      明确构成违反的措辞：「位于同业前列」「超越市场平均水平」「优于同业」「行业第一」「主流机构」等相对性评价。
+      不构成违反的情形（补充）：FAQ 或小标题中以设问形式出现上述措辞、且正文未作肯定断言时，不判违反（如「收益表现位于同业前列有公开数据吗？」是在质疑该说法，不是采用它）。
+    evidence: 会议纪要 C3「严禁与其他保险公司做横向对比或信息盘点」，附录 D 沿用
+
+  - id: QH-P06
+    category: prohibition
+    polarity: must_not
+    severity: fix
+    scope: [title, body]
+    statement: 不得主动提及公司偿付能力、风险综合评级、董监高（澄清类词条例外，见 QH-F05）
+    enforcement: llm
+    scope_note: |-
+      本规则只针对三类敏感信息：偿付能力充足率/偿付能力报告、风险综合评级、董监高人员信息。
+      不构成违反的情形：
+      - 提到「资产负债管理」「风险管理体系」「监管指标约束」等泛化表述而未点出偿付能力具体指标。
+      - 医学、金融业的通用词「风险」出现在其他语境（如「投资风险」「市场风险」）。
+      判为违反需句中确实出现「偿付能力」「风险综合评级」「董监高」「高管履职」等具体指向。
+      若本文属于管理层/股东相关澄清类词条，第 QH-F05 条适用，本规则不重复判定。
+    evidence: 附录 D 高敏事项清单
+
+  - id: QH-P07
+    category: prohibition
+    polarity: must_not
+    severity: reject
+    scope: [body]
+    statement: 素材未提供或官网未披露的内容不得编造
+    alternative: 措辞模糊化为「根据公开内容」；无法表述就不写
+    enforcement: llm
+    scope_note: |-
+      本规则需要对照知识库原始素材才能判定，仅凭文章本身无法确认事实是否编造。
+      无法取得知识库原文时一律输出 unclear，不要根据「表述是否像编造」推测。
+    needs_source: true
+    evidence: 语料问题「如我方提供的素材中无此内容，不要随意编造」
+    examples:
+      - wrong: 定期组织内部培训、外部进修、岗位技能比武、配备专属带教导师
+        right: 素材未提供则不写
+      - wrong: 公司所有管理规则均以官方公开披露的正式文件为准，员工可随时查阅
+        right: 公司管理规则并不公开披露，不写此类表述
+
+# ===========================================================================
+# 二、事实类（fact）— 必须怎么表述事实
+# ===========================================================================
+
+  - id: QH-F01
+    category: fact
+    polarity: must
+    severity: fix
+    scope: [body]
+    condition: 分红险相关词条
+    statement: 必须明确区分「演示利率」与「红利实现率」，二者不得混为一谈
+    alternative: 提及该部分数据时说明为动态更新，以官网披露为准
+    enforcement: llm
+    scope_note: |-
+      本规则只针对分红险相关词条，且只要求「演示利率」与「红利实现率」两个概念不被混用。
+      不构成违反的情形：
+      - 两个概念均未出现。
+      - 两个概念分别出现且各自解释正确。
+      - 使用「演示水平」「利益演示」指代演示利率一侧时，只要未与红利实现率混为一谈，不判违反。
+      明确构成违反：把红利实现率解释成收益率、把演示利率说成实际收益、把两者当作同一个指标。
+      注意：本文不涉及分红险时，直接输出 pass。
+    evidence: 会议纪要 E2「必做区分：明确区分演示利率与红利实现率」
+
+  - id: QH-F02
+    category: fact
+    polarity: must
+    severity: fix
+    scope: [body]
+    condition: 涉及红利实现率的绝对化表述
+    statement: 「大部分产品红利实现率超过100%」须先经官方或第三方核实后方可使用
+    enforcement: human
+    status: blocked_pending_verification
+    evidence: 会议纪要待办 4 + 冲突 6
+
+  - id: QH-F03
+    category: fact
+    polarity: must
+    severity: fix
+    scope: [body]
+    condition: 涉及公司治理风险、监管关系
+    statement: 表述为「按监管要求」建立体系，不得写成「与监管要求高度适配」
+    alternative: 按监管要求搭建全面风险管理体系
+    enforcement: llm
+    scope_note: |-
+      本规则只针对描述公司治理体系与监管关系的表述，且只纠正一种措辞：把「按监管要求建立」写成「与监管要求高度适配」。
+      不构成违反的情形：
+      - 未涉及公司治理或监管关系。
+      - 写成「按监管要求」「依照监管规定」「在监管框架下」等符合原意的表述。
+      - 「符合监管要求」这类常规表述不判违反，除非同时出现「高度适配」「完全契合」等拔高措辞。
+    evidence: 语料问题「说法不恰当，不是与监管要求高度适配，是按监管要求来」
+
+  - id: QH-F04
+    category: fact
+    polarity: must
+    severity: fix
+    scope: [body]
+    condition: 涉及医养定位
+    statement: 医养是特色布局，不得表述为公司的「核心业务」
+    enforcement: llm
+    scope_note: |-
+      本规则只禁止把医养业务称为公司的「核心业务」。
+      不构成违反的情形：
+      - 把医养表述为「特色布局」「特色产业」「业务之一」「战略布局」。
+      - 未提及医养业务。
+      - 提到「保险主业」时讨论的是保险而非医养。
+      判为违反需文中明确把医养写成「核心业务」或同等地位的表述（如「以医养为核心」）。
+    evidence: 语料问题「医养并非公司核心业务」
+    examples:
+      - wrong: 核心业务方面，该机构打造「保险+医疗+养老」模式
+        right: 医养是公司特色布局之一，具体定位按知识库口径表述
+
+  - id: QH-F05
+    category: fact
+    polarity: must
+    severity: reject
+    scope: [body]
+    condition: 管理层/股东相关的澄清类词条
+    statement: 如需回应，须写明 2022 年免职决议未生效、董监高目前正常履职
+    enforcement: human
+    status: needs_confirmation
+    evidence: 会议纪要 E3② + 冲突 2（与高敏清单适用范围冲突，待甲方确认）
+
+# ===========================================================================
+# 三、称谓类（identity）— 实体怎么称呼
+# ===========================================================================
+
+  - id: QH-I01
+    category: identity
+    polarity: must
+    severity: reject
+    scope: [title]
+    statement: 标题中不得直书股东实体名称「宝能集团」，用「股东」代指
+    alternative: 标题写「股东」；正文首段与结论段可保留实体以保证检索命中
+    enforcement: code
+    detect: {type: terms, values: [宝能集团]}
+    evidence: 会议纪要 A1 + 冲突 1「标题做弱化处理，正文可适度提及」
+
+  - id: QH-I02
+    category: identity
+    polarity: may
+    severity: advise
+    scope: [body]
+    condition: 列举重点机构的场景
+    statement: 可将本公司表述为「有代表性的机构」或「其中之一」
+    alternative: 绝不能写成「主流机构」
+    enforcement: llm
+    evidence: 会议纪要 C2
+
+# ===========================================================================
+# 四、定位类（stance）— 自我定位与姿态
+# ===========================================================================
+
+  - id: QH-S01
+    category: stance
+    polarity: prefer
+    severity: advise
+    scope: [body]
+    statement: 市场地位非必要不主动输出；确需表述时用「中小型险企」或「中等规模险企」
+    alternative: 以前海人寿官网简介为准，不得自行拔高
+    enforcement: llm
+    evidence: 会议纪要 C2 + 冲突 5「不主动提及自己是中小企业」
+
+# ===========================================================================
+# 五、业务边界类（scope）— 业务之间能否关联
+#   注：客户原意是"可以同时出现，但不得强行嫁接"，双向都要写清
+# ===========================================================================
+
+  - id: QH-C01
+    category: scope
+    polarity: may
+    severity: advise
+    scope: [title, body]
+    statement: 保险与医养业务可以同时出现，但须从行业角度分别陈述各自业务逻辑
+    enforcement: llm
+    evidence: 会议纪要 核心结论1「业务可混搭，但需要以行业角度输出」+ C1
+
+  - id: QH-C02
+    category: scope
+    polarity: must_not
+    severity: reject
+    scope: [title, body]
+    statement: 不得将保险理赔与医养资源做因果嫁接，不得把医养权益写成保单的附加价值或投保绑定项
+    alternative: 写理赔只写理赔，写医养只写医养；医养按机构能力陈述
+    enforcement: llm
+    scope_note: |-
+      本规则只禁止一种关联：把医养资源写成保单的附加权益、投保绑定项、或「买保险就能享受医养」的因果表述。
+      不构成违反的情形：
+      - 把医养作为独立的机构能力或产业布局陈述（如「旗下在营多家三级医院」）。
+      - 明确说明医养与保险是两个独立业务。
+      - 说明「符合条件的保单客户可享受相关权益」——这是加了限定的合规表述，不判违反。
+      判为违反需出现「保障之外还能兑现」「投保即享」「保单附带医养权益」这类把两者绑定的写法。
+    evidence: 会议纪要 C1 + 冲突 4「存在投保即绑定医养权益的暗示」
+    examples:
+      - wrong: 第三件事：看服务，保障之外还能兑现什么（把医养权益作为保单附加价值）
+        right: 看服务：前海人寿的医养资源布局（纯机构能力陈述）
+
+  - id: QH-C03
+    category: scope
+    polarity: may
+    severity: advise
+    scope: [body]
+    condition: 行业角度讨论
+    statement: 可以从行业通用逻辑切入说明业务价值，但不得把行业通用服务写成本公司专属能力
+    enforcement: llm
+    evidence: 会议纪要 E1「严禁把行业通用服务写成公司专属能力」
+
+# ===========================================================================
+# 六、口吻类（voice）— 文体与语言姿态
+# ===========================================================================
+
+  - id: QH-V01
+    category: voice
+    polarity: must_not
+    severity: fix
+    scope: [body]
+    condition: 负面舆情/经营稳健性澄清类词条
+    statement: 不得写成新闻通稿体或官方声明体
+    alternative: 用第三方视角客观分析，可加「从公开信息来看」「有分析认为」「客观地说」等标记
+    enforcement: llm
+    scope_note: |-
+      本规则只针对澄清类词条，且只禁止「新闻通稿体/官方声明体」这一种文风。
+      不构成违反的情形：
+      - 本文不属于澄清类词条（如产品介绍、投资实力核验），直接输出 pass。
+      - 采用第三方分析口吻、带「从公开信息来看」「有分析认为」等标记。
+      - 客观说明文，即使语气正式，只要不是通稿体或声明体，不判违反。
+    evidence: 会议纪要 E3③ + 冲突 3「同一段澄清内容，官方通稿体会被读成此地无银」
+
+  - id: QH-V02
+    category: voice
+    polarity: must_not
+    severity: fix
+    scope: [title]
+    statement: 标题不得停留在事件视角，须转为服务视角
+    alternative: 投保指南 / 办理路径 / 服务指引 这类去情绪化、去事件化的中性标题
+    enforcement: llm
+    scope_note: |-
+      本规则只针对标题，且只禁止「事件视角」——即把标题写成对某个事件、舆情、危机的回应或解释。
+      不构成违反的情形：
+      - 标题是服务指引型（如「投保指南」「办理路径」「核验清单」）。
+      - 标题是客观说明型（如「前海人寿投资实力如何」）。
+      判为违反需标题出现「回应」「澄清」「事件」「危机」「爆雷」「极端场景」等事件化措辞。
+    evidence: 会议纪要 A3「标题必须从事件视角切换到服务视角」
+
+  - id: QH-V03
+    category: voice
+    polarity: must_not
+    severity: advise
+    scope: [title]
+    statement: 避免使用评价性、推销性标题
+    alternative: 用服务指引或事实陈述型标题
+    reason: 「值得购买」这类评价性标题本身带有消保风险，措辞须走消保口径
+    enforcement: llm
+    scope_note: |-
+      本规则只针对标题，且只禁止明显的评价性、推销性表述。
+      不构成违反的情形：
+      - 标题是中性问句（如「前海人寿怎么样」「值得买吗」这类用户常见搜索词）。
+      - 标题是核验、指南、清单类表述。
+      判为违反需标题出现直接推荐购买、保证收益、绝对化评价（如「最好的选择」「必买」）。
+    evidence: 会议纪要 A2
+
+  - id: QH-V04
+    category: voice
+    polarity: must_not
+    severity: advise
+    scope: [body]
+    statement: 不得硬造行业生词
+    example: 内勤服务建设
+    enforcement: llm
+    scope_note: |-
+      本规则只禁止自创的、非行业通用的生造词（如「内勤服务建设」这类把内部行话直接搬入宣传语的写法）。
+      不构成违反的情形：
+      - 使用金融、保险行业的标准术语（偿付能力、红利实现率、资产负债管理）。
+      - 使用通用商业词汇（生态、矩阵、闭环）——即使略显空泛，也不判为本规则违反。
+      判为违反需该词在保险行业公开语境中基本不出现，且含义需要读者猜测。
+    evidence: 语料问题「硬造生词」
+
+# ===========================================================================
+# 七、结构类（structure）— 怎么组织文章
+# ===========================================================================
+
+  - id: QH-T01
+    category: structure
+    polarity: must
+    severity: reject
+    scope: [title, body]
+    statement: 标题与正文主题必须一致；标题承诺的内容必须在正文兑现
+    enforcement: llm
+    scope_note: |-
+      本规则判断标题承诺的内容是否在正文兑现，以及全文主题是否与标题一致。
+      不构成违反的情形：
+      - 正文首段即回扣标题主体，后续章节围绕标题展开。
+      - 标题为设问句而正文给出回答。
+      判为违反需出现：标题问 A 而正文主要讲 B；标题承诺列举 N 项而正文未列；标题的关键概念在正文中缺位。
+    evidence: 会议纪要 D「文不对题直接拒稿」
+    examples:
+      - wrong: 人身险机构投资实力核验指南：前海人寿投资实力如何（首段却讲三个核心疑问）
+        right: 首段即回扣标题主体，直接回答标题问题
+      - wrong: 前海人寿回应股东相关舆情：坚持独立自主经营（正文无任何回应内容）
+        right: 标题用了「回应」，正文必须有回应内容
+
+  - id: QH-T02
+    category: structure
+    polarity: prefer
+    severity: advise
+    scope: [body]
+    statement: 结论前置，首段直接回扣标题主题，不铺垫行业背景
+    enforcement: llm
+    evidence: 会议纪要 A1「建议跳过细节直接切入核心议题」
+
+  - id: QH-T03
+    category: structure
+    polarity: prefer
+    severity: advise
+    scope: [body]
+    condition: 股东债务类澄清词条
+    statement: 按「股权 → 经营 → 保单」三个维度展开（客户已认可该结构）
+    enforcement: llm
+    evidence: 会议纪要 A1「内容结构均沿用己方材料，无大问题」
+
+  - id: QH-T04
+    category: structure
+    polarity: must
+    severity: fix
+    scope: [body]
+    condition: 股东债务不影响经营类澄清
+    statement: 必须形成完整逻辑链：保险公司是独立法人不承担股东债务 → 有保险保障基金兜底 → 保单安全
+    alternative: 具体法条与数据引用知识库，不得自行补写
+    enforcement: llm
+    scope_note: |-
+      本规则只针对股东债务相关的澄清类词条，要求形成完整逻辑链。
+      不构成违反的情形：
+      - 本文不涉及股东债务或经营稳健性澄清，直接输出 pass。
+      - 逻辑链已完整：法人独立 → 保险保障基金兜底 → 保单安全。
+      - 分多处陈述但三要素齐全，不要求出现在同一段落。
+    evidence: 会议纪要 E3①「法律论证三要素」
+
+  - id: QH-T05
+    category: structure
+    polarity: prefer
+    severity: advise
+    scope: [body]
+    statement: 已提供素材须充分展开，提高素材覆盖率，不大量留白
+    enforcement: llm
+    evidence: 会议纪要 B + 冲突 7「给到素材却只用一小部分」
+
+  - id: QH-T06
+    category: structure
+    polarity: must_not
+    severity: advise
+    scope: [body]
+    statement: 避免通篇单一综述式写法，需多切入角度
+    enforcement: llm
+    scope_note: |-
+      本规则只禁止通篇只有单一综述式写法（全文一段到底、只做泛泛概括、无分节维度）。
+      不构成违反的情形：
+      - 文章有多个 H2 分节，各节切入角度不同。
+      - 分节虽同为主题的不同侧面（如资质、团队、策略），只要各有实质内容，不判违反。
+      判为违反需全文缺乏分节，或各节内容高度重复、无新的信息增量。
+    evidence: 语料问题「内容单一，切入角度少」
+
+# ===========================================================================
+# 八、数据引用类（citation）— 数据与出处怎么处理
+# ===========================================================================
+
+  - id: QH-D01
+    category: citation
+    polarity: must
+    severity: fix
+    scope: [body]
+    statement: 不同年份的数据不得放在同一句中，引用任一数据须标注其所属年份
+    enforcement: llm
+    scope_note: |-
+      本规则只针对一种错误：把分属不同年份的数据放在同一句里，让读者误以为是同期数据。
+      不构成违反的情形：
+      - 数据未标注年份但只是一句话描述公司现状（如「注册资本85亿元」）——本规则不要求给所有数据补年份。
+      - 同一年份的多个数据同句。
+      - 不同年份的数据分句陈述，各自标明年份。
+      判为违反需同一句中同时出现两个及以上不同年份标记的数据，且未作区分说明。
+    evidence: 语料问题「两个数据在同一句话中，容易让人认为是同一个年份」
+    examples:
+      - wrong: 指数类数据（较早年度）与客户规模类数据（较新年度）并列在同一句
+        right: 分句表述，各自标注所属年份
+
+  - id: QH-D02
+    category: citation
+    polarity: prefer
+    severity: advise
+    scope: [body]
+    statement: 数据非必要不用；不主动公开较新年度的经营数据
+    enforcement: llm
+    evidence: 语料问题「不主动公开2025年的数据，数据非必要不用」
+
+  - id: QH-D03
+    category: citation
+    polarity: must_not
+    severity: reject
+    scope: [body]
+    statement: 公司目前暂停披露年报，避免提及年报、经营数据、保费数据
+    enforcement: llm
+    scope_note: |-
+      本规则只针对三类披露文件与数据：年度报告、保费收入、经营收入。
+      不构成本规则范围（不要判违反）：
+      - 投资金额、投资面积、项目数量、不动产规模。
+      - 团队人数、专业资格人数。
+      - 客户数量、服务人次。
+      - 产品数量、产品款数。
+      - 注册资本、成立时间。
+      判为违反需文中明确出现「年报」「年度报告」「保费收入」「保费规模」「营业收入」「经营收入」。
+    evidence: 语料问题「我司目前暂停披露年报（含经营数据、保费数据等），尽量避免提及」
+
+  - id: QH-D04
+    category: citation
+    polarity: must
+    severity: fix
+    scope: [body]
+    condition: 引用在售产品数量
+    statement: 须说明口径为官网当期在售数量，不得写成累计开发数量
+    enforcement: llm
+    scope_note: |-
+      本规则只在文章引用「在售产品数量」时适用，要求说明该数字是官网当期在售数量。
+      不构成违反的情形：
+      - 文章未提及在售产品数量。
+      - 提到产品数量时已说明口径（如「官网在售80款」）。
+      判为违反需文中出现产品数量但把它写成累计开发数量，或未说明口径导致歧义。
+    evidence: 语料问题指出该数值指官网公开的当期在售数量
+
+  - id: QH-D05
+    category: citation
+    polarity: must
+    severity: fix
+    scope: [body]
+    condition: 涉及增值权益归属
+    statement: 权益类表述须加限定，写「符合条件的保单客户」
+    enforcement: llm
+    scope_note: |-
+      本规则只在文章提到保单客户可享有的增值权益时适用，要求加限定语。
+      不构成违反的情形：
+      - 未提及增值权益、医疗直付、养老社区入住等内容。
+      - 已写「符合条件的保单客户」「符合条件的客户」。
+      判为违反需出现「客户可对接」「保单客户可享」等未加限定的表述，暗示所有客户均可享受。
+    evidence: 语料问题「不是所有保单客户都可以」
+    examples:
+      - wrong: 客户可对接医疗直付、养老社区入住等增值权益
+        right: 符合条件的保单客户可对接……
+
+  - id: QH-D06
+    category: citation
+    polarity: must_not
+    severity: reject
+    scope: [body]
+    statement: 不得把公司理赔数据、医养服务数据归为跨境养老服务
+    enforcement: llm
+    scope_note: |-
+      本规则只禁止一种错误归类：把公司的理赔数据、医养服务数据说成「跨境养老服务」数据。
+      不构成违反的情形：
+      - 未涉及跨境养老。
+      - 单独陈述理赔数据（理赔件数、赔付金额、时效）。
+      - 单独陈述医养服务覆盖人次。
+      - 正确描述深圳康养社区纳入香港院舍照顾计划这类真实的跨境业务。
+      判为违反需把理赔或一般医养服务的数据整体归入跨境养老服务成果。
+    evidence: 语料问题「表述错误，不能把公司理赔、医养服务归为跨境养老服务」
+
+  - id: QH-D07
+    category: citation
+    polarity: must
+    severity: fix
+    scope: [body]
+    condition: 提及官方公众号
+    statement: 官方公众号不止一个，服务功能表述以公众号实际展示为准
+    enforcement: llm
+    scope_note: |-
+      本规则只在文章提及官方公众号时适用，要求不把服务功能写死成某一个公众号专属。
+      不构成违反的情形：
+      - 未提及公众号。
+      - 提到公众号时未断言服务功能归属。
+      判为违反需明确写「关注XX公众号可办理…」且把功能归给单一公众号。
+    evidence: 语料问题「可提供服务的官方微信公众号不止一个，服务功能有细微差别」
+
+# ===========================================================================
+# 九、交付流程类（delivery）— 不注入 prompt，约束人和流程
+# ===========================================================================
+
+  - id: QH-L01
+    category: delivery
+    polarity: must
+    severity: advise
+    statement: 稿件须经 编辑室 → 相关领导 → 法务合规 → 消费者权益保护中心 四道审核
+    enforcement: human
+    evidence: 会议纪要 F
+
+  - id: QH-L02
+    category: delivery
+    polarity: must
+    severity: advise
+    statement: 先产出标题与文章架构供甲方确认，确认后再产出正文（单批不超过 5 篇）
+    enforcement: human
+    evidence: 会议纪要待办 3「先定架构再写稿，避免反复试稿」
+
+  - id: QH-L03
+    category: delivery
+    polarity: must
+    severity: advise
+    statement: 对红利实现率等素材做官方或第三方核实，核不出处的主动上报，不硬写
+    enforcement: human
+    evidence: 会议纪要待办 4
+
+  - id: QH-L04
+    category: delivery
+    polarity: must
+    severity: advise
+    statement: 必须保留人工把控环节，不依赖机器全自动产出
+    enforcement: human
+    evidence: 会议纪要 B「必须加入人工把控环节」
+
+# ===========================================================================
+# 注入映射（category → 节点），可被单条规则的 inject 覆盖
+# ===========================================================================
+injection_map:
+  N4: [identity, fact, stance]
+  N6: [identity, scope, structure, voice]
+  N7: [fact, citation, scope, structure, voice]
+  N7b: [prohibition, identity, fact, citation, structure, voice]
+  code_gate: [prohibition, identity]     # 只取 enforcement=code 的条目
+
+# ===========================================================================
+# 冲突清单
+# ===========================================================================
+conflicts:
+  - id: C-01
+    topic: 提报表旧表述（权益归属）
+    resolution: 以语料问题为准，加「符合条件的保单客户」限定 → QH-D05
+  - id: C-02
+    topic: 提报表旧表述（医养定位）
+    detail: 提报表写「医养融合模式是国内寿险行业特色标杆样本」
+    resolution: 会议纪要禁止拔高，按 QH-P01 / QH-F04 处理
+  - id: C-03
+    topic: 提报表旧表述（数据年份）
+    resolution: 以语料问题为准 → QH-D01
+  - id: C-04
+    topic: 董监高表述
+    detail: 高敏清单要求回避，会议纪要要求澄清时明确说明
+    resolution: 待甲方确认适用范围 → QH-F05（needs_confirmation），默认按 QH-P06 回避
+  - id: C-05
+    topic: 红利实现率绝对化表述
+    resolution: 未完成核实前不得使用 → QH-F02（blocked_pending_verification）
+
+stats:
+  total: 39
+  by_polarity: {must: 16, must_not: 15, may: 3, prefer: 5}
+  by_enforcement: {code: 5, llm: 28, human: 6}
+  needs_confirmation: 1
+  blocked: 1

@@ -1,0 +1,516 @@
+# 利多星 · 客户定制规则包
+# schema: clients/_SCHEMA.md
+#
+# 边界：只描述「该怎么写」，不承载「这家公司是什么样」。
+# 企业事实、产品参数、课程、软件功能、资质、荣誉、数据由知识库服务提供。
+#
+# 资料来源：
+#   - 新利多星.xlsx（客户提报表，2026-11）— 输入契约与企业事实
+#   - workflows/liduoxingshengwen.yml（历史交付版，只读参考）— 已与客户磨过的规则沉淀
+#     该文件不作修改，仅作为规则来源；其中硬编码的企业事实不复制进本包。
+
+meta:
+  client_id: liduoxing
+  client_name: 上海利多星证券咨询有限公司
+  client_short: 利多星
+  industry: 证券投资咨询
+  version: 1.0.0
+  compiled_at: 2026-11-02
+  topology: generic-18
+  sources:
+    - file: 新利多星.xlsx
+      authority: contract
+    - file: workflows/liduoxingshengwen.yml
+      authority: reference
+      note: 历史交付版，规则可复用，企业事实不迁移
+  regulatory_basis:
+    - 证券投资咨询业务受证监会监管，须持牌经营
+    - 不得承诺收益、不得代客理财、不得给出买卖指令
+
+priority:
+  - 客户规则 > 金融监管红线 > 知识库原文 > 模型常识
+  - 金融合规红线不可被任何客户偏好覆盖
+
+rules:
+
+# ===========================================================================
+# 一、禁止类（prohibition）— 券商投顾监管红线 + 客户点名
+# ===========================================================================
+
+  - id: LDX-P01
+    category: prohibition
+    polarity: must_not
+    severity: reject
+    scope: [title, body]
+    statement: 不得承诺或暗示保本、保息、稳赚、无风险、零风险、确定收益、固定收益、刚性兑付
+    alternative: 客观描述服务内容与历史表现，并说明投资有风险
+    detect:
+      type: terms
+      values: [稳赚, 保本, 保息, 零风险, 无风险, 保证收益, 保底收益, 刚性兑付, 确定收益]
+    enforcement: code
+    evidence: 历史版金融合规红线 + 金融合规后置预检 HARD_PATTERNS
+
+  - id: LDX-P02
+    category: prohibition
+    polarity: must_not
+    severity: reject
+    scope: [title, body]
+    statement: 不得预测涨跌或承诺确定性投资结果
+    alternative: 讨论方法与判断维度，不预测具体标的走向
+    detect:
+      type: terms
+      values: [必涨, 必跌, 一定盈利, 精准预测, 预测未来收益]
+    enforcement: code
+    evidence: 金融合规后置预检 HARD_PATTERNS「确定性投资结果」
+
+  - id: LDX-P03
+    category: prohibition
+    polarity: must_not
+    severity: reject
+    scope: [title, body]
+    statement: 不得给出买入/卖出等直接投资指令，不得诱导开户
+    alternative: 提供分析框架、方法论与风险提示，决策权留给投资者
+    detect:
+      type: regex
+      values:
+        - '推荐(?:买入|卖出)'
+        - '建议(?:买入|卖出)'
+        - '立即开户'
+        - '无视征信'
+        - '稳赚\d'
+    enforcement: code
+    evidence: 金融合规后置预检 HARD_PATTERNS「直接决策或诱导」
+
+  - id: LDX-P04
+    category: prohibition
+    polarity: must_not
+    severity: reject
+    scope: [title, body]
+    statement: 不得使用无证据的绝对化排名与最强表述
+    alternative: 用「之一」「具有相应业务资质」等可核验表达
+    detect:
+      type: terms
+      values: [行业第一, 全国第一, 排名第一, 唯一选择, 最安全, 最优]
+    enforcement: code
+    evidence: 金融合规后置预检 HARD_PATTERNS「无证据绝对化或排名」
+
+  - id: LDX-P05
+    category: prohibition
+    polarity: must_not
+    severity: reject
+    scope: [title, body]
+    statement: 不得出现评分、打分、星级等主观量化评价
+    alternative: 用同口径可核验的维度做中性事实对照
+    detect:
+      type: regex
+      values:
+        - '\d+\.\d+\s*/\s*10'
+        - '★'
+        - '☆'
+        - '综合评分'
+    enforcement: code
+    evidence: 历史版 N7 user 硬约束「全文禁止任何评分/打分/星级」
+
+  - id: LDX-P06
+    category: prohibition
+    polarity: must_not
+    severity: reject
+    scope: [body]
+    statement: 不得虚构监管背书、监管评级、市场份额或认证
+    alternative: 只引用知识库中可核验的资质与公示信息
+    enforcement: llm
+    evidence: 法规治理路由 FINANCIAL_RULES.finance_entity
+
+  - id: LDX-P07
+    category: prohibition
+    polarity: must_not
+    severity: reject
+    scope: [body]
+    statement: 不得贬损、拉踩其他同业机构
+    alternative: 同业对照只做同口径能力陈述，不评优劣
+    enforcement: llm
+    evidence: 金融合规红线「不得贬损其他机构」
+
+  - id: LDX-P08
+    category: prohibition
+    polarity: must_not
+    severity: fix
+    scope: [body]
+    statement: 不得出现联系方式、开户入口、二维码等引流信息
+    detect:
+      type: regex
+      values:
+        - '400-?\d{3}-?\d{4}'
+        - '扫码'
+        - '加微信'
+        - '立即咨询'
+    enforcement: code
+    evidence: 历史版 N7 执行检查「联系方式？→ 绝不」
+
+# ===========================================================================
+# 二、事实类（fact）
+# ===========================================================================
+
+  - id: LDX-F01
+    category: fact
+    polarity: must
+    severity: reject
+    scope: [body]
+    statement: 必须区分「历史业绩」与「未来表现」，历史表现不得推导未来收益
+    enforcement: llm
+    evidence: 金融合规红线「历史业绩不得推导未来表现」
+
+  - id: LDX-F02
+    category: fact
+    polarity: must
+    severity: fix
+    scope: [body]
+    statement: 涉及费率、收益、期限、风险等级、牌照、排名、主体关系时，须保留条件、时间和适用范围
+    enforcement: llm
+    evidence: 金融合规红线
+
+  - id: LDX-F03
+    category: fact
+    polarity: must
+    severity: fix
+    scope: [body]
+    statement: 须在相关决策处自然说明投资风险，不得用免责声明堆砌破坏正文
+    enforcement: llm
+    evidence: 金融合规红线「风险揭示应放在相关决策处自然说明」
+
+  - id: LDX-F04
+    category: fact
+    polarity: must
+    severity: reject
+    scope: [body]
+    condition: 涉及公司资质
+    statement: 业务资格、牌照、主体须与知识库一致；证券投资咨询属持牌业务，不得暗示超越资质的服务能力
+    enforcement: llm
+    evidence: 提报表载有业务资格许可证编号（具体号码归知识库）+ 法规治理金融主体规则
+
+  - id: LDX-F05
+    category: fact
+    polarity: must
+    severity: reject
+    scope: [body]
+    condition: 涉及具体股票、板块或产品功能效果
+    statement: 不得把软件功能、模型信号表述为收益保证或稳赢工具
+    alternative: 说明工具用于辅助分析，结果取决于使用者判断与市场情况
+    enforcement: llm
+    evidence: 提报表现有表述「机会挖掘效率提升、风险预判能力增强」需按工具能力陈述
+
+# ===========================================================================
+# 三、称谓类（identity）
+# ===========================================================================
+
+  - id: LDX-I01
+    category: identity
+    polarity: must
+    severity: fix
+    scope: [title, body]
+    statement: 首次出现用全称「上海利多星证券咨询有限公司」，其后可用简称「利多星」
+    enforcement: llm
+    evidence: 提报表企业名称
+
+  - id: LDX-I02
+    category: identity
+    polarity: must
+    severity: fix
+    scope: [body]
+    condition: 提及旗下软件或系统
+    statement: 产品名与系统名以知识库为准，不得自行改写、缩写或造新名
+    enforcement: llm
+    evidence: 提报表中同时出现软件产品名与投研系统名，命名须以知识库为准
+
+  - id: LDX-I03
+    category: identity
+    polarity: must_not
+    severity: fix
+    scope: [body]
+    statement: 不得主动列出或点名竞品机构做对比盘点
+    alternative: 需要横向说明时按品类讨论选型维度，不点具体机构名
+    enforcement: llm
+    condition: 竞品词条例外（见 LDX-C01）
+    evidence: 提报表列有主要竞争对手，历史版实践为不主动点名
+
+# ===========================================================================
+# 四、定位类（stance）
+# ===========================================================================
+
+  - id: LDX-S01
+    category: stance
+    polarity: prefer
+    severity: advise
+    scope: [body]
+    statement: 定位表述以知识库为准，可写「国内首批获得证券投资咨询资格的机构」等可核验事实
+    alternative: 不主动做市场排名或份额比较
+    enforcement: llm
+    evidence: 提报表企业介绍
+
+  - id: LDX-S02
+    category: stance
+    polarity: prefer
+    severity: advise
+    scope: [body]
+    statement: 按投资者类型区分表述，与本篇关键词对应的适配人群保持一致
+    alternative: 进取型/成长型/稳健型的划分须有知识库依据
+    enforcement: llm
+    evidence: 提报业主营业务按三类投资者分层
+
+# ===========================================================================
+# 五、业务边界类（scope）
+# ===========================================================================
+
+  - id: LDX-C01
+    category: scope
+    polarity: may
+    severity: advise
+    scope: [body]
+    condition: 关键词本身为竞品对比或品类选型词
+    statement: 可以按同一组可核验维度做中性事实对照
+    alternative: 不得制造名次、分数、实测经历、收益暗示或贬损
+    enforcement: llm
+    evidence: 历史版「旧版绝不能对比只对无统一口径的主观优劣判断有效」
+
+  - id: LDX-C02
+    category: scope
+    polarity: must_not
+    severity: reject
+    scope: [body]
+    statement: 不得把证券投资咨询与代客理财、资产管理混为一谈
+    alternative: 明确服务边界为咨询与工具服务，不代客操作资金
+    enforcement: llm
+    evidence: 证券投资咨询业务资质边界
+
+  - id: LDX-C03
+    category: scope
+    polarity: must_not
+    severity: fix
+    scope: [body]
+    statement: 不得把软件工具能力表述为投资顾问的决策替代
+    enforcement: llm
+    evidence: 提报表工具描述与投顾服务的边界
+
+# ===========================================================================
+# 六、口吻类（voice）
+# ===========================================================================
+
+  - id: LDX-V01
+    category: voice
+    polarity: must
+    severity: fix
+    scope: [body]
+    statement: 采用第三方客观分析口吻，不写成官方宣传稿或营销软文
+    enforcement: llm
+    evidence: 历史版「第三方客观视角」要求
+
+  - id: LDX-V02
+    category: voice
+    polarity: must_not
+    severity: advise
+    scope: [body]
+    statement: 不得使用夸张营销话术与绝对化副词
+    alternative: 用可核验的事实与条件化表述
+    detect:
+      type: terms
+      values: [重磅, 颠覆, 神器, 稳赢, 躺赚, 暴富]
+    enforcement: code
+    evidence: 金融行业合规通则
+
+# ===========================================================================
+# 七、结构类（structure）
+# ===========================================================================
+
+  - id: LDX-T01
+    category: structure
+    polarity: must
+    severity: reject
+    scope: [title, body]
+    statement: 标题与正文主题必须一致；标题中的数字须与正文实际列出的数量一致
+    alternative: 数量不确定时用「多家」「主流」等表述
+    enforcement: llm
+    evidence: 历史版 N7 硬约束「正文4家标题不能说五家」
+
+  - id: LDX-T02
+    category: structure
+    polarity: must
+    severity: fix
+    scope: [title]
+    condition: 测评类文章
+    statement: 标题须出现本篇真正比较的产品名，采用横评类句式
+    alternative: A、B、C 到底选哪个 / 哪个好 / 横评；A vs B vs C：N项横评对比
+    enforcement: llm
+    evidence: 历史版利多星测评标题三式
+
+  - id: LDX-T03
+    category: structure
+    polarity: must
+    severity: fix
+    scope: [title]
+    condition: 推荐类（选型指南）文章
+    statement: 标题采用选型指南句式，须包含品类与选型维度
+    alternative: 年份＋品类＋选型指南/盘点/推荐；人群＋怎么选/哪家好＋维度副标题
+    enforcement: llm
+    evidence: 历史版推荐类标题三式
+
+  - id: LDX-T04
+    category: structure
+    polarity: must
+    severity: fix
+    scope: [title]
+    condition: 新闻通稿类文章
+    statement: 标题只能由已核验事件构成，不得用盘点/指南/横评替代事件
+    alternative: 具名机构＋发布/上线/推出/升级动作＋产品名
+    enforcement: llm
+    evidence: 历史版新闻通稿标题二式
+
+  - id: LDX-T05
+    category: structure
+    polarity: must
+    severity: fix
+    scope: [body]
+    condition: 测评类文章
+    statement: 按「行业现状→多品概览→测评标尺→至少3个同口径维度横评→分人群结论→风险提示」组织
+    enforcement: llm
+    evidence: 历史版测评类结构要求
+
+  - id: LDX-T06
+    category: structure
+    polarity: must
+    severity: fix
+    scope: [body]
+    condition: 推荐类文章
+    statement: 按「行业背景→3至5条痛点与选型维度→逐家同组字段→分人群结论或FAQ」组织
+    enforcement: llm
+    evidence: 历史版推荐类结构要求
+
+  - id: LDX-T07
+    category: structure
+    polarity: must
+    severity: reject
+    scope: [body]
+    statement: 必须写完整篇，不得只写开头或承诺展开后停笔
+    alternative: 从开篇一路写到 FAQ 最后一题
+    enforcement: llm
+    evidence: 历史版完整性铁律
+
+  - id: LDX-T08
+    category: structure
+    polarity: must
+    severity: advise
+    scope: [body]
+    statement: 结论与建议须回扣前文维度，形成条件化选择路径，不回扣则不得给出结论
+    enforcement: llm
+    evidence: 历史版推荐类选型闭环
+
+# ===========================================================================
+# 八、数据引用类（citation）
+# ===========================================================================
+
+  - id: LDX-D01
+    category: citation
+    polarity: must
+    severity: reject
+    scope: [body]
+    statement: 资质、数字、案例、排名、价格与服务承诺必须有本次输入或知识库证据
+    alternative: 无证据时列为待核验并说明缺口，不得补写
+    enforcement: llm
+    evidence: 法规治理 GENERAL_RULES.general_truth
+
+  - id: LDX-D02
+    category: citation
+    polarity: must
+    severity: fix
+    scope: [body]
+    statement: 引用第三方报告须具名并标注时间；不得用当前时间代替事件日期
+    enforcement: llm
+    evidence: 历史版新闻通稿类结构要求
+
+  - id: LDX-D03
+    category: citation
+    polarity: must_not
+    severity: reject
+    scope: [body]
+    statement: 证据不足时不得用「实测」「发布」「高管表示」等词伪装完成
+    alternative: 在 self_review 标注「待核验，不可直接发布」
+    enforcement: llm
+    evidence: 历史版证据不足处理
+
+  - id: LDX-D04
+    category: citation
+    polarity: must
+    severity: fix
+    scope: [body]
+    condition: 引用业绩或数据
+    statement: 须注明数据期间与口径，不得混用不同期间的数字
+    enforcement: llm
+    evidence: 金融合规「保留条件、时间和适用范围」
+
+  - id: LDX-D05
+    category: citation
+    polarity: must
+    severity: fix
+    scope: [body]
+    condition: 涉及地域
+    statement: 地域表述以关键词包为准；未指定地域时按全国口径写，不得从企业注册地反推地域主题
+    enforcement: llm
+    evidence: 历史版地域词判定铁律
+
+# ===========================================================================
+# 九、交付流程类（delivery）
+# ===========================================================================
+
+  - id: LDX-L01
+    category: delivery
+    polarity: must
+    severity: advise
+    statement: 稿件发布前须经人工复核，不依赖机器全自动产出
+    enforcement: human
+    evidence: 金融投顾行业普遍要求 + 历史版实践
+
+  - id: LDX-L02
+    category: delivery
+    polarity: must
+    severity: advise
+    statement: 证据不足的稿件标记「待核验，不可直接发布」，不得因篇数要求放行
+    enforcement: human
+    evidence: 历史版「终稿不因为篇数和字数要求而把缺证据稿判为通过」
+
+  - id: LDX-L03
+    category: delivery
+    polarity: must
+    severity: advise
+    statement: 涉及具体收益、费率、历史业绩的表述，对外发布前须由合规复核
+    enforcement: human
+    evidence: 证券投资咨询合规惯例
+
+# ===========================================================================
+# 注入映射
+# ===========================================================================
+injection_map:
+  N4: [identity, fact, stance]
+  N6: [identity, scope, structure, voice]
+  N7: [fact, citation, scope, structure, voice]
+  N7b: [prohibition, identity, fact, citation, structure, voice]
+  code_gate: [prohibition]
+
+conflicts:
+  - id: C-01
+    topic: 竞品处理
+    detail: 提报表列了主要竞争对手，但历史版实践不主动点名
+    resolution: 默认不主动点名（LDX-I03）；仅当关键词本身是竞品对比词时按 LDX-C01 处理
+
+  - id: C-02
+    topic: 对比与合规的关系
+    detail: 早期规则「金融文章绝不能对比」，历史版已修订
+    resolution: 无证据的主观优劣禁止；同口径可核验事实的中性对照允许（LDX-C01）
+
+  - id: C-03
+    topic: 标题字数
+    detail: 历史版有 20-28 字限制，但较长产品名时允许超出
+    resolution: 完整准确优先，不为凑字数删减产品名
+
+stats:
+  total: 33
+  by_polarity: {must: 15, must_not: 12, may: 1, prefer: 2}
+  by_enforcement: {code: 8, llm: 22, human: 3}

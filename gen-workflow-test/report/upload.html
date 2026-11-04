@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f7f7f8">
+  <meta name="description" content="导入客户资料并生成写作规则">
+  <title>导入客户资料 · GEO 交付工作台</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M5 4.5h9.6L19 8.9v10.6H5z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M14.4 4.5v4.4H19M8.2 12h7.6M8.2 15.4h5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span class="brand-name">GEO 交付工作台</span>
+      </div>
+      <nav class="nav" aria-label="主导航">
+        <a class="nav-item" href="./index.html"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M4.5 19.5V9.8L12 4.5l7.5 5.3v9.7z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M9.5 19.5v-5.8h5v5.8" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span><span>验收报告</span></a>
+        <a class="nav-item" href="./rules/index.html"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M6 3.5h8.5L18 7v13.5H6z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M14 3.5V7h3.5M9 11.5h6M9 15h4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span><span>规则包评审</span></a>
+        <a class="nav-item active" href="./upload.html"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M12 16.5v-13M7.5 8 12 3.5 16.5 8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M4.5 14.5v4a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span><span>导入客户资料</span></a>
+      </nav>
+      <div class="sidebar-foot">
+        <div class="status-line"><span class="dot" id="svcDot"></span><span id="svcText">检查服务…</span></div>
+        <p>资料只保存在本机，不对外发送。</p>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <nav class="breadcrumb" aria-label="当前位置">
+          <span>GEO 交付</span><span class="slash">/</span><b>导入客户资料</b>
+        </nav>
+        <div class="top-actions">
+          <span class="storage-indicator" id="cfgBadge"><span></span>服务检查中</span>
+        </div>
+      </header>
+
+      <div class="content">
+        <div class="page-head">
+          <div>
+            <div class="eyebrow">ONBOARD</div>
+            <h1>导入客户资料</h1>
+            <p>上传客户提供的全部资料，系统会读出写作规范并整理成规则包。企业事实类内容会被排除，只保留「该怎么写」的部分。</p>
+          </div>
+        </div>
+
+        <div class="steps" id="steps">
+          <div class="step is-active" data-step="1"><span class="step-no">1</span><div><b>填写客户信息</b><small>用于生成工作流名称</small></div></div>
+          <div class="step" data-step="2"><span class="step-no">2</span><div><b>上传资料</b><small>docx / xlsx / txt</small></div></div>
+          <div class="step" data-step="3"><span class="step-no">3</span><div><b>抽取规则</b><small>约 3-6 分钟</small></div></div>
+        </div>
+
+        <div id="alerts"></div>
+
+        <section class="section-card">
+          <div class="section-head">
+            <div><h2>客户信息</h2><p>标识用于接口与目录命名，创建后不可修改</p></div>
+          </div>
+          <div class="section-body">
+            <div class="form-grid">
+              <label class="field"><span>客户标识</span>
+                <input id="slug" placeholder="qianhai_life" autocomplete="off">
+                <em>小写字母、数字、下划线，2-40 位</em>
+              </label>
+              <label class="field"><span>客户简称</span>
+                <input id="short" placeholder="前海人寿" autocomplete="off">
+                <em>用于工作流文件名，如「前海人寿生文.yml」</em>
+              </label>
+              <label class="field field-wide"><span>客户全称</span>
+                <input id="name" placeholder="前海人寿保险股份有限公司" autocomplete="off">
+              </label>
+            </div>
+          </div>
+        </section>
+
+        <section class="section-card">
+          <div class="section-head">
+            <div><h2>客户资料</h2><p>支持 docx、xlsx、txt、md、csv、pdf</p></div>
+            <span class="section-count" id="fileCount">0 个文件</span>
+          </div>
+          <div class="section-body">
+            <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="选择或拖入客户资料">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 16.5v-13M7.5 8 12 3.5 16.5 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M4.5 14.5v4a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              <b>把资料拖到这里，或点击选择</b>
+              <small>建议包含：客户规范、评审纪要、语料问题反馈、信息提报表</small>
+              <input type="file" id="fileInput" multiple accept=".docx,.xlsx,.txt,.md,.csv,.pdf" hidden>
+            </div>
+            <ul class="file-list" id="fileList"></ul>
+          </div>
+        </section>
+
+        <section class="section-card" id="progressCard" hidden>
+          <div class="section-head">
+            <div><h2 id="progressTitle">正在抽取规则</h2><p id="progressSub">请保持页面打开</p></div>
+          </div>
+          <div class="section-body">
+            <div class="progress-bar"><span id="progressFill"></span></div>
+            <pre class="log" id="log"></pre>
+          </div>
+        </section>
+
+        <div class="action-bar">
+          <button class="button" id="resetBtn">清空</button>
+          <button class="button primary" id="submitBtn" disabled>上传并抽取规则</button>
+        </div>
+
+        <p class="foot-note">抽取结果会进入规则包评审页，逐条确认后才生成工作流。企业事实、产品参数、经营数据不会进入规则包，由知识库单独管理。</p>
+      </div>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="./upload.js"></script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f7f7f8">
+  <meta name="description" content="GEO 生文质量验收报告">
+  <title>生文质量验收 · GEO 交付工作台</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M5 4.5h9.6L19 8.9v10.6H5z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M14.4 4.5v4.4H19M8.2 12h7.6M8.2 15.4h5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span class="brand-name">GEO 交付工作台</span>
+      </div>
+      <nav class="nav" aria-label="主导航">
+        <button class="nav-item active"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M4.5 19.5V9.8L12 4.5l7.5 5.3v9.7z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M9.5 19.5v-5.8h5v5.8" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span><span>验收报告</span></button>
+        <button class="nav-item"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M6 3.5h8.5L18 7v13.5H6z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M14 3.5V7h3.5M9 11.5h6M9 15h4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span><span>文章明细</span></button>
+        <button class="nav-item"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M4.5 7.5h6l1.8 2h7.2v8.8a1.7 1.7 0 0 1-1.7 1.7H6.2a1.7 1.7 0 0 1-1.7-1.7V7.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span><span>客户规则包</span></button>
+      </nav>
+      <div class="sidebar-foot">
+        <div class="status-line"><span class="dot"></span>前海人寿 · 规则包 v2.0.0</div>
+        <p>39 条规则中 25 条参与验收，14 条为流程项或建议项，不计入合格率。</p>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <nav class="breadcrumb" aria-label="当前位置">
+          <span>GEO 交付</span><span class="slash">/</span><span>前海人寿</span><span class="slash">/</span><b>验收报告</b>
+        </nav>
+        <div class="top-actions">
+          <span class="storage-indicator"><span></span>报告已生成</span>
+          <button class="button small">导出 Markdown</button>
+        </div>
+      </header>
+
+      <div class="content">
+        <div class="page-head">
+          <div>
+            <div class="eyebrow">ACCEPTANCE</div>
+            <h1>生文质量验收报告</h1>
+            <p>对照客户书面规则逐条核验本批文章。判定违反的条目均附原文证据句，可直接定位核对。</p>
+          </div>
+          <div class="head-actions">
+            <button class="button">查看原始输出</button>
+            <button class="button primary">重新生成报告</button>
+          </div>
+        </div>
+
+        <section class="stats" id="stats"></section>
+
+        <div id="alerts"></div>
+
+        <section class="section-card">
+          <div class="section-head">
+            <div><h2>整批重复度</h2><p>逐字不重复但结构雷同，业务阅读体验更接近同一篇的改写版</p></div>
+          </div>
+          <div class="section-body">
+            <div class="metric-grid" id="metrics"></div>
+            <div id="dedupWarn"></div>
+          </div>
+        </section>
+
+        <section class="section-card">
+          <div class="section-head">
+            <div><h2>逐条判定</h2><p id="tableSub"></p></div>
+            <div class="filter-row">
+              <label class="switch"><input type="checkbox" id="onlyViolate"><span>只看违反</span></label>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>客户要求</th><th class="col-cat">类别</th><th class="col-state">判定</th><th>证据（原文）</th></tr></thead>
+              <tbody id="rows"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="section-card">
+          <div class="section-head">
+            <div><h2>未纳入合格率的规则</h2><p>流程类与建议类规则不参与验收计算</p></div>
+            <span class="section-count" id="skipCount"></span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>规则</th><th>内容</th><th class="col-state">原因</th></tr></thead>
+              <tbody id="skipRows"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <p class="foot-note">报告由规则包自动生成。判定「无法判定」表示该规则需模型判定但尚未执行，或模型给出的证据句无法在原文中逐字定位。</p>
+      </div>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="./app.js"></script>
+</body>
+</html>

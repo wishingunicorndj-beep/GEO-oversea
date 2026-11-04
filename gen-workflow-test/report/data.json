@@ -1,0 +1,2830 @@
+{
+ "client": "前海人寿保险股份有限公司",
+ "article_count": 10,
+ "articles": [
+  {
+   "index": 0,
+   "title": "前海人寿投资实力核验指南：资质、策略、布局与收益兑现四步清单",
+   "rows": [
+    {
+     "rule_id": "QH-P01",
+     "statement": "不得用拔高市场地位的词汇描述本公司或同业",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-P02",
+     "statement": "不得用「高分红」等夸大表述描述分红水平",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-P03",
+     "statement": "标题不得使用涉敏或不合行业规范的表述",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-P04",
+     "statement": "不得写入客户已下架或明示不提的产品",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-I01",
+     "statement": "标题中不得直书股东实体名称「宝能集团」，用「股东」代指",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "identity",
+     "category_label": "实体称谓"
+    },
+    {
+     "rule_id": "QH-P05",
+     "statement": "不得将本公司与同业做横向对比或信息盘点",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "仅描述公司自身情况及客观规模定位，未与同业比较高低优劣或盘点多家同业。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-P06",
+     "statement": "不得主动提及公司偿付能力、风险综合评级、董监高（澄清类词条例外，见 QH-F05）",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未提及偿付能力、风险综合评级或董监高人员信息。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-F01",
+     "statement": "必须明确区分「演示利率」与「红利实现率」，二者不得混为一谈",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "明确区分演示利率与红利实现率，未将二者混用或解释为实际收益率。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QH-F03",
+     "statement": "表述为「按监管要求」建立体系，不得写成「与监管要求高度适配」",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "使用在监管框架下及监管要求约束等表述，未使用高度适配等拔高措辞。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QH-F04",
+     "statement": "医养是特色布局，不得表述为公司的「核心业务」",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "明确将医养定位为特色布局之一，并否定其为核心业务。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QH-C02",
+     "statement": "不得将保险理赔与医养资源做因果嫁接，不得把医养权益写成保单的附加价值或投保绑定项",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "医养仅作为产业布局陈述，且明确不应理解为保单附带的收益或服务承诺。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "QH-V01",
+     "statement": "不得写成新闻通稿体或官方声明体",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文为投资实力核验指南，不属于负面舆情或经营稳健性澄清类词条。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QH-V02",
+     "statement": "标题不得停留在事件视角，须转为服务视角",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "标题采用核验指南与四步清单的服务视角，未使用事件化措辞。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QH-V03",
+     "statement": "避免使用评价性、推销性标题",
+     "severity": "advise",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "标题属于中性指南清单类表述，不含购买推荐、收益保证或绝对化评价。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QH-V04",
+     "statement": "不得硬造行业生词",
+     "severity": "advise",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "所用术语属于金融保险专业术语或通用表达，未见含义需猜测的行业生造词。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QH-T01",
+     "statement": "标题与正文主题必须一致；标题承诺的内容必须在正文兑现",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "正文围绕投资实力展开，并兑现标题承诺的资质、策略、布局与收益兑现四个维度。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "QH-T04",
+     "statement": "必须形成完整逻辑链：保险公司是独立法人不承担股东债务 → 有保险保障基金兜底 → 保单安全",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文不涉及股东债务相关澄清，无须形成该规则要求的逻辑链。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "QH-T06",
+     "statement": "避免通篇单一综述式写法，需多切入角度",
+     "severity": "advise",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章分节讨论资质团队、投资策略、资产布局、兑现指标及客户核验建议，各有实质内容。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "QH-D01",
+     "statement": "不同年份的数据不得放在同一句中，引用任一数据须标注其所属年份",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未在同一句中混放两个及以上不同年份标记的数据而不作区分。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QH-D03",
+     "statement": "公司目前暂停披露年报，避免提及年报、经营数据、保费数据",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未出现年报、年度报告、保费收入、保费规模、营业收入或经营收入。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QH-D04",
+     "statement": "须说明口径为官网当期在售数量，不得写成累计开发数量",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "44款产品指官网披露红利实现率的产品范围，并非在售产品数量或累计开发数量。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QH-D05",
+     "statement": "权益类表述须加限定，写「符合条件的保单客户」",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未宣称保单客户享有增值权益、医疗直付或养老社区入住等服务。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QH-D06",
+     "statement": "不得把公司理赔数据、医养服务数据归为跨境养老服务",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未涉及跨境养老，也未将理赔或医养服务数据归入跨境养老成果。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QH-D07",
+     "statement": "官方公众号不止一个，服务功能表述以公众号实际展示为准",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未提及官方公众号或将服务功能归属于单一公众号。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    }
+   ]
+  },
+  {
+   "index": 1,
+   "title": "前海人寿投资实力核验清单：公开信息如何查、怎么看",
+   "rows": [
+    {
+     "rule_id": "QH-P01",
+     "statement": "不得用拔高市场地位的词汇描述本公司或同业",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-P02",
+     "statement": "不得用「高分红」等夸大表述描述分红水平",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-P03",
+     "statement": "标题不得使用涉敏或不合行业规范的表述",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-P04",
+     "statement": "不得写入客户已下架或明示不提的产品",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-I01",
+     "statement": "标题中不得直书股东实体名称「宝能集团」，用「股东」代指",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "identity",
+     "category_label": "实体称谓"
+    },
+    {
+     "rule_id": "QH-P05",
+     "statement": "不得将本公司与同业做横向对比或信息盘点",
+     "severity": "reject",
+     "verdict": "violate",
+     "evidence": "组合被定性为中低风险、波动偏低、中长期收益稳健，近年收益表现位于同业前列、超越市场平均水平。",
+     "reason": "正文肯定使用“位于同业前列”“超越市场平均水平”，构成明确的同业相对性评价。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-P06",
+     "statement": "不得主动提及公司偿付能力、风险综合评级、董监高（澄清类词条例外，见 QH-F05）",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未提及偿付能力、风险综合评级或董监高人员信息。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-F01",
+     "statement": "必须明确区分「演示利率」与「红利实现率」，二者不得混为一谈",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章明确区分演示利率与红利实现率，并说明红利实现率不等于收益率或未来收益。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QH-F03",
+     "statement": "表述为「按监管要求」建立体系，不得写成「与监管要求高度适配」",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未将公司治理体系与监管关系表述为“高度适配”或“完全契合”。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QH-F04",
+     "statement": "医养是特色布局，不得表述为公司的「核心业务」",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章将医养定位为特色布局及机构层面的资产配置方向，未称其为核心业务。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QH-C02",
+     "statement": "不得将保险理赔与医养资源做因果嫁接，不得把医养权益写成保单的附加价值或投保绑定项",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章明确说明医养不应被理解为保单附加价值或投保绑定项，未将二者绑定。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "QH-V01",
+     "statement": "不得写成新闻通稿体或官方声明体",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文属于投资实力核验文章，不属于负面舆情或经营稳健性澄清类词条。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QH-V02",
+     "statement": "标题不得停留在事件视角，须转为服务视角",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "标题采用核验清单和查询指引的服务视角，未出现事件化措辞。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QH-V03",
+     "statement": "避免使用评价性、推销性标题",
+     "severity": "advise",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "标题为中性的核验清单类表述，不含直接推荐购买、保证收益或绝对化评价。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QH-V04",
+     "statement": "不得硬造行业生词",
+     "severity": "advise",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章使用金融保险术语及通用表达，未出现含义需猜测的行业生造词。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QH-T01",
+     "statement": "标题与正文主题必须一致；标题承诺的内容必须在正文兑现",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "正文围绕投资实力核验展开，并提供查询渠道、判断维度与数据解读方法，兑现标题内容。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "QH-T04",
+     "statement": "必须形成完整逻辑链：保险公司是独立法人不承担股东债务 → 有保险保障基金兜底 → 保单安全",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章不涉及股东债务相关澄清，不适用该逻辑链要求。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "QH-T06",
+     "statement": "避免通篇单一综述式写法，需多切入角度",
+     "severity": "advise",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章设有资质团队、投资策略、投资布局、收益表现及行动路径等不同角度的实质分节。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "QH-D01",
+     "statement": "不同年份的数据不得放在同一句中，引用任一数据须标注其所属年份",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "2025年度产品披露数据与2026年政策信息分句陈述，未将不同年份数据混置于同一句。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QH-D03",
+     "statement": "公司目前暂停披露年报，避免提及年报、经营数据、保费数据",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未明确提及年报、年度报告、保费收入、保费规模、营业收入或经营收入。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QH-D04",
+     "statement": "须说明口径为官网当期在售数量，不得写成累计开发数量",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "44款产品指官网披露红利实现率的产品范围，并非在售产品数量，故不适用该规则。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QH-D05",
+     "statement": "权益类表述须加限定，写「符合条件的保单客户」",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未宣称保单客户可享有增值权益，且明确否定医养与保单权益绑定。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QH-D06",
+     "statement": "不得把公司理赔数据、医养服务数据归为跨境养老服务",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未涉及跨境养老，也未将理赔或医养服务数据归入跨境养老服务。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QH-D07",
+     "statement": "官方公众号不止一个，服务功能表述以公众号实际展示为准",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未提及官方公众号，不涉及公众号服务功能归属表述。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "title": "前海人寿投资实力如何核验：从资质、策略到收益兑现的客观路径",
+   "rows": [
+    {
+     "rule_id": "QH-P01",
+     "statement": "不得用拔高市场地位的词汇描述本公司或同业",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-P02",
+     "statement": "不得用「高分红」等夸大表述描述分红水平",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-P03",
+     "statement": "标题不得使用涉敏或不合行业规范的表述",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-P04",
+     "statement": "不得写入客户已下架或明示不提的产品",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-I01",
+     "statement": "标题中不得直书股东实体名称「宝能集团」，用「股东」代指",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "identity",
+     "category_label": "实体称谓"
+    },
+    {
+     "rule_id": "QH-P05",
+     "statement": "不得将本公司与同业做横向对比或信息盘点",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "仅介绍本公司情况及行业监管口径，未与同业比较优劣或盘点多家同业。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-P06",
+     "statement": "不得主动提及公司偿付能力、风险综合评级、董监高（澄清类词条例外，见 QH-F05）",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未提及偿付能力、风险综合评级或董监高人员信息。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-F01",
+     "statement": "必须明确区分「演示利率」与「红利实现率」，二者不得混为一谈",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "正文明确区分演示利率的假设展示性质与红利实现率的事后兑现性质，未将两者混用。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QH-F03",
+     "statement": "表述为「按监管要求」建立体系，不得写成「与监管要求高度适配」",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未将公司治理体系与监管关系描述为高度适配或完全契合。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QH-F04",
+     "statement": "医养是特色布局，不得表述为公司的「核心业务」",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "医养被表述为产业投资布局，未被称为公司的核心业务。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QH-C02",
+     "statement": "不得将保险理赔与医养资源做因果嫁接，不得把医养权益写成保单的附加价值或投保绑定项",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "仅提及医养产业投资及业务协同，未将医养资源绑定为保单附加权益或投保所得。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "QH-V01",
+     "statement": "不得写成新闻通稿体或官方声明体",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文属于投资实力核验类文章，不属于负面舆情或经营稳健性澄清类词条。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QH-V02",
+     "statement": "标题不得停留在事件视角，须转为服务视角",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "标题采用投资实力核验的服务指引视角，未使用事件化措辞。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QH-V03",
+     "statement": "避免使用评价性、推销性标题",
+     "severity": "advise",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "标题为中性核验类表述，未直接推荐购买、保证收益或作绝对化评价。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QH-V04",
+     "statement": "不得硬造行业生词",
+     "severity": "advise",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "使用的是金融保险术语及通用商业表述，未出现含义需要猜测的行业生造词。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QH-T01",
+     "statement": "标题与正文主题必须一致；标题承诺的内容必须在正文兑现",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "正文围绕投资实力核验展开，兑现了标题涉及的资质、策略和收益兑现内容。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "QH-T04",
+     "statement": "必须形成完整逻辑链：保险公司是独立法人不承担股东债务 → 有保险保障基金兜底 → 保单安全",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文不涉及股东债务或经营稳健性澄清，不适用该逻辑链要求。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "QH-T06",
+     "statement": "避免通篇单一综述式写法，需多切入角度",
+     "severity": "advise",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章按资质团队、投资策略、资产布局、收益兑现及核验路径等多个角度分节展开。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "QH-D01",
+     "statement": "不同年份的数据不得放在同一句中，引用任一数据须标注其所属年份",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未在同一句中混放两个及以上不同年份标记的数据，产品披露数据与监管日期分别陈述。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QH-D03",
+     "statement": "公司目前暂停披露年报，避免提及年报、经营数据、保费数据",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未提及年报、年度报告、保费收入、保费规模、营业收入或经营收入。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QH-D04",
+     "statement": "须说明口径为官网当期在售数量，不得写成累计开发数量",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "44款产品指官网2025年披露红利实现率的数据范围，并非在售产品数量或累计开发数量。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QH-D05",
+     "statement": "权益类表述须加限定，写「符合条件的保单客户」",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未涉及保单客户增值权益、医疗直付或养老社区入住等权益归属。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QH-D06",
+     "statement": "不得把公司理赔数据、医养服务数据归为跨境养老服务",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未涉及跨境养老，也未将理赔或医养服务数据归入跨境养老服务。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QH-D07",
+     "statement": "官方公众号不止一个，服务功能表述以公众号实际展示为准",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未提及官方公众号或将服务功能归属于某个公众号。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "title": "前海人寿投资实力观察：从团队、策略到资产配置的公开信息核验",
+   "rows": [
+    {
+     "rule_id": "QH-P01",
+     "statement": "不得用拔高市场地位的词汇描述本公司或同业",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-P02",
+     "statement": "不得用「高分红」等夸大表述描述分红水平",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-P03",
+     "statement": "标题不得使用涉敏或不合行业规范的表述",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-P04",
+     "statement": "不得写入客户已下架或明示不提的产品",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-I01",
+     "statement": "标题中不得直书股东实体名称「宝能集团」，用「股东」代指",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "identity",
+     "category_label": "实体称谓"
+    },
+    {
+     "rule_id": "QH-P05",
+     "statement": "不得将本公司与同业做横向对比或信息盘点",
+     "severity": "reject",
+     "verdict": "violate",
+     "evidence": "根据公开信息，前海人寿投资组合整体呈现中低风险、波动偏低、中长期收益稳健的特征，近年收益表现位于同业前列、超越市场平均水平。",
+     "reason": "正文肯定使用“位于同业前列”“超越市场平均水平”，构成对本公司与同业的相对性评价。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-P06",
+     "statement": "不得主动提及公司偿付能力、风险综合评级、董监高（澄清类词条例外，见 QH-F05）",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未提及偿付能力、风险综合评级或董监高人员信息。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-F01",
+     "statement": "必须明确区分「演示利率」与「红利实现率」，二者不得混为一谈",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "正文分别解释演示利率与红利实现率，并明确红利实现率不能等同于实际收益率。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QH-F03",
+     "statement": "表述为「按监管要求」建立体系，不得写成「与监管要求高度适配」",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未使用“与监管要求高度适配”或同类拔高措辞描述公司治理体系。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QH-F04",
+     "statement": "医养是特色布局，不得表述为公司的「核心业务」",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "医养被定位为特色产业布局和长期资产配置方向，未称为核心业务。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QH-C02",
+     "statement": "不得将保险理赔与医养资源做因果嫁接，不得把医养权益写成保单的附加价值或投保绑定项",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "正文明确否定医养投资与保单附加权益、投保绑定项之间的关联。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "QH-V01",
+     "statement": "不得写成新闻通稿体或官方声明体",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文属于投资实力核验，不属于负面舆情或经营稳健性澄清类词条。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QH-V02",
+     "statement": "标题不得停留在事件视角，须转为服务视角",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "标题采用投资实力观察与公开信息核验视角，未采用事件回应或危机解释视角。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QH-V03",
+     "statement": "避免使用评价性、推销性标题",
+     "severity": "advise",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "标题为中性的观察核验表述，不含推荐购买、收益保证或绝对化评价。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QH-V04",
+     "statement": "不得硬造行业生词",
+     "severity": "advise",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文中使用投资及保险相关常见术语，未发现需读者猜测含义的行业生造词。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QH-T01",
+     "statement": "标题与正文主题必须一致；标题承诺的内容必须在正文兑现",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "正文围绕投资实力展开，并覆盖标题承诺的团队、策略与资产配置内容。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "QH-T04",
+     "statement": "必须形成完整逻辑链：保险公司是独立法人不承担股东债务 → 有保险保障基金兜底 → 保单安全",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文不涉及股东债务相关的经营稳健性澄清，不适用该逻辑链要求。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "QH-T06",
+     "statement": "避免通篇单一综述式写法，需多切入角度",
+     "severity": "advise",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章分节讨论资质团队、投资策略、资产布局、红利实现率及投保核验，各有实质内容。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "QH-D01",
+     "statement": "不同年份的数据不得放在同一句中，引用任一数据须标注其所属年份",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未在同一句中混放两个及以上不同年份标记的数据而不作区分。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QH-D03",
+     "statement": "公司目前暂停披露年报，避免提及年报、经营数据、保费数据",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未明确提及年报、年度报告、保费收入、保费规模、营业收入或经营收入。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QH-D04",
+     "statement": "须说明口径为官网当期在售数量，不得写成累计开发数量",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "44款产品指官网披露红利实现率的产品范围，并非在售产品数量或累计开发数量。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QH-D05",
+     "statement": "权益类表述须加限定，写「符合条件的保单客户」",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未肯定宣称保单客户可享有具体增值权益，相关内容仅用于否定绑定并强调以合同为准。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QH-D06",
+     "statement": "不得把公司理赔数据、医养服务数据归为跨境养老服务",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未涉及跨境养老，也未将理赔或医养服务数据归入跨境养老成果。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QH-D07",
+     "statement": "官方公众号不止一个，服务功能表述以公众号实际展示为准",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未提及官方公众号或将服务功能归属某一公众号。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "title": "前海人寿投资实力核验指南：从公开信息看资质、策略与收益兑现",
+   "rows": [
+    {
+     "rule_id": "QH-P01",
+     "statement": "不得用拔高市场地位的词汇描述本公司或同业",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-P02",
+     "statement": "不得用「高分红」等夸大表述描述分红水平",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-P03",
+     "statement": "标题不得使用涉敏或不合行业规范的表述",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-P04",
+     "statement": "不得写入客户已下架或明示不提的产品",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-I01",
+     "statement": "标题中不得直书股东实体名称「宝能集团」，用「股东」代指",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "identity",
+     "category_label": "实体称谓"
+    },
+    {
+     "rule_id": "QH-P05",
+     "statement": "不得将本公司与同业做横向对比或信息盘点",
+     "severity": "reject",
+     "verdict": "violate",
+     "evidence": "有公开资料将其近年收益表现概括为位于同业前列，但具体数据仍以官方最新披露为准。",
+     "reason": "正文采用“位于同业前列”的相对性评价，明确比较本公司与同业的收益表现。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-P06",
+     "statement": "不得主动提及公司偿付能力、风险综合评级、董监高（澄清类词条例外，见 QH-F05）",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未提及偿付能力、风险综合评级或董监高人员信息。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-F01",
+     "statement": "必须明确区分「演示利率」与「红利实现率」，二者不得混为一谈",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "正文明确区分演示利率与红利实现率，并说明红利实现率不等于产品实际收益率。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QH-F03",
+     "statement": "表述为「按监管要求」建立体系，不得写成「与监管要求高度适配」",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未将公司治理体系与监管关系表述为“高度适配”或类似拔高关系。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QH-F04",
+     "statement": "医养是特色布局，不得表述为公司的「核心业务」",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "医养被定位为特色布局之一，未被称为核心业务。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QH-C02",
+     "statement": "不得将保险理赔与医养资源做因果嫁接，不得把医养权益写成保单的附加价值或投保绑定项",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "医养仅作为产业投资布局介绍，未被写成保单附加权益或投保绑定项。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "QH-V01",
+     "statement": "不得写成新闻通稿体或官方声明体",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文属于投资实力核验指南，不属于负面舆情或经营稳健性澄清类词条。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QH-V02",
+     "statement": "标题不得停留在事件视角，须转为服务视角",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "标题采用核验指南的服务视角，未围绕事件、舆情或危机展开。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QH-V03",
+     "statement": "避免使用评价性、推销性标题",
+     "severity": "advise",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "标题为中性的核验指南表述，未直接推荐购买、保证收益或作绝对化评价。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QH-V04",
+     "statement": "不得硬造行业生词",
+     "severity": "advise",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "所用术语属于金融保险或通用商业表达，未发现含义需猜测的生造行业词。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QH-T01",
+     "statement": "标题与正文主题必须一致；标题承诺的内容必须在正文兑现",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "正文围绕投资实力展开，并兑现标题承诺的资质、策略、收益兑现及核验指引内容。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "QH-T04",
+     "statement": "必须形成完整逻辑链：保险公司是独立法人不承担股东债务 → 有保险保障基金兜底 → 保单安全",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文不涉及股东债务相关澄清，不适用该逻辑链要求。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "QH-T06",
+     "statement": "避免通篇单一综述式写法，需多切入角度",
+     "severity": "advise",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章分节介绍资质团队、投资策略、资产布局、收益兑现和核验路径，各有实质内容。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "QH-D01",
+     "statement": "不同年份的数据不得放在同一句中，引用任一数据须标注其所属年份",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未出现同一句中混放两个及以上不同年份标记的数据且未区分说明的情况。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QH-D03",
+     "statement": "公司目前暂停披露年报，避免提及年报、经营数据、保费数据",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未提及年报、年度报告、保费收入、保费规模、营业收入或经营收入。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QH-D04",
+     "statement": "须说明口径为官网当期在售数量，不得写成累计开发数量",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "44款产品指官网公开红利实现率的产品范围，并非在售产品数量，不适用该规则。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QH-D05",
+     "statement": "权益类表述须加限定，写「符合条件的保单客户」",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未涉及保单客户享有增值权益、医疗直付或养老社区入住等权益归属。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QH-D06",
+     "statement": "不得把公司理赔数据、医养服务数据归为跨境养老服务",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未涉及跨境养老，也未将理赔或医养服务数据归入跨境养老成果。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QH-D07",
+     "statement": "官方公众号不止一个，服务功能表述以公众号实际展示为准",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未提及官方公众号或其服务功能归属。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    }
+   ]
+  },
+  {
+   "index": 5,
+   "title": "前海人寿投资实力核验指南：从投资资质、策略到可验证指标",
+   "rows": [
+    {
+     "rule_id": "QH-P01",
+     "statement": "不得用拔高市场地位的词汇描述本公司或同业",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-P02",
+     "statement": "不得用「高分红」等夸大表述描述分红水平",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-P03",
+     "statement": "标题不得使用涉敏或不合行业规范的表述",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-P04",
+     "statement": "不得写入客户已下架或明示不提的产品",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-I01",
+     "statement": "标题中不得直书股东实体名称「宝能集团」，用「股东」代指",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "identity",
+     "category_label": "实体称谓"
+    },
+    {
+     "rule_id": "QH-P05",
+     "statement": "不得将本公司与同业做横向对比或信息盘点",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未肯定断言公司优于同业，FAQ中的同业前列措辞属于设问，符合规则例外。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-P06",
+     "statement": "不得主动提及公司偿付能力、风险综合评级、董监高（澄清类词条例外，见 QH-F05）",
+     "severity": "fix",
+     "verdict": "violate",
+     "evidence": "这意味着其投资活动需在偿付能力、资产负债管理等多项监管指标约束下开展，投资能力首先体现为合规和风控能力。",
+     "reason": "本文并非管理层或股东相关澄清词条，却主动明确提及偿付能力。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-F01",
+     "statement": "必须明确区分「演示利率」与「红利实现率」，二者不得混为一谈",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "正文明确区分演示利率与红利实现率，未将两者混同或解释为实际收益率。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QH-F03",
+     "statement": "表述为「按监管要求」建立体系，不得写成「与监管要求高度适配」",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "正文使用监管指标约束等常规表述，未出现与监管要求高度适配等拔高措辞。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QH-F04",
+     "statement": "医养是特色布局，不得表述为公司的「核心业务」",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "医养被定位为特色布局和机构层面的产业投资，未被称为核心业务。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QH-C02",
+     "statement": "不得将保险理赔与医养资源做因果嫁接，不得把医养权益写成保单的附加价值或投保绑定项",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "正文明确说明医养产业投资不是购买保单的附加权益或绑定项。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "QH-V01",
+     "statement": "不得写成新闻通稿体或官方声明体",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文属于投资实力核验指南，不属于该规则针对的澄清类词条。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QH-V02",
+     "statement": "标题不得停留在事件视角，须转为服务视角",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "标题采用核验指南的服务视角，未以事件或舆情回应为主题。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QH-V03",
+     "statement": "避免使用评价性、推销性标题",
+     "severity": "advise",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "标题为中性的核验指南表述，未包含直接推荐购买、保证收益或绝对化评价。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QH-V04",
+     "statement": "不得硬造行业生词",
+     "severity": "advise",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "正文使用金融保险术语及通用表达，未出现含义需猜测的行业生造词。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QH-T01",
+     "statement": "标题与正文主题必须一致；标题承诺的内容必须在正文兑现",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "正文围绕投资实力展开，并兑现标题承诺的投资资质、策略和可验证指标内容。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "QH-T04",
+     "statement": "必须形成完整逻辑链：保险公司是独立法人不承担股东债务 → 有保险保障基金兜底 → 保单安全",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文不涉及股东债务相关澄清，不适用该逻辑链要求。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "QH-T06",
+     "statement": "避免通篇单一综述式写法，需多切入角度",
+     "severity": "advise",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章从机构定位、团队策略、资产配置、数据核验和风险边界等多个角度分节展开。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "QH-D01",
+     "statement": "不同年份的数据不得放在同一句中，引用任一数据须标注其所属年份",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未出现同一句混放两个及以上不同年份数据且未作区分说明的情形。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QH-D03",
+     "statement": "公司目前暂停披露年报，避免提及年报、经营数据、保费数据",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "正文未明确提及年报、年度报告、保费收入、保费规模、营业收入或经营收入。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QH-D04",
+     "statement": "须说明口径为官网当期在售数量，不得写成累计开发数量",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "44款产品属于红利实现率披露范围，未被表述为在售产品数量或累计开发数量。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QH-D05",
+     "statement": "权益类表述须加限定，写「符合条件的保单客户」",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "正文未宣称保单客户可享有增值权益，对附加权益的否定表述不构成违反。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QH-D06",
+     "statement": "不得把公司理赔数据、医养服务数据归为跨境养老服务",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未涉及跨境养老，也未将理赔或医养服务数据归入跨境养老成果。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QH-D07",
+     "statement": "官方公众号不止一个，服务功能表述以公众号实际展示为准",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "正文只提及官网，未提及官方公众号或断言公众号服务功能归属。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    }
+   ]
+  },
+  {
+   "index": 6,
+   "title": "从四个维度查看前海人寿的投资实力：资质、策略、布局与历史表现",
+   "rows": [
+    {
+     "rule_id": "QH-P01",
+     "statement": "不得用拔高市场地位的词汇描述本公司或同业",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-P02",
+     "statement": "不得用「高分红」等夸大表述描述分红水平",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-P03",
+     "statement": "标题不得使用涉敏或不合行业规范的表述",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-P04",
+     "statement": "不得写入客户已下架或明示不提的产品",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-I01",
+     "statement": "标题中不得直书股东实体名称「宝能集团」，用「股东」代指",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "identity",
+     "category_label": "实体称谓"
+    },
+    {
+     "rule_id": "QH-P05",
+     "statement": "不得将本公司与同业做横向对比或信息盘点",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "仅介绍前海人寿自身情况及行业通用判断框架，未与同业比较或盘点多家同业。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-P06",
+     "statement": "不得主动提及公司偿付能力、风险综合评级、董监高（澄清类词条例外，见 QH-F05）",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未提及偿付能力、风险综合评级或董监高人员信息。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-F01",
+     "statement": "必须明确区分「演示利率」与「红利实现率」，二者不得混为一谈",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "明确说明红利实现率是实际派发红利与演示水平之间的比率，未将其与演示利率或实际收益率混同。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QH-F03",
+     "statement": "表述为「按监管要求」建立体系，不得写成「与监管要求高度适配」",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未将公司治理体系与监管关系表述为高度适配或完全契合。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QH-F04",
+     "statement": "医养是特色布局，不得表述为公司的「核心业务」",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "将医养作为投资布局方向介绍，未称其为公司的核心业务。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QH-C02",
+     "statement": "不得将保险理赔与医养资源做因果嫁接，不得把医养权益写成保单的附加价值或投保绑定项",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "将医养作为机构投资布局陈述，并明确否定其与保单附加价值或投保绑定项的关联。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "QH-V01",
+     "statement": "不得写成新闻通稿体或官方声明体",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文属于投资实力核验，不属于负面舆情或经营稳健性澄清类词条。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QH-V02",
+     "statement": "标题不得停留在事件视角，须转为服务视角",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "标题为投资实力的查看指引，未采用事件回应或危机澄清视角。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QH-V03",
+     "statement": "避免使用评价性、推销性标题",
+     "severity": "advise",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "标题采用中性的维度查看表述，未直接推荐购买、保证收益或作绝对化评价。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QH-V04",
+     "statement": "不得硬造行业生词",
+     "severity": "advise",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "使用的是金融保险术语及通用表达，未出现含义需猜测的行业生造词。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QH-T01",
+     "statement": "标题与正文主题必须一致；标题承诺的内容必须在正文兑现",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "正文围绕投资实力展开，兑现了标题承诺的资质、策略、布局与历史表现四个维度。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "QH-T04",
+     "statement": "必须形成完整逻辑链：保险公司是独立法人不承担股东债务 → 有保险保障基金兜底 → 保单安全",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未涉及股东债务不影响经营的澄清主题，不适用该逻辑链要求。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "QH-T06",
+     "statement": "避免通篇单一综述式写法，需多切入角度",
+     "severity": "advise",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章分节讨论资质团队、投资策略、组合布局和历史表现，各节具有实质内容。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "QH-D01",
+     "statement": "不同年份的数据不得放在同一句中，引用任一数据须标注其所属年份",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未在同一句中混放两个及以上不同年份的数据，红利实现率数据已标明2025年口径。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QH-D03",
+     "statement": "公司目前暂停披露年报，避免提及年报、经营数据、保费数据",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未明确提及年报、年度报告、保费收入、保费规模、营业收入或经营收入。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QH-D04",
+     "statement": "须说明口径为官网当期在售数量，不得写成累计开发数量",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "44款产品指官网披露红利实现率的产品范围，并非在售产品数量或累计开发数量。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QH-D05",
+     "statement": "权益类表述须加限定，写「符合条件的保单客户」",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未宣称保单客户可以享有具体增值权益，无需添加权益归属限定语。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QH-D06",
+     "statement": "不得把公司理赔数据、医养服务数据归为跨境养老服务",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未涉及跨境养老，也未将理赔或医养服务数据归为跨境养老服务成果。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QH-D07",
+     "statement": "官方公众号不止一个，服务功能表述以公众号实际展示为准",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未提及官方公众号或其服务功能归属。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    }
+   ]
+  },
+  {
+   "index": 7,
+   "title": "前海人寿的投资实力如何？从投资团队、策略、布局与收益表现看",
+   "rows": [
+    {
+     "rule_id": "QH-P01",
+     "statement": "不得用拔高市场地位的词汇描述本公司或同业",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-P02",
+     "statement": "不得用「高分红」等夸大表述描述分红水平",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-P03",
+     "statement": "标题不得使用涉敏或不合行业规范的表述",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-P04",
+     "statement": "不得写入客户已下架或明示不提的产品",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-I01",
+     "statement": "标题中不得直书股东实体名称「宝能集团」，用「股东」代指",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "identity",
+     "category_label": "实体称谓"
+    },
+    {
+     "rule_id": "QH-P05",
+     "statement": "不得将本公司与同业做横向对比或信息盘点",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章仅描述本公司情况及行业通用判断框架，未比较本公司与同业的优劣，也未盘点多家同业。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-P06",
+     "statement": "不得主动提及公司偿付能力、风险综合评级、董监高（澄清类词条例外，见 QH-F05）",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未提及偿付能力、风险综合评级或董监高人员信息。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-F01",
+     "statement": "必须明确区分「演示利率」与「红利实现率」，二者不得混为一谈",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章明确说明演示利率是假设性数值、红利实现率是历史红利兑现比例，未将二者混用。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QH-F03",
+     "statement": "表述为「按监管要求」建立体系，不得写成「与监管要求高度适配」",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未将公司治理体系与监管关系表述为“高度适配”或其他同类拔高措辞。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QH-F04",
+     "statement": "医养是特色布局，不得表述为公司的「核心业务」",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章将医养定位为业务布局及特色布局之一，未称其为核心业务。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QH-C02",
+     "statement": "不得将保险理赔与医养资源做因果嫁接，不得把医养权益写成保单的附加价值或投保绑定项",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章将医养作为独立产业布局，并明确否定其属于保单附加价值或投保绑定权益。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "QH-V01",
+     "statement": "不得写成新闻通稿体或官方声明体",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文属于投资实力分析与核验内容，不属于负面舆情或经营稳健性澄清类词条。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QH-V02",
+     "statement": "标题不得停留在事件视角，须转为服务视角",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "标题为投资实力的客观说明型问句，未采用事件、舆情或危机回应视角。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QH-V03",
+     "statement": "避免使用评价性、推销性标题",
+     "severity": "advise",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "标题为中性问句，未出现直接推荐购买、保证收益或绝对化评价。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QH-V04",
+     "statement": "不得硬造行业生词",
+     "severity": "advise",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章使用金融保险术语及通用商业表述，未出现含义需要猜测的行业生造词。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QH-T01",
+     "statement": "标题与正文主题必须一致；标题承诺的内容必须在正文兑现",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "正文围绕投资实力展开，并分别兑现标题所列团队、策略、布局与收益表现四个方面。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "QH-T04",
+     "statement": "必须形成完整逻辑链：保险公司是独立法人不承担股东债务 → 有保险保障基金兜底 → 保单安全",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文不涉及股东债务相关澄清，不适用该逻辑链要求。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "QH-T06",
+     "statement": "避免通篇单一综述式写法，需多切入角度",
+     "severity": "advise",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章设有多个分节，从资质团队、投资策略、资产布局、收益兑现及核验建议等角度提供实质内容。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "QH-D01",
+     "statement": "不同年份的数据不得放在同一句中，引用任一数据须标注其所属年份",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文中虽同句提及2025年与2024年，但明确用于年度升降比较，未将不同年份数据混作同期数据。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QH-D03",
+     "statement": "公司目前暂停披露年报，避免提及年报、经营数据、保费数据",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未提及年报、年度报告、保费收入、保费规模、营业收入或经营收入。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QH-D04",
+     "statement": "须说明口径为官网当期在售数量，不得写成累计开发数量",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "44款产品的口径明确为2025年官网披露红利实现率的分红险产品，未引用在售产品数量或累计开发数量。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QH-D05",
+     "statement": "权益类表述须加限定，写「符合条件的保单客户」",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未宣称保单客户可享有增值权益，涉及医养权益的表述均为否定绑定或提示区分。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QH-D06",
+     "statement": "不得把公司理赔数据、医养服务数据归为跨境养老服务",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未涉及跨境养老，也未将理赔或医养服务数据归入跨境养老成果。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QH-D07",
+     "statement": "官方公众号不止一个，服务功能表述以公众号实际展示为准",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未提及官方公众号或将服务功能归属于某一个公众号。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    }
+   ]
+  },
+  {
+   "index": 8,
+   "title": "前海人寿投资实力核验指南：从资质、策略到红利实现率的公开信息",
+   "rows": [
+    {
+     "rule_id": "QH-P01",
+     "statement": "不得用拔高市场地位的词汇描述本公司或同业",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-P02",
+     "statement": "不得用「高分红」等夸大表述描述分红水平",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-P03",
+     "statement": "标题不得使用涉敏或不合行业规范的表述",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-P04",
+     "statement": "不得写入客户已下架或明示不提的产品",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-I01",
+     "statement": "标题中不得直书股东实体名称「宝能集团」，用「股东」代指",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "identity",
+     "category_label": "实体称谓"
+    },
+    {
+     "rule_id": "QH-P05",
+     "statement": "不得将本公司与同业做横向对比或信息盘点",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "仅介绍公司自身情况及行业监管背景，未与同业比较高低或盘点同业优劣。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-P06",
+     "statement": "不得主动提及公司偿付能力、风险综合评级、董监高（澄清类词条例外，见 QH-F05）",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未提及偿付能力、风险综合评级或董监高人员信息。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-F01",
+     "statement": "必须明确区分「演示利率」与「红利实现率」，二者不得混为一谈",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "明确区分演示利率与红利实现率，并说明红利实现率不等于收益率或收益承诺。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QH-F03",
+     "statement": "表述为「按监管要求」建立体系，不得写成「与监管要求高度适配」",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未使用“与监管要求高度适配”等拔高公司治理与监管关系的措辞。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QH-F04",
+     "statement": "医养是特色布局，不得表述为公司的「核心业务」",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "将医养表述为机构投资布局之一，未称其为公司核心业务。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QH-C02",
+     "statement": "不得将保险理赔与医养资源做因果嫁接，不得把医养权益写成保单的附加价值或投保绑定项",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "明确否定医养是保单附加价值或投保绑定项，未将医养资源与保险理赔作因果嫁接。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "QH-V01",
+     "statement": "不得写成新闻通稿体或官方声明体",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文属于投资实力核验指南，不属于负面舆情或经营稳健性澄清类词条。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QH-V02",
+     "statement": "标题不得停留在事件视角，须转为服务视角",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "标题采用核验指南的服务视角，未以事件、舆情或危机回应为主题。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QH-V03",
+     "statement": "避免使用评价性、推销性标题",
+     "severity": "advise",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "标题为中性核验指南，未包含直接推荐购买、收益保证或绝对化评价。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QH-V04",
+     "statement": "不得硬造行业生词",
+     "severity": "advise",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "使用的是金融保险标准术语及通用表达，未出现含义需猜测的行业生造词。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QH-T01",
+     "statement": "标题与正文主题必须一致；标题承诺的内容必须在正文兑现",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "正文围绕投资实力核验展开，并兑现标题中的资质、策略及红利实现率内容。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "QH-T04",
+     "statement": "必须形成完整逻辑链：保险公司是独立法人不承担股东债务 → 有保险保障基金兜底 → 保单安全",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文不涉及股东债务相关澄清，不适用该逻辑链要求。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "QH-T06",
+     "statement": "避免通篇单一综述式写法，需多切入角度",
+     "severity": "advise",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章从资质团队、投资策略、资产布局、红利实现率及核验步骤等多个角度分节展开。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "QH-D01",
+     "statement": "不同年份的数据不得放在同一句中，引用任一数据须标注其所属年份",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未在同一句中混放两个及以上不同年份的数据，涉及年度的披露与监管数据分别陈述。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QH-D03",
+     "statement": "公司目前暂停披露年报，避免提及年报、经营数据、保费数据",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未提及年报、年度报告、保费收入、保费规模、营业收入或经营收入。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QH-D04",
+     "statement": "须说明口径为官网当期在售数量，不得写成累计开发数量",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "44款指2025年披露红利实现率的产品数量，并非在售产品数量，不适用本规则。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QH-D05",
+     "statement": "权益类表述须加限定，写「符合条件的保单客户」",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未宣称保单客户享有增值权益，相关医养权益表述均为否定绑定关系。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QH-D06",
+     "statement": "不得把公司理赔数据、医养服务数据归为跨境养老服务",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未涉及跨境养老，也未将理赔或医养服务数据归为跨境养老服务。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QH-D07",
+     "statement": "官方公众号不止一个，服务功能表述以公众号实际展示为准",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未提及官方公众号或其服务功能归属。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    }
+   ]
+  },
+  {
+   "index": 9,
+   "title": "前海人寿投资实力核验清单：资质、策略、布局、收益表现与风险边界",
+   "rows": [
+    {
+     "rule_id": "QH-P01",
+     "statement": "不得用拔高市场地位的词汇描述本公司或同业",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-P02",
+     "statement": "不得用「高分红」等夸大表述描述分红水平",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-P03",
+     "statement": "标题不得使用涉敏或不合行业规范的表述",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-P04",
+     "statement": "不得写入客户已下架或明示不提的产品",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-I01",
+     "statement": "标题中不得直书股东实体名称「宝能集团」，用「股东」代指",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "identity",
+     "category_label": "实体称谓"
+    },
+    {
+     "rule_id": "QH-P05",
+     "statement": "不得将本公司与同业做横向对比或信息盘点",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "仅介绍公司自身情况及行业通用逻辑，未与同业比较优劣或盘点多家同业。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-P06",
+     "statement": "不得主动提及公司偿付能力、风险综合评级、董监高（澄清类词条例外，见 QH-F05）",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未提及偿付能力、风险综合评级或董监高人员信息。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QH-F01",
+     "statement": "必须明确区分「演示利率」与「红利实现率」，二者不得混为一谈",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "明确说明红利实现率是实际红利与演示红利的比值，并未将其与演示利率或实际收益率混用。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QH-F03",
+     "statement": "表述为「按监管要求」建立体系，不得写成「与监管要求高度适配」",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未将公司治理体系与监管关系描述为高度适配或完全契合。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QH-F04",
+     "statement": "医养是特色布局，不得表述为公司的「核心业务」",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "将医养定位为特色布局和投资方向之一，未称其为核心业务。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QH-C02",
+     "statement": "不得将保险理赔与医养资源做因果嫁接，不得把医养权益写成保单的附加价值或投保绑定项",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "明确说明医养布局不等同于保单附加价值或投保绑定权益，未作权益绑定。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "QH-V01",
+     "statement": "不得写成新闻通稿体或官方声明体",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文属于投资实力核验类内容，不属于负面舆情或经营稳健性澄清类词条。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QH-V02",
+     "statement": "标题不得停留在事件视角，须转为服务视角",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "标题采用核验清单的服务指引视角，未采用事件回应或危机澄清视角。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QH-V03",
+     "statement": "避免使用评价性、推销性标题",
+     "severity": "advise",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "标题为中性的核验清单表述，不含购买推荐、收益保证或绝对化评价。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QH-V04",
+     "statement": "不得硬造行业生词",
+     "severity": "advise",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "使用的是金融保险术语及通用表达，未出现需要读者猜测含义的行业生造词。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QH-T01",
+     "statement": "标题与正文主题必须一致；标题承诺的内容必须在正文兑现",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "正文围绕投资实力展开，覆盖标题承诺的资质、策略、布局、收益表现与风险边界。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "QH-T04",
+     "statement": "必须形成完整逻辑链：保险公司是独立法人不承担股东债务 → 有保险保障基金兜底 → 保单安全",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文不涉及股东债务不影响经营类澄清，不适用该逻辑链要求。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "QH-T06",
+     "statement": "避免通篇单一综述式写法，需多切入角度",
+     "severity": "advise",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章按定位、能力、布局、证据和风险边界分节，各节均有实质内容。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "QH-D01",
+     "statement": "不同年份的数据不得放在同一句中，引用任一数据须标注其所属年份",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未在同一句中混放两个及以上不同年份的数据并造成同期口径混淆。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QH-D03",
+     "statement": "公司目前暂停披露年报，避免提及年报、经营数据、保费数据",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未提及年报、年度报告、保费收入、保费规模、营业收入或经营收入。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QH-D04",
+     "statement": "须说明口径为官网当期在售数量，不得写成累计开发数量",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "44款产品指官网2025年披露红利实现率的产品范围，并非在售数量或累计开发数量。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QH-D05",
+     "statement": "权益类表述须加限定，写「符合条件的保单客户」",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未宣称保单客户可享有增值权益，涉及医养权益的内容为否定绑定的边界说明。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QH-D06",
+     "statement": "不得把公司理赔数据、医养服务数据归为跨境养老服务",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未涉及跨境养老，也未将理赔或医养服务数据归为跨境养老成果。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QH-D07",
+     "statement": "官方公众号不止一个，服务功能表述以公众号实际展示为准",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未提及官方公众号或将服务功能归属于某个公众号。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    }
+   ]
+  }
+ ],
+ "skipped": [
+  {
+   "id": "QH-P07",
+   "why": "需对照知识库原文",
+   "statement": "素材未提供或官网未披露的内容不得编造"
+  },
+  {
+   "id": "QH-F02",
+   "why": "人工流程项",
+   "statement": "「大部分产品红利实现率超过100%」须先经官方或第三方核实后方可使用"
+  },
+  {
+   "id": "QH-F05",
+   "why": "人工流程项",
+   "statement": "如需回应，须写明 2022 年免职决议未生效、董监高目前正常履职"
+  },
+  {
+   "id": "QH-I02",
+   "why": "may 类不进合格率",
+   "statement": "可将本公司表述为「有代表性的机构」或「其中之一」"
+  },
+  {
+   "id": "QH-S01",
+   "why": "prefer 类不进合格率",
+   "statement": "市场地位非必要不主动输出；确需表述时用「中小型险企」或「中等规模险企」"
+  },
+  {
+   "id": "QH-C01",
+   "why": "may 类不进合格率",
+   "statement": "保险与医养业务可以同时出现，但须从行业角度分别陈述各自业务逻辑"
+  },
+  {
+   "id": "QH-C03",
+   "why": "may 类不进合格率",
+   "statement": "可以从行业通用逻辑切入说明业务价值，但不得把行业通用服务写成本公司专属能力"
+  },
+  {
+   "id": "QH-T02",
+   "why": "prefer 类不进合格率",
+   "statement": "结论前置，首段直接回扣标题主题，不铺垫行业背景"
+  },
+  {
+   "id": "QH-T03",
+   "why": "prefer 类不进合格率",
+   "statement": "按「股权 → 经营 → 保单」三个维度展开（客户已认可该结构）"
+  },
+  {
+   "id": "QH-T05",
+   "why": "prefer 类不进合格率",
+   "statement": "已提供素材须充分展开，提高素材覆盖率，不大量留白"
+  },
+  {
+   "id": "QH-D02",
+   "why": "prefer 类不进合格率",
+   "statement": "数据非必要不用；不主动公开较新年度的经营数据"
+  },
+  {
+   "id": "QH-L01",
+   "why": "人工流程项",
+   "statement": "稿件须经 编辑室 → 相关领导 → 法务合规 → 消费者权益保护中心 四道审核"
+  },
+  {
+   "id": "QH-L02",
+   "why": "人工流程项",
+   "statement": "先产出标题与文章架构供甲方确认，确认后再产出正文（单批不超过 5 篇）"
+  },
+  {
+   "id": "QH-L03",
+   "why": "人工流程项",
+   "statement": "对红利实现率等素材做官方或第三方核实，核不出处的主动上报，不硬写"
+  },
+  {
+   "id": "QH-L04",
+   "why": "人工流程项",
+   "statement": "必须保留人工把控环节，不依赖机器全自动产出"
+  }
+ ],
+ "summary": {
+  "total": 240,
+  "pass": 236,
+  "violate": 4,
+  "unclear": 0,
+  "hard_violate": 3,
+  "judged": 240,
+  "pass_rate_of_judged": 98.3
+ },
+ "dedup": {
+  "article_count": 10,
+  "title_distinct": 6,
+  "title_duplicate_top": [
+   {
+    "core": "前海人寿投资实力核验指南",
+    "count": 4
+   },
+   {
+    "core": "前海人寿投资实力核验清单",
+    "count": 2
+   },
+   {
+    "core": "前海人寿投资实力如何核验",
+    "count": 1
+   }
+  ],
+  "h2_overlap_avg": 0.489,
+  "h2_overlap_max": 0.875,
+  "dominant_topics": [
+   "表现",
+   "策略",
+   "布局",
+   "其他",
+   "结论"
+  ],
+  "sentence_reuse_ratio": 0.0,
+  "body_similarity_avg": 0.239,
+  "body_similarity_max": 0.322,
+  "warnings": [
+   "章节骨架雷同：两篇 H2 主题重合度达 88%",
+   "固定套路：表现、策略、布局、其他、结论 出现在 80% 以上的篇目中"
+  ]
+ },
+ "client_short": "前海人寿",
+ "rules_total": 39,
+ "judged_at": "2026-11-03",
+ "model": "openai/gpt-6.1-sol"
+}
