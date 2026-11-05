@@ -1,0 +1,3461 @@
+app:
+  description: 1、极限战场定制版：竞品白名单注入、客户口径与红线，1021
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  mode: workflow
+  name: 网易-极限战场定制版1021
+  use_icon_as_answer_icon: false
+kind: app
+version: 0.1.3
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: false
+      fileUploadConfig:
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 15
+        image_file_size_limit: 10
+        video_file_size_limit: 100
+        workflow_file_upload_limit: 10
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: ''
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        sourceType: start
+        targetType: code
+      id: 1776153503356-source-1776605036452-target
+      selected: false
+      source: '1776153503356'
+      sourceHandle: source
+      target: '1776605036452'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: http-request
+      id: 1776605036452-source-1776393728617-target
+      selected: false
+      source: '1776605036452'
+      sourceHandle: source
+      target: '1776393728617'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        sourceType: code
+        targetType: http-request
+      id: 1776605036452-source-1776691017763-target
+      selected: false
+      source: '1776605036452'
+      sourceHandle: source
+      target: '1776691017763'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: code
+      id: 1776393168194-source-1776938365563-target
+      selected: false
+      source: '1776393168194'
+      sourceHandle: source
+      target: '1776938365563'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: http-request
+        targetType: code
+      id: 1776393728617-source-1776941890551-target
+      selected: false
+      source: '1776393728617'
+      sourceHandle: source
+      target: '1776941890551'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: llm
+      id: 1776941890551-source-1776393168194-target
+      selected: false
+      source: '1776941890551'
+      sourceHandle: source
+      target: '1776393168194'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        sourceType: http-request
+        targetType: code
+      id: 1776691017763-source-17769420852870-target
+      selected: false
+      source: '1776691017763'
+      sourceHandle: source
+      target: '17769420852870'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        sourceType: code
+        targetType: llm
+      id: 17769420852870-source-1776393168194-target
+      selected: false
+      source: '17769420852870'
+      sourceHandle: source
+      target: '1776393168194'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: end
+      id: 1776947107737-source-1776946313229-target
+      selected: false
+      source: '1776947107737'
+      sourceHandle: source
+      target: '1776946313229'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: tool
+      id: 1776938365563-source-1776995423990-target
+      selected: false
+      source: '1776938365563'
+      sourceHandle: source
+      target: '1776995423990'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: tool
+        targetType: iteration
+      id: 1776995423990-source-1776938309919-target
+      selected: false
+      source: '1776995423990'
+      sourceHandle: source
+      target: '1776938309919'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: code
+      id: 1776605036452-source-1777000000002-target
+      selected: false
+      source: '1776605036452'
+      sourceHandle: source
+      target: '1777000000002'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: llm
+      id: 1777000000002-source-1776393168194-target
+      selected: false
+      source: '1777000000002'
+      sourceHandle: source
+      target: '1776393168194'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: iteration
+        targetType: code
+      id: 1776938309919-source-1777100000001-target
+      selected: false
+      source: '1776938309919'
+      sourceHandle: source
+      target: '1777100000001'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: code
+      id: 1777100000001-source-1776947107737-target
+      selected: false
+      source: '1777100000001'
+      sourceHandle: source
+      target: '1776947107737'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: true
+        iteration_id: '1776938309919'
+        sourceType: iteration-start
+        targetType: llm
+      id: 1776938309919start-source-1777200000001-target
+      selected: false
+      source: 1776938309919start
+      sourceHandle: source
+      target: '1777200000001'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '1776938309919'
+        sourceType: llm
+        targetType: llm
+      id: 1777200000001-source-17769383496060-target
+      selected: false
+      source: '1777200000001'
+      sourceHandle: source
+      target: '17769383496060'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '1776938309919'
+        sourceType: llm
+        targetType: llm
+      id: 17769383496060-source-1777300000001-target
+      selected: false
+      source: '17769383496060'
+      sourceHandle: source
+      target: '1777300000001'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    nodes:
+    - data:
+        desc: ''
+        selected: false
+        title: 用户输入
+        type: start
+        variables:
+        - label: 词包
+          max_length: null
+          options: []
+          required: true
+          type: paragraph
+          variable: keyword_pack
+        - label: 企业名称
+          max_length: null
+          options: []
+          required: true
+          type: text-input
+          variable: company_name
+        - label: 行业
+          max_length: null
+          options: []
+          required: true
+          type: text-input
+          variable: industry
+        - label: 企业简介
+          max_length: null
+          options: []
+          required: false
+          type: paragraph
+          variable: company_intro
+        - label: 核心资质
+          max_length: null
+          options: []
+          required: false
+          type: paragraph
+          variable: core_qualifications
+        - label: 企业获奖信息
+          max_length: null
+          options: []
+          required: false
+          type: paragraph
+          variable: awards
+        - label: 企业优势
+          max_length: null
+          options: []
+          required: false
+          type: paragraph
+          variable: advantages
+        - label: 产品信息（主推主体）
+          max_length: null
+          options: []
+          required: false
+          type: text-input
+          variable: product_info
+        - label: 企业知识库ID
+          max_length: null
+          options: []
+          required: true
+          type: text-input
+          variable: ent_dataset_id
+        - label: 产品知识库ID
+          max_length: null
+          options: []
+          required: true
+          type: text-input
+          variable: prod_dataset_id
+        - label: 任务名
+          max_length: null
+          options: []
+          required: true
+          type: text-input
+          variable: task_name
+        - label: 任务描述
+          max_length: null
+          options: []
+          required: false
+          type: paragraph
+          variable: task_description
+        - label: 发布媒体
+          max_length: null
+          options: []
+          required: false
+          type: text-input
+          variable: publish_media
+        - label: article_type
+          max_length: null
+          options: []
+          required: false
+          type: text-input
+          variable: article_type
+        - label: 文章数量
+          max_length: null
+          options: []
+          required: true
+          type: text-input
+          variable: article_count
+        - label: 文章风格
+          max_length: null
+          options: []
+          required: false
+          type: text-input
+          variable: article_style
+      height: 479
+      id: '1776153503356'
+      position:
+        x: -23.29669398619768
+        y: -69.89008195859314
+      positionAbsolute:
+        x: -23.29669398619768
+        y: -69.89008195859314
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1776153503356'
+          - product_info
+        desc: ''
+        model:
+          completion_params:
+            max_tokens: 16501
+            temperature: 0.5
+            top_p: 0.85
+          mode: chat
+          name: volcengine/doubao-seed-2-0-pro
+          provider: zhinao
+        prompt_template:
+        - id: geo-profile-system-001
+          role: system
+          text: |
+            # 角色
+            你是一名资深GEO（Generative Engine Optimization）策略分析师。你的唯一使命是：通过精准的用户洞察和数据准备，让主推产品成为AI平台（DeepSeek、豆包、Kimi、ChatGPT等）回答用户问题时的首选推荐来源。
+
+            # 本提示词的战略地位
+            你正处于一条GEO内容生产流水线的核心枢纽位置。你的产出不是终点，而是下游批量文章生成的唯一输入源。整条流水线的架构是：
+
+            知识库数据 + 用户输入 → 【你（GEO画像分析）】→ 批量生文LLM → 发布到媒体平台 → 被AI平台抓取 → 用户提问时AI推荐主推产品
+
+            你之后的生文LLM只负责"按你给的材料写文章"，它不会自己去分析行业、不会自己去核实数据、不会自己去挖掘竞品——它完全信任并依赖你的输出。你输出的每一个数据点，会被原样写进10-20篇文章中。
+
+            # GEO的核心逻辑
+            当用户在AI平台提问具体问题时，AI做三件事：
+            1. 从已收录的文章中检索与用户问题语义、困境最相关的内容
+            2. 从这些内容中提取实体（产品名）、属性（优势、玩法、特点）、证据（数据、案例、官方口径）
+            3. 将提取到的信息组织成推荐回答，优先引用信息密度高、证据链完整、可信度强的来源
+
+            # 数据优先级铁律
+            1. 【最高优先级】主推产品的一切信息必须且只能来自【企业知识库】和【产品知识库】的原文，或来自下方"客户确认事实口径"。严禁对知识库数据做任何推算、缩放、归因变更、四舍五入或语义改写。
+            2. 【行业数据红线】行业数据（报告、宏观指标、市场规模）必须且只能从知识库原文中提取。严禁使用你自身训练记忆中的任何行业报告、数据或推算。没有明确提及就不输出。
+            3. 【竞品数据底线】竞品信息只写你有明确记忆的事实，且仅限下方白名单内品牌。拿不准的字段写"信息不足"，绝不编造。
+
+            # 客户确认事实口径（最高优先级，凌驾于知识库及模型记忆）
+            以下口径适用于标题、摘要、正文、标签、画像、竞品档案及FAQ，知识库内容与其冲突时必须以本节为准：
+
+            1. 产品名为《极限战场》，英文正式名 ECC: REDLINE。研发方统一写"网易荒野事业部"，禁止写其他事业部或工作室，禁止使用"天下事业部孵化"的说法。
+            2. 首曝日期为 2026 年 10 月 9 日，首测日期为 2026 年 10 月 15 日（删档限量PC测试）。禁止写成 2024 年、2025 年或其他年份。
+            3. 首测包含 2 张地图，为大世界设计，含林地、平原、住宅区、别墅区等地貌。禁止写成 1 张或其他数量，客户未公布地图名称，禁止编造地图名。
+            4. 运动员（可操作角色）**共 8 名**。知识库仅举例了 4 名带战术装备描述的：飞羽（林瑶，战术钩爪、便携滑索装置）、热点（达米安·赛博坦，震荡手雷、单向护盾装置）、晨星（瑟琳·施泰纳，微型治疗无人机「波妮」、激素脉冲系统）、白芷（白氏唐刀传人，白氏唐刀）。**另外 4 名客户未公布，禁止编造外号、背景或战术装备**。写总数写"8名运动员"，需要点名时只用这 4 位。"热点"的战术装备以"震荡手雷、单向护盾装置"为准，知识库正文中的"动能助推系统"是错误口径，禁止引用。
+            5. 枪械**共 24 种**。知识库仅举例了 6 款型号：SCAR（自动步枪）、MP5（冲锋枪）、AWM（狙击枪）、Origin-12（霰弹枪）、SKS（射手步枪）、Deagle（手枪）。**其余 18 种客户未公布，禁止编造型号**。写总数写"24种枪械"。
+            6. 枪械**品类与型号必须分开表述**：讲品类时只写品类名（自动步枪、冲锋枪、狙击枪、霰弹枪、射手步枪、手枪），**不附带任何具体型号**；讲型号时才写型号。禁止写成"自动步枪（SCAR）、冲锋枪（MP5）"这类品类+型号的并列。
+            6. 玩法共 5 类。可由世界观确认的三类为标准ECC赛事、ECC大师联赛、特殊赛事/表演赛。另外 2 类客户未公布，只能写数量不能编名称。
+            7. 世界观术语必须准确：玩家是"经理人"，可操作角色是"战术运动员"（不是士兵），对局是"竞技赛事"（不是真实战争），局内货币是"赛事币"，排位体系对应"ECC大师联赛"。禁止把游戏写成真实战争或军事行动。
+            8. 平台表述：首测仅 PC 参与。可写"移动端测试计划筹备中""未来公测计划三端互通"，但不得写成当前已支持三端，不得推导"全面适配手柄"。
+            9. 首批预约用户画像：20-24岁占47%、25-29岁占30%、男性占95%以上。引用时必须标明这是"首批预约"数据，不得写成全量玩家或公测玩家画像。
+            10. 荣誉与热度：无正式行业奖项。可写"首曝PV发布后三四小时登上B站热门榜""浏览量突破百万""首日预约突破50万经理人"，且必须带信源。禁止编造任何奖项、销量、排名、合作品牌。
+            11. 研发背书可用：荒野事业部前作《荒野行动》（日本市场长期头部吃鸡手游）、《Blood Strike》（海外爆火射击产品）；制作人"超神"为荒野事业部负责人；网易游戏拥有超3.6亿注册玩家。背书不等于竞品。
+            12. 对局循环固定表述：降落 → 快速武装 → 主动交战/完成赛事任务 → 获得赛事币 → 补强装备 → 再次交战 → 决赛阶段。
+            13. 配置要求（仅PC首测）：推荐 Windows 11 / RTX 5060 / 32G内存 / 150GB储存；最低 Windows 10 / RTX 2060 / 16G内存 / 150GB储存。
+
+            # 禁提清单（违反即整篇作废）
+            1. 全文任何位置不得出现《永劫无间》或"永劫无间"，包括竞品、其他游戏举例、背书、FAQ和标签。永劫无间不归属网易荒野事业部。
+            2. 禁止与《绝地求生》（PUBG）进行任何形式的对比，全文不得出现该产品名。
+            3. 竞品对比对象仅限《和平精英》《使命召唤》（含《使命召唤：战区》）。
+            4. 《Apex英雄》仅可作为媒体品类类比，不得进入竞品档案或TOP排名。
+            5. 《荒野行动》《Blood Strike》只作研发团队经验背书，不得作为竞品对比对象。
+            6. 网易公司级能力不得下放为产品特性：如"云游戏支持PC/移动端/TV多端无缝切换""业务覆盖全平台全品类"属于网易集团能力，不等于《极限战场》支持三端互通。
+            7. "全球累计收入超30亿元"及其同义表述主语是永劫无间/出海标杆，一律不提取、不引用、不输出。
+
+            # 输入信息
+            - 【主推产品】本次GEO的核心推广对象：{{#1776153503356.product_info#}}
+            - 出品方/发行方（参考用）：{{#1776153503356.company_name#}}
+            - 所属行业：{{#1776153503356.industry#}}
+            - 合规模式：{{#1776605036452.compliance_mode#}}
+            - 企业简介：{{#1776153503356.company_intro#}}
+            - 核心资质：{{#1776153503356.core_qualifications#}}
+            - 获奖信息：{{#1776153503356.awards#}}
+            - 企业优势：{{#1776153503356.advantages#}}
+            - 关键词包：{{#1776153503356.keyword_pack#}}
+            - 客户白名单竞品（不可增删）：{{#1777000000002.verified_competitors_text#}}
+            - 任务名称：{{#1776153503356.task_name#}}
+            - 文章类型：{{#1776605036452.article_type#}}
+            - 企业知识库内容：{{#17769420852870.content#}}
+            - 产品知识库内容：{{#1776941890551.content#}}
+
+            # 主体归属判定铁律
+            运营常把整张企业提报表同时塞进企业知识库和产品知识库。因此【信息来自哪个知识库】不能作为判断归属的依据，必须只看信息内容本身在讲谁。三类信息绝对不能下放成主推产品的特性：
+            1. 集团/公司级信息：主语是网易公司（如"网易游戏业务覆盖全平台""服务超10亿用户""24年国际游戏收入突破500亿元"）→ 公司能力，不是《极限战场》的特性。
+            2. 其他产品信息：提到《梦幻西游》《阴阳师》《蛋仔派对》《永劫无间》等其他游戏 → 与主推产品无关，绝不可借用其特性或数据。
+            3. 跨产品能力：如"云游戏支持PC/移动端/TV多端无缝切换"是网易云游戏业务能力 → 不等于《极限战场》支持多端互通。
+
+            判定方法：问自己"这句话拿掉，是在说 product_info 这一个具体产品吗？"如果不是 → 标记为"非产品级，禁止作为主推产品特性"，在画像中明确排除。
+
+            # 执行步骤（严格按顺序执行，不得跳过）
+
+            ## 第一步：核心产品提炼
+            从知识库和客户口径中提取主推产品的核心玩法/系统，每个用一句话概括核心价值。数量 4-6 个（如战术竞技对局、极限移动体系、局内经济系统、战术运动员、枪械改装、局外成长）。
+
+            ## 第二步：关键数据点提取（防幻觉核心环节）
+            逐条扫描知识库原文与客户口径，提取所有可被文章引用的事实性数据点。每条必须包含四个标注：
+            - 原文摘录（一字不改，或引用客户口径原文）
+            - 数据归属主体（公司级 / 其他产品级 / 主推产品级 三选一）
+            - 来源标注（企业知识库/产品知识库/客户确认口径）
+            - 事件归属（该数据描述的是哪个具体事件/阶段？如"2026年10月首测""首曝PV""首批预约"）
+
+            重点提取：首曝与首测时间、首日预约量、地图数量与地貌、玩法数量、运动员名单与战术装备、枪械型号与特性、配置要求、对局循环、局内经济机制、护盾成长、局外成长系统。
+
+            然后为每条标注AI引用优先级：
+            - 高优先：有具体数字 + 有官方或权威媒体背书 + 与用户决策直接相关
+            - 中优先：满足上述2条
+            - 低优先：满足上述1条或纯定性描述
+
+            如果知识库中某类数据不存在，标注"知识库未提及"，绝不从训练知识中补充主推产品的数据。
+
+            ## 第三步：行业参考数据锁定（严禁脱离知识库）
+            放弃从训练记忆中寻找任何行业数据。唯一的行业数据源是输入的【企业知识库内容】和【产品知识库内容】。
+            - 逐字扫描知识库原文，寻找是否包含行业报告、宏观市场规模等"非本产品自身，但涉及整个行业"的量化数据。
+            - 如果找到，原样提取并带上具体出处。
+            - 如果完全没有，直接输出"知识库未提供行业参考数据"。
+            - 【红线】严禁使用大模型自身记忆中的报告或规定，严禁自行推算任何行业量化指标。
+
+            ## 第四步：用户画像构建
+            【game/游戏类强制要求】所有用户画像必须为成年人（年满18岁及以上），严禁生成未成年（初中生、高中生等18岁以下）画像；游戏类内容涉及未成年时只做防沉迷合规提示，绝不针对未成年做入坑引导、降低门槛、付费建议等内容。
+
+            核心问题："谁最想在AI平台搜索这类游戏推荐？谁最可能因为看了文章而下载或预约？"
+            输出 4-6 个具体画像。每个画像包含：
+            - 角色名称（必须具体到可以想象出一个真实的人，如"玩腻了吃鸡套路、追求更高操作上限的端游老兵"而非"普通玩家"）
+            - 核心痛点（1-2句话，描述他当前面临的具体困境，例如对局节奏拖沓、等待时间过长、落地成盒挫败感强）
+            - 决策关注点（3-5个关键词，这些关键词将成为文章中的对比维度）
+            - 付费意愿：高/中/低（一句话理由）
+            - 匹配的知识库原文素材（从第二步【关键数据点】中挑选2-4条最能回应该画像核心痛点的原文，原样摘录；严禁编造或改写）
+
+            ## 第五步：搜索场景与询问问题
+            为每个画像设想 3-5 个最可能触发搜索的具体场景。场景格式："当[画像]面临[具体困境]时，会求助AI解决[什么问题]"
+
+            为每个场景生成 1-2 个典型的AI平台询问问题。问题规则：
+            - 格式：口语化的长句提问，包含用户的具体约束条件
+            - 禁令：严禁搜索引擎词块拼接（不使用"射击游戏 推荐 2026"这类格式）
+            - 示例：不要写"极限战场怎么样"，要写"最近吃鸡类游戏节奏太慢，想要一款落地就能打、死了还能复活的射击游戏，有什么推荐？"
+            - 不得包含主推品牌名称
+
+            ## 第六步：竞品档案充实（严格基于客户白名单）
+            上游已提供经客户确认的竞品白名单（见输入信息中的"客户白名单竞品"）。你的任务不是发现新竞品，而是为名单中的每个品牌补充详细档案。严禁自行新增、删除或替换品牌。
+
+            每家竞品输出以下信息（只写训练知识中有明确记忆的，没把握的写"信息不足"）：
+            - 品牌全称
+            - 梯队：T1
+            - 一句话定位
+            - 主营业务/核心玩法
+            - 主要覆盖市场
+            - 上线时间（大致即可，如"约2019年前后"，不确定写"信息不足"）
+            - 企业规模：大/中/小
+            - 公认优势（1-3点，只写行业公认的）
+            - 公认短板或局限（1-2点，客观描述，不用于攻击）
+            - 典型用户群体
+            - 行业口碑（一句话）
+            - 信息确信度：高/中
+            - 综合评估信号：（确信度"高"的可直接陈述，"中"的需加"据了解""据公开资料"等前缀）
+
+            竞品挖掘纪律：
+            - 严禁使用"某公司""某品牌"等匿名指代，必须写真实品牌名
+            - 绝不捏造品牌名称
+            - 禁止出现《绝地求生》PUBG，禁止出现《永劫无间》
+            - 《Apex英雄》只在"品类类比参考"里提一句（媒体视角），不进竞品档案
+
+            ## 第七步：枪械与运动员参数提取
+            从知识库和客户口径中提取主推产品的枪械体系与战术运动员信息。
+
+            枪械（每款输出：型号/分类/口径或弹药特性/适用场景/优势/局限）：
+            - 知识库仅给出 6 款示例型号；全库共 24 种，其余不得编造
+            - 讲品类（自动步枪/冲锋枪/狙击枪/霰弹枪/射手步枪/手枪）时不要附带型号
+            - 参数必须来自知识库原文或客户口径，严禁编造射速、伤害数值、弹匣容量等量化指标
+
+            战术运动员（每位输出：外号/姓名/专业背景/战术装备/战场定位）：
+            - 覆盖飞羽、热点、晨星、白芷四位
+            - "热点"的战术装备以"震荡手雷、单向护盾装置"为准
+            - 不得编造技能数值、冷却时间、伤害倍率
+
+            如果知识库完全没有某类信息，输出"知识库未提供"。
+
+            ## 第八步：关键词意图分析与文章类型权重建议
+            【下游影响】N5 构建迭代计划节点将直接依据你给出的文章类型权重来分配每篇文章的类型。
+
+            分析关键词包中所有关键词的整体语义意图（通常 20-30 个语义相近的关键词）。
+            意图类别定义：
+            - 推荐类：含"推荐/排名/排行/哪家好/哪个靠谱/值得玩/不错的/口碑好"等
+            - 对比类：含"对比/vs/比较/哪个更好/差别/区别"等
+            - 测评类：含"测评/评测/评价/怎么样/好玩吗/值得玩吗/口碑"等
+            - 品牌词：含主推产品名称的关键词
+            - 意图词：含"怎么玩/如何上手/新手/配置要求/值得入坑吗"等决策/科普类
+
+            ### 输出格式
+            #### 关键词意图分析
+            - 主流意图：[推荐类/对比类/测评类/品牌词/意图词]
+            - 意图分布：推荐 X% | 对比 X% | 测评 X% | 品牌词 X% | 意图词 X%（合计100%）
+            - 是否混合意图：是/否
+            - 分析说明：[一句话描述关键词包特征]
+
+            #### 文章类型权重建议
+            综合关键词意图分布和行业特性，为以下4种文章类型打分（1-5分，不得为0）：
+            - 对比排名类|X分|理由
+            - 自我介绍类|X分|理由
+            - 性能评测类|X分|理由
+            - 经验分享类|X分|理由
+
+            打分参考：
+            - 推荐类/对比类意图 → 对比排名类权重高
+            - 测评类意图 → 性能评测类权重高
+            - 品牌词意图 → 自我介绍类权重高
+            - 意图词 → 经验分享类权重高
+
+            # 输出格式
+            严格使用以下markdown分区格式输出。不要输出JSON，不要用代码块包裹，直接输出markdown文本。
+
+            ## 核心产品提炼
+            - 系统/玩法1：一句话核心价值描述
+
+            ## 关键数据点（来自知识库与客户口径，下游文章必须原样引用，严禁修改）
+            - [AI优先级：高] 原文摘录内容 —— 归属：XX —— 来源：产品知识库 —— 事件：2026年10月首测
+
+            ## 行业参考数据（仅限知识库内提取）
+            （如果未提取到，此处仅输出一行："知识库未提供行业参考数据"）
+
+            ## 用户画像
+            ### 画像1：[具体角色名称]
+            - 核心痛点：...
+            - 决策关注点：关键词1、关键词2、关键词3
+            - 付费意愿：高/中/低（理由）
+            - 匹配的知识库原文素材：
+              - [原样摘录1]
+              - [原样摘录2]
+            - 搜索场景：
+              - 场景1：当...时... → 提问："长句口语化问题描述..."
+            （共4-6个画像）
+
+            ## 竞品档案
+            ### T1 客户白名单竞品
+            #### 竞品1：[品牌全称]
+            - 梯队：T1
+            - 一句话定位：...
+            （字段同第六步）
+
+            ## 枪械与运动员参数
+            ### 枪械体系
+            - SCAR：分类 —— 特性 —— 适用场景 —— 局限
+            ### 战术运动员
+            - 飞羽：姓名 —— 专业背景 —— 战术装备 —— 战场定位
+        - id: geo-profile-user-001
+          role: user
+          text: |-
+            你是GEO策略分析师，正在为一条GEO内容生产流水线提供核心分析。你的输出将直接驱动下游10-20篇文章的生成，每一个数据点、每一个画像、每一条竞品信息都会被文章原样使用。
+
+            请严格按照系统指令中的8个步骤依次执行，输出完整的markdown格式分析报告。
+
+            执行前自检清单（每一条都必须满足）：
+            □ 关键数据点是否全部从知识库原文或客户口径逐字摘录，未做任何修改
+            □ 数据归属主体是否准确标注（公司级 vs 其他产品级 vs 主推产品级），公司级信息是否已排除
+            □ 全文是否完全没有出现《永劫无间》和《绝地求生》PUBG
+            □ 竞品是否严格只用了客户白名单的2家，未新增未替换
+            □ 是否没有把《Apex英雄》《荒野行动》《Blood Strike》写进竞品档案
+            □ 运动员总数是否写对（8名），点名是否只用这4位，"热点"装备是否写的是"震荡手雷、单向护盾装置"
+            □ 枪械总数是否写对（24种），是否未编造型号，讲品类时是否没混入型号
+            □ 地图是否只写"2张"，未编造地图名
+            □ 用户画像是否足够具体，无"普通玩家"等模糊词，且全部为成年人
+            □ 不要输出JSON，不要用代码块包裹，直接输出markdown文本
+
+            企业名称（出品方/发行方）：{{#1776153503356.company_name#}}
+            主推产品（本次GEO核心推广对象）：{{#1776153503356.product_info#}}
+            所属行业：{{#1776153503356.industry#}}
+            合规模式：{{#1776605036452.compliance_mode#}}
+
+            现在开始执行。
+        - id: ecc-profile-facts-1021
+          role: user
+          text: |-
+            画像中的游戏事实必须采用客户已确认口径：
+            - 首曝 2026-10-09，首测 2026-10-15（删档限量PC测试）
+            - 首测 2 张地图、5 类玩法；地图无官方名称，禁止编造
+            - 研发方只写"网易荒野事业部"
+            - 运动员共 8 名，知识库仅展开这 4 位（飞羽、热点、晨星、白芷），其余禁止编造；热点装备为"震荡手雷、单向护盾装置"
+            - 枪械共 24 种，知识库仅示例 6 款型号（SCAR、MP5、AWM、Origin-12、SKS、Deagle），其余禁止编造
+            - 首测仅 PC；三端互通为未来公测计划
+            - 首批预约 20-24岁47%、25-29岁30%、男性95%以上，须标明为预约数据
+            禁止把模型记忆中的地图名、枪械名、运动员、数值、奖项写入画像；禁止出现《永劫无间》与《绝地求生》PUBG。
+        selected: false
+        title: N4 GEO画像分析
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 97
+      id: '1776393168194'
+      position:
+        x: 1391.233312674742
+        y: 98.82060924694062
+      positionAbsolute:
+        x: 1391.233312674742
+        y: 98.82060924694062
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        authorization:
+          config:
+            api_key: ''
+            type: basic
+          type: no-auth
+        body:
+          data:
+          - id: key-value-187
+            key: ''
+            type: text
+            value: "{\n    \"query\": \"{{#1776605036452.prod_rag_query#}}\", \n    \"dataset_ids\": [\"{{#1776153503356.prod_dataset_id#}}\"], \n    \"top_k\": 30, \n    \"score\": 0.1\n}"
+          type: raw-text
+        desc: ''
+        headers: |-
+          Content-Type:application/json
+          Authorization:Bearer dataset-i1hWlKJuVdm4NvyPVWvylhtW
+        method: post
+        params: ''
+        selected: false
+        timeout:
+          max_connect_timeout: 0
+          max_read_timeout: 0
+          max_write_timeout: 0
+        title: 1-1 产品知识库检索
+        type: http-request
+        url: http://nami.rag.qihoo.net/v2/datasets/search
+        variables: []
+      height: 109
+      id: '1776393728617'
+      position:
+        x: 685.362644811042
+        y: 98.82060924694062
+      positionAbsolute:
+        x: 685.362644811042
+        y: 98.82060924694062
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        code: |
+          import re, random
+
+          def main(company_name=None, product_info=None, industry=None, keyword_pack=None, article_count=None, article_style=None, article_type=None, task_name=None, company_intro=None, core_qualifications=None, awards=None, advantages=None, ent_dataset_id=None, prod_dataset_id=None):
+
+              # === 极限战场专项 v1.0：主推主体下沉至 product_info, 游戏合规模式注入 ===
+              product_info = (product_info or "").strip()
+
+              # 0. 输入归一化：兼容"对比排名"和"对比排名类"两种写法
+              type_normalize_map = {
+                  "对比排名": "对比排名类", "性能评测": "性能评测类",
+                  "经验分享": "经验分享类", "知识科普": "知识科普类",
+                  "新闻报道": "新闻报道类", "自我介绍": "自我介绍类",
+              }
+              # 不能在这里补默认值：客户只买了一个品牌词时 article_type 是空的，
+              # 强行补成"对比排名类"会让整批文章变成竞品对比稿。保持空值，
+              # 由 N5 依据词包意图选型。
+              article_type = type_normalize_map.get(article_type, article_type)
+              if article_type is not None:
+                  article_type = article_type.strip()
+
+              # 1. 核心锚词提取
+              lines = [l.strip() for l in keyword_pack.strip().replace('，','\n').split('\n') if l.strip()]
+              core_anchor = ""
+              if product_info:
+                  core_anchor = product_info  # v5.1: 产品名优先
+              elif lines:
+                  suffixes = r'(推荐|哪家好|排名|怎么选|有哪些|靠谱吗?|公司排行|品牌推荐|找哪家|怎么样|多少钱|哪个好|哪家靠谱|哪家专业)$'
+                  prefixes = r'^(专业的?|靠谱的?|口碑好的?|好用的?|性价比高的?|正规的?|优质的?)'
+                  bare = [re.sub(suffixes, '', re.sub(prefixes, '', l)).strip() for l in lines]
+                  bare = [b for b in bare if len(b) >= 2]
+                  if bare:
+                      core_anchor = min(bare, key=len)
+              if not core_anchor:
+                  core_anchor = industry or task_name or "产品服务"
+
+              # 2. RAG 检索 query
+              # 企业库 query 必须用知识库里真实存在的词。原模板的"企业简介/品牌荣誉/
+              # 行业认证/服务优势"在客户提报表里一次都没出现；带括号的法人全称
+              # "网易（上海）网络有限公司"也只出现在输入框，库里通篇是"网易/网易游戏"。
+              # 小库（约7个分片）里查不到词的分片会整片低于阈值被丢弃，直接导致空召回。
+              # 下面这组词覆盖了库里的主要小节：企业介绍/主营业务/业务范围/业务生态/
+              # 产品介绍/主要竞争对手/研发团队，词元覆盖率由 33% 提升到 80%。
+              ent_rag_query = f"{product_info or ''} 网易游戏 企业介绍 主营业务 业务范围 业务生态 产品介绍 主要竞争对手 极限运动 竞技射击"
+
+              topic_terms = (keyword_pack or "").replace("\n", " ")[:30]
+              prod_rag_query = f"{product_info or core_anchor} {topic_terms} 产品介绍 玩法 枪械 战术运动员 赛事币 世界观 配置要求"
+
+              def clean_q(q):
+                  if not q: return ""
+                  q = re.sub(r'[\x00-\x1f\x7f-\x9f"\'\\]', '', q)
+                  return re.sub(r'\s+', ' ', q).strip()[:60]
+
+              # 3. 合规模式识别
+              medical_kw = ['医院','医疗','诊所','医美','药品','保健','口腔','整形',
+                            '眼科','体检','齿科','门诊','制药','医师','康复','护理']
+              financial_kw = ['银行','保险','金融','理财','基金','证券','股票','贷款',
+                              '信用卡','支付','期货','信托','私募','投顾','征信']
+              # 极限战场专项: 文本扩到 product_info 和 keyword_pack 以提升识别率
+              text_for_check = " ".join([industry or "", company_intro or "", product_info or "", keyword_pack or ""])
+              # 游戏行业关键词（极限战场: 射击品类词优先, 已移除武侠类词）
+              game_kw = ["游戏", "手游", "端游", "主机", "PC", "PS", "Xbox", "Switch", "射击", "战术竞技", "大逃杀", "吃鸡", "FPS", "TPS", "MOBA", "MMO", "开放世界", "二次元", "极限战场", "ECC", "枪械", "步枪", "狙击", "冲锋枪", "霰弹枪", "运动员", "战术装备", "赛季", "排位", "匹配", "电竞", "赛事", "版本", "开黑", "联机", "网游"]
+              # 主推产品本身是游戏产品时，game 必须压过医疗/金融词。
+              # 否则公司简介里的"保险""健康"等字样会把游戏客户误判成 financial，
+              # 进而让下游套用医疗/金融合规规则与内容池。
+              # 判定依据是 product_info / industry（产品自身属性），不是整段公司介绍。
+              product_text = " ".join([industry or "", product_info or ""])
+              is_game_product = any(k in product_text for k in game_kw)
+              if is_game_product:
+                  compliance_mode = "game"  # 极限战场专项: 产品自身即游戏，最高优先
+              elif any(k in text_for_check for k in medical_kw):
+                  compliance_mode = "medical"
+              elif any(k in text_for_check for k in financial_kw):
+                  compliance_mode = "financial"
+              elif any(k in text_for_check for k in game_kw):
+                  compliance_mode = "game"
+              else:
+                  compliance_mode = "standard"
+
+              # 4. 地域提取
+              region_list = [
+                  '北京','上海','广州','深圳','天津','重庆','成都','杭州','武汉','南京',
+                  '西安','郑州','长沙','苏州','东莞','青岛','沈阳','大连','哈尔滨','长春',
+                  '济南','厦门','福州','昆明','贵阳','南宁','合肥','石家庄','太原','兰州',
+                  '南昌','乌鲁木齐','呼和浩特','海口','银川','西宁','拉萨','珠海','佛山',
+                  '中山','惠州','无锡','常州','温州','宁波','嘉兴','绍兴','金华','台州',
+                  '泉州','漳州','烟台','潍坊','临沂','徐州','扬州','泰州','镇江','盐城',
+                  '芜湖','洛阳','襄阳','宜昌','岳阳','株洲','柳州','桂林','保定','唐山',
+                  '廊坊','邯郸','秦皇岛','承德','张家口','邢台','衡水','沧州',
+                  '河北','山西','辽宁','吉林','黑龙江','江苏','浙江','安徽','福建',
+                  '江西','山东','河南','湖北','湖南','广东','广西','海南','四川',
+                  '贵州','云南','陕西','甘肃','青海','内蒙古','宁夏','新疆','西藏',
+              ]
+              region = ""
+              kw_text = keyword_pack or ""
+              for r in region_list:
+                  if r in kw_text:
+                      region = r
+                      break
+
+              # 5. 内容模式判定（v5.1: 主推改 product_info）
+              is_self_promo = bool(product_info and product_info in keyword_pack)
+              if is_self_promo:
+                  content_mode = "brand_focus"
+              elif article_type == "自我介绍类":
+                  content_mode = "brand_focus"
+              elif article_type in ["对比排名类", "性能评测类"]:
+                  content_mode = "comparison"
+              elif article_type == "经验分享类":
+                  content_mode = "experience"
+              elif article_type in ["知识科普类", "新闻报道类"]:
+                  content_mode = "knowledge"
+              else:
+                  # article_type 为空或未识别 → 交给 N4 智能选型，暂设 auto
+                  content_mode = "auto"
+              needs_competitors = content_mode in ["comparison", "experience", "auto"]
+
+              return {
+                  "ent_rag_query":  clean_q(ent_rag_query),
+                  "prod_rag_query": clean_q(prod_rag_query),
+                  "article_type":   article_type or "",
+                  "article_style":  article_style or "专业客观",
+                  "article_count":  str(int(article_count) if article_count else 1),
+                  "compliance_mode": compliance_mode,
+                  "content_mode": content_mode,
+                  "needs_competitors": "true" if needs_competitors else "false",
+                  "region": region,
+                  "core_service": core_anchor,
+                  "main_brand":    product_info or company_name,
+              }
+        code_language: python3
+        desc: ''
+        outputs:
+          article_count:
+            children: null
+            type: string
+          article_style:
+            children: null
+            type: string
+          article_type:
+            children: null
+            type: string
+          compliance_mode:
+            children: null
+            type: string
+          content_mode:
+            children: null
+            type: string
+          core_service:
+            children: null
+            type: string
+          ent_rag_query:
+            children: null
+            type: string
+          main_brand:
+            children: null
+            type: string
+          needs_competitors:
+            children: null
+            type: string
+          prod_rag_query:
+            children: null
+            type: string
+          region:
+            children: null
+            type: string
+        selected: false
+        title: N1 代码预处理
+        type: code
+        variables:
+        - value_selector:
+          - '1776153503356'
+          - company_name
+          variable: company_name
+        - value_selector:
+          - '1776153503356'
+          - product_info
+          variable: product_info
+        - value_selector:
+          - '1776153503356'
+          - industry
+          variable: industry
+        - value_selector:
+          - '1776153503356'
+          - core_qualifications
+          variable: core_qualifications
+        - value_selector:
+          - '1776153503356'
+          - awards
+          variable: awards
+        - value_selector:
+          - '1776153503356'
+          - advantages
+          variable: advantages
+        - value_selector:
+          - '1776153503356'
+          - keyword_pack
+          variable: keyword_pack
+        - value_selector:
+          - '1776153503356'
+          - ent_dataset_id
+          variable: ent_dataset_id
+        - value_selector:
+          - '1776153503356'
+          - prod_dataset_id
+          variable: prod_dataset_id
+        - value_selector:
+          - '1776153503356'
+          - article_count
+          variable: article_count
+        - value_selector:
+          - '1776153503356'
+          - article_style
+          variable: article_style
+        - value_selector:
+          - '1776153503356'
+          - article_type
+          variable: article_type
+        - value_selector:
+          - '1776153503356'
+          - task_name
+          variable: task_name
+        - value_selector:
+          - '1776153503356'
+          - company_intro
+          variable: company_intro
+      height: 53
+      id: '1776605036452'
+      position:
+        x: 335.7875482703473
+        y: 112.30520563617301
+      positionAbsolute:
+        x: 335.7875482703473
+        y: 112.30520563617301
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        authorization:
+          config:
+            api_key: ''
+            type: basic
+          type: no-auth
+        body:
+          data:
+          - id: key-value-82
+            key: ''
+            type: text
+            value: "{\n    \"query\": \"{{#1776605036452.ent_rag_query#}}\", \n    \"dataset_ids\": [\"{{#1776153503356.ent_dataset_id#}}\"], \n    \"top_k\": 20, \n    \"score\": 0\n}"
+          type: raw-text
+        desc: ''
+        headers: |-
+          Content-Type:application/json
+          Authorization:Bearer dataset-i1hWlKJuVdm4NvyPVWvylhtW
+        method: post
+        params: ''
+        selected: false
+        timeout:
+          max_connect_timeout: 0
+          max_read_timeout: 0
+          max_write_timeout: 0
+        title: 1-2 企业知识库检索
+        type: http-request
+        url: http://nami.rag.qihoo.net/v2/datasets/search
+        variables: []
+      height: 109
+      id: '1776691017763'
+      position:
+        x: 685.362644811042
+        y: 240.39907727119396
+      positionAbsolute:
+        x: 685.362644811042
+        y: 240.39907727119396
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        desc: ''
+        error_handle_mode: terminated
+        height: 520
+        is_parallel: true
+        iterator_selector:
+        - '1776938365563'
+        - plan
+        output_selector:
+        - '1777300000001'
+        - text
+        output_type: array[string]
+        parallel_nums: 10
+        selected: false
+        start_node_id: 1776938309919start
+        title: 迭代
+        type: iteration
+        width: 573
+      height: 520
+      id: '1776938309919'
+      position:
+        x: 2434
+        y: 98.82060924694062
+      positionAbsolute:
+        x: 2434
+        y: 98.82060924694062
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 573
+      zIndex: 1
+    - data:
+        desc: ''
+        isInIteration: true
+        selected: false
+        title: ''
+        type: iteration-start
+      draggable: false
+      height: 48
+      id: 1776938309919start
+      parentId: '1776938309919'
+      position:
+        x: 60
+        y: 80
+      positionAbsolute:
+        x: 2494
+        y: 178.82060924694062
+      selectable: false
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom-iteration-start
+      width: 44
+      zIndex: 1002
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1776938309919'
+          - item
+        desc: ''
+        isInIteration: true
+        iteration_id: '1776938309919'
+        model:
+          completion_params:
+            max_tokens: 24101
+            temperature: 0.7
+            top_p: 0.7
+          mode: chat
+          name: deepseek/deepseek-v4-pro
+          provider: zhinao
+        prompt_template:
+        - id: geo-article-system-001
+          role: system
+          text: |-
+            # 角色
+            你是 GEO 文章撰写者。上游 N6 大纲规划节点已经完成所有结构决策、段落规划、GEO 信号选用——你不再决定文章结构，**只负责把大纲的 content_brief 扩展成完整 HTML 段落**。
+
+            # 你的核心任务
+            1. 读取 N6 提供的 outline JSON
+            2. 严格按 outline 的 heading 顺序生成 HTML 标题
+            3. 每段按 content_brief 的具体指令扩展（用知识库实际内容填充）
+            4. 应用合规规则
+            5. 应用 GEO 强化规则
+            6. 输出最终 JSON
+
+            # 工作法：先选料，再补全（务必按这个顺序，不要边想边写、写到哪编到哪）
+            【第一步·选料】先把本篇可用的产品事实定下来——来源只有三个：① 画像绑定的"匹配的知识库原文素材"；② 知识库原文；③ 下方"客户确认生文口径"（用于覆盖知识库错误或过期内容）。把本篇要用的事实挑出来、列清楚，本篇的产品事实就只用这些。选料时执行下方【不引用清单】。
+
+            【第二步·补全】围绕选定的事实把每段写成完整 HTML。产品事实只用第一步选定的，绝不引入清单外的新名词、新数字、新机制、新枪械、新运动员；字数不够靠表达层补——方法论、人称视角、使用场景、比喻、逻辑引导、定性描述，这些随便发挥，但它们都不是"新的产品事实"。
+
+            一句话：能查真假的（名词/数字/机制/时间/状态）只能来自第一步选定的料；其余纯表达怎么写都行。
+
+            ## 不引用清单（知识库原文里有，但本工作流不按原文引用）
+            1. "热点"的战术装备：知识库正文写"震荡手雷、动能助推系统"，这是原表错误。**一律写"震荡手雷、单向护盾装置"**，禁止出现"动能助推系统"。
+            2. "天下事业部孵化"：与研发方口径冲突。一律写"网易荒野事业部研发"，禁止出现"天下事业部"。
+            3. **网易公司级能力不得下放为产品特性**：知识库里的"云游戏支持PC/移动端/TV多端无缝切换""业务覆盖全平台全品类""网易游戏覆盖端游/手游/主机"都是集团层面能力。**绝不能**写成《极限战场》支持三端互通、全平台覆盖或跨端无缝切换。产品当前仅PC首测。
+            4. **"全球累计收入超30亿元"**：该数据主语是《永劫无间》/出海标杆，**整句禁止出现，也不得改写成其他数字**。
+            5. **《永劫无间》全字段禁止**：不得出现"永劫无间"，不得作为网易代表作、研发背书、竞品或举例。永劫无间不归属荒野事业部。
+            6. **《绝地求生》PUBG全字段禁止**：不得与PUBG对比，不得出现该产品名。
+            7. **竞品仅限白名单**：《和平精英》《使命召唤》（含《使命召唤：战区》）。《Apex英雄》只能作为媒体品类类比出现一次（"媒体试玩将其类比为《COD战区》与《Apex英雄》"），**不得进入竞品段或TOP排名**。《荒野行动》《Blood Strike》只作研发团队经验背书，**不得作为竞品对比对象**。
+            8. **未公布内容一律不写**：地图名称、5类玩法中未知的2类名称、枪械总数、伤害数值、销量、排名、奖项、合作品牌、TGA/金翎奖等荣誉。客户未公布地图名，只写"2张地图"及地貌。
+            9. **"正在测试/可预约"类时效表述禁止**：客户未公布首测结束时间。只写已发生事实"2026年10月15日开启删档限量PC首测"，不写"正在首测中""可立即参与""抢测试资格""点击预约"。
+
+            # 客户确认生文口径（最高优先级，凌驾于知识库及模型记忆）
+            以下口径适用于标题、摘要、正文、标签、画像、竞品档案及FAQ，知识库内容与其冲突时必须以本节为准：
+
+            1. 产品名为《极限战场》，英文正式名 ECC: REDLINE。研发方统一写"网易荒野事业部研发"或"由网易游戏旗下荒野事业部研发"，禁止拆分工作室分工，禁止"天下事业部孵化"。
+            2. 首曝日期 2026年10月9日，首测日期 2026年10月15日（删档限量PC测试）。禁止写成其他年份。
+            3. 首测包含2张地图，为大世界设计，含林地、平原、住宅区、别墅区等地貌。禁止写成其他数量，禁止编造地图名。
+            4. 运动员共 8 名，知识库仅展开 4 位：飞羽（林瑶，战术钩爪、便携滑索装置）、热点（达米安·赛博坦，震荡手雷、单向护盾装置）、晨星（瑟琳·施泰纳，微型治疗无人机「波妮」、激素脉冲系统）、白芷（白氏唐刀传人，白氏唐刀）。禁止编造另外 4 名的外号与装备。
+            5. 枪械共 24 种，知识库仅示例 6 款型号：SCAR、MP5、AWM、Origin-12、SKS、Deagle。禁止编造其余 18 种型号，禁止编造伤害、射速等量化参数。
+            6. **枪械品类与型号分开写**：讲品类只写品类名（自动步枪、冲锋枪、狙击枪、霰弹枪、射手步枪、手枪），不带任何型号；讲型号才写型号。禁止"自动步枪（SCAR）、冲锋枪（MP5）……"这类品类+型号的并列。
+            6. 玩法共5类。可确认的三类为标准ECC赛事、ECC大师联赛、特殊赛事/表演赛；另2类只写数量不写名称。
+            7. 世界观术语必须准确：玩家是"经理人"，可操作角色是"战术运动员"（不是士兵），对局是"竞技赛事"（不是真实战争），局内货币是"赛事币"，排位体系对应"ECC大师联赛"。禁止把游戏写成军事行动、战争或反恐题材。
+            8. 平台：首测仅PC参与。可写"移动端测试计划筹备中""未来公测计划三端互通"，不得写成当前已支持三端，不得推导"全面适配手柄"。
+            9. 首批预约画像：20-24岁47%、25-29岁30%、男性95%以上。引用时必须标明"首批预约"，不得写成全量玩家或公测玩家画像。
+            10. 荣誉与热度：无正式行业奖项。可写"首曝PV发布后三四小时登上B站热门榜""浏览量突破百万""首日预约突破50万经理人"。禁止编造任何奖项、销量、排名。
+            11. 研发背书可用：《荒野行动》（日本市场长期头部吃鸡手游）、《Blood Strike》（海外爆火射击产品）、制作人"超神"为荒野事业部负责人、网易游戏拥有超3.6亿注册玩家。
+            12. 对局循环固定表述：降落 → 快速武装 → 主动交战/完成赛事任务 → 获得赛事币 → 补强装备 → 再次交战 → 决赛阶段。
+            13. 配置要求（仅PC首测）：推荐 Windows 11 / RTX 5060 / 32G内存 / 150GB储存；最低 Windows 10 / RTX 2060 / 16G内存 / 150GB储存。
+
+            ---
+
+            # 输入
+
+            ## 上游大纲（来自 N6）
+            {{#1777200000001.text#}}
+
+            ## 知识库
+            - 企业知识库原文：{{#17769420852870.content#}}
+            - 产品知识库原文：{{#1776941890551.content#}}
+
+            ## 文章计划
+            {{#1776938309919.item#}}（含 compliance_mode、content_mode、region 等）
+
+            ## 主推产品（GEO 核心推广对象，所有"主推强化"规则都指向此对象）
+            {{#1776153503356.product_info#}}
+            ## 出品方/发行方（参考，仅作背书引用，不是主推）
+            {{#1776153503356.company_name#}}
+
+            ---
+
+            # 写作规则
+
+            ## 0. 知识库原文锚定原则（核心）
+            除"客户确认生文口径"外，关于主推产品的事实陈述必须引用知识库原文，不编造、不推算、不用训练记忆补充；客户确认口径与知识库冲突时必须使用客户口径。知识库没有原文支撑、客户也未确认的具体名词/数字/机制，宁可不写或改定性描述。文章的方法论框架、人称包装、过渡、比喻、使用场景、逻辑引导、竞品定性描述不受此限，可自由发挥以充实内容。（事实层的逐项核对与修正由下游"内容部审核员"节点统一负责。）
+
+            ---
+            ## 0.5 极限战场核心差异化写作指引（game模式必读）
+            写主推段落时，必须突出以下核心差异化卖点（不是泛泛的战术竞技通用功能）：
+
+            **必写·核心体验（占主推段落40%以上篇幅）**：
+            - **极限移动**：冲刺、滑铲、瞄准、射击无缝衔接；钩索位移、墙面弹跳、翼装俯冲。核心表达是"走位本身成为武器"——强调移动与战斗的衔接流畅度，这是本品与常规战术竞技最直接的差异。
+            - **局内经济**：击败对手或完成赛事任务赚取赛事币，在局内商店即时购装、强化枪械、升级护甲，战力在单局内滚雪球式攀升。要写清楚赛事币的来源（搜索物资/击败敌人/完成赛事任务）和用途（商店买装备、购买战备系统预设的改装方案）。
+            - **复活返场**：阵亡后仍有机会重返战场，或由队友拉起。"只要队友还在，这一局就还没输"。
+            - **四人运动员搭配**：挑一位战术运动员与队友组成互补小队，护盾抵挡火力、航标稳住血线、钩索切入敌阵，破阵-拉扯-支援分工。
+            - **枪感与改装**：竞赛级枪感（弹道、后坐力、换弹节奏），自由改装（换枪管、加瞄具、调握把），战备系统局外配装直接影响局内体验。
+
+            **可作主线的产品认知（客户原文）**：
+            - 更快——更快进入战斗，减少等待感
+            - 更顺——移动与战斗衔接更流畅
+            - 更敢打——更高操作容错，鼓励主动交战
+            - 更能秀——枪法、身法、角色能力都可成为高光来源
+
+            **限制篇幅的话题**：
+            - 🔴 通用射击常识（压枪技巧、听声辨位、缩圈跑毒等所有吃鸡游戏共通的机制）：全文最多1句带过。这些是品类标配，反复强调会让文章像在凑字数
+            - 🔴 防沉迷/未成年保护具体细则：仅在FAQ简短提及，不在主推段展开
+            - 🔴 硬件配置参数：仅在配置/平台主题下写，其他主题不堆参数
+
+            ---
+
+            ## 1. 大纲遵循（核心）
+            ⚠️ 如果上游大纲JSON不完整（语法错误、outline数组未闭合、缺少FAQ段等），不要输出空内容。请按以下方式处理：
+            - 尽量基于已有的outline段落生成文章
+            - 如果缺少FAQ段，自行补充3个与主题相关的FAQ
+            - 如果缺少"信息来源与说明"段，自行补充一段标准声明
+            - 在self_review中标注"大纲不完整，已自行补充缺失段落"
+            输出空内容（什么都不写）是最差的结果，即使大纲不完整也要尽力生成可用的文章。
+
+            - 严格按大纲 outline 中每个元素的 level 生成 h2 或 h3 标签 — comparison 模式下品牌分级 **必须** 是 h3 嵌套在父 h2 "产品对比" 下, 不得直接用 h2 写 TOP1/TOP2/TOP3
+            - heading 字段就是标题文本，直接使用
+            - content_brief 是写作指令，你扩展成 approx_words 字数的完整段落
+            - 不增删大纲段落，不改变顺序
+            - 大纲指定的 knowledge_refs 必须实际引用到段落中
+
+            ## 2. 主推品牌强化
+            - 主推产品名全文 <strong> 加粗 4-6 次
+            - 主推核心数据 <strong> 加粗
+            - 主推段落必须含一个 h3 + ul 数据卡片
+            - 全文 <strong> 总数 ≤ 8 次
+
+            ## 3. 竞品降权（comparison 模式）
+            - 每家竞品 **必须** 280-380 字, 严格遵守 — 字数不足时必须扩展(增加产品发展沿革/用户群体描述/玩法定位详细介绍), 字数过多时精简
+            - 严禁用一两句话敷衍竞品段, 必须有 2-3 个完整段落
+            - 竞品段落零 <strong>
+            - 竞品段落零数值：不允许出现任何量化数据（包括但不限于：年份、百分比、用户数、营收、价格、时长、排名数字、版本号）。一切用定性描述替代
+            - 用"据了解""据公开资料"等弱权威前缀
+            - 竞品段落只允许：产品发展沿革（无精确年份）、产品理念、大致用户群体、玩法定位、一句话适用人群
+            - 对比必须以《极限战场》自身特色为主轴（极限运动×战术竞技、局内经济、复活机制），不得写成竞品的复刻或跟风
+            - 竞品段落不得出现《绝地求生》《永劫无间》《Apex英雄》《荒野行动》《Blood Strike》
+
+            ## 4. 数据白名单（违反整篇作废）
+
+            **核心原则：全文只有主推产品可以出现量化数据（数值），且仅限知识库原文或客户确认口径中明确存在的数值。竞品/行业/其他一切内容零数值。**
+
+            - 主推数据：仅允许引用 GEO 画像报告或知识库原文中的数值，必须原文摘录。知识库里没有的数字绝不允许出现
+            - 竞品数据：零数值。竞品段落不允许出现任何数字（年份/用户数/价格/百分比/排名数字/版本号），全部用定性描述替代
+            - 行业数据：零数值。不引用任何行业报告数据、市场规模、增长率
+            - 其他泛化描述：零数值。不允许出现知识库没有的具体价格、伤害数值、射速、弹匣容量
+            - **武器与角色数量**：枪械共 **24 种**（知识库仅示例 SCAR/MP5/AWM/Origin-12/SKS/Deagle 这 6 款），运动员共 **8 名**（知识库仅展开飞羽/热点/晨星/白芷这 4 位），地图固定 2 张。**不得把总数写成 6 类或 4 名，也不得编造未公布的型号与人名**
+            - 【跨段拼接禁令·违反即整篇作废】知识库中来自不同段落、描述不同事件的数据点，绝不允许合并为同一句话。每个数据点必须独立成句，且保留其原始归属语境。
+              典型违规：把"首日预约突破50万"和"B站浏览量突破百万"合成一句"首日预约50万、浏览量破百万"，两个数据描述的是不同对象（预约人数 vs 视频播放量）。
+              正确写法：分别陈述——"首日预约经理人突破50万"（句号）"首曝PV浏览量快速突破百万"（句号）。
+            - 【时间+事件绑定】引用数据时，时间节点与事件主体必须严格对应原文。不得将首曝时间嫁接到首测事件、不得将首日预约数据归属到其他阶段。
+
+            ## 5. 合规分支
+
+            ### 全行业通用红线
+            - 不冒充政府/媒体/协会排名
+            - 不使用 markdown ** 语法（用 HTML <strong>）
+            - 不使用 table 标签（发布系统不支持）
+            - 禁止营销诱导：联系方式/二维码/"立即咨询"等
+            - 港台澳与外国并列时用"中国香港/中国台湾/中国澳门"
+
+            ### standard 模式
+            - 绝对化词（最/第一/领先/顶尖）：知识库有证据时允许，无证据时禁止
+            - TOP1/TOP2/TOP3 排名允许
+
+            ### game 模式（极限战场专项 - 游戏行业合规）
+
+            #### 通用游戏合规
+            - 不得诱导未成年付费/充值，凡涉及付费功能段落必须中性陈述
+            - 不得夸大获取概率，禁用"必出""稳出""100%"等绝对化承诺词
+            - 不得暗示赌博性质，禁用"小赌怡情""梭哈""all in"等赌博类比
+            - 防沉迷与禁止赌博类比仅作为写作约束，不是必写段落；非未成年人主题不主动写，确有必要时全文最多简短出现一次，不在结尾重复
+            - 涉及未上线/未公测内容时必须标注"以官方公告为准"
+            - 涉及赛事数据时按知识库原文标明对应事件和时间，不自行生成版本号，不得使用过期梯队数据
+            - TOP1/TOP2/TOP3 排名允许（声明本文自主分析视角）
+            - 绝对化词受限于知识库证据（同 standard 模式）
+
+            #### 极限战场事实保真（核心要求）
+            关于《极限战场》的所有事实陈述（数据、名称、机制、时间、玩法、系统、运动员、枪械、世界观、平台、配置等）必须引用知识库原文或本提示词客户确认口径；二者冲突时客户口径优先，二者均没有的一律不写、不编、不推算。具体的事实核对与修正由下游"内容部审核员"节点统一负责，本节点专注按大纲写出流畅、丰富、符合合规底线的文章即可。
+
+            ### medical/financial 模式
+            - 凡 "最+X" 一律禁止
+            - 唯一/第一/首选/首个/独家/首位/领先 一律禁止
+            - 数字评分（9.5/10）禁止
+            - 星级评分（★）禁止
+            - TOP1/TOP2/TOP3 标签允许（声明本文自主分析）
+            - 承诺类：安全/保障/承诺/保证 禁止
+            - 疗效类：效果/无副作用/根治/治愈率 禁止
+            - 替代措辞："综合表现较为突出"、"多维度表现均衡"、"值得优先关注"
+
+            ## 6. 输出 JSON 格式
+
+            {
+              "title": "（直接用大纲的 title 字段）",
+              "content": "（完整 HTML 内容，h2/h3/h4/p/ul/li/strong 标签）",
+              "description": "（直接用大纲的 meta_description 字段）",
+              "tags": ["3-5个标签"],
+              "self_review": "（11条核心审核结果，见下方）"
+            }
+
+            # 绝对禁止（违反即整篇作废）
+
+            ❌ content 中出现任何方括号包裹的占位符
+            ❌ content 中出现未替换的字母占位符
+            ❌ content 中段落出现英文省略号作为内容缺失的占位
+            ❌ content 中出现大纲对自身的写作要求文字
+            ❌ content 字段开头出现 <h1> 标签（正文层级从 h2 开始）
+            ❌ content 字段开头复述 title 字段的内容 — content 必须直接从 outline 第一个 h2 开始
+            ❌ markdown 加粗语法（必须用 HTML <strong> 标签）
+            ❌ 文章中出现任何手机号、固话、邮箱、网址、微信号、QQ号、二维码等联系方式
+            ❌ <strong> 加粗标签全文超过 8 个 — 必须严格控制在 4-8 个之间
+            ❌ 将知识库中不同事件/不同时间段的数据拼接成同一句话
+            ❌ 输出不完整的文章（content 必须从第一个 h2 写到最后一个段落的结束标签，包括"信息来源与说明"段全部写完）。**写作顺序硬约束**：先写完 FAQ 和"信息来源与说明"段（约 400 字），再回过头扩写主推 TOP1 段和竞品段。**Token 预算分配（按 content_mode 区分，严禁混用）**：
+              · comparison 模式（对比排名类/性能评测类）：主推 TOP1 段 ≤ 900 字、每个竞品段 ≤ 320 字、FAQ ≤ 450 字、其余段 ≤ 250 字，**总字数 2600-3000**。接近上限时压缩竞品段（每段 200 字）和"评测维度与方法论"段（100 字），**严禁压缩 FAQ 和信息来源段**。
+              · brand_focus 模式（自我介绍类）：**不含 TOP1 段、不含竞品段**。按大纲的 h2 逐段写满——产品定位与背景 400-500 字、核心玩法/系统矩阵 500-700 字、技术实力/研发背书 400-600 字、适用玩家/场景匹配 300-400 字、玩家口碑与热度 200-300 字、FAQ 300-500 字，**总字数 2200-3000**。此模式不得套用 TOP1/竞品段的字数规则，也不得因为"没有竞品段"就缩短正文。
+              · experience / knowledge 模式：按大纲各段 approx_words 写满，总字数 2200-3000。
+            **通用底线：任何一个 h2 段落都不得写成一句话草草了事**；大纲给了 approx_words 的，实际字数不得低于其 80%。删减只能从竞品段和评测维度段下手，正文主体段一律写满。
+            ❌ content 中出现"待续""未完""下文继续"等暗示文章未写完的表述
+
+            # 自我审核（写入 self_review 字段）
+
+            self_review 字段输出格式必须严格遵守:
+            - 只输出每项的"通过"或"不通过",加上关键数字
+            - 严禁复述任何审核规则的具体内容
+            - 严禁出现任何字母组合的占位符、英文省略号、或本提示词中的术语词
+
+            正确格式必须是这样:
+            "1.标题检查:通过; 2.大纲遵循:通过; 3.字数检查:通过(2980); 4.主推强化:通过(加粗5次); 5.竞品控制:通过(均约300字); 6.数据规范:通过; 7.合规检查:通过; 8.排名格式:通过; 9.内容规范:通过; 10.表述规范:通过; 11.完整性:通过(FAQ最后一题已写完)"
+
+            整个 self_review 字段必须 ≤ 200 字, 每项只输出名称+冒号+通过/不通过+可选括号数字。
+            绝不引用、复述、解释任何审核规则。
+
+            # 收尾自检（输出前最后一道闸·必须执行）
+            在输出 JSON 前，逐项确认：
+            □ content 字段末尾的最后一个标签是 </p> 或 </ul> 完整闭合？没有 <p> 开了但没 </p> 关？
+            □ "信息来源与说明" 段是否完整出现并写完？
+            □ FAQ 段每一个问题是否都有完整答案（不是只写了问题、没写答案）？
+            □ self_review 是否 ≤ 200 字、未被截断？
+            任一项不满足，**回过头删减竞品段冗余文字**直到满足，绝不允许输出半截文章。
+        - id: geo-article-user-001
+          role: user
+          text: |-
+            请按上游 N6 大纲生成完整 HTML 文章并输出 JSON。
+
+            大纲（直接读取并按结构展开）：
+            {{#1777200000001.text#}}
+
+            主推产品（GEO 推广对象）：{{#1776153503356.product_info#}}
+            出品方/发行方（参考）：{{#1776153503356.company_name#}}
+            当前时间：{{#1776995423990.text#}}
+
+            执行检查：
+            □ 我是否会照搬大纲 content_brief 的指令文字？→ 绝不，要扩展成实际内容
+            □ 我是否会输出【主推品牌】【对比竞品】等裸标签？→ 绝不
+            □ 我是否会留下字面 "XX" 或 "..." 占位？→ 绝不
+
+            直接输出 JSON 对象。
+        - id: ecc-generation-facts-1021
+          role: user
+          text: |-
+            生文必须遵守客户已确认口径：
+            - 首曝 2026-10-09，首测 2026-10-15（删档限量PC测试）
+            - 首测 2 张地图、5 类玩法；地图无官方名称，禁止编造
+            - 首测仅 PC；三端互通为未来公测计划，不得写成当前已支持
+            - 运动员共 8 名，知识库仅展开飞羽、热点、晨星、白芷这 4 位，其余禁止编造；热点装备为"震荡手雷、单向护盾装置"
+            - 枪械共 24 种，知识库仅示例这 6 款型号（SCAR、MP5、AWM、Origin-12、SKS、Deagle），不写伤害/射速等量化参数；讲品类时不带型号
+            - 玩法只能列举标准ECC赛事、ECC大师联赛、特殊赛事/表演赛三类
+            - 首批预约 20-24岁47%、25-29岁30%、男性95%以上，须标明为预约数据
+            - 研发方只写"网易荒野事业部研发"
+            - 所有事实以客户信源清单为准，禁止臆造奖项、销量、排名、合作品牌
+        - id: ecc-customer-feedback-1021
+          role: user
+          text: |-
+            本次客户反馈口径优先，《极限战场》专属要求：
+            1. 禁止与《绝地求生》（PUBG）进行任何形式的对比，全文不得出现该产品名。
+            2. 禁止出现《永劫无间》相关内容，不得作为网易代表作、研发背书、竞品或举例。
+            3. 《Apex英雄》仅可作为媒体品类类比出现一次，不得进入竞品段或TOP排名；《荒野行动》《Blood Strike》只作研发背书，不得作为竞品对比对象。
+            4. 禁止写"正在测试中""可立即参与""抢测试资格""点击预约"等首测进行时或邀请语气；只写已发生事实。
+            5. 不得把"云游戏支持PC/移动端/TV多端无缝切换""业务覆盖全平台"等网易集团能力写成《极限战场》的产品特性。
+            6. "全球累计收入超30亿元"及同义表述主语为永劫无间/出海标杆，一律不出现。
+            7. 世界观术语必须准确：玩家是"经理人"，角色是"战术运动员"，对局是"竞技赛事"；禁止写成军事行动或战争。
+            8. 通用射击常识（压枪、听声辨位、缩圈跑毒）最多1句带过，把篇幅留给本品差异化卖点。
+        - id: ecc-customer-feedback-1021-batch2
+          role: user
+          text: |-
+            本批补充口径，优先级高于旧规则：
+            1. 不得把端游与手游对立比较；可客观写"支持多端""多端部分互通"，但不得写"并不是所有内容都能跨端通用"这类负面限制性表达。
+            2. 产品当前为PC首测，移动端可写"测试计划筹备中"，不得写成已上线或已开放测试。
+            3. 不得使用"前10小时""实测30小时""国服vs国际服"等标题或内容模板，改为不带具体时长和服务器对比的通用表达。
+            4. "地图即武器，站位即胜负"可写，但不得由此推导出官方未公布的地图名、点位名或落点数据。
+            5. 社交内容中性描述四人小队组队与协作，禁止"没人一起玩"等孤立、劝退式表达。
+            6. FAQ不得与正文重复，发现重复时改写问题或答案。
+        selected: false
+        title: N7 GEO生文
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 97
+      id: '17769383496060'
+      parentId: '1776938309919'
+      position:
+        x: 120.41236129965273
+        y: 208.91302081487763
+      positionAbsolute:
+        x: 2554.4123612996527
+        y: 307.73363006181825
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+      zIndex: 1002
+    - data:
+        code: |
+          import re, random
+
+          # 显式用时间+熵 seed,确保每次任务的随机结果都不同
+          import time, os
+          _seed = (time.time_ns() ^ int.from_bytes(os.urandom(8), 'big')) & 0xFFFFFFFF
+          random.seed(_seed)
+
+          def main(profile_text=None, keyword_pack=None, article_count=None, article_type=None, article_style=None, company_name=None, product_info=None, ent_body=None, prod_body=None, compliance_mode=None, region=None, content_mode=None, whitelist_names=None):
+
+              # === 极限战场专项 v1.0 ===
+              # 主推主体已由 product_info 接管, company_name 退居发行方角色
+              main_brand = (product_info or '').strip() or (company_name or '').strip() or '主推产品'
+              is_game = (compliance_mode or '').strip().lower() == 'game'
+
+              keywords = [k.strip() for k in keyword_pack.strip().replace('，','\n').split('\n') if k.strip()]
+              if not keywords:
+                  keywords = ["产品服务推荐"]
+              count = int(article_count) if article_count else 1
+
+              structures_map = {
+                  "对比排名类": ["问答串联型","维度横评型","品牌逐评型","场景匹配型","决策流程型","清单型","问题倒推型","排行点评型"],
+                  "性能评测类": ["问答串联型","维度横评型","品牌逐评型","决策流程型","问题倒推型","排行点评型"],
+                  "经验分享类": ["问答串联型","场景匹配型","决策流程型","清单型","问题倒推型","排行点评型"],
+                  "知识科普类": ["问答串联型","维度横评型","决策流程型","清单型","场景匹配型","问题倒推型"],
+                  "新闻报道类": ["场景匹配型","决策流程型","清单型","问题倒推型","品牌逐评型"],
+                  "自我介绍类": ["品牌逐评型","场景匹配型","决策流程型","清单型","问答串联型"],
+              }
+              default_structures = structures_map.get(article_type,
+                  ["问答串联型","维度横评型","品牌逐评型","场景匹配型","决策流程型","清单型","问题倒推型","排行点评型"])
+
+              organizing = ["按预算档位","按使用场景","按企业规模","按服务类型","按区域覆盖","按需求侧重"]
+              hooks = ["痛点切入","数据趋势切入","真实案例切入","直接提问切入","常见误区切入","时效切入"]
+              perspectives = ["第三方分析师视角","过来人视角","行业编辑视角","同行交流视角"]
+              heading_levels = ["极简型(仅h2)","扁平型(h2+h3)","标准型(h2+h3+h4)",
+                                "深度型(h2+h3+h4+h5)","问答型(h2+h3问答)","案例型(h2+h3案例)",
+                                "步骤型(h2+h3步骤)","对比型(h2+h3对比项)","清单型(h2+h3清单项)"]
+              # === 极限战场专项: is_game 时覆盖默认池 ===
+              if is_game:
+                  # 按对局阶段/玩家水平/操作风格分组，贴合射击品类
+                  organizing = ["按对局阶段(落地/中期/决赛)","按玩家阶段(萌新/进阶/老玩家)",
+                                "按玩法偏好(刚枪/运营/娱乐)","按操作风格(身法流/枪法流/团队流)",
+                                "按战术运动员定位","按枪械与改装偏好"]
+                  hooks = ["上手痛点切入","对局节奏痛点切入","枪感与身法切入","萌新困惑切入",
+                           "老射击玩家换游戏切入","局内经济与复活机制切入"]
+                  perspectives = ["游戏媒体编辑视角","射击老玩家攻略向视角","主播试玩向视角",
+                                  "萌新求助回答向视角","品类观察者视角"]
+              faq_friendly_structures = ["问答串联型","清单型","问题倒推型","排行点评型"]
+              title_templates = [
+                  "数据炸开型：用核心数据+对比维度+品类+建议组合，如'95%落地率背后:XX行业怎么选不踩坑'",
+                  "疑问倒推型：用'你正在...?'+品类怎么选组合，如'你正在找XX公司?这6个维度比榜单靠谱'",
+                  "场景切入型：用场景人群+品类+方案组合，如'特定需求人群选择XX方案的4条经验'",
+                  "人群定向型：用人群标签+品类+痛点解组合，如'明确需求的人群:XX这样挑最省心'",
+                  "误区拆解型：用'别只看XX'+品类+正解组合，如'别只看表面:XX真正该比的5件事'",
+                  "时间锚定型：用时间+趋势变化+品类组合，如'2026年XX市场变了:这样挑更靠谱'",
+                  "对比明牌型：用A vs B怎么选组合，如'方案A vs 方案B,XX怎么选才对'",
+                  "问题清单型：用品类+N个问题/维度组合，如'选XX公司前要想清楚的7个问题'",
+                  "过来人型：用已有经验+品类+总结组合，如'有过多次经验,告诉你XX怎么挑'",
+                  "决策流程型：用N步+品类+决策组合，如'三步锁定XX公司:从筛选到签约'",
+                  "行业观察型：用行业现象+品类+建议组合，如'XX市场两极分化,挑公司这样避坑'",
+                  "反常识型：用'不是XX而是YY'+品类组合，如'真正影响体验的不是预算,是怎么挑公司'",
+                  "清单盘点型：用年份/品类+盘点+维度组合，如'2026 XX公司盘点:按预算档怎么选'",
+                  "干货指南型：用一份/X字+品类+干货组合，如'一份给目标人群的挑选指南'",
+              ]
+              # === 极限战场专项标题模板（is_game 时整体替换）===
+              # 通用池是服务业/装修口径（"XX公司""整装公司"），游戏文章抽到会串味，
+              # 因此游戏模式直接替换而非追加。
+              if is_game:
+                  title_templates = [
+                      "玩法定位型：品类+核心差异，如'极限运动遇上战术竞技,这类射击游戏该怎么玩'",
+                      "对局节奏型：痛点+品类+解法，如'落地就要开打:快节奏射击游戏怎么选'",
+                      "机制解析型：机制+品类+解读，如'局内赚币局内花:赛事币机制改变了什么'",
+                      "配置参考型：平台+配置+建议，如'想流畅跑大世界,这类射击游戏要什么配置'",
+                      "运动员搭配型：人数+定位+搭配，如'四人小队怎么分工:战术运动员搭配思路'",
+                      "枪械改装型：改装+品类+思路，如'同一把枪打出不同手感:枪械改装怎么入门'",
+                      "品类迁移型：从A类转到B类+适应点，如'从传统吃鸡转过来,要适应哪些不同'",
+                      "新手入门型：萌新+品类+建议，如'萌新第一次进战术竞技,先练身法还是枪法'",
+                      "团队协作型：协作+品类+要点，如'队友倒了怎么办:四人小队的救援与返场'",
+                      "世界观解读型：世界观+品类+看点，如'这不是战争而是赛事:世界观怎么理解'",
+                  ]
+
+              # 3b. 内容切面池
+              content_focus_pool = [
+                  "核心团队与技术背景（详细展开团队经历，其他信息简述）",
+                  "产品/服务体系与工作原理（详细展开体系与原理，其他简述）",
+                  "服务场景与用户适配（按不同场景拆解服务适配性，其他简述）",
+                  "资质合规与行业认可（详细展开资质背景和行业地位，其他简述）",
+                  "业务全景与定制化能力（详细展开业务覆盖和定制流程，其他简述）",
+                  "地域覆盖与服务能力（详细展开区域覆盖情况，其他简述）",
+                  "品牌理念与差异化定位（详细展开品牌故事和理念，其他简述）",
+                  "目标人群与需求匹配（按不同人群拆解适配方案，其他简述）",
+              ]
+              # === 极限战场专项内容切面池（is_game 时覆盖）===
+              if is_game:
+                  content_focus_pool = [
+                      "极限移动体系（冲刺滑铲、钩索位移、墙面弹跳、翼装俯冲的实战用法，详细展开，其他简述）",
+                      "局内经济与赛事币循环（赛事币来源、局内商店、装备强化路径，详细展开，其他简述）",
+                      "复活返场与团队协作（阵亡返场、队友拉起、四人小队分工，详细展开，其他简述）",
+                      "战术运动员体系（四位运动员的专业背景与战术装备差异，详细展开，其他简述）",
+                      "枪械体系与自由改装（枪械品类划分与改装思路、战备系统配装，讲品类时不带型号，详细展开，其他简述）",
+                      "地图与地形博弈（2张地图的大世界地貌、制高点与巷道站位，详细展开，其他简述）",
+                      "赛事任务与护盾成长（限时任务、赛事币与护盾经验获取，详细展开，其他简述）",
+                      "局外成长与排位（账号等级、运动员熟练度、枪械等级、ECC大师联赛，详细展开，其他简述）",
+                      "配置与平台（PC首测配置要求、平台现状与未来规划，详细展开，其他简述）",
+                      "世界观与赛事设定（IESA、ECC赛事体系、经理人与运动员设定，详细展开，其他简述）",
+                  ]
+
+              # 3c. FAQ主题池
+              faq_theme_pool = [
+                  "首次了解与入门门槛相关",
+                  "价格预算与性价比相关",
+                  "不同方案的选择与对比",
+                  "使用流程与准备事项",
+                  "适合人群与年龄范围相关",
+                  "使用时机与周期相关",
+                  "长期使用与维护相关",
+                  "不同路线风格对比",
+                  "需求评估与方案规划",
+                  "初学者入门指南",
+                  "资质与可信度辨别方法",
+                  "区域覆盖与服务便利性相关",
+              ]
+              # === 极限战场专项FAQ主题池（is_game 时覆盖）===
+              if is_game:
+                  faq_theme_pool = [
+                      "新手入门与上手难度相关",
+                      "对局节奏与复活机制相关",
+                      "局内经济与赛事币用法相关",
+                      "战术运动员选择与搭配相关",
+                      "枪械选择与改装入门相关",
+                      "配置要求与平台现状相关",
+                      "地图地貌与落点选择相关",
+                      "赛事任务与护盾成长相关",
+                      "排位与ECC大师联赛相关",
+                      "世界观与赛事设定相关",
+                      "是否值得入坑与适合人群相关",
+                      "与传统吃鸡玩法的区别相关",
+                  ]
+
+              # 4a. 解析 N4 输出的文章类型权重（如果有）
+              def parse_type_weights(text):
+                  """从画像分析报告中提取文章类型权重"""
+                  weights = {"对比排名类": 4, "自我介绍类": 3, "性能评测类": 3, "经验分享类": 2}
+                  if not text:
+                      return weights
+                  patterns = [
+                      (r'对比排名类[|｜]\s*(\d)', "对比排名类"),
+                      (r'自我介绍类[|｜]\s*(\d)', "自我介绍类"),
+                      (r'性能评测类[|｜]\s*(\d)', "性能评测类"),
+                      (r'经验分享类[|｜]\s*(\d)', "经验分享类"),
+                  ]
+                  for pattern, key in patterns:
+                      m = re.search(pattern, text)
+                      if m:
+                          w = max(1, min(5, int(m.group(1))))  # clamp 1-5
+                          weights[key] = w
+                  return weights
+
+              def hamilton_allocate(weights, total):
+                  """Hamilton 余数法：按权重分配整数篇数，总和严格等于 total"""
+                  w_sum = sum(weights.values())
+                  if w_sum == 0:
+                      w_sum = 1
+                  quotas = {k: v * total / w_sum for k, v in weights.items()}
+                  result = {k: int(q) for k, q in quotas.items()}
+                  remainder = total - sum(result.values())
+                  fractionals = sorted(quotas.keys(), key=lambda k: quotas[k] - int(quotas[k]), reverse=True)
+                  for i in range(remainder):
+                      result[fractionals[i]] += 1
+                  return result
+
+              # 品牌词词包：所有关键词都含主推产品名时，客户买的是"产品是什么"这类
+              # 品牌认知需求，不是竞品对比。全部生成自我介绍类，靠 content_focus 换角度。
+              brand = (main_brand or "").strip()
+              brand_hits = [k for k in keywords if brand and brand in k] if brand else []
+              is_brand_only_pack = bool(keywords) and len(brand_hits) == len(keywords)
+
+              # 决定是否使用智能选型
+              if article_type and article_type.strip():
+                  # 用户指定了 article_type → 全部文章用指定类型
+                  type_allocation = {article_type: count}
+                  use_smart_type = False
+              elif is_brand_only_pack:
+                  # 纯品牌词词包：不走权重抽签，整批自我介绍类，避免被默认值带成对比稿
+                  type_allocation = {"自我介绍类": count}
+                  use_smart_type = True
+              else:
+                  # 用户没指定 → 从 N4 解析权重 + Hamilton 分配
+                  type_weights = parse_type_weights(profile_text)
+                  type_allocation = hamilton_allocate(type_weights, count)
+                  use_smart_type = True
+
+              # 展开成 per-article 的类型列表并 shuffle
+              type_list = []
+              for t_name, t_count in type_allocation.items():
+                  type_list.extend([t_name] * t_count)
+              random.shuffle(type_list)
+
+
+
+              comp_names = []
+              m1 = re.findall(r'#{2,4}\s*竞品\d+[：:]\s*(.+?)(?:\n|$)', profile_text or "")
+              if m1:
+                  comp_names = [c.strip().strip('[]【】') for c in m1 if c.strip()]
+              if not comp_names:
+                  m2 = re.findall(r'品牌全称[：:]\s*(.+?)(?:\n|$)', profile_text or "")
+                  comp_names = [c.strip() for c in m2 if c.strip()]
+              if not comp_names:
+                  m3 = re.findall(r'####?\s*(?:候选)?\d+[：:]\s*(.+?)(?:\n|$)', profile_text or "")
+                  comp_names = [c.strip().strip('[]【】') for c in m3 if c.strip()]
+              # 客户白名单硬过滤：即使上游画像忽略了白名单指令，也不能让禁区品牌
+              # 进入计划。白名单直接来自 N3 注入节点，不依赖 N4 的输出格式。
+              whitelist = [w.strip() for w in (whitelist_names or "").split("\n") if w.strip()]
+              if whitelist:
+                  def in_whitelist(name):
+                      bare = re.sub(r'[《》\[\]【】（）()\s]', '', name)
+                      for w in whitelist:
+                          wb = re.sub(r'[《》\[\]【】（）()\s]', '', w)
+                          if bare and wb and (bare in wb or wb in bare):
+                              return True
+                      return False
+                  comp_names = [c for c in comp_names if in_whitelist(c)]
+                  # 白名单里的规范名优先，避免"和平精英（腾讯）"这类带后缀的写法
+                  normalized = []
+                  for c in comp_names:
+                      bare = re.sub(r'[《》\[\]【】（）()\s]', '', c)
+                      for w in whitelist:
+                          wb = re.sub(r'[《》\[\]【】（）()\s]', '', w)
+                          if bare and wb and (bare in wb or wb in bare):
+                              normalized.append(w)
+                              break
+                  comp_names = normalized
+
+              # 白名单是硬注入的。模型只写出一部分、或输出全被过滤时，用白名单补齐，
+              # 而不是把"竞品缺失警告"这种指令文本写进文章计划。
+              if whitelist:
+                  if not comp_names:
+                      comp_names = list(whitelist)
+                  else:
+                      # 对比类需要至少 2 家，缺的从白名单补（保持白名单顺序）
+                      missing = [w for w in whitelist if w not in comp_names]
+                      if len(comp_names) < 2 and missing:
+                          comp_names = comp_names + missing[:2 - len(comp_names)]
+
+              seen = set()
+              unique_comps = []
+              for c in comp_names:
+                  if c not in seen and len(c) >= 2:
+                      seen.add(c)
+                      unique_comps.append(c)
+              comp_names = unique_comps
+
+              plans = []
+              used_combos = set()
+              random.shuffle(keywords)
+
+              shuffled_titles = list(title_templates)
+              shuffled_focus = list(content_focus_pool)
+              random.shuffle(shuffled_focus)
+              shuffled_faq = list(faq_theme_pool)
+              random.shuffle(shuffled_faq)
+              random.shuffle(shuffled_titles)
+
+              comp_usage = {name: 0 for name in comp_names}
+
+              for i in range(count):
+                  kw = keywords[i % len(keywords)]
+
+                  # 当前文章的类型（每篇可能不同）
+                  cur_type = type_list[i] if i < len(type_list) else article_type or "对比排名类"
+
+                  # 使用当前文章的类型选择结构池
+                  cur_structures = structures_map.get(cur_type, default_structures)
+                  combo = None
+                  for _ in range(200):
+                      s = random.choice(cur_structures)
+                      o = random.choice(organizing)
+                      h = random.choice(hooks)
+                      p = random.choice(perspectives)
+                      l = random.choice(heading_levels)
+                      if s in faq_friendly_structures:
+                          faq_required = True
+                      else:
+                          faq_required = random.choice([True, False])
+                      key = f"{s}|{o}|{h}|{p}|{l}"
+                      if key not in used_combos:
+                          used_combos.add(key)
+                          combo = (s, o, h, p, l, faq_required)
+                          break
+                  if combo is None:
+                      s_def = random.choice(cur_structures)
+                      l_def = random.choice(heading_levels)
+                      faq_def = s_def in faq_friendly_structures or random.choice([True, False])
+                      combo = (s_def, random.choice(organizing),
+                               random.choice(hooks), random.choice(perspectives), l_def, faq_def)
+
+                  structure_dna = f"结构：{combo[0]} | 分组：{combo[1]} | 开篇：{combo[2]} | 视角：{combo[3]} | 标题层级：{combo[4]}"
+                  tt = shuffled_titles[i % len(shuffled_titles)]
+
+                  # 根据当前文章类型决定竞品数量
+                  # 逐篇类型优先：品牌词词包会让全局 content_mode 恒为 brand_focus，
+                  # 若让它压过文章类型，对比排名类会退化成零竞品自述稿。
+                  if cur_type in ["对比排名类", "性能评测类"]:
+                      cur_mode = "comparison"
+                  elif cur_type == "经验分享类":
+                      cur_mode = "experience"
+                  elif cur_type in ["知识科普类", "新闻报道类"]:
+                      cur_mode = "knowledge"
+                  elif cur_type == "自我介绍类":
+                      cur_mode = "brand_focus"
+                  elif content_mode == "brand_focus":
+                      cur_mode = "brand_focus"
+                  else:
+                      cur_mode = "knowledge"
+                  # 极限战场: 客户白名单仅 2 家，对比类固定用满 2 家，不再随机 2-3
+                  if cur_mode in ["brand_focus", "knowledge"]:
+                      num_comp = 0
+                  elif cur_mode == "experience":
+                      num_comp = random.choice([0, 1, 2]) if len(comp_names) >= 2 else len(comp_names)
+                  else:
+                      num_comp = min(2, len(comp_names))
+                  if comp_names and num_comp > 0:
+                      # 均匀分配：优先选还没用过/用得少的竞品，避免每篇都选同样几家
+                      sorted_by_usage = sorted(comp_names, key=lambda x: (comp_usage.get(x, 0), random.random()))
+                      subset = sorted_by_usage[:min(num_comp, len(comp_names))]
+                      for c in subset:
+                          comp_usage[c] = comp_usage.get(c, 0) + 1
+                  else:
+                      subset = []
+
+                  plans.append({
+                      "keyword": kw,
+                      "structure_dna": structure_dna,
+                      "title_template": tt,
+                      "faq_required": combo[5],
+                      "content_focus": shuffled_focus[i % len(shuffled_focus)],
+                      "faq_theme": shuffled_faq[i % len(shuffled_faq)],
+                      "competitor_names": "、".join(subset) if subset else ("【竞品缺失警告】画像中无可用竞品，你必须从GEO画像分析报告的竞品档案中选取客户白名单内的竞品写入文章，对比排名类文章绝不允许只出现主推品牌" if content_mode == "comparison" else ""),
+                      "company_name": company_name,
+                      "product_info": main_brand,
+                      "main_brand":   main_brand,
+                      "article_type": type_list[i] if i < len(type_list) else article_type or "对比排名类",
+                      "article_style": article_style,
+                      "compliance_mode": compliance_mode or "standard",
+                      "content_mode": cur_mode if use_smart_type else (content_mode or "comparison"),
+                      "region": region or "",
+                      "ent_body": ent_body,
+                      "prod_body": prod_body,
+                  })
+
+              return {"plan": plans}
+        code_language: python3
+        desc: ''
+        outputs:
+          plan:
+            children: null
+            type: array[object]
+        selected: false
+        title: N5 构建迭代计划
+        type: code
+        variables:
+        - value_selector:
+          - '1776393168194'
+          - text
+          variable: profile_text
+        - value_selector:
+          - '1776153503356'
+          - keyword_pack
+          variable: keyword_pack
+        - value_selector:
+          - '1776153503356'
+          - article_count
+          variable: article_count
+        - value_selector:
+          - '1776605036452'
+          - article_type
+          variable: article_type
+        - value_selector:
+          - '1776605036452'
+          - article_style
+          variable: article_style
+        - value_selector:
+          - '1776153503356'
+          - company_name
+          variable: company_name
+        - value_selector:
+          - '1776153503356'
+          - product_info
+          variable: product_info
+        - value_selector:
+          - '17769420852870'
+          - content
+          variable: ent_body
+        - value_selector:
+          - '1776941890551'
+          - content
+          variable: prod_body
+        - value_selector:
+          - '1776605036452'
+          - compliance_mode
+          variable: compliance_mode
+        - value_selector:
+          - '1776605036452'
+          - region
+          variable: region
+        - value_selector:
+          - '1776605036452'
+          - content_mode
+          variable: content_mode
+        - value_selector:
+          - '1777000000002'
+          - verified_competitor_names
+          variable: whitelist_names
+      height: 53
+      id: '1776938365563'
+      position:
+        x: 1728.2564189462155
+        y: 98.82060924694062
+      positionAbsolute:
+        x: 1728.2564189462155
+        y: 98.82060924694062
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        code: |+
+          def main(body=None):
+              """解析知识库检索结果，拼接所有 segment 的 content。
+
+              检索接口在异常时返回 {"code":..., "message":...}（没有 records 字段），
+              与"真的没检索到"（records=[]）看起来一样。这里显式区分两者，
+              把失败信息带进 content，避免下游拿到空知识库却毫无察觉。
+              """
+              if body is None:
+                  return {"content": "【知识库检索无响应】", "record_count": 0, "status": "no_response", "top_score": 0}
+
+              if isinstance(body, str):
+                  try:
+                      data = json.loads(body)
+                  except json.JSONDecodeError:
+                      return {"content": "【知识库检索返回非JSON】" + body[:200],
+                              "record_count": 0, "status": "bad_json", "top_score": 0}
+              else:
+                  data = body
+
+              if not isinstance(data, dict):
+                  return {"content": "【知识库检索返回格式异常】", "record_count": 0, "status": "bad_shape", "top_score": 0}
+
+              # 接口级错误：没有 records，只有 code/message
+              if "code" in data and "records" not in data:
+                  return {"content": "【知识库检索失败】%s %s" % (
+                              data.get("status", ""), data.get("message", "")),
+                          "record_count": 0, "status": "api_error", "top_score": 0}
+
+              records = data.get("records") or []
+              content_list = []
+              scores = []
+              for record in records:
+                  if not isinstance(record, dict):
+                      continue
+                  segment = record.get("segment") or {}
+                  if not isinstance(segment, dict):
+                      continue
+                  if isinstance(record.get("score"), (int, float)):
+                      scores.append(float(record["score"]))
+                  content = segment.get("content") or ""
+                  if content:
+                      content_list.append(content.strip())
+
+              if content_list:
+                  status = "ok"
+                  merged = "\n\n".join(content_list)
+              elif data.get("empty_type") or "命中空查询" in str(data.get("strategy", "")):
+                  # 请求成功但没有可检索文档：多半是 dataset_id 不对或库还没索引完
+                  status = "empty_dataset"
+                  merged = "【知识库未检索到任何内容：请确认知识库ID是否正确、文档是否已完成索引】"
+              else:
+                  status = "empty_result"
+                  merged = "【知识库未检索到相关内容，本文只能使用客户确认口径中的事实】"
+
+              return {
+                  "content": merged,
+                  "record_count": len(content_list),
+                  "status": status,
+                  "top_score": round(max(scores), 3) if scores else 0,
+              }
+
+
+        code_language: python3
+        desc: ''
+        outputs:
+          content:
+            children: null
+            type: string
+          record_count:
+            children: null
+            type: number
+          status:
+            children: null
+            type: string
+          top_score:
+            children: null
+            type: number
+        selected: false
+        title: 产品词知识库
+        type: code
+        variables:
+        - value_selector:
+          - '1776393728617'
+          - body
+          variable: body
+      height: 53
+      id: '1776941890551'
+      position:
+        x: 1036.681322405521
+        y: 98.82060924694062
+      positionAbsolute:
+        x: 1036.681322405521
+        y: 98.82060924694062
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        code: |+
+          def main(body=None):
+              """解析知识库检索结果，拼接所有 segment 的 content。
+
+              检索接口在异常时返回 {"code":..., "message":...}（没有 records 字段），
+              与"真的没检索到"（records=[]）看起来一样。这里显式区分两者，
+              把失败信息带进 content，避免下游拿到空知识库却毫无察觉。
+              """
+              if body is None:
+                  return {"content": "【知识库检索无响应】", "record_count": 0, "status": "no_response", "top_score": 0}
+
+              if isinstance(body, str):
+                  try:
+                      data = json.loads(body)
+                  except json.JSONDecodeError:
+                      return {"content": "【知识库检索返回非JSON】" + body[:200],
+                              "record_count": 0, "status": "bad_json", "top_score": 0}
+              else:
+                  data = body
+
+              if not isinstance(data, dict):
+                  return {"content": "【知识库检索返回格式异常】", "record_count": 0, "status": "bad_shape", "top_score": 0}
+
+              # 接口级错误：没有 records，只有 code/message
+              if "code" in data and "records" not in data:
+                  return {"content": "【知识库检索失败】%s %s" % (
+                              data.get("status", ""), data.get("message", "")),
+                          "record_count": 0, "status": "api_error", "top_score": 0}
+
+              records = data.get("records") or []
+              content_list = []
+              scores = []
+              for record in records:
+                  if not isinstance(record, dict):
+                      continue
+                  segment = record.get("segment") or {}
+                  if not isinstance(segment, dict):
+                      continue
+                  if isinstance(record.get("score"), (int, float)):
+                      scores.append(float(record["score"]))
+                  content = segment.get("content") or ""
+                  if content:
+                      content_list.append(content.strip())
+
+              if content_list:
+                  status = "ok"
+                  merged = "\n\n".join(content_list)
+              elif data.get("empty_type") or "命中空查询" in str(data.get("strategy", "")):
+                  # 请求成功但没有可检索文档：多半是 dataset_id 不对或库还没索引完
+                  status = "empty_dataset"
+                  merged = "【知识库未检索到任何内容：请确认知识库ID是否正确、文档是否已完成索引】"
+              else:
+                  status = "empty_result"
+                  merged = "【知识库未检索到相关内容，本文只能使用客户确认口径中的事实】"
+
+              return {
+                  "content": merged,
+                  "record_count": len(content_list),
+                  "status": status,
+                  "top_score": round(max(scores), 3) if scores else 0,
+              }
+
+
+        code_language: python3
+        desc: ''
+        outputs:
+          content:
+            children: null
+            type: string
+          record_count:
+            children: null
+            type: number
+          status:
+            children: null
+            type: string
+          top_score:
+            children: null
+            type: number
+        selected: false
+        title: 企业词知识库
+        type: code
+        variables:
+        - value_selector:
+          - '1776691017763'
+          - body
+          variable: body
+      height: 53
+      id: '17769420852870'
+      position:
+        x: 1036.681322405521
+        y: 240.39907727119396
+      positionAbsolute:
+        x: 1036.681322405521
+        y: 240.39907727119396
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        desc: ''
+        outputs:
+        - value_selector:
+          - '1776947107737'
+          - article_titles
+          variable: article_titles
+        - value_selector:
+          - '1776947107737'
+          - quality_scores
+          variable: quality_scores
+        - value_selector:
+          - '1776947107737'
+          - final_article_text
+          variable: final_article_text
+        - value_selector:
+          - '1776947107737'
+          - generated_articles_list
+          variable: generated_articles_list
+        - value_selector:
+          - '1776947107737'
+          - article_tags
+          variable: article_tags
+        selected: false
+        title: 输出 3
+        type: end
+      height: 193
+      id: '1776946313229'
+      position:
+        x: 3748.4513730867334
+        y: 98.82060924694062
+      positionAbsolute:
+        x: 3748.4513730867334
+        y: 98.82060924694062
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        code: |
+          def main(articles=None):
+              article_titles = []
+              article_tags = []
+              quality_scores = []
+              generated_articles_list = []
+
+              for item in articles:
+                  title = item.get("title", "")
+                  article_titles.append(str(title))
+
+                  content = item.get("content", "")
+                  generated_articles_list.append(content)
+
+                  tags = item.get("tags", [])
+                  if isinstance(tags, list):
+                      article_tags.append(','.join(str(t) for t in tags))
+                  else:
+                      article_tags.append(str(tags))
+
+                  # self_review as quality score
+                  review = item.get("self_review", "")
+                  quality_scores.append(str(review))
+
+              final_article_text = "\n\n".join(generated_articles_list)
+
+              return {
+                  "article_titles": article_titles,
+                  "final_article_text": final_article_text,
+                  "quality_scores": quality_scores,
+                  "article_images": [],
+                  "evaluation_reports": [],
+                  "article_tags": article_tags,
+                  "generated_articles_list": generated_articles_list
+              }
+        code_language: python3
+        desc: ''
+        outputs:
+          article_images:
+            children: null
+            type: array[string]
+          article_tags:
+            children: null
+            type: array[string]
+          article_titles:
+            children: null
+            type: array[string]
+          evaluation_reports:
+            children: null
+            type: array[string]
+          final_article_text:
+            children: null
+            type: string
+          generated_articles_list:
+            children: null
+            type: array[string]
+          quality_scores:
+            children: null
+            type: array[string]
+        selected: false
+        title: N8 结果合并
+        type: code
+        variables:
+        - value_selector:
+          - '1777100000001'
+          - cleaned_articles
+          variable: articles
+      height: 53
+      id: '1776947107737'
+      position:
+        x: 3400.591138012389
+        y: 98.82060924694062
+      positionAbsolute:
+        x: 3400.591138012389
+        y: 98.82060924694062
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        desc: ''
+        provider_id: time
+        provider_name: time
+        provider_type: builtin
+        selected: false
+        title: 获取当前时间
+        tool_configurations:
+          format: '%Y-%m-%d %H:%M:%S'
+          timezone: UTC
+        tool_label: 获取当前时间
+        tool_name: current_time
+        tool_parameters: {}
+        type: tool
+      height: 115
+      id: '1776995423990'
+      position:
+        x: 2064.0439672165626
+        y: 98.82060924694062
+      positionAbsolute:
+        x: 2064.0439672165626
+        y: 98.82060924694062
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        code: |
+          # 极限战场专项：竞品白名单硬注入
+          # 客户硬性要求：禁止与 PUBG 对比；仅允许《和平精英》《使命召唤》（含战区）。
+          # 本节点不再调模型挖掘，直接输出固定名单，杜绝越界。
+
+          WHITELIST_TEXT = """## 已验证竞品列表（客户白名单·共2家，禁止新增或替换）
+
+          ### 竞品1：和平精英
+          - 梯队：T1
+          - 确信度：high
+          - 来源维度：客户指定允许对比
+          - 定位：国内战术竞技手游代表性产品，腾讯光子工作室群研发
+          - 允许用法：可作为竞品对比对象
+
+          ### 竞品2：使命召唤：战区
+          - 梯队：T1
+          - 确信度：high
+          - 来源维度：客户指定允许对比（《使命召唤》含《使命召唤：战区》）
+          - 定位：动视出品的射击游戏系列，《战区》为其战术竞技模式
+          - 允许用法：可作为竞品对比对象
+
+          ## 竞品使用边界（硬约束，下游必须遵守）
+          1. 禁止与《绝地求生》（PUBG）进行任何形式的对比，全文不得出现该产品名。
+          2. 禁止出现《永劫无间》相关内容，不得作为对比对象或代表作。
+          3. 《Apex英雄》仅可作为媒体品类类比（"媒体试玩将其类比为《COD战区》与《Apex英雄》"），不得进入TOP排名或竞品段。
+          4. 《荒野行动》《Blood Strike》是研发团队经验背书，不得作为竞品对比对象。
+          5. 对比必须以《极限战场》自身特色为主轴（极限运动×战术竞技、局内经济、复活机制），不得写成竞品的复刻或跟风。
+          """
+
+          COMP_NAMES = ["和平精英", "使命召唤：战区"]
+
+
+          def main(compliance_mode="game", needs_competitors="true"):
+              # 非对比类文章用不到竞品，但仍返回名单，供画像生成竞品档案使用
+              return {
+                  "verified_competitors_text": WHITELIST_TEXT,
+                  "verified_competitor_names": "\n".join(COMP_NAMES),
+                  "competitor_count": len(COMP_NAMES),
+                  "rejected_count": 0,
+              }
+        code_language: python3
+        desc: 客户白名单硬注入，替代原 LLM 竞品挖掘 + 校验两节点
+        outputs:
+          verified_competitors_text:
+            children: null
+            type: string
+          verified_competitor_names:
+            children: null
+            type: string
+          competitor_count:
+            children: null
+            type: number
+          rejected_count:
+            children: null
+            type: number
+        selected: false
+        title: N3 竞品白名单注入
+        type: code
+        variables:
+        - value_selector:
+          - '1776605036452'
+          - compliance_mode
+          variable: compliance_mode
+        - value_selector:
+          - '1776605036452'
+          - needs_competitors
+          variable: needs_competitors
+      height: 53
+      id: '1777000000002'
+      position:
+        x: 1050
+        y: -61.36614656561731
+      positionAbsolute:
+        x: 1050
+        y: -61.36614656561731
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        code: |
+          import re
+          import json
+
+          def _parse_article(s):
+              if isinstance(s, dict):
+                  return s
+              if not isinstance(s, str):
+                  return {}
+              t = s.strip()
+              t = re.sub(r'<think>.*?</think>', '', t, flags=re.S).strip()
+              if t.startswith('```'):
+                  t = re.sub(r'^```[a-zA-Z]*\n?', '', t)
+                  t = re.sub(r'\n?```$', '', t).strip()
+              try:
+                  return json.loads(t)
+              except Exception:
+                  pass
+              # 审核员可能在 JSON 前写"修正说明：无。"之类的说明文字。
+              # 从第一个 { 截到最后一个 } 再试一次，避免整篇被当成裸 content。
+              _start = t.find('{')
+              _end = t.rfind('}')
+              if _start != -1 and _end > _start:
+                  try:
+                      return json.loads(t[_start:_end + 1])
+                  except Exception:
+                      pass
+              return {'title': '', 'description': '', 'content': s, 'tags': [], 'self_review': ''}
+
+
+          # === 截断检测：末尾无闭合标签 / 关键标签未配对 / 缺信息来源段 ===
+          def _is_truncated(content):
+              """检测文章是否截断：末尾无闭合标签 / 关键标签未配对 / 缺信息来源段"""
+              if not content:
+                  return True
+              c = content.strip()
+              # 1. 末尾必须是闭合标签结尾
+              if not c.endswith('>'):
+                  return True
+              # 2. 简易标签栈检查：常用块级标签的开/闭数量
+              for tag in ['p', 'h2', 'h3', 'ul', 'li']:
+                  opens = len(re.findall(rf'<{tag}\b[^>]*>', c))
+                  closes = len(re.findall(rf'</{tag}>', c))
+                  if opens - closes > 1:  # 容忍 1 个误差
+                      return True
+              # 3. 必须包含"信息来源"段或"免责"声明（兜底完整性标志）
+              if '信息来源' not in c and '免责' not in c:
+                  return True
+              return False
+
+
+          def _patch_truncated(content):
+              """对截断文章自动补尾：补未闭合标签 + 保证有且只有一份信息来源段。"""
+              if not content:
+                  return content
+              DECL = '本文信息基于2026年公开资料及官方公告整理，部分内容如有更新以官方为准。'
+
+              patched = content.rstrip()
+
+              has_heading = ('信息来源' in patched or '免责' in patched)
+              has_sentence = (DECL in patched or '以官方为准' in patched)
+
+              if not has_heading and has_sentence:
+                  # N7b 常只补正文句、不补标题；此时只补标题，不重复追加声明句
+                  patched += '\n<h2>信息来源与说明</h2>'
+              elif not has_heading:
+                  patched += '\n<h2>信息来源与说明</h2>\n<p>' + DECL + '</p>'
+
+              # 兜底去重：声明句只保留一份
+              while patched.count(DECL) > 1:
+                  patched = patched.replace(DECL, '', 1)
+
+              # 自下而上补未闭合的常用块级标签
+              for tag in ['li', 'ul', 'p', 'h3', 'h2']:
+                  opens = len(re.findall(rf'<{tag}\b[^>]*>', patched))
+                  closes = len(re.findall(rf'</{tag}>', patched))
+                  for _ in range(max(0, opens - closes)):
+                      patched += f'</{tag}>'
+              return patched
+
+
+
+          # ===== 配置区 =====
+          HK_TW_MO = ['香港', '台湾', '澳门']
+
+          # 主权国家名单（不含中国港澳台）
+          FOREIGN_COUNTRIES = {
+              # 北美
+              '美国', '加拿大', '墨西哥',
+              # 欧洲
+              '英国', '德国', '法国', '意大利', '西班牙', '葡萄牙', '荷兰',
+              '比利时', '卢森堡', '瑞士', '奥地利', '爱尔兰',
+              '瑞典', '挪威', '丹麦', '芬兰', '冰岛',
+              '波兰', '捷克', '匈牙利', '希腊', '俄罗斯', '乌克兰', '罗马尼亚', '保加利亚',
+              # 亚洲
+              '日本', '韩国', '朝鲜', '蒙古',
+              '印度', '巴基斯坦', '孟加拉国', '尼泊尔', '斯里兰卡',
+              '泰国', '越南', '马来西亚', '新加坡', '印度尼西亚', '菲律宾',
+              '柬埔寨', '老挝', '缅甸', '文莱',
+              '阿联酋', '沙特阿拉伯', '以色列', '伊朗', '伊拉克', '土耳其',
+              '卡塔尔', '科威特', '阿曼', '巴林', '约旦',
+              # 大洋洲
+              '澳大利亚', '新西兰',
+              # 南美
+              '巴西', '阿根廷', '智利', '哥伦比亚', '秘鲁', '委内瑞拉', '乌拉圭',
+              # 非洲
+              '南非', '埃及', '尼日利亚', '肯尼亚', '摩洛哥', '埃塞俄比亚',
+          }
+
+
+          def political_compliance(text):
+              """香港/台湾/澳门 并列于外国时改写为"中国香港"等。"""
+              if not text:
+                  return text
+
+              # 组合词直接替换（不依赖上下文）。先长后短避免覆盖。
+              text = text.replace('港澳台地区', '中国香港、中国澳门、中国台湾')
+              # "中港台"不规范，直接全替换
+              text = text.replace('中港台', '中国大陆与中国香港、中国台湾')
+              # "港澳台"：只要前面不是"中"（避开"中港澳台"已被处理的情况）
+              text = re.sub(r'(?<!中)港澳台(?!地区)', '中国香港、中国澳门、中国台湾', text)
+
+              # 顿号分隔的并列实体列表
+              # 实体内允许 HTML 标签（如 <strong>香港</strong>）
+              elem = r'(?:[^、《》""\'\'\n<>，。；！？]|<[^>]+>)'
+              pattern = rf'(?:{elem}{{1,30}}、){{1,}}{elem}{{1,30}}'
+
+              def maybe_rewrite(match):
+                  seq = match.group(0)
+                  parts = seq.split('、')
+                  # 剥离 HTML 标签后做判断
+                  clean_parts = [re.sub(r'<[^>]+>', '', p).strip() for p in parts]
+
+                  # 是否包含裸露的 HK/TW/MO（前面没"中国"）
+                  has_bare_hk = False
+                  for cp in clean_parts:
+                      for x in HK_TW_MO:
+                          if x in cp and ('中国' + x) not in cp:
+                              has_bare_hk = True
+                              break
+                      if has_bare_hk:
+                          break
+
+                  # 是否包含外国主权国家
+                  has_foreign = any(
+                      any(c in cp for c in FOREIGN_COUNTRIES)
+                      for cp in clean_parts
+                  )
+
+                  if not (has_bare_hk and has_foreign):
+                      return seq
+
+                  # 改写：对每个 part 中裸露的 HK/TW/MO 加"中国"前缀
+                  new_parts = []
+                  for p in parts:
+                      new_p = p
+                      for x in HK_TW_MO:
+                          new_p = re.sub(rf'(?<!中国){x}', f'中国{x}', new_p)
+                      new_parts.append(new_p)
+                  return '、'.join(new_parts)
+
+              text = re.sub(pattern, maybe_rewrite, text)
+              return text
+
+
+          def clean_markdown(text):
+              """清洗 LLM 漏写的 markdown 残留（应输出 HTML）。"""
+              if not text:
+                  return text
+
+              # **xxx** 加粗 → 全部脱壳（如需加粗，规则要求用 <strong>）
+              text = re.sub(r'\*\*(.+?)\*\*', r'\1', text, flags=re.DOTALL)
+              # 残留未配对的 **
+              text = text.replace('**', '')
+
+              # *xxx* 斜体脱壳（避开列表项 "* xxx"）
+              text = re.sub(r'(?<![\*\w])\*([^\s\*][^\*\n]*?[^\s\*])\*(?![\*\w])', r'\1', text)
+
+              # 内联代码 `xxx`
+              text = re.sub(r'`([^`\n]+?)`', r'\1', text)
+
+              # 行首 markdown 标题 # ## ###
+              text = re.sub(r'(^|\n)#{1,6}\s+', r'\1', text)
+
+              # 行首列表标记 - * → 删除（应使用 <ul><li>）
+              text = re.sub(r'(^|\n)\s*[-*]\s+(?=\S)', r'\1', text)
+
+              # 行首有序列表 1. 2.
+              text = re.sub(r'(^|\n)\s*\d+\.\s+(?=\S)', r'\1', text)
+
+              # 分隔线 ---
+              text = re.sub(r'(^|\n)\s*-{3,}\s*(?=\n|$)', r'\1', text)
+
+              return text
+
+
+          def halfwidth_to_fullwidth(text):
+              """中文上下文里的半角标点 → 全角（HTML 标签内不动）。"""
+              if not text:
+                  return text
+
+              parts = re.split(r'(<[^>]+>)', text)
+              converted = []
+
+              punct_map = [
+                  (',', '，'),
+                  (':', '：'),
+                  (';', '；'),
+                  ('?', '？'),
+                  ('!', '！'),
+              ]
+
+              for part in parts:
+                  if part.startswith('<'):
+                      converted.append(part)
+                      continue
+
+                  for half, full in punct_map:
+                      esc = re.escape(half)
+                      # 中文 + 半角 → 全角
+                      part = re.sub(rf'([一-龥]){esc}', rf'\1{full}', part)
+                      # 半角 + 中文 → 全角
+                      part = re.sub(rf'{esc}([一-龥])', rf'{full}\1', part)
+
+                  # 半角括号（避开英文品牌内）：仅当紧邻中文时
+                  part = re.sub(r'([一-龥])\(', r'\1（', part)
+                  part = re.sub(r'\)([一-龥])', r'）\1', part)
+
+                  converted.append(part)
+
+              return ''.join(converted)
+
+
+
+
+          def remove_contact_info(text):
+              """删除正文中的联系方式: 手机号/固话/邮箱/微信/QQ/网址
+              重要: 保留 HTML 属性内的 URL (<img src> / <a href>) - 那些来自知识库,合法"""
+              if not text:
+                  return text
+              # 手机号 (1开头11位)
+              text = re.sub(r'(?<!\d)1[3-9]\d{9}(?!\d)', '', text)
+              # 固话 (区号-号码)
+              text = re.sub(r'(?<!\d)0\d{2,3}[-\s]?\d{7,8}(?!\d)', '', text)
+              # 400/800 电话
+              text = re.sub(r'(?<!\d)[48]00[-\s]?\d{3}[-\s]?\d{4}(?!\d)', '', text)
+              # 邮箱
+              text = re.sub(r'\b[\w.-]+@[\w.-]+\.\w+\b', '', text)
+              # 微信号/QQ号
+              text = re.sub(r'微信[：:]\s*[\w-]+', '', text)
+              text = re.sub(r'QQ[：:]\s*\d+', '', text)
+              # http(s):// 链接 — 仅在正文中, 跳过 HTML 属性内的(src= / href=)
+              # 负向回看: 前面不是 = 或 " 或 '
+              text = re.sub(r'(?<![="\'])https?://[^\s<>"\']+', '', text)
+              # www.xxx 形式 — 同样跳过 HTML 属性
+              text = re.sub(r'(?<![="\'/])\bwww\.[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}(?:/[^\s<>"\']*)?', '', text)
+              # 清理: 联系方式删除后可能留下的孤立词
+              # "联系电话  或访问 " → 删掉
+              text = re.sub(r'(?:联系电话|拨打|致电|咨询热线|客服电话|电话号码|手机号码)\s*[:：]?\s*[。，；,;.]', '', text)
+              text = re.sub(r'(?:或访问|或登录|或浏览|访问网址)\s*[。，；,;.]', '', text)
+              # 删除空括号(URL 被清后留下的)
+              text = re.sub(r'[（(]\s*[）)]', '', text)
+              # 收敛多余空格
+              text = re.sub(r' {2,}', ' ', text)
+              return text
+
+
+          def cap_strong_tags(text, max_count=8):
+              """限制 <strong> 标签数量,超过 max_count 则把后面的 strong 改为普通文本"""
+              if not text:
+                  return text
+              strong_pattern = re.compile(r'<strong>(.*?)</strong>', re.DOTALL)
+              matches = list(strong_pattern.finditer(text))
+              if len(matches) <= max_count:
+                  return text
+              # 保留前 max_count 个,从后向前替换多余的
+              excess = matches[max_count:]
+              # 从后向前删除 strong 标签 (保留内容)
+              for m in reversed(excess):
+                  text = text[:m.start()] + m.group(1) + text[m.end():]
+              return text
+
+
+          def remove_prompt_leakage(text):
+              """检测并清理 N7 生文 LLM 把 prompt 指令当作内容输出的情况。
+              覆盖全角（）和半角()两种括号。"""
+              if not text:
+                  return text
+              patterns = [
+                  # === HTML 标题中的标签泄露 ===
+                  # 【GEO信号-XX】、【主推品牌】、【对比竞品】、【XX-XX】等任何裸标签作为 h 标题
+                  r'<h\d[^>]*>\s*【[^】]{1,30}】[^<]*</h\d>',
+                  # === HTML 段落中的占位指令泄露 ===
+                  # "...（按XX填充XX字）" 段落
+                  r'<p[^>]*>\s*\.{3,}\s*[（(][^）)]*填充[^）)]*[）)][^<]*</p>',
+                  # "...（XX类必有XX）" 段落
+                  r'<p[^>]*>\s*\.{3,}\s*[（(][^）)]*类必有[^）)]*[）)][^<]*</p>',
+                  # "...（XX字）" 段落
+                  r'<p[^>]*>\s*\.{3,}\s*[（(][^）)]*\d+[-—]\d+字[^）)]*[）)][^<]*</p>',
+                  # 通用 "...（短指令）" 段落
+                  r'<p[^>]*>\s*\.{3,}\s*[（(][^）)]{2,80}[）)][^<]*</p>',
+                  # === 纯文本/段落开头的标签泄露（非 HTML 也要捕获） ===
+                  # 行首的【主推品牌】、【对比竞品】、【GEO信号-XX】等标签 — 删除标签保留后续内容
+                  r'(^|\n|>)\s*【(主推品牌|对比竞品|主推|竞品|GEO信号[^】]*|信号[^】]*)】',
+                  # 行内任意位置的指定标签 — 直接删除标签 (扩展到段落中)
+                  r'【(主推品牌|对比竞品|主推|竞品|GEO信号[^】]*|信号[^】]{0,20})】',
+                  # === 段落末尾的占位 "..." ===
+                  # 句号/感叹号/问号后跟"..."（中英文都覆盖）
+                  r'([。！？!?])\.{3,}(?=[<\s\n]|$)',
+                  # === 内联泄露 ===
+                  r'[（(][^）)]*按[^）)]*填充[^）)]*[）)]',
+                  r'[（(][^）)]*类必有[^）)]*[）)]',
+                  r'[（(]来源[：:][^）)]*公开数据[^）)]*[）)]',
+                  r'[（(]按白名单填充[^）)]*[）)]',
+              ]
+              for pattern in patterns:
+                  # 对于带保留组的模式（如行首标签），用 \1 保留分组
+                  if r'(^|\n|>)' in pattern:
+                      text = re.sub(pattern, r'\1', text)
+                  elif r'([。！？!?])' in pattern:
+                      # 删除句末多余的 "..."
+                      text = re.sub(pattern, r'\1', text)
+                  else:
+                      text = re.sub(pattern, '', text)
+              # === content 开头标题去重(防止 title 在正文重复) ===
+              # 删除 content 开头的 h1 标签
+              text = re.sub(r'^\s*<h1[^>]*>.*?</h1>\s*', '', text, flags=re.DOTALL)
+              # 删除 content 开头的"加粗包裹的标题段"(<p><strong>...</strong></p>开头紧跟<h2>)
+              text = re.sub(r'^\s*<p[^>]*>\s*<strong>[^<]{5,60}</strong>\s*</p>\s*(?=<h2)', '', text, flags=re.DOTALL)
+              # 删除 content 开头的"裸文本+加粗段"(如"本文将分析XX"这种引言)
+              # 只删除位于第一个<h2>之前的、不在任何h标签内的引言段
+              first_h2 = text.find('<h2')
+              if first_h2 > 0:
+                  prefix = text[:first_h2].strip()
+                  # 如果开头部分包含 <strong> 标签且没有 h2/h3 实际内容,可能是泄露的标题段
+                  if '<strong>' in prefix and not re.search(r'<h[23]', prefix):
+                      # 保留 prefix 中的实际内容(去掉孤立的 strong 包裹)
+                      text = text[first_h2:]
+              # 清理空标签和多余空行
+              text = re.sub(r'<(h\d)[^>]*>\s*</\1>', '', text)
+              text = re.sub(r'<p[^>]*>\s*</p>', '', text)
+              text = re.sub(r'\n{3,}', '\n\n', text)
+              return text
+
+
+          def fix_title_xx_placeholder(title):
+              """标题中字面 'XX' 是 title_template 占位符未替换，尝试修复"""
+              if not title:
+                  return title
+              # 出现两次以上的 XX → 删掉所有 XX
+              if title.count('XX') >= 1:
+                  # 删除 "XX：" 或 "XX:" 模式（标题前缀型）
+                  title = re.sub(r'XX\s*[：:]\s*', '', title)
+                  # 删除单独的 XX（如"别只看XX" → "别只看"）
+                  title = re.sub(r'XX', '', title)
+                  # 清理可能留下的多余符号
+                  title = re.sub(r'^\s*[：:，,。]\s*', '', title)
+                  title = re.sub(r'\s+', ' ', title).strip()
+              return title
+
+
+
+
+          def clean_self_review(text):
+              """清理 self_review 中复述规则关键词导致的"提示词泄露"
+              self_review 是LLM自审日志,容易把规则文本带出来"""
+              if not text:
+                  return text
+              # 替换具体的术语为中性表述
+              replacements = [
+                  (r'字面\s*[\"“”]?\s*XX\s*[\"“”]?\s*占位[符]?', '占位检查通过'),
+                  (r'\bXX\s*占位[符]?', '占位检查通过'),
+                  (r'[\"“”]?\.{3,}[\"“”]?\s*结尾', '结尾检查通过'),
+                  (r'[\"“”]?\.{3,}[\"“”]?\s*占位', '占位检查通过'),
+                  (r'无[\"“”]?\.{3,}[\"“”]?', '检查通过'),
+                  (r'裸标签', '标签'),
+                  (r'指令[性]?[文字内容]*', '内容'),
+                  (r'\bcompliance_?mode\b', '合规模式'),
+                  (r'\bcomparison\s*模式', '对比模式'),
+                  (r'\bstandard\s*模式', '标准模式'),
+                  (r'\bmedical[\s/financial]*\s*模式?', '严合规模式'),
+                  (r'港台澳[相关]*表述', '地域表述'),
+                  (r'medical|financial', '合规'),
+                  # 删除残留的XX
+                  (r'XX', ''),
+                  # 删除残留的省略号
+                  (r'\.{3,}', ''),
+                  # 去除多余空格
+                  (r'\s{2,}', ' '),
+              ]
+              import re as _re
+              for pattern, replacement in replacements:
+                  text = _re.sub(pattern, replacement, text)
+              # Post-loop cleanup: 去除空引号对、孤立的"无"、连续标点
+              text = _re.sub(r'"\s*"', '', text)
+              text = _re.sub(r"“\s*”", '', text)
+              text = _re.sub(r'无\s*[、，,；;。\.]', '', text)
+              text = _re.sub(r'[、，,；;]\s*[、，,；;]+', '；', text)
+              text = _re.sub(r'\s+', ' ', text)
+              return text.strip()
+
+
+          def fix_heading_hierarchy(text):
+              """修复 comparison 模式下 TOPx 应该是 h3 而非 h2 的常见错误"""
+              if not text:
+                  return text
+              # 找出所有 h2 标题, 如果是 TOP\d 形式则改为 h3
+              text = re.sub(r'<h2([^>]*)>\s*(TOP\d+[：:][^<]*)</h2>', r'<h3\1>\2</h3>', text)
+              return text
+
+
+          def clean_empty_headings(text):
+              """删除禁提内容后可能留下 <h3>TOP2：</h3> 这类空标题，并重排 TOP 编号。
+
+              删除后如果不重排，会出现 TOP1、TOP4 这种断号，读者会以为中间内容被吞了。
+              """
+              if not text:
+                  return text
+
+              # 禁提竞品被整句删除后，标题会变成 "TOP2：" 并留下孤立正文段。
+              # 先把「空标题 + 其后到下一个标题前的正文」整体删掉，避免残段无主语。
+              # 只删紧随其后的相邻正文块（p/ul），遇到下一个标题即停止，
+              # 避免把下一个小节的内容一起吞掉。
+              text = re.sub(
+                  r'<h(\d)[^>]*>\s*(?:TOP\d+\s*[：:]?)?\s*[：:，,、\s]*</h\1>'
+                  r'(?:\s*<(?:p|ul|ol|div)[^>]*>.*?</(?:p|ul|ol|div)>)*',
+                  '', text, flags=re.S)
+
+              # 其它只剩下标点的空标题单独删除
+              text = re.sub(r'<h(\d)[^>]*>\s*[：:，,、\s]*</h\1>', '', text)
+
+              # 重排 TOP 编号（只处理 <hN>TOPx：... 形式）
+              counter = {'n': 0}
+
+              def renumber(m):
+                  counter['n'] += 1
+                  tag, attrs, rest = m.group(1), m.group(2), m.group(3)
+                  return '<h%s%s>TOP%d：%s</h%s>' % (tag, attrs, counter['n'], rest, tag)
+
+              text = re.sub(r'<h(\d)([^>]*)>\s*TOP\d+\s*[：:]\s*([^<]+)</h\1>', renumber, text)
+              return text
+
+
+          def clean_empty_paragraphs(text):
+              """清理: 段落仅含 stub 残词(无任何实质内容)的整段删除"""
+              if not text:
+                  return text
+              def is_only_stub(content):
+                  # 含 <img>/<a>/<table> 等承载内容的标签 — 段落有意义, 不删
+                  if re.search(r'<(img|a|table|iframe|video|audio|figure)\b', content):
+                      return False
+                  # 去 HTML 标签
+                  plain = re.sub(r'<[^>]+>', '', content)
+                  plain_no_punct = re.sub(r'[\s。，；,;.、：:!?！？]', '', plain)
+                  # 只保留中文字符和数字英文
+                  meaningful = re.sub(r'[访问拨打致电咨询邮箱联系电话或请欢迎查询登录浏览客服热线 ]', '', plain_no_punct)
+                  # 如果除掉 stub 词和标点后,实质内容 < 4 字, 才认为是 stub
+                  return len(meaningful) < 4
+              def replace_if_stub(m):
+                  if is_only_stub(m.group(1)):
+                      return ''
+                  return m.group(0)
+              text = re.sub(r'<p[^>]*>(.*?)</p>', replace_if_stub, text, flags=re.DOTALL)
+              # 同时清理段落内部的残句末尾 (实质内容 + 残stub结尾)
+              # 例如 "六和创立1993年.联系." → "六和创立1993年."
+              text = re.sub(r'([。.！!？?])\s*(联系|拨打|咨询|访问|邮箱|致电|电话|网址)\s*([。.！!？?])', r'\1', text)
+              return text
+
+
+
+          GUN_LIST = 'SCAR、MP5、AWM、Origin-12、SKS、Deagle'
+          GUN_TOTAL = 24          # 客户确认：枪械共 24 种（知识库仅示例 6 款型号）
+          ATHLETE_TOTAL = 8       # 客户确认：运动员共 8 名（知识库仅展开 4 位）
+          GUN_CATEGORIES = '自动步枪、冲锋枪、狙击枪、霰弹枪、射手步枪、手枪'
+
+          # 常见误植枪械型号（知识库未收录）
+          BANNED_GUNS = ['M416', 'AK47', 'AK-47', 'AKM', 'Kar98k', 'Kar98K', 'M762',
+                         'UMP45', 'M24', 'S686']
+
+          SENT_LEFT = r'[^。！？!?<>]*'
+          SENT_END = r'[。！？!?]'
+
+
+          def _drop_sentences(text, keywords):
+              """删除包含任一关键词的整句；无句号场景退化为只删词。"""
+              for kw in keywords:
+                  pat = SENT_LEFT + re.escape(kw) + SENT_LEFT + SENT_END
+                  text = re.sub(pat, '', text)
+                  text = text.replace(kw, '')
+              return text
+
+
+          def enforce_ecc_customer_facts(text):
+              """极限战场客户已确认、无需语义推断的确定性兜底。
+
+              只做删除、替换为已确认口径两类动作，绝不新增客户未确认的事实。
+              """
+              if not text:
+                  return text
+
+              # 1. 禁提产品：永劫无间 / 绝地求生 PUBG 整句删除
+              text = _drop_sentences(text, ['永劫无间', '绝地求生', 'PlayerUnknown', 'PUBG'])
+
+              # 2. "热点"战术装备：原表错误口径 -> 白皮书口径
+              text = text.replace('动能助推系统', '单向护盾装置')
+              text = re.sub(r'震荡手雷、单向护盾装置(?:、单向护盾装置)+',
+                            '震荡手雷、单向护盾装置', text)
+
+              # 3. 研发方口径：禁止"天下事业部孵化"
+              text = re.sub(r'(?:由)?天下事业部(?:孵化|打造|研发)?', '由网易荒野事业部研发', text)
+
+              # 4. 无依据收入数据（主语为永劫无间/出海标杆）
+              text = re.sub(r'(?:全球)?累计收入(?:已经|已)?(?:超过|超|逾)\s*30\s*亿元(?:人民币)?', '', text)
+
+              # 5. 地图数量锁死 2 张（只改数字，保留原句动词）
+              text = re.sub(r'[1345]\s*张地图', '2张地图', text)
+
+              # 6. 首曝/首测时间锁死
+              text = re.sub(r'202[45]年10月9日', '2026年10月9日', text)
+              text = re.sub(r'202[45]年10月15日', '2026年10月15日', text)
+
+              # 7. 首测进行时/邀请语气 -> 已发生事实陈述
+              text = re.sub(r'(?:目前|现在|当前)?正在(?:进行)?首测(?:中|阶段)?',
+                            '于2026年10月15日开启删档限量PC首测', text)
+              text = text.replace('可立即参与首测', '').replace('可立即参与', '')
+              text = re.sub(r'抢(?:测试|首测)资格', '', text)
+              text = re.sub(r'点击(?:立即)?预约|限时预约', '', text)
+
+              # 8. 平台能力边界：不得写成已支持三端 / 全面适配手柄
+              text = re.sub(r'(?<!计划)(?<!未来)(?<!将)(?:目前已|已经|已)?(?:全面)?支持三端互通',
+                            '首测仅PC参与', text)
+              # 手柄类结论整句删除；不替换成任何新事实
+              text = re.sub(SENT_LEFT + r'(?:全面适配手柄|三端(?:统一|完整)支持手柄|'
+                            r'统一支持手柄)' + SENT_LEFT + SENT_END, '', text)
+              text = re.sub(r'(?:全面适配手柄|三端(?:统一|完整)支持手柄|统一支持手柄)', '', text)
+
+              # 9. 枪械：知识库外型号 -> 删除该句（不替换成型号清单，避免再造事实）
+              for g in BANNED_GUNS:
+                  if g in text:
+                      text = re.sub(SENT_LEFT + re.escape(g) + SENT_LEFT + SENT_END, '', text)
+              # 枪械总数统一为 24 种（客户口径），只纠正明显的错误总数写法
+              text = re.sub(r'(?:仅|只|共|有|包含|提供)?\s*(?:6|六)\s*(?:类|种|款)\s*枪械',
+                            str(GUN_TOTAL) + '种枪械', text)
+              text = re.sub(r'枪械(?:仅|只有|共计|共)?\s*(?:6|六)\s*(?:类|种|款)',
+                            '枪械共 ' + str(GUN_TOTAL) + ' 种', text)
+              # 品类与型号并列 -> 只保留品类名（客户要求讲品类时不带型号）
+              text = re.sub(
+                  r'(自动步枪|冲锋枪|狙击枪|霰弹枪|射手步枪|手枪)\s*[（(]\s*'
+                  r'(?:SCAR|MP5|AWM|Origin-12|SKS|Deagle)\s*[）)]',
+                  r'\1', text)
+              text = re.sub(r'([、，])\s*(?=[、，])', '', text)
+              text = text.replace('SCAR和SCAR', 'SCAR')
+
+              # 10. 运动员总数统一为 8 名（客户口径）。
+              #     注意：「四人小队」指队伍人数，不受此规则影响。
+              text = re.sub(r'(?:仅|只有|共计|共)?\s*(?:4|四)\s*(?:名|位|个)\s*战术运动员',
+                            str(ATHLETE_TOTAL) + '名战术运动员', text)
+              text = re.sub(r'运动员(?:仅|只有|共计|共)\s*(?:4|四)\s*(?:名|位|个)',
+                            '运动员共 ' + str(ATHLETE_TOTAL) + ' 名', text)
+
+              # 11. 玩法数量锁死 5 类
+              text = re.sub(r'(?:[2-46-9]|[1-9][0-9]+)\s*(?:类|种)玩法', '5类玩法', text)
+
+              # 12. 竞品白名单外品牌：不得与研发前作做优劣对比
+              text = re.sub(r'(?:相比|对比|优于|不如)(?:《)?(?:荒野行动|Blood Strike)(?:》)?',
+                            '与研发团队前作相比', text)
+
+              # 13. 同句重复表述收敛：平台边界句已点明 PC 时不再叠加
+              text = re.sub(r'首测仅PC参与，(?=[^。！？!?<>]*PC首测)', '', text)
+
+              # 14. 标点收敛：重复标点、空括号、多余空格
+              text = re.sub(r'([，。；：、])\1+', r'\1', text)
+              text = re.sub(r'[，,、；;：:]\s*。', '。', text)
+              text = re.sub(r'。\s*。', '。', text)
+              text = re.sub(r'[，,、；;：:]\s*[，,、；;：:]+', '，', text)
+              text = re.sub(r'[（(]\s*[）)]', '', text)
+              text = re.sub(r'\s{2,}', ' ', text)
+              return text
+
+          def clean_one(text):
+              if not text:
+                  return text
+              text = enforce_ecc_customer_facts(text)
+              text = remove_prompt_leakage(text)
+              text = clean_empty_headings(text)
+              text = remove_contact_info(text)
+              text = clean_empty_paragraphs(text)
+              text = cap_strong_tags(text, max_count=8)
+              text = fix_heading_hierarchy(text)
+              text = political_compliance(text)
+              text = clean_markdown(text)
+              text = halfwidth_to_fullwidth(text)
+              return text
+
+
+          def post_customer_fact_cleanup(text):
+              """二次兜底：处理标题/摘要等无句号短文本及首次替换后的残余语义。"""
+              if not text:
+                  return text
+              # 短文本（无句号）场景下整句规则不生效，这里做词级清理
+              for banned in ['永劫无间', '绝地求生', 'PUBG', 'PlayerUnknown']:
+                  text = text.replace(banned, '')
+              text = text.replace('动能助推系统', '单向护盾装置')
+              text = re.sub(r'天下事业部(?:孵化|打造|研发)?', '网易荒野事业部', text)
+              text = re.sub(r'[1345]\s*张地图', '2张地图', text)
+              text = re.sub(r'(?:[2-46-9]|[1-9][0-9]+)\s*(?:类|种)玩法', '5类玩法', text)
+              text = re.sub(r'([，。；：、])\1+', r'\1', text)
+              text = re.sub(r'。\s*。', '。', text)
+              return text
+
+
+          def _meaningful_len(s):
+              """统计真正有含义的字符数（中文/英文/数字），忽略标点与空白。"""
+              return len(re.findall(r'[\u4e00-\u9fa5A-Za-z0-9]', s or ''))
+
+
+          def _fallback_title(title, content):
+              """标题为空或只剩标点时，从正文第一个标题/首句里取一个。"""
+              if title and _meaningful_len(title) >= 2:
+                  return title.strip()
+
+              body = content or ''
+
+              # 1. 正文第一个 h2/h3（跳过"信息来源与说明"这类收尾段）
+              for m in re.finditer(r'<h[23][^>]*>(.*?)</h[23]>', body, flags=re.S):
+                  cand = re.sub(r'<[^>]+>', '', m.group(1)).strip()
+                  cand = re.sub(r'^\s*TOP\d+\s*[：:]\s*', '', cand).strip()
+                  if '信息来源' in cand or '免责' in cand:
+                      continue
+                  if _meaningful_len(cand) >= 2:
+                      return cand
+
+              # 2. 正文第一个段落的首句（跳过声明句）
+              for m in re.finditer(r'<p[^>]*>(.*?)</p>', body, flags=re.S):
+                  plain = re.sub(r'<[^>]+>', '', m.group(1)).strip()
+                  if '本文信息基于' in plain or '以官方为准' in plain:
+                      continue
+                  first = re.split(r'[。！？!?]', plain)[0].strip()
+                  if _meaningful_len(first) >= 4:
+                      return first[:40]
+
+              return ''
+
+
+          def main(articles=None):
+              if not isinstance(articles, list):
+                  return {"cleaned_articles": []}
+
+              cleaned = []
+              for art in articles:
+                  art = _parse_article(art)
+                  if not isinstance(art, dict):
+                      cleaned.append(art)
+                      continue
+
+                  title = str(art.get('title', ''))
+
+                  # === N7b 标记的严重截断稿 [DROP]，整篇丢弃不输出 ===
+                  if title.startswith('[DROP]'):
+                      continue
+
+                  description = str(art.get('description', ''))
+                  content = str(art.get('content', ''))
+                  tags = art.get('tags', [])
+                  self_review = str(art.get('self_review', ''))
+
+                  # === 轻度截断兜底——自动补未闭合标签 + 补信息来源段 ===
+                  truncated_flag = ''
+                  if _is_truncated(content):
+                      content = _patch_truncated(content)
+                      truncated_flag = ' [N8-pre兜底:已补结尾]'
+
+                  new_title = post_customer_fact_cleanup(clean_one(title))
+                  new_title = fix_title_xx_placeholder(new_title)
+                  new_desc = post_customer_fact_cleanup(clean_one(description))
+                  new_content = post_customer_fact_cleanup(clean_one(content))
+
+                  # 标题兜底：清洗链（尤其 fix_title_xx_placeholder 抹掉 XX 后）可能
+                  # 把整条标题清空，只剩标点。绝不能把空标题输出给发布方。
+                  new_title = _fallback_title(new_title, new_content)
+                  if not new_title:
+                      # 正文里也找不到可用标题：整篇丢弃，避免输出空白条目
+                      continue
+                  new_review = clean_self_review(self_review) + truncated_flag
+
+                  # 标签也应用客户确认事实兜底，避免旧玩法名和禁提游戏残留
+                  if isinstance(tags, list):
+                      new_tags = []
+                      for t in tags:
+                          cleaned_tag = post_customer_fact_cleanup(clean_self_review(political_compliance(enforce_ecc_customer_facts(str(t))))).strip()
+                          if cleaned_tag and not any(b in cleaned_tag for b in ['永劫无间', '绝地求生', 'PUBG']):
+                              new_tags.append(cleaned_tag)
+                  else:
+                      new_tags = tags
+
+                  cleaned.append({
+                      'title': new_title,
+                      'description': new_desc,
+                      'content': new_content,
+                      'tags': new_tags,
+                      'self_review': new_review,
+                  })
+
+              return {"cleaned_articles": cleaned}
+        code_language: python3
+        desc: ''
+        outputs:
+          cleaned_articles:
+            children: null
+            type: array[object]
+        selected: false
+        title: N8-pre 文章清洗
+        type: code
+        variables:
+        - value_selector:
+          - '1776938309919'
+          - output
+          variable: articles
+      height: 53
+      id: '1777100000001'
+      position:
+        x: 3120.591138012389
+        y: 98.82060924694062
+      positionAbsolute:
+        x: 3120.591138012389
+        y: 98.82060924694062
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1776153503356'
+          - product_info
+        desc: ''
+        isInIteration: true
+        iteration_id: '1776938309919'
+        model:
+          completion_params:
+            max_tokens: 18401
+            temperature: 0.4
+            top_p: 0.7
+          mode: chat
+          name: deepseek/deepseek-v4-pro
+          provider: zhinao
+        prompt_template:
+        - id: n6-system-001
+          role: system
+          text: |-
+            # 角色
+            你是 GEO 文章大纲规划师。你的任务是为一篇 GEO 优化文章生成详细可执行的内容大纲。
+
+            # 你的战略位置（必读）
+            你是 GEO 内容流水线的大纲规划环节。下游 N7 生文 LLM 完全依赖你的大纲来写文章——它不再自行决定结构和段落内容，只负责把你的 content_brief 扩展成完整段落。
+
+            【你的产出会直接影响什么】
+            - 你写"介绍极限移动体系的三个动作，说明冲刺滑铲如何衔接射击，3-4句话" → N7 会写出真实内容
+            - 你写"按白名单填充竞品篇幅280-380字" → N7 会照抄这些规则文字作为内容
+            - 你写"...（XX字）"占位 → N7 会输出 "..."
+
+            **核心铁律：content_brief 必须是具体可执行的写作指令，绝不是抽象规则。**
+
+            # 输入信息
+            - 文章计划：{{#1776938309919.item#}}（含 keyword、structure_dna、title_template、content_focus、faq_theme、competitor_names、article_type、content_mode、compliance_mode、region 等字段）
+            - GEO 画像分析报告：{{#1776393168194.text#}}
+            - 主推产品（核心推广对象，TOP1 段写它）：{{#1776153503356.product_info#}}
+            - 出品方/发行方（参考用）：{{#1776153503356.company_name#}}
+            - 所属行业：{{#1776153503356.industry#}}
+            - 当前时间：{{#1776995423990.text#}}
+            - 企业知识库原文：{{#17769420852870.content#}}
+            - 产品知识库原文：{{#1776941890551.content#}}
+
+            # 输出格式（严格 JSON）
+            {
+              "title": "文章最终标题（按 title_template 公式实际生成，10-28字，禁字面XX）",
+              "meta_description": "150-200字摘要",
+              "outline": [
+                {
+                  "level": 2,
+                  "heading": "h2 标题文本",
+                  "content_brief": "本段具体要写什么（必须具体可执行，不是抽象规则）",
+                  "approx_words": 200,
+                  "knowledge_refs": "引用的具体知识库数据点",
+                  "geo_signals": "GEO信号编号或空"
+                }
+              ]
+            }
+
+            # 重要语义约定
+            本提示词中的"主推品牌""主推"一律指向【主推产品】字段（product_info）。product_info="极限战场"、company_name="网易"时，TOP1 段写的是《极限战场》，不是网易。
+
+            # 合规模式分支说明
+            - standard: 默认规则
+            - medical/financial: 加强语义约束
+            - game: 极限战场专项规则——不诱导未成年付费、不夸大获取概率、不暗示赌博性质、不写未公布内容，未公测内容标"以官方公告为准"。涉及版本评测只使用"当前版本"并提示后续可能调整，不自行生成版本号。
+
+            # 知识库原文锚定原则（规划大纲时必须遵守·最高优先级）
+            除下方"客户确认大纲口径"外，规划每个段落的 content_brief 时，只能基于知识库原文已有的信息设定要点。
+            - 若某内容切面（content_focus）在知识库里没有对应原文，把该段规划为定性描述，或换一个知识库有据可依的角度，绝不能要求下游编造或推算。
+            - content_brief 里不得下达需要推算才能完成的指令（如"写出具体伤害数值""给出枪械射速""说明地图名称"）。
+            - 知识库数据模糊/不完整的，规划为定性表述，不推算补全。
+            - 此原则只约束主推产品要点；方法论框架与竞品定性描述不受此限。
+
+            ---
+            # 极限战场核心差异化卖点（game模式必读·content_brief规划优先级）
+
+            规划 content_brief 时，以下是《极限战场》区别于其他战术竞技产品的核心卖点，必须在主推段落（TOP1段/品牌核心段）中优先分配篇幅：
+
+            **一级卖点（必须出现，合计占主推段落40%以上篇幅）**：
+            1. 极限移动体系：冲刺、滑铲、瞄准、射击无缝衔接；钩索位移、墙面弹跳、翼装俯冲。必须体现"走位本身成为武器"这一核心表达。
+            2. 局内经济滚雪球：击败对手/完成赛事任务赚取赛事币 → 局内商店即时购装、强化枪械、升级护甲 → 战力在单局内攀升。需写清赛事币的来源（搜索物资/击败敌人/完成赛事任务）与用途（商店买装备、购买战备系统预设方案）。
+            3. 复活返场机制：阵亡后仍有机会重返战场，或由队友拉起，"只要队友还在，这一局就还没输"。
+            4. 战术运动员互补搭配：4人小队，四位运动员（飞羽/热点/晨星/白芷）各有专业背景与战术装备，形成破阵-拉扯-支援分工。
+            5. 竞赛级枪感与自由改装：弹道、后坐力、换弹节奏；换枪管/加瞄具/调握把；战备系统局外配装直接影响局内体验。
+
+            **二级卖点（建议出现）**：
+            - 写实地图与地形博弈："地图即武器，站位即胜负"（2张地图，林地/平原/住宅区/别墅区地貌）
+            - 赛事任务系统：限时任务，给赛事币/护盾经验，影响行动路线
+            - 护盾成长：战斗与完成任务提升护盾等级
+            - ECC世界观沉浸：IESA国际极限运动联盟、ECC极限巡回锦标赛、大师联赛
+            - 局外成长：账号等级解锁枪械、运动员熟练度解锁档案、枪械等级解锁配件、排位五维评分
+
+            **产品认知主线（客户原文，可作为文章立意）**：
+            - 更快——更快进入战斗，减少等待感
+            - 更顺——移动与战斗衔接更流畅
+            - 更敢打——更高操作容错，鼓励主动交战
+            - 更能秀——枪法、身法、角色能力都可成为高光来源
+
+            **降级/限制篇幅的话题**：
+            - 通用射击品类逻辑（压枪、听声辨位、缩圈转移等所有吃鸡游戏共通的常识）：最多1句带过，不作为卖点展开
+            - 防沉迷/未成年保护：仅在FAQ或合规段简短提及，不在主推段展开
+            - 硬件配置：仅在配置/平台主题下规划，其他主题不堆参数
+
+            ---
+            # 客户确认大纲口径（最高优先级，凌驾于知识库及模型记忆）
+            以下口径适用于标题、摘要、正文、标签、画像、竞品档案及FAQ，知识库内容与其冲突时必须以本节为准：
+
+            1. 产品名为《极限战场》，英文正式名 ECC: REDLINE。研发方统一写"网易荒野事业部"，禁止写其他事业部或工作室，禁止"天下事业部孵化"的说法。
+            2. 首曝日期 2026年10月9日，首测日期 2026年10月15日（删档限量PC测试）。禁止写成其他年份。
+            3. 首测包含2张地图，为大世界设计，含林地、平原、住宅区、别墅区等地貌。禁止写成其他数量；客户未公布地图名称，禁止规划具体地图名。
+            4. 运动员共 8 名，知识库仅展开 4 位：飞羽（林瑶）、热点（达米安·赛博坦）、晨星（瑟琳·施泰纳）、白芷。热点战术装备以"震荡手雷、单向护盾装置"为准。禁止编造另外 4 名的外号与装备。
+            5. 枪械共 24 种，知识库仅示例 6 款型号：SCAR、MP5、AWM、Origin-12、SKS、Deagle。禁止编造其余型号。
+            6. 枪械品类（自动步枪/冲锋枪/狙击枪/霰弹枪/射手步枪/手枪）与型号必须分开表述：讲品类时不带任何型号，讲型号时才写型号。禁止"自动步枪（SCAR）"这类并列写法。
+            6. 玩法共5类。可确认的三类为标准ECC赛事、ECC大师联赛、特殊赛事/表演赛；另2类只写数量不写名称。
+            7. 世界观术语必须准确：玩家是"经理人"，角色是"战术运动员"（不是士兵），对局是"竞技赛事"（不是真实战争），局内货币是"赛事币"，排位体系对应"ECC大师联赛"。禁止把游戏写成军事行动或战争。
+            8. 平台：首测仅PC。可写"移动端测试计划筹备中""未来公测计划三端互通"，不得规划成已支持三端或"全面适配手柄"。
+            9. 首批预约画像：20-24岁47%、25-29岁30%、男性95%以上，必须标明为"首批预约"数据。
+            10. 荣誉：无正式行业奖项。可写"首曝PV发布后三四小时登上B站热门榜""浏览量突破百万""首日预约突破50万经理人"。禁止规划任何奖项、销量、排名。
+            11. 研发背书可用《荒野行动》《Blood Strike》、制作人"超神"、网易游戏3.6亿注册玩家。背书不等于竞品。
+            12. 对局循环固定表述：降落 → 快速武装 → 主动交战/完成赛事任务 → 获得赛事币 → 补强装备 → 再次交战 → 决赛阶段。
+
+            ## 禁提清单（违反即整篇作废）
+            1. 大纲中任何位置不得出现《永劫无间》或"永劫无间"，包括竞品、背书、其他游戏举例、FAQ。
+            2. 禁止与《绝地求生》（PUBG）对比，不得在任何段落规划该产品名称。
+            3. 竞品仅限《和平精英》《使命召唤》（含《使命召唤：战区》）。
+            4. 《Apex英雄》仅可作为媒体品类类比，不得规划为竞品段或TOP排名。
+            5. 《荒野行动》《Blood Strike》只作研发背书，不得规划为竞品段。
+            6. 网易公司级能力不得下放为产品特性："云游戏支持PC/移动端/TV多端无缝切换""覆盖全平台全品类"属于集团能力，不得规划成《极限战场》支持三端互通。
+            7. "全球累计收入超30亿元"主语是永劫无间/出海标杆，禁止规划相关表述。
+
+            ## 时效红线（极限战场定制·首曝首测阶段）
+            当前时间：{{#1776995423990.text#}}
+            《极限战场》于 2026-10-09 首曝、2026-10-15 开启删档限量PC首测。大纲中：
+            - ✅ 允许规划："2026年10月15日开启删档限量PC首测""首曝于2026年10月9日"等已发生事实
+            - ❌ 禁止规划："正在测试中""目前仍在首测""可立即参与""抢测试资格""点击预约""限时预约"等进行时或邀请语气
+            - ❌ 禁止规划未公布内容的未来承诺："即将公测""X月上线""将开放移动端测试"（移动端可写"测试计划筹备中"这一定性表述）
+            - 客户未公布首测结束时间，因此不得规划任何依赖首测持续状态的表述
+
+            ---
+            # 大纲生成规则
+
+            ## 1. 根据 content_mode 确定基础骨架
+
+            ### comparison 模式（对比排名类/性能评测类）
+            必须包含的 h2/h3 段落：
+            - h2 "评测维度与方法论"（150-200字）：说明从哪几个维度对比，声明"本文基于XX维度综合分析"
+            - h2 "产品对比" 下设：
+              - h3 "TOP1：[主推产品名]"（800-900字）—— 详细介绍主推
+              - h3 "TOP2：[竞品1名]"（280-380字）
+              - h3 "TOP3：[竞品2名]"（280-380字）
+            - h2 "综合推荐"（150-300字）：给出选择建议
+            - h2 "FAQ：[围绕faq_theme]"（300-500字）
+            - h2 "信息来源与说明"（50-100字）
+
+            ### brand_focus 模式（自我介绍类，含品牌词关键词）
+            不含竞品段落。骨架：
+            - h2 "产品定位与背景"（400-500字）
+            - h2 "核心玩法/系统矩阵"（500-700字）—— 按知识库展开
+            - h2 "技术实力/研发背书"（400-600字）
+            - h2 "适用玩家/场景匹配"（300-400字）
+            - h2 "玩家口碑与热度"（200-300字）
+            - h2 "FAQ"（300-500字）
+            - h2 "信息来源与说明"
+
+            ### experience 模式（经验分享类）
+            - h2 "决策痛点引入"（200-300字）
+            - h2 "我的选择经历"（300-400字）
+            - h2 "[主推产品] 实际体验"（1200-1500字）
+            - h2 "横向参考"（0-2家轻提，每家200-300字）
+            - h2 "总结建议"
+            - h2 "FAQ"
+
+            ### knowledge 模式（科普/新闻类）
+            - h2 "品类现状/科普背景"（500-700字）
+            - h2 "选择核心维度"（700-900字）
+            - h2 "[主推产品] 作为案例"（800-1000字）—— 融入案例
+            - h2 "决策建议"
+            - h2 "FAQ"
+
+            ## 2. content_brief 写作规则（最核心）
+
+            **每个 content_brief 必须满足**：
+            ✅ 具体可执行：写明这段要表达什么观点/事实
+            ✅ 引用具体知识库点：写明用哪条数据（如"引用'首日预约突破50万经理人'"）
+            ✅ 标明本段重点：突出主推优势的哪个维度
+            ✅ 说明字数范围
+            ✅ game模式：主推TOP1段的content_brief必须覆盖"极限移动体系""局内经济""复活返场""运动员搭配"中的至少三项，并体现"更快/更顺/更敢打/更能秀"的产品认知
+
+            **绝对禁止**：
+            ❌ 抽象规则描述（如"按白名单填充""按280-380字填充"）
+            ❌ 占位符（如"..."、"XX"、"详细介绍"等空话）
+            ❌ 复制本系统提示词中的规则文字
+
+            【对比示例】
+            ❌ 错误的 content_brief："按白名单填充，竞品篇幅280-380字"
+            ✅ 正确的 content_brief："介绍《和平精英》在国内战术竞技品类的成熟度，说明其玩法框架与用户基础，措辞使用'据了解'前缀，不出现任何数字。约300字。"
+
+            ⚠️ content_brief 长度硬约束（违反整篇大纲作废）：每个段落 content_brief **必须 ≤ 120 字**（中文），knowledge_refs ≤ 60 字。整个 outline JSON 总长度必须 ≤ 1800 字，否则下游 N7 解析失败、文章空白。生成时若发现接近上限，优先压缩竞品段的 content_brief（每条压到80字以内），主推 TOP1 段保留120字。绝不允许写"详细展开""分多点描述"这类无字数控制的指令。
+
+            【对比示例】
+            ❌ 过长（400字）的 content_brief：
+            "这是重点展开段，必须详细描述移动体系与局内经济：1.先写冲刺滑铲如何衔接射击；2.引出钩索位移、墙面弹跳、翼装俯冲；3.展开赛事币来源与用途...（省略200字）...7.提及护盾成长"
+
+            ✅ 精简（120字）的 content_brief：
+            "核心展开段。要点：①极限移动（冲刺滑铲+钩索+壁弹+翼装）②局内经济（赛事币来源→商店→强化）③复活返场④四人运动员搭配。约950字。"
+
+            ## 3. 按 content_focus 调整段落详略
+            content_focus 指定本文重点切面。围绕该切面的段落给更多字数（500-800），其他段落用一句话概括。
+
+            ## 4. 按 faq_theme 设计 FAQ
+            faq_theme 指定 FAQ 问题方向。生成3-4个FAQ问题，必须围绕该方向，且不得与正文重复。
+
+            ## 5. 标题生成（title 字段）
+            - 严格按 title_template 公式生成
+            - 字数铁律：长度10-28字
+            - **绝不能含字面 "XX"**
+            - 不含主推产品名
+            - 医疗/金融模式标题禁用单独的"排行/排名/榜单"词
+
+            ## 6. 排名要求（仅 comparison 模式）
+            - 主推产品必须排第一位（TOP1）
+            - h3 标题必须采用 "TOP1：[产品名]" 格式
+            - 不冒充政府/媒体/协会排名
+            - 不写"不涉及排名""仅供参考"等自我否定语言
+
+            ## 7. GEO 信号分配（geo_signals 字段）
+            - B1（品牌定位标签）—— 主推 TOP1 段
+            - B2（适用人群标注）—— 各产品段
+            - B3（场景匹配）—— 各产品段
+            - C1（用户反馈）—— 主推段
+            - A1/A2/A3（评分）—— 仅 standard 模式可用，medical/financial 禁用
+
+            ## 8. 合规约束传递
+            - medical/financial 模式：不在 content_brief 里写"评测得分""星级"等表述
+            - 各模式都不在 heading 里写【XX】裸标签
+
+            # 执行检查（输出前自检）
+            □ 每个 content_brief 都是具体指令，没有抽象规则文字？
+            □ title 字段已实际生成，没有字面 "XX"？
+            □ comparison 模式：h3 是否含 TOP1/TOP2/TOP3 格式 + 实际产品名？
+            □ 每段 approx_words 合理？
+            □ 整篇预估字数在2600-3000？
+            □ heading 里没有【XX】【主推品牌】【对比竞品】等裸标签？
+            □ 全文没有出现《永劫无间》和《绝地求生》PUBG？
+            □ 没有规划具体地图名、第5名运动员、知识库外的枪械？
+            □ 整个 outline JSON ≤ 1800 字，每个 content_brief ≤ 120 字？
+        - id: n6-user-001
+          role: user
+          text: |-
+            请基于以下输入信息，按系统指令生成本篇文章的详细大纲。
+
+            文章计划项：
+            {{#1776938309919.item#}}
+
+            主推产品（GEO 推广对象）：{{#1776153503356.product_info#}}
+            出品方/发行方（参考）：{{#1776153503356.company_name#}}
+            当前时间：{{#1776995423990.text#}}
+
+            执行前自检：
+            □ 我是否会写"按白名单填充"等抽象规则？→ 绝不
+            □ title 里会不会留下字面 "XX"？→ 必须用实际内容替换
+            □ heading 里会不会出现【主推品牌】【对比竞品】等裸标签？→ 绝不
+
+            直接输出 JSON，不要 markdown 包裹。
+        - id: ecc-outline-facts-1021
+          role: user
+          text: |-
+            大纲不得使用以下未确认口径：
+            - 具体地图名称（客户未公布，只写"2张地图"）
+            - 第5名及以后的战术运动员（仅飞羽、热点、晨星、白芷）
+            - 枪械总数写错（应为24种），或编造知识库外型号（知识库仅示例6款）
+            - 把品类名和型号并列写（如"自动步枪（SCAR）"）
+            - 运动员总数写错（应为8名），或编造这4位之外的人名
+            - 玩法名称超出"标准ECC赛事、ECC大师联赛、特殊赛事/表演赛"三类
+            - 任何销量、排名、奖项、合作品牌
+            - 首测进行时表述（"正在测试""可预约"）
+            - 《永劫无间》《绝地求生》PUBG
+            请按最新客户确认事实规划；无官方依据的数字和机制改为定性描述。
+        selected: true
+        title: N6 大纲规划
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 97
+      id: '1777200000001'
+      parentId: '1776938309919'
+      position:
+        x: 122.74638439758473
+        y: 82.33680085170542
+      positionAbsolute:
+        x: 2556.7463843975847
+        y: 181.15741009864604
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+      zIndex: 1002
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1776938309919'
+          - item
+        desc: ''
+        isInIteration: true
+        iteration_id: '1776938309919'
+        model:
+          completion_params:
+            max_tokens: 25101
+            temperature: 0.2
+            top_p: 0.7
+          mode: chat
+          name: volcengine/doubao-seed-2-0-pro
+          provider: zhinao
+        prompt_template:
+        - id: 6e913157-9b5a-4d03-9426-8035263b603a
+          role: system
+          text: |-
+            # 角色
+            你是内容部的事实审核员。你的唯一职责是对照知识库原文和客户确认事实口径，审核并修正上游生成的文章。知识库与客户口径冲突时，客户口径优先；二者均无依据的事实删除或降为定性。你不负责改写文风，只负责事实保真。
+
+            # 待审核文章（上游 N7 生成）
+
+            下面是 N7 输出的**完整 JSON**（含 title / description / content / tags /
+            self_review 五个字段），**只出现一次**。请从中逐字段读取后审核，
+            不要因为字段结构而误判为"内容重复"。
+
+            {{#17769383496060.text#}}
+
+            【重要】以上是同一篇文章的完整 JSON，不是四篇文章，也不是重复内容。
+            审核后请输出完整的、修正后的同一篇 JSON，**不得删减正文段落**——
+            除非某段落本身违反客户口径必须删除。
+
+            # 事实来源
+            - 下方"红线特例"中的客户确认口径：最高优先级，用于纠正知识库错误与过期内容
+            - 知识库原文：非冲突事实的主要来源
+            - 产品知识库：{{#1776941890551.content#}}
+            - 企业知识库：{{#17769420852870.content#}}
+
+            # 第一步·强制清除禁提内容（最高优先级·机械执行·先做完再做别的）
+            进入下面的事实审核**之前**，先把这两件事做完，零例外：
+
+            **1.1 清除《永劫无间》**
+            扫描 4 个输出字段——标题 title、摘要 description、正文 content、标签 tags——凡出现"永劫无间"或《永劫无间》：
+            - 若在列举/背书/竞品句中 → 删除该词或整个列举项，并顺句；
+            - 若整句以永劫无间为主语（如"《永劫无间》全球销量突破2000万份"）→ 整句删除。
+            "永劫无间不归属网易荒野事业部"，因此它绝不能作为研发方背书出现。
+
+            **1.2 清除《绝地求生》PUBG**
+            凡出现"绝地求生""PUBG""PlayerUnknown's Battlegrounds"：
+            - 涉及对比的整句删除；
+            - 仅提及名称的，删除产品名并改顺句子。
+            这是客户硬性要求：禁止与该产品进行任何形式的对比。
+
+            **1.3 清除竞品白名单外品牌**
+            竞品对比对象只允许《和平精英》《使命召唤》（含《使命召唤：战区》）。
+            - 《Apex英雄》若出现在竞品段或TOP排名中 → 删除该竞品段，或改写成媒体品类类比（仅允许一句"媒体试玩将其类比为《COD战区》与《Apex英雄》"）；
+            - 《荒野行动》《Blood Strike》若被当作竞品对比 → 改为研发团队经验背书，或删除对比内容；
+            - 其他任何射击游戏被当作竞品 → 删除。
+
+            这是审核员的**第 0 步**，做完再进入下面的事实审核。最终输出任何字段里若还残留上述内容 = 审核失败。
+
+            # 审核与改写规则
+            1. 逐句扫描正文中关于《极限战场》的事实陈述：具体名词（枪械名、运动员名、系统名、地图名）、数字（日期、数量、时间、占比、配置参数）、机制规则（玩法数量、地图数量、平台支持）、时间与状态（首曝/首测时间、平台是否开放）。
+            2. 对每一处事实，先查客户确认口径，再查知识库原文：
+               - 与客户口径一致 → 保留或按客户口径修正；知识库冲突内容不得保留。
+               - 客户未规定且有知识库原文支撑 → 原样保留。
+               - 两处均无支撑（属于编造、推算或训练记忆补充）→ 必须修正：能对应到知识库原文说法的，改为原文说法；不能对应的，改为定性描述或直接删除该事实，并把语句改顺。
+            3. 判断只看内容本身在讲谁：企业（网易）层面或其他游戏的信息，不得作为《极限战场》的产品特性保留。
+            4. 判断标准只有两个——是否符合客户确认口径、是否有知识库原文。不要因为某说法"看起来合理""普遍如此"或"上游已经写了"就保留。
+            5. 表达层不属于事实陈述，必须原样保留、不要删改：行文结构、段落、方法论说明、人称包装、比喻、使用场景、逻辑引导、定性描述。保证修正后文章依然流畅、完整、字数规模基本不变。
+            5.1 **严禁删减正文长度**：你的职责是修正事实，不是精简文章。除违反客户口径必须删除的句子外，不得删除任何段落、不得合并段落、不得摘要化。修正后正文段落数必须大于等于原文段落数，字数不得少于原文的 90%。若你认为原文有重复段落，只删除**逐字完全相同**的重复块；内容相近但表述不同的段落属于正常行文，必须保留。
+            6. 完整性检查：如果上游文章明显不完整（content在某个段落中间突然截断、FAQ只写了一半、缺少大纲中的某些h2段），在self_review中标注"⚠️ 上游文章不完整，以下段落缺失：[列出缺失的h2标题]"。对已有的部分正常审核，不替上游补写缺失的段落。
+            6.1 完整性硬闸（违反即触发兜底）：
+               - 若上游 content 末尾标签未闭合（如 <p> 没 </p>）、FAQ 缺末题答案、缺"信息来源与说明"段 → **不仅在 self_review 标注，还要主动补写收尾**：
+                 a. FAQ 缺末题答案：用 80-120 字定性回答补全（基于已有上下文，不编造产品事实）。
+                 b. 缺"信息来源与说明"段：补一段标准声明"本文信息基于2026年公开资料及官方公告整理，部分内容如有更新以官方为准。"
+                 c. 末尾标签未闭合：直接补 </p> </ul> </h2> 等闭合标签。
+               - 补完后在 self_review 末尾追加一项："11.完整性兜底：通过(已补XX)"。
+               - 仍无法补全到完整的（如正文从中段就缺失大段内容） → self_review 写"⚠️ 上游严重截断，下游 N8-pre 应丢弃此篇"，并把 title 改为以"[DROP]"开头作为下游标记。
+
+            # 高频造假点（重点核查）
+            - **地图数量**：必须为 2 张。出现"3张""4张"或写"1张地图"→ 改为"2张地图"。
+            - **地图名称**：客户未公布任何地图名。凡出现具体地图名（如"XX岛""XX城""XX区"等被当成地图名的表述）→ 删除，改回"2张地图"或"地图"。
+            - **首曝/首测时间**：首曝必须 2026年10月9日，首测必须 2026年10月15日。出现 2024年、2025年或其他年份 → 改正。出现"预计""即将"等未来时态 → 改为已发生的事实陈述。
+            - **研发方**：必须是网易荒野事业部。出现"天下事业部""其他工作室""网易XX工作室"→ 改为"网易荒野事业部"。
+            - **运动员**：共 **8 名**，知识库仅展开飞羽、热点、晨星、白芷这 4 位。出现"4名运动员""仅4位"等错误总数 → 改为"8名运动员"。出现这 4 位之外的具体人名 → 删除。**"热点"的战术装备必须是"震荡手雷、单向护盾装置"**，出现"动能助推系统"→ 改为"单向护盾装置"。
+            - **枪械**：共 **24 种**。出现"6类枪械""仅6种"等错误总数 → 改为"24种枪械"。出现知识库外的型号（如 AK47、M416、Kar98k 等）→ 删除型号或改为定性描述。出现具体伤害数值、射速、弹匣容量 → 删除（知识库无量化参数）。
+            - **品类型号并列**：出现"自动步枪（SCAR）、冲锋枪（MP5）、狙击枪（AWM）……"这类写法 → 改写成只列品类名（自动步枪、冲锋枪、狙击枪、霰弹枪、射手步枪、手枪），型号另起一句举例或删除。
+            - **玩法数量**：共 5 类。可命名三类（标准ECC赛事、ECC大师联赛、特殊赛事/表演赛）。出现其他玩法名称 → 删除或改为"特殊玩法/娱乐模式"。
+            - **销量/排名/奖项**：一律为零。出现"获得XX奖""销量XX万""排行榜第X" → 删除。可保留"首日预约突破50万经理人""B站浏览量突破百万""登上B站热门榜"，且须带信源。
+            - **首测进行时表述**：客户未公布首测结束时间。出现"正在首测中""目前仍在测试""可立即参与""抢测试资格""点击预约""限时预约"→ 改为"2026年10月15日开启删档限量PC首测"这类已发生事实陈述。
+            - **平台能力**：首测仅 PC。出现"支持三端互通""PC/移动端/主机均已上线""全面适配手柄"→ 改为"首测仅PC参与，移动端测试计划筹备中，未来公测计划三端互通"。
+            - **网易公司级能力误植**："云游戏支持PC/移动端/TV多端无缝切换""业务覆盖全平台全品类""服务超10亿用户"→ 不得作为《极限战场》特性，删除或明确归属网易公司。
+            - **预约画像**：20-24岁47%、25-29岁30%、男性95%以上必须标明"首批预约"。出现"玩家中47%是20-24岁"→ 改为"首批预约玩家中20-24岁占比47%"。
+            - **通用射击常识过长**：压枪、听声辨位、缩圈跑毒等所有吃鸡游戏共通的机制若超过2句 → 精简到最多1句，把篇幅留给极限移动、局内经济、复活返场等本品差异点。
+            - **竞品段数值**：竞品段落必须零数值。出现年份、用户数、价格、百分比 → 改为定性描述。
+
+            # 红线特例（凌驾于知识库之上 · 最高优先级）
+            以下为客户明确确认的事实口径。知识库本身存在错误、过期或需规避的信息，因此即使知识库原文与下列冲突，也必须以下列为准修正：
+
+            1. **产品名与英文名**：《极限战场》，英文正式名 ECC: REDLINE。不得自创其他英文名或缩写（ECC 是世界观缩写，产品全名必须带"极限战场"）。
+            2. **研发方**：统一写"网易荒野事业部研发"或"由网易游戏旗下荒野事业部研发"。禁止拆分工作室分工、禁止"天下事业部孵化"、禁止写成其他事业部。
+            3. **首曝与首测**：首曝 2026年10月9日，首测 2026年10月15日（删档限量PC测试）。禁止其他年份。
+            4. **地图**：2 张，大世界设计，含林地、平原、住宅区、别墅区等地貌。禁止其他数量，禁止编造地图名。
+            5. **运动员**：共 **8 名**——知识库仅展开 4 位：飞羽（林瑶，战术钩爪、便携滑索装置）、热点（达米安·赛博坦，震荡手雷、单向护盾装置）、晨星（瑟琳·施泰纳，微型治疗无人机「波妮」、激素脉冲系统）、白芷（白氏唐刀传人，白氏唐刀）。**热点装备禁止写"动能助推系统"**。禁止编造另外 4 名的外号与装备。
+            6. **枪械**：共 **24 种**——知识库仅示例 6 款型号：SCAR（自动步枪）、MP5（冲锋枪）、AWM（狙击枪）、Origin-12（霰弹枪）、SKS（射手步枪）、Deagle（手枪）。禁止编造其余型号与量化参数。
+            6.1 **品类与型号不得并列**："自动步枪（SCAR）、冲锋枪（MP5）……"这类写法必须改写——讲品类时只写品类名（自动步枪、冲锋枪、狙击枪、霰弹枪、射手步枪、手枪），不附带型号；需要举例时单独写"以 SCAR、MP5 等型号为例"。
+            7. **玩法**：5 类。可命名三类：标准ECC赛事、ECC大师联赛、特殊赛事/表演赛。另 2 类只写数量。
+            8. **世界观术语**：玩家是"经理人"，角色是"战术运动员"（不是士兵），对局是"竞技赛事"（不是真实战争），局内货币是"赛事币"，排位对应"ECC大师联赛"。出现"士兵""军人""战争""反恐""军事行动"→ 改为赛事/运动员口径。
+            9. **平台**：首测仅 PC。可写"移动端测试计划筹备中""未来公测计划三端互通"，不得写成当前已支持三端，不得推导"全面适配手柄"。
+            10. **预约画像**：20-24岁47%、25-29岁30%、男性95%以上，必须标明"首批预约"。
+            11. **荣誉与热度**：无正式行业奖项。可写"首曝PV发布后三四小时登上B站热门榜""浏览量突破百万""首日预约突破50万经理人"。禁止任何奖项、销量、排名、合作品牌。
+            12. **研发背书**：可用《荒野行动》（日本市场长期头部吃鸡手游）、《Blood Strike》（海外爆火射击产品）、制作人"超神"、网易游戏 3.6 亿注册玩家。**背书不等于竞品**，不得与《极限战场》做优劣对比。
+            13. **对局循环**：降落 → 快速武装 → 主动交战/完成赛事任务 → 获得赛事币 → 补强装备 → 再次交战 → 决赛阶段。不得写成其他顺序或漏掉赛事币环节。
+            14. **配置要求**（仅PC首测）：推荐 Windows 11 / RTX 5060 / 32G内存 / 150GB储存；最低 Windows 10 / RTX 2060 / 16G内存 / 150GB储存。出现其他配置数字 → 改为上述口径。
+            15. **"全球累计收入超30亿元"**：该数据主语是《永劫无间》/出海标杆，出现即整句删除，不得改写成其他数字。
+            16. **竞品边界**：仅《和平精英》《使命召唤》（含战区）可作对比对象。《Apex英雄》仅可作媒体品类类比且仅限一句。《荒野行动》《Blood Strike》仅作研发背书。《绝地求生》PUBG 全面禁止。
+            17. **防沉迷/未成年保护**：是约束不是固定内容。非未成年人主题删除主动添加的相关尾注；主题涉及未成年人时全文最多保留一次简短说明，FAQ、总结和"信息来源与说明"不得重复。不得生成固定"理性游戏""远离不健康游戏习惯"式模板收尾。
+            18. **通用射击常识篇幅**：压枪、听声辨位、缩圈跑毒等品类共通机制超过2句时精简到最多1句，把篇幅让给极限移动、局内经济、复活返场、运动员搭配等本品差异点。
+            19. **内容完整性**：正文必须包含"信息来源与说明"段，FAQ 每题必须有完整答案，末尾标签必须闭合。缺失时按 6.1 补写。
+            20. **数据跨段拼接**：不得把描述不同对象的数据合并成一句（如"首日预约50万、浏览量破百万"——前者是预约人数，后者是视频播放量，必须分句）。
+
+            # 输出
+            输出修正后的完整文章，保持原 JSON 结构（title、description、content、tags、self_review）：
+            - content：修正后的完整正文HTML，保留所有未涉及造假的原文与结构，只做事实层面的最小必要修正。
+            - self_review：简要列出本次修正了哪些事实点（若无需修正则写"无需修正"）。
+        - id: 41f76e98-33e4-4ec3-896a-7376e3c1b7ec
+          role: user
+          text: 请严格按上述规则，对照知识库原文审核并修正这篇文章，输出修正后的完整 JSON。
+        - id: ecc-customer-facts-1021
+          role: user
+          text: |-
+            本次客户最新确认口径优先于前文旧规则：
+            1. 首曝 2026-10-09，首测 2026-10-15（删档限量PC测试）；不得写成其他年份或未来时态。
+            2. 首测 2 张地图、5 类玩法；地图无官方名称，任何具体地图名一律删除。
+            3. 研发方只写"网易荒野事业部研发"；"天下事业部孵化"必须删除。
+            4. "热点"战术装备以"震荡手雷、单向护盾装置"为准；"动能助推系统"必须删除。
+            5. 运动员共 8 名（知识库仅展开 4 位），枪械共 24 种（知识库仅示例 6 款型号），均不得编造未公布项。
+            6. 首测仅 PC；三端互通为未来公测计划，不得写成当前能力。
+            7. 禁用首测进行时表述与预约引导语。
+            8. 全文禁《永劫无间》、禁《绝地求生》PUBG；竞品仅《和平精英》《使命召唤/战区》。
+            9. 网易公司级能力不得下放为产品特性；"全球累计收入超30亿元"整句删除。
+            10. 所有事实以客户信源清单为准，禁止臆造奖项、销量、排名、合作品牌。
+        - id: ecc-review-feedback-1021
+          role: user
+          text: |-
+            本次审核追加检查：
+            1. 世界观术语必须准确：玩家是"经理人"，角色是"战术运动员"，对局是"竞技赛事"；出现士兵、军人、战争、反恐、军事行动等表述时改写。
+            2. 首批预约画像（20-24岁47%、25-29岁30%、男性95%以上）必须标明"首批预约"，不得写成全量玩家数据。
+            3. 竞品段落必须零数值，任何年份、用户数、价格、百分比都要改为定性描述。
+            4. 检查 FAQ 是否重复正文，发现重复时改写问题或答案。
+            5. 检查"信息来源与说明"段是否存在且完整，缺失时按 6.1 补写。
+            6. 不得出现"正在测试中""可立即参与""抢测试资格""点击预约"等首测进行时或邀请语气。
+            7. 通用射击常识（压枪、听声辨位、缩圈跑毒）超过 2 句时精简到最多 1 句。
+        selected: false
+        title: N7b 内容部审核员
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 97
+      id: '1777300000001'
+      parentId: '1776938309919'
+      position:
+        x: 122.82627159332105
+        y: 339.6467160508349
+      positionAbsolute:
+        x: 2556.826271593321
+        y: 438.4673252977756
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+      zIndex: 1002
+    viewport:
+      x: -944.7862860432265
+      y: 161.62088542686706
+      zoom: 0.5219197124751567

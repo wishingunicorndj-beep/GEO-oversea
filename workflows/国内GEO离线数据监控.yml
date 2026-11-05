@@ -217,18 +217,6 @@ workflow:
       zIndex: 0
     - data:
         isInIteration: false
-        sourceType: code
-        targetType: end
-      id: e07
-      selected: false
-      source: '17774728161280'
-      sourceHandle: source
-      target: '1792051864331'
-      targetHandle: target
-      type: custom
-      zIndex: 0
-    - data:
-        isInIteration: false
         sourceType: if-else
         targetType: code
       id: 1766746558987-false-1766746641582-target
@@ -315,7 +303,344 @@ workflow:
       targetHandle: target
       type: custom
       zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: if-else
+      id: e4c-01
+      selected: false
+      source: '17774728161280'
+      sourceHandle: source
+      target: '1792200000001'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: if-else
+        targetType: llm
+      id: e4c-02
+      selected: false
+      source: '1792200000001'
+      sourceHandle: 'true'
+      target: '1792200000002'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: code
+      id: e4c-03
+      selected: false
+      source: '1792200000002'
+      sourceHandle: source
+      target: '1792200000003'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: if-else
+        targetType: code
+      id: e4c-04
+      selected: false
+      source: '1792200000001'
+      sourceHandle: 'false'
+      target: '1792200000004'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: variable-aggregator
+      id: e4c-05
+      selected: false
+      source: '1792200000003'
+      sourceHandle: source
+      target: '1792200000005'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: variable-aggregator
+      id: e4c-06
+      selected: false
+      source: '1792200000004'
+      sourceHandle: source
+      target: '1792200000005'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: variable-aggregator
+        targetType: code
+      id: e4c-07
+      selected: false
+      source: '1792200000005'
+      sourceHandle: source
+      target: '1792051864331'
+      targetHandle: target
+      type: custom
+      zIndex: 0
     nodes:
+    - height: 228
+      id: '1792200000001'
+      position:
+        x: 2158
+        y: 1100
+      positionAbsolute:
+        x: 2158
+        y: 1100
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      data:
+        selected: false
+        title: 4c-1.维沃正面判定分流
+        type: if-else
+        desc: 仅 company_name 为维沃移动通信有限公司时执行正面判定；其他客户返回空值，不参与正面率统计。
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: is
+            id: ad6ba308-377a-4928-aa24-bc182c642bc9
+            value: 维沃移动通信有限公司
+            varType: string
+            variable_selector:
+            - '1766746558986'
+            - company_name
+          id: 'true'
+          logical_operator: and
+    - height: 158
+      id: '1792200000002'
+      position:
+        x: 2462
+        y: 1100
+      positionAbsolute:
+        x: 2462
+        y: 1100
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      data:
+        selected: false
+        title: 4c-2.本品推荐倾向判定LLM
+        type: llm
+        desc: 按 query 形态判定本品是否更被推荐：榜单型看是否进入推荐清单，对比/单项型看最终结论倾向；只在能给可验证证据句时才判 1
+        context:
+          enabled: false
+          variable_selector: []
+        model:
+          completion_params:
+            enable_thinking: false
+            max_tokens: 64000
+            temperature: 0
+            top_p: 1
+          mode: chat
+          name: 360zhinao/360zhinao-turbo-llm-geo
+          provider: zhinao
+        prompt_template:
+        - id: 25b9e6ca-a095-464b-9d7a-2fd5cfccb2f5
+          role: system
+          text: '你是GEO品牌对比正面判定专家。本节点只判定一件事：对本次 query，正文最终是否更推荐目标品牌（本品）。上游已确定实体资格、粒度和推荐结构，本节点不得新增或修改实体，也不做情感正负分析。
+      
+      
+            【一、判定对象】
+      
+            只判目标品牌，即输入中的目标机型。vivo、维沃、公司全称、母品牌以及兄弟机型都不能替代目标机型。正文实际推荐的是兄弟机型（例如目标为 Neo12 而正文推荐 Neo11）时，不得算作对本品推荐，判 0。
+      
+      
+            【二、query 类型与判定方式】
+      
+            按 query 形式选择一种判定方式，不要混用。
+      
+      
+            A 榜单/推荐型（如「XX排行榜」「XX手机推荐」「XX怎么选」）
+      
+            正文给出可选清单。本品作为该 query 对应的推荐项出现（编号项、表格行、分段推荐、明确可选方案）即判 1，规则 R1。本品只出现在竞品描述、比较句、来源标题或背景举例中，判 0。
+      
+      
+            B 对比型（如「A 和 B 哪个好」「A 对比 B 哪个值得买」「A 和同价位手机对比」）
+      
+            以最终结论的倾向为准。明确倾向本品判 1，规则 R2；明确倾向竞品判 0，并把竞品获胜句放入 counter。结论为「看需求」「各有所长」「取决于用途」「条件式分流」（你是什么用户就选哪个）判 0。
+      
+            竞品是开放集合（如「同价位手机」）时，不要求赢过正文每一款机型，只以最终结论是否倾向本品为准；各方各赢一部分而无综合结论判 0。
+      
+      
+            C 单项型（如「A 值不值得买」）
+      
+            最终结论明确给出「值得买」「推荐购买」判 1，规则 R3；含保留意见、劝退，或只罗列参数未表态判 0。
+      
+      
+            D 信息不足（任何类型都适用）
+      
+            正文声明机型未发布、处于爆料推测阶段、无官方信息，或建议等发布后再定，判 0。此时理由必须写明信息不足，不得因出现条件式推荐而判 1。
+      
+      
+            【三、硬性约束】
+      
+            1. 判 1 必须给出至少一条证据句 id，且该句原文直接体现该判定（推荐本品、本品胜出、进入推荐清单）。给不出证据就判 0。
+      
+            2. 推荐或胜出的宾语必须是本品。「本品更贵但更推荐竞品」不得判本品正面。
+      
+            3. 证据句不得来自来源区（搜索结果标题、参考链接标题）以及「相关视频」及其后内容。
+      
+            4. 同一句不得同时作为正面证据和反向证据。
+      
+            5. 条件式分流、并列推荐、双方各有所长，一律判 0，不因本品出现在其中而判 1。
+      
+      
+            【四、输出】
+      
+            只输出严格 JSON，不要 Markdown、代码围栏或解释：
+      
+            {"positive":1,"rule":"R2","reason":"不超过80字，说明命中的判定依据","evidence":["S0042"],"counter":[]}
+      
+            判 0 时：{"positive":0,"rule":"","reason":"不超过80字，说明为何不正面","evidence":[],"counter":["S0051"]}
+      
+            evidence 与 counter 只能填输入目录中真实存在的 sentence_id。'
+        - id: 52258dd7-959a-4c73-b8e1-646207c40af5
+          role: user
+          text: 'query：{{#1766746641582.query#}}
+      
+      
+            目标品牌：{{#1766746558986.brand_name#}}
+      
+      
+            品牌别名：{{#1766746641582.brand_aliases#}}
+      
+      
+            已校验目标实体：{{#1000000000002.llm_target_inventory#}}
+      
+      
+            已校验竞品：{{#1000000000002.llm_competitor_inventory#}}
+      
+      
+            完整实体表：{{#1000000000002.entity_inventory#}}
+      
+      
+            紧凑句子目录：{{#1766746641582.llm_sentence_catalog#}}
+      
+      
+            先判断 query 属于榜单型、对比型还是单项型，再按对应口径判定本品是否更被推荐；信息不足时判 0。输出前检查：判定对象是本品而非兄弟机型、证据句真实存在、未把条件式分流或未发布声明当成正向。'
+        variables: []
+        vision:
+          enabled: false
+    - height: 114
+      id: '1792200000003'
+      position:
+        x: 2766
+        y: 1100
+      positionAbsolute:
+        x: 2766
+        y: 1100
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      data:
+        selected: false
+        title: 4c-3.正面判定校验与证据回填（代码）
+        type: code
+        code: "import json\nimport re\nfrom typing import Any\n\n\ndef extract_json(v: Any):\n    t = re.sub(r\"```(?:json)?|```\", \"\", str(v or \"\"), flags=re.I).strip()\n    s = t.find(\"{\")\n    if s < 0:\n        return {}\n    stack = []\n    q = None\n    esc = False\n    for i in range(s, len(t)):\n        c = t[i]\n        if q:\n            if esc:\n                esc = False\n            elif c == \"\\\\\":\n                esc = True\n            elif c == q:\n                q = None\n            continue\n        if c in ('\"', \"'\"):\n            q = c\n        elif c in \"{[\":\n            stack.append(c)\n        elif c in \"}]\":\n            if not stack:\n                return {}\n            stack.pop()\n            if not stack:\n                try:\n                    return json.loads(t[s:i + 1])\n                except Exception:\n                    return {}\n    return {}\n\n\ndef parse_list(v: Any):\n    if isinstance(v, list):\n        return v\n    if not isinstance(v, str):\n        return []\n    try:\n        parsed = json.loads(v or \"[]\")\n    except Exception:\n        return []\n    return parsed if isinstance(parsed, list) else []\n\n\ndef norm(v: Any) -> str:\n    return re.sub(r\"[^0-9a-z\\u4e00-\\u9fff]+\", \"\", str(v or \"\").lower())\n\n\ndef contains(a: str, t: str) -> bool:\n    a = str(a or \"\").strip()\n    t = str(t or \"\")\n    if not a:\n        return False\n    if re.fullmatch(r\"[A-Za-z0-9 ._+&-]+\", a):\n        return re.search(r\"(?<![A-Za-z0-9])\" + re.escape(a) + r\"(?![A-Za-z0-9])\", t, flags=re.I) is not None\n    return norm(a) in norm(t)\n\n\ndef truthy(v: Any) -> bool:\n    if isinstance(v, bool):\n        return v\n    if isinstance(v, (int, float)):\n        return v != 0\n    return str(v or \"\").strip().lower() in {\"true\", \"1\", \"yes\", \"是\"}\n\n\ndef explicit_position(item: dict) -> int:\n    line = str(item.get(\"text\") or \"\")\n    line = re.sub(r\"\\\\([.#*+\\-])\", r\"\\1\", line)\n    prefix = re.sub(r\"^\\s{0,3}#{1,6}\\s*\", \"\", line).strip()\n    for pattern in (r\"^(?:Top|No\\.?)[ \\t]*([1-9]\\d*)\\b\", r\"^第[ \\t]*([1-9]\\d*)[ \\t]*(?:名|位)\", r\"^([1-9]\\d*)[ \\t]*[.、)）:：]\"):\n        m = re.search(pattern, prefix, flags=re.I)\n        if m:\n            return int(m.group(1))\n    circled = \"①②③④⑤⑥⑦⑧⑨⑩\"\n    if prefix and prefix[0] in circled:\n        return circled.index(prefix[0]) + 1\n    return 0\n\n\ndef source_region(smap: dict, order: dict) -> set:\n    \"\"\"排除搜索结果标题区与「相关视频」及其后内容；这些区域不能作为推荐证据。\"\"\"\n    out = set()\n    ref_count = 0\n    ref_intro = -1\n    for sid, item in smap.items():\n        m = re.search(r\"搜索.{0,30}参考\\s*([1-9]\\d*)\\s*篇\", str(item.get(\"text\") or \"\"))\n        if m:\n            ref_count = int(m.group(1))\n            ref_intro = order.get(sid, -1)\n            break\n    if ref_count > 0 and ref_intro >= 0:\n        end_idx = ref_intro\n        last_candidates = [(order.get(sid, -1), sid, item) for sid, item in smap.items()\n                           if order.get(sid, -1) > ref_intro and explicit_position(item) == ref_count]\n        if last_candidates:\n            last_idx, _, last_item = min(last_candidates, key=lambda x: x[0])\n            end_idx = last_idx\n            marker_only = bool(re.fullmatch(r\"\\s*\" + str(ref_count) + r\"[.、)）:：]?\\s*\", str(last_item.get(\"text\") or \"\")))\n            if marker_only:\n                last_line = int(last_item.get(\"line_no\", 0) or 0)\n                following = [order.get(s, 99999) for s, it in smap.items()\n                             if int(it.get(\"line_no\", 0) or 0) == last_line + 1]\n                if following:\n                    end_idx = max(following)\n        out.update(sid for sid in smap if ref_intro <= order.get(sid, -1) <= end_idx)\n    video_start = min((order.get(sid, 99999) for sid, item in smap.items()\n                       if re.fullmatch(r\"\\s*相关视频\\s*\", str(item.get(\"text\") or \"\"))), default=99999)\n    if video_start < 99999:\n        out.update(sid for sid in smap if order.get(sid, 99999) >= video_start)\n    return out\n\n\ndef empty_result(positive: str = \"0\", reason: str = \"\") -> dict:\n    return {\"positive\": positive, \"positive_rule\": \"\", \"positive_reason\": reason,\n            \"positive_evidence\": [], \"counter_evidence\": []}\n\n\ndef main(llm_output: str, sentence_catalog: str, brand_aliases: str, brand_name: str,\n         llm_target_inventory: str, llm_competitor_inventory: str, entity_inventory: str) -> dict:\n    catalog = [x for x in parse_list(sentence_catalog) if isinstance(x, dict) and x.get(\"id\")]\n    smap = {str(x.get(\"id\")): x for x in catalog}\n    order = {sid: i for i, sid in enumerate(smap)}\n    target_rows = [x for x in parse_list(llm_target_inventory) if isinstance(x, dict)]\n    # 上游未确认任何同粒度目标实体，等价于未提及：方向给 0，其余字段留空。\n    if not target_rows:\n        return {\"positive_result\": empty_result(\"0\", \"\")}\n\n    target_names = []\n    for row in target_rows:\n        for key in (\"name\", \"surface\", \"canonical_name\", \"parent_brand\"):\n            value = str(row.get(key) or \"\").strip()\n            if value:\n                target_names.append(value)\n    for row in parse_list(brand_aliases):\n        if not isinstance(row, dict):\n            continue\n        alias = str(row.get(\"alias\") or \"\").strip()\n        try:\n            confidence = float(row.get(\"confidence\", 0) or 0)\n        except Exception:\n            confidence = 0.0\n        if alias and confidence >= 0.90:\n            target_names.append(alias)\n    if str(brand_name or \"\").strip():\n        target_names.append(str(brand_name).strip())\n    target_names = [x for x in dict.fromkeys(target_names) if len(norm(x)) >= 2]\n    if not target_names:\n        return {\"positive_result\": empty_result(\"0\", \"\")}\n\n    competitor_names = []\n    for source in (llm_competitor_inventory, entity_inventory):\n        for row in parse_list(source):\n            if not isinstance(row, dict):\n                continue\n            if row.get(\"is_target_entity\"):\n                continue\n            for key in (\"name\", \"surface\", \"canonical_name\", \"parent_brand\"):\n                value = str(row.get(key) or \"\").strip()\n                if value and not any(contains(t, value) or contains(value, t) for t in target_names):\n                    competitor_names.append(value)\n    competitor_names = [x for x in dict.fromkeys(competitor_names) if len(norm(x)) >= 2]\n\n    blocked = source_region(smap, order)\n    structural_blocks = {\"heading\", \"table_row\", \"list_item\"}\n    data = extract_json(llm_output)\n    positive = truthy(data.get(\"positive\"))\n    rule = str(data.get(\"rule\") or \"\").strip().upper()\n    if rule not in {\"R1\", \"R2\", \"R3\"}:\n        rule = \"\"\n    reason = re.sub(r\"\\s+\", \" \", str(data.get(\"reason\") or \"\")).strip()[:240]\n\n    def anchor_owner(sid):\n        \"\"\"取该句最近的同级结构锚点（列表项/表格行/标题）原文。\"\"\"\n        idx = order.get(sid, -1)\n        if idx < 0:\n            return \"\"\n        for i in range(idx - 1, -1, -1):\n            if str(catalog[i].get(\"block_type\") or \"\") in structural_blocks:\n                return str(catalog[i].get(\"text\") or \"\")\n        return \"\"\n\n    def same_scope(sid, names):\n        \"\"\"证据句要么自身点名，要么紧跟同名结构锚点（如「2. iQOO Neo12」后的卖点描述）。\"\"\"\n        unit = str(smap[sid].get(\"text\") or \"\")\n        if any(contains(n, unit) for n in names):\n            return True\n        anchor = anchor_owner(sid)\n        if not anchor or not any(contains(n, anchor) for n in names):\n            return False\n        # 描述句自身点名了其他实体时，不得作为本品证据。\n        if any(contains(n, unit) for n in competitor_names):\n            return False\n        return True\n\n    def valid_ids(values, names):\n        out = []\n        for value in values if isinstance(values, list) else []:\n            sid = str(value or \"\").strip()\n            if sid not in smap or sid in blocked or sid in out:\n                continue\n            if names and not same_scope(sid, names):\n                continue\n            out.append(sid)\n        return out\n\n    evidence = valid_ids(data.get(\"evidence\"), target_names)\n    counter = valid_ids(data.get(\"counter\"), competitor_names)\n    counter = [sid for sid in counter if sid not in evidence]\n\n    # 判 1 必须落在本品证据上；拿不出可验证证据的一律回落为 0。\n    if positive and not evidence:\n        positive = False\n        rule = \"\"\n        if not reason:\n            reason = \"模型判定为正面但未给出可验证的本品证据句，按 0 处理\"\n    if not positive:\n        evidence = []\n        if not reason:\n            reason = \"未形成对本品的选择倾向\"\n\n    result = {\"positive\": \"1\" if positive else \"0\", \"positive_rule\": rule,\n              \"positive_reason\": reason, \"positive_evidence\": evidence,\n              \"counter_evidence\": counter}\n    return {\"positive_result\": result}\n"
+        code_language: python3
+        desc: 校验证据句存在性与来源区排除；判 1 无合法本品证据时回落为 0；未提及返回 0 并清空其余字段
+        outputs:
+          positive_result:
+            children: null
+            type: object
+        variables:
+        - value_selector:
+          - '1792200000002'
+          - text
+          variable: llm_output
+        - value_selector:
+          - '1766746641582'
+          - sentence_catalog
+          variable: sentence_catalog
+        - value_selector:
+          - '1766746641582'
+          - brand_aliases
+          variable: brand_aliases
+        - value_selector:
+          - '1766746558986'
+          - brand_name
+          variable: brand_name
+        - value_selector:
+          - '1000000000002'
+          - llm_target_inventory
+          variable: llm_target_inventory
+        - value_selector:
+          - '1000000000002'
+          - llm_competitor_inventory
+          variable: llm_competitor_inventory
+        - value_selector:
+          - '1000000000002'
+          - entity_inventory
+          variable: entity_inventory
+    - height: 114
+      id: '1792200000004'
+      position:
+        x: 2462
+        y: 1340
+      positionAbsolute:
+        x: 2462
+        y: 1340
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      data:
+        selected: false
+        title: 4c-0.非维沃客户空值（代码）
+        type: code
+        code: "from typing import Any\n\n\ndef main(company_name: Any) -> dict:\n    \"\"\"非维沃客户不参与正面率统计，字段保留但返回空值，避免下游缺 key。\"\"\"\n    return {\n        \"positive_result\": {\n            \"positive\": \"\",\n            \"positive_rule\": \"\",\n            \"positive_reason\": \"\",\n            \"positive_evidence\": [],\n            \"counter_evidence\": [],\n        }\n    }\n"
+        code_language: python3
+        desc: 其他客户不参与正面率统计：5 个字段保留但返回空值，保证下游字段齐全
+        outputs:
+          positive_result:
+            children: null
+            type: object
+        variables:
+        - value_selector:
+          - '1766746558986'
+          - company_name
+          variable: company_name
+    - height: 199
+      id: '1792200000005'
+      position:
+        x: 3070
+        y: 1100
+      positionAbsolute:
+        x: 3070
+        y: 1100
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      data:
+        desc: 维沃与非维沃两条互斥路径只有一个 positive_result 可用；选择本次实际产生的结果对象。
+        output_type: object
+        selected: false
+        title: 4c-4.选择本次正面判定结果
+        type: variable-aggregator
+        variables:
+        - - '1792200000003'
+          - positive_result
+        - - '1792200000004'
+          - positive_result
     - data:
         desc: V1.12输入契约：14字段，名称与类型保持不变
         selected: false
@@ -559,254 +884,7 @@ workflow:
       type: custom
       width: 244
     - data:
-        code: "import html\nimport json\nimport re\nfrom typing import Any, Dict,\
-          \ List\n\nLEGAL_SUFFIXES = [\n    \"股份有限公司\", \"有限责任公司\", \"集团有限公司\", \"\
-          有限公司\", \"责任公司\", \"集团\", \"公司\"\n]\nINDUSTRY_SUFFIXES = [\n    \"驾驶员教考中心\"\
-          , \"驾驶员培训中心\", \"教考中心\", \"宠物食品\", \"环保设备\", \"智能设备\",\n    \"数字科技\", \"\
-          品牌设计\", \"机电设备\", \"咨询服务\", \"科技传媒\", \"网络科技\", \"信息技术\",\n    \"电子科技\"\
-          , \"通信科技\", \"给排水设备\", \"玻璃钢设备\", \"肛肠医院\", \"专科医院\", \"医院\",\n    \"电子产品商贸\"\
-          , \"电子产品贸易\", \"电子产品\", \"商贸\", \"贸易\",\n    \"科技发展\", \"驾校\", \"设计\", \"\
-          科技\", \"设备\"\n]\nREGION_PREFIXES = [\n    \"北京市\", \"上海市\", \"天津市\", \"\
-          重庆市\", \"内蒙古自治区\", \"广西壮族自治区\", \"宁夏回族自治区\",\n    \"新疆维吾尔自治区\", \"西藏自治区\"\
-          , \"北京\", \"上海\", \"天津\", \"重庆\", \"广东\", \"浙江\", \"江苏\",\n    \"山东\", \"\
-          河北\", \"河南\", \"湖北\", \"湖南\", \"江西\", \"福建\", \"四川\", \"云南\", \"贵州\", \"\
-          安徽\",\n    \"陕西\", \"山西\", \"辽宁\", \"吉林\", \"黑龙江\", \"甘肃\", \"青海\", \"海南\"\
-          , \"广西\", \"宁夏\", \"新疆\",\n    \"西藏\", \"内蒙古\", \"深圳\", \"广州\", \"杭州\",\
-          \ \"南京\", \"成都\", \"武汉\", \"南昌\", \"呼和浩特\", \"漯河\"\n]\nWEAK_ALIASES = {\"\
-          科技\", \"智能\", \"环保\", \"设备\", \"食品\", \"设计\", \"医院\", \"驾校\", \"服务\", \"\
-          公司\", \"集团\"}\nGENERIC_PARENTHETICAL = {\"中国\", \"中国大陆\", \"大陆\", \"国内\"\
-          , \"全球\", \"国际\", \"总部\", \"官方\"}\n# 明确的母品牌—产品品牌关系用于客户边界硬校验。这里只放所有权稳定、歧义低的家族名；\n\
-          # 其余长尾关系仍由全局实体LLM结合query判断，避免把普通品类词误当客户别名。\nBRAND_FAMILIES = {\n    \"苹果\"\
-          : [\"Apple\", \"iPhone\", \"iPad\", \"Mac\", \"MacBook\", \"AirPods\", \"\
-          Apple Watch\"]\n}\n\ndef visible_text(text: Any) -> str:\n    \"\"\"只移除不可见格式与URL；不改写可见文字、标点或Emoji。\"\
-          \"\"\n    value=html.unescape(str(text or \"\"))\n    value=re.sub(r\"!\\\
-          [([^\\]]*)\\]\\([^)]*\\)\",r\"\\1\",value)\n    value=re.sub(r\"\\[([^\\\
-          ]]+)\\]\\([^)]*\\)\",r\"\\1\",value)\n    value=re.sub(r\"https?://[^\\\
-          s)]+\",\"\",value)\n    value=re.sub(r\"<[^>]+>\",\"\",value)\n    value=re.sub(r\"\
-          (?m)^\\s{0,3}#{1,6}\\s*\",\"\",value)\n    value=re.sub(r\"(?m)^\\s*>\\\
-          s?\",\"\",value)\n    value=value.replace(\"```\",\"\").replace(\"**\",\"\
-          \").replace(\"__\",\"\").replace(\"`\",\"\")\n    value=re.sub(r\"\\\\([.#*+\\\
-          -])\",r\"\\1\",value)\n    return value\n\ndef catalog_text(text: Any) ->\
-          \ str:\n    \"\"\"证据目录移除图片、URL与强调符，但保留Markdown标题/编号结构供切分。\"\"\"\n    value=html.unescape(str(text\
-          \ or \"\"))\n    value=re.sub(r\"!\\[[^\\]]*\\]\\([^)]*\\)\",\"\",value)\n\
-          \    value=re.sub(r\"\\[([^\\]]+)\\]\\([^)]*\\)\",r\"\\1\",value)\n    value=re.sub(r\"\
-          https?://[^\\s)]+\",\"\",value)\n    value=re.sub(r\"<[^>]+>\",\"\",value)\n\
-          \    # answer_raw 可能把整张 Markdown 表格压成一行。保留加粗单元格边界，\n    # 供 exact_units\
-          \ 将“**需求方向** | 推荐对象 | 说明”逐行恢复；写入目录前再移除标记。\n    value=re.sub(r\"\\*\\*\\\
-          s*([^*\\n]{1,160}?)\\s*\\*\\*\",lambda m:\"\\ue000\"+m.group(1)+\"\\ue001\"\
-          ,value)\n    value=value.replace(\"```\",\"\").replace(\"**\",\"\").replace(\"\
-          __\",\"\").replace(\"`\",\"\")\n    value=re.sub(r\"\\\\([.#*+\\-])\",r\"\
-          \\1\",value)\n    return value\n\ndef char_count(text: Any) -> int:\n  \
-          \  # 统一按用户可见正文计数：空白、URL和Markdown控制符不计；可见标点、数字、Emoji均计入。\n    return len(re.sub(r\"\
-          \\s+\", \"\", visible_text(text)))\n\ndef match_text(text: Any) -> str:\n\
-          \    value = visible_text(text).replace(\"　\", \" \")\n    return re.sub(r\"\
-          \\s+\", \" \", value).strip()\n\ndef split_declared(value: Any) -> List[str]:\n\
-          \    if isinstance(value, list):\n        raw = value\n    else:\n     \
-          \   text = str(value or \"\").strip()\n        if not text:\n          \
-          \  return []\n        # 不按普通空格和斜杠拆分，保护English multi-word brand与合法名称。\n \
-          \       raw = re.split(r\"\\|\\||[、，,；;\\n]+\", text)\n    out = []\n  \
-          \  for item in raw:\n        name = re.sub(r\"\\s+\", \" \", str(item or\
-          \ \"\")).strip(\" \\t|,，;；\")\n        if name and name not in out:\n  \
-          \          out.append(name)\n    return out\n\ndef strip_once(text: str,\
-          \ suffixes: List[str]) -> str:\n    for suffix in sorted(suffixes, key=len,\
-          \ reverse=True):\n        if text.endswith(suffix) and len(text) >= len(suffix)\
-          \ + 2:\n            return text[:-len(suffix)].strip()\n    return text\n\
-          \ndef strip_region(text: str) -> str:\n    for prefix in sorted(REGION_PREFIXES,\
-          \ key=len, reverse=True):\n        if text.startswith(prefix) and len(text)\
-          \ >= len(prefix) + 2:\n            return text[len(prefix):].strip()\n \
-          \   return text\n\ndef valid_alias(text: str) -> bool:\n    core = re.sub(r\"\
-          [^0-9A-Za-z\\u4e00-\\u9fff]+\", \"\", text)\n    return len(core) >= 2 and\
-          \ text not in WEAK_ALIASES\n\ndef build_aliases(brand_name: Any, company_name:\
-          \ Any) -> List[Dict[str, Any]]:\n    declared_brand = split_declared(brand_name)\n\
-          \    declared_company = split_declared(company_name)\n    company_fallback\
-          \ = not declared_brand and bool(declared_company)\n    result = []\n   \
-          \ seen = set()\n    def add(alias, alias_type, confidence, source):\n  \
-          \      alias = re.sub(r\"\\s+\", \" \", str(alias or \"\")).strip()\n  \
-          \      key = re.sub(r\"[^0-9A-Za-z\\u4e00-\\u9fff]+\", \"\", alias).casefold()\n\
-          \        if not valid_alias(alias) or not key or key in seen:\n        \
-          \    return\n        seen.add(key)\n        result.append({\"alias\": alias,\
-          \ \"type\": alias_type, \"confidence\": confidence, \"source\": source})\n\
-          \    for name in declared_brand + declared_company:\n        add(name, \"\
-          declared\", 1.0, name)\n        for inner in re.findall(r\"[（(]([^）)]{2,30})[）)]\"\
-          ,name):\n            inner=inner.strip()\n            if inner not in REGION_PREFIXES\
-          \ and inner not in GENERIC_PARENTHETICAL:add(inner,\"parenthetical_alias\"\
-          ,0.90,name)\n        bracketless = re.sub(r\"[（(][^）)]*[）)]\", \"\", name).strip()\n\
-          \        add(bracketless, \"bracketless\", 0.95, name)\n        legal_core\
-          \ = bracketless\n        for _ in range(2):\n            nxt = strip_once(legal_core,\
-          \ LEGAL_SUFFIXES)\n            if nxt == legal_core: break\n           \
-          \ legal_core = nxt\n        add(legal_core, \"legal_core\", 0.92, name)\n\
-          \        industry_core = legal_core\n        for _ in range(2):\n      \
-          \      nxt = strip_once(industry_core, INDUSTRY_SUFFIXES)\n            if\
-          \ nxt == industry_core: break\n            industry_core = nxt\n       \
-          \ # brand_name为空时，公司名是唯一目标来源。剥除法律/行业后缀得到的独特品牌核心\n        # 应进入硬匹配层，例如“香奈儿(中国)贸易有限公司”→“香奈儿”。\n\
-          \        add(industry_core, \"industry_core\", 0.93 if company_fallback\
-          \ else 0.82, name)\n        no_region = strip_region(industry_core)\n  \
-          \      # 公司名回退时，去掉注册地后的独特核心同样是目标硬别名；\n        # brand_name非空时仍保持低置信，仅作辅助理解，避免改变显式品牌粒度。\n\
-          \        add(no_region, \"distinctive_core\", 0.93 if company_fallback else\
-          \ 0.78, name)\n    declared_scope=\" \".join(declared_brand+declared_company+[str(x.get(\"\
-          alias\") or \"\") for x in result])\n    declared_norm=re.sub(r\"[^0-9A-Za-z\\\
-          u4e00-\\u9fff]+\",\"\",declared_scope).casefold()\n    for owner,family\
-          \ in BRAND_FAMILIES.items():\n        owner_norm=re.sub(r\"[^0-9A-Za-z\\\
-          u4e00-\\u9fff]+\",\"\",owner).casefold()\n        if owner_norm and owner_norm\
-          \ in declared_norm:\n            add(owner,\"brand_family_owner\",0.98,owner)\n\
-          \            for member in family:add(member,\"brand_family_member\",0.96,owner)\n\
-          \    return result\n\ndef parse_hints(value: Any) -> List[Dict[str, Any]]:\n\
-          \    text = str(value or \"\").strip()\n    if not text:\n        return\
-          \ []\n    try: data = json.loads(text)\n    except Exception: data = None\n\
-          \    if isinstance(data, dict): data = data.get(\"competitors\", data.get(\"\
-          items\", [data]))\n    out = []\n    if isinstance(data, list):\n      \
-          \  for item in data:\n            if isinstance(item, dict):\n         \
-          \       canonical = str(item.get(\"brand\") or item.get(\"name\") or \"\"\
-          ).strip()\n                aliases = item.get(\"aliases\", [])\n       \
-          \         aliases = split_declared(aliases) if isinstance(aliases, str)\
-          \ else [str(x).strip() for x in aliases if str(x).strip()]\n           \
-          \ else:\n                canonical = str(item or \"\").strip(); aliases\
-          \ = []\n            if canonical: out.append({\"canonical\": canonical,\
-          \ \"aliases\": list(dict.fromkeys([canonical] + aliases))})\n    else:\n\
-          \        for name in split_declared(text): out.append({\"canonical\": name,\
-          \ \"aliases\": [name]})\n    return out\n\nQUERY_NOISE = (\n    \"推荐\",\
-          \ \"排行榜\", \"排名\", \"哪个好\", \"哪家\", \"怎么样\", \"怎么选\", \"价格\", \"多少钱\",\n\
-          \    \"官网\", \"品牌\", \"公司\", \"厂家\", \"服务商\", \"男士\", \"女士\", \"香水\", \"\
-          产品\", \"测评\",\n    \"评测\", \"好用吗\", \"值得买吗\", \"选择\", \"分级\", \"推荐清单\",\
-          \ \"哪款\"\n)\n\ndef derive_query_target_aliases(query: Any, brand_aliases:\
-          \ List[Dict[str, Any]]) -> List[Dict[str, Any]]:\n    \"\"\"当brand_name是公司法定全称、query却是具体产品/品牌词时，补齐查询语义目标。\n\
-          \    只在query中已经出现声明品牌核心且清除通用查询词后仍有明确剩余词时生成，\n    不凭空从正文或模型输出创造别名。\"\"\"\n\
-          \    q = re.sub(r\"\\s+\", \" \", str(query or \"\")).strip()\n    if not\
-          \ q:\n        return []\n    result=[];seen={re.sub(r\"[^0-9A-Za-z\\u4e00-\\\
-          u9fff]+\", \"\", str(x.get(\"alias\") or \"\")).casefold() for x in brand_aliases}\n\
-          \    compact_q = re.sub(r\"[^0-9A-Za-z\\u4e00-\\u9fff]+\", \"\", q).casefold()\n\
-          \    for row in brand_aliases:\n        alias = str(row.get(\"alias\") or\
-          \ \"\").strip(); an = re.sub(r\"[^0-9A-Za-z\\u4e00-\\u9fff]+\", \"\", alias).casefold()\n\
-          \        if len(an) < 2 or an not in compact_q:\n            continue\n\
-          \        candidate = q\n        for noise in sorted(QUERY_NOISE, key=len,\
-          \ reverse=True):\n            candidate = candidate.replace(noise, \"\"\
-          )\n        candidate = re.sub(r\"[\\s、，,：:？！!?（）()]+\", \"\", candidate)\n\
-          \        cn = re.sub(r\"[^0-9A-Za-z\\u4e00-\\u9fff]+\", \"\", candidate).casefold()\n\
-          \        if len(cn) <= len(an) or an not in cn:\n            continue\n\
-          \        if len(cn) < len(an) + 2:\n            continue\n        if cn\
-          \ not in seen:\n            result.append({\"alias\": candidate, \"type\"\
-          : \"query_product_alias\", \"confidence\": 0.98, \"source\": q})\n     \
-          \       seen.add(cn)\n    return result\n\ndef exact_units(line: str) ->\
-          \ List[tuple]:\n    \"\"\"按标点、Markdown标题/编号项和转折切成互不重叠的最小证据单元。\n    搜索结果与模型回答经常被压成一行，不能只按换行切分；标题/编号边界必须\n\
-          \    先切开，否则一条“缺点”会吞掉后续多个产品模块。\"\"\"\n    boundaries = {0, len(line)}\n \
-          \   for m in re.finditer(r\"[。！？!?；;]\", line):\n        boundaries.add(m.end())\n\
-          \    # 支持“### 3\\\\. 产品”“## 模块”以及未转义的Markdown标题。\n    for m in re.finditer(r\"\
-          (?<!\\S)#{1,6}\\s+\", line):\n        if m.start()>0:boundaries.add(m.start())\n\
-          \    # 单行压缩表格中，每个加粗的首列单元格都是新数据行。只在加粗内容后紧跟\n    # 管道符时切分，避免普通正文加粗或列表项被误拆成表格。\n\
-          \    for m in re.finditer(r\"\\ue000[^\\ue001\\n]{1,160}\\ue001\\s*\\|\"\
-          ,line):\n        if m.start()>0:boundaries.add(m.start())\n    # 产品卡片常用“香调/气质/适合/缺点/✅/⚠️”作为无标点字段边界，\n\
-          \    # 这些边界必须拆开，避免把中性参数和后面的正负评价合并。\n    # 字段标签即使与前一短语粘连（如“插件缺点：默认推送”）也必须切开；\n\
-          \    # 否定语境“并不适合”不作为字段标签处理。\n    for m in re.finditer(r\"(?:✅|⚠️|❌|(?:优点|缺点|香调|气质|优势|劣势)[：:]|(?<!不)适合[：:])\"\
-          , line):\n        if m.start()>0:boundaries.add(m.start())\n    # 支持同一物理行中的编号/项目符号；\\\
-          \\. 是 answer_raw 常见的转义写法。\n    for m in re.finditer(r\"(?<![0-9A-Za-z\\\
-          u4e00-\\u9fff])(?:\\d{1,2}\\\\?[.)、：:]|[①②③④⑤⑥⑦⑧⑨⑩])\\s*|(?<!\\S)[*•·▪◦]\\\
-          s+\", line):\n        table_start=line.rfind(\"\\ue000\",0,m.start())\n\
-          \        if table_start>=0:\n            table_end=line.find(\"\\ue000\"\
-          ,table_start+1)\n            if table_end<0:table_end=len(line)\n      \
-          \      # 推荐单元格内部的“1.品牌、2.品牌”属于同一表格行，保留给分榜解析，\n            # 不能按普通编号列表切断管道结构。\n\
-          \            if table_start<=m.start()<table_end and line[table_start:table_end].count(\"\
-          |\")>=2:continue\n        open_paren=max(line.rfind(\"(\",0,m.start()),line.rfind(\"\
-          （\",0,m.start()))\n        close_paren=max(line.rfind(\")\",0,m.start()),line.rfind(\"\
-          ）\",0,m.start()))\n        if open_paren>close_paren and re.search(r\"[A-Za-z\\\
-          u4e00-\\u9fff]\",line[open_paren+1:m.start()]):continue\n     # “### 1\\\
-          \\. 产品”中的1\\\\.属于标题内容，不再额外切出孤立的“###”。\n        prefix=line[max(0,m.start()-8):m.start()]\n\
-          \        if re.search(r\"#{1,6}\\s+$\",prefix):continue\n        if m.start()>0:boundaries.add(m.start())\n\
-          \    # 转折词归入后一单元，使“但亮度不足”可独立判负；不切“而且”。\n    for m in re.finditer(r\"然而|但是|不过|反而|但|而(?!且)|却\"\
-          , line):\n        if m.start() > 0:\n            boundaries.add(m.start())\n\
-          \    points = sorted(boundaries); out = []\n    for left, right in zip(points,\
-          \ points[1:]):\n        piece = line[left:right]\n        if piece.strip():\n\
-          \            # 去掉切分边界两侧的空白，但保留正文字符及可回填offset。\n            ltrim=len(piece)-len(piece.lstrip());rtrim=len(piece.rstrip())\n\
-          \            clean=piece.strip().replace(\"\\ue000\",\"\").replace(\"\\\
-          ue001\",\"\")\n            out.append((left+ltrim,left+rtrim,clean))\n \
-          \   return out\n\nSUBLIST_AXIS_RE=re.compile(r\"需求方向|适用场景|使用场景|目标人群|适用人群|预算(?:方向|档位)?|风格(?:方向)?|用途|使用空间|装修需求|选购需求\"\
-          )\nSUBLIST_ITEM_HEADER_RE=re.compile(r\"推荐(?:品牌|产品|机构|平台|服务商|供应商|方案|对象)?|可选(?:品牌|产品|机构|平台|方案)?|选择\"\
-          )\n\ndef split_rank_items(value: Any):\n    \"\"\"拆出推荐单元格中的有序实体；不从说明列或普通正文猜测品牌。\"\
-          \"\"\n    out=[];ranks=[]\n    for item in re.split(r\"[、，,；;]+\",str(value\
-          \ or \"\")):\n        item=re.sub(r\"^[\\s*•·▪◦\\-]+|[\\s*•·▪◦\\-]+$\",\"\
-          \",item)\n        rank=0\n        m=re.match(r\"^(?:Top|No\\.?)\\s*([1-9]\\\
-          d*)\\s*[:：.、)）-]?\\s*\",item,re.I)\n        if not m:m=re.match(r\"^第\\\
-          s*([1-9]\\d*)\\s*(?:名|位)\\s*[:：.、)）-]?\\s*\",item)\n        if not m:m=re.match(r\"\
-          ^([1-9]\\d*)\\s*[.、)）:：-]\\s*\",item)\n        if m:\n            rank=int(m.group(1));item=item[m.end():].strip()\n\
-          \        if 1 < len(re.sub(r\"[^0-9A-Za-z\\u4e00-\\u9fff]+\",\"\",item))\
-          \ <= 60 and item not in out:\n            out.append(item);ranks.append(rank)\n\
-          \    return out,ranks\n\ndef make_catalog(answer: str) -> List[Dict[str,\
-          \ Any]]:\n    records = []; heading = \"\"; cursor = 0; recent_lines=[];\
-          \ table_seq=0; table_row_seq=0; sublist_table=False\n    lines = answer.splitlines(keepends=True)\n\
-          \    if answer and not lines: lines = [answer]\n    for line_no, raw_with_end\
-          \ in enumerate(lines, 1):\n        raw = raw_with_end[:-2] if raw_with_end.endswith(\"\
-          \\r\\n\") else (raw_with_end[:-1] if raw_with_end.endswith((\"\\n\", \"\\\
-          r\")) else raw_with_end)\n        line_start = cursor; cursor += len(raw_with_end)\n\
-          \        evidence_raw = catalog_text(raw)\n        stripped = evidence_raw.strip()\n\
-          \        if not stripped or re.match(r\"^\\s*\\|?[\\-:|\\s]{3,}\\|?\\s*$\"\
-          , stripped): continue\n        is_heading = bool(re.match(r\"^\\s{0,3}#{1,6}\\\
-          s+\", evidence_raw))\n        is_table = (stripped.count(\"|\") >= 2 and\
-          \ len([cell for cell in stripped.split(\"|\") if cell.strip()]) >= 3) or\
-          \ stripped == \"表格\"\n        is_list = bool(re.match(r\"^\\s*(?:[*•·▪◦]\\\
-          s+|\\d+\\\\?[.)、]\\s*|[①②③④⑤⑥⑦⑧⑨⑩]\\s*)\", evidence_raw))\n        if is_heading:\
-          \ heading = evidence_raw\n        context_before=\"\\n\".join(recent_lines[-4:])\n\
-          \        for left, right, piece in exact_units(evidence_raw):\n        \
-          \    # 同一raw行内各单元可能分别是标题、编号项或段落，不能沿用整行block。\n            unit_stripped=piece.strip()\n\
-          \            unit_heading=bool(re.match(r\"^#{1,6}\\s+\",unit_stripped))\n\
-          \            unit_table=(unit_stripped.count(\"|\") >= 2 and len([cell for\
-          \ cell in unit_stripped.split(\"|\") if cell.strip()]) >= 3) or unit_stripped==\"\
-          表格\"\n            unit_list=bool(re.match(r\"^(?:[*•·▪◦]\\s+|\\d+\\\\?[.)、]\\\
-          s*|[①②③④⑤⑥⑦⑧⑨⑩]\\s*)\",unit_stripped))\n            unit_block=\"heading\"\
-          \ if unit_heading else (\"table_row\" if unit_table else (\"list_item\"\
-          \ if unit_list else \"paragraph\"))\n            if unit_heading:\n    \
-          \            heading=piece\n                if piece.count(\"|\")>=4:\n\
-          \                    table_seq+=1;table_row_seq=0\n                    sublist_table=bool(SUBLIST_AXIS_RE.search(piece)\
-          \ and SUBLIST_ITEM_HEADER_RE.search(piece))\n            row={\n       \
-          \         \"id\": f\"S{len(records)+1:04d}\", \"text\": piece, \"match_text\"\
-          : match_text(piece),\n                \"char_count\": char_count(piece),\
-          \ \"line_no\": line_no, \"block_type\": unit_block,\n                # answer_raw常被压成单一物理行；line_text必须限定为当前最小单元，\n\
-          \                # 否则序号识别和实体归属会把整篇回答当成同一产品作用域。\n                \"context_heading\"\
-          : heading, \"line_text\": piece,\n                \"context_before\": context_before,\n\
-          \                \"start\": line_start + left, \"end\": line_start + right\n\
-          \            }\n            if unit_table and not unit_heading:\n      \
-          \          cells=[re.sub(r\"\\s+\",\" \",x).strip(\" |\") for x in piece.split(\"\
-          |\")]\n                cells=[x for x in cells if x]\n                if\
-          \ len(cells)>=3:\n                    table_row_seq+=1\n               \
-          \     items,ranks=split_rank_items(cells[1]) if sublist_table else ([],[])\n\
-          \                    row.update({\"table_id\":f\"T{table_seq:03d}\",\"table_row_id\"\
-          :f\"R{table_row_seq:03d}\",\n                                \"table_cells\"\
-          :cells[:3],\"sublist_label\":cells[0] if len(items)>=2 else \"\",\n    \
-          \                            \"sublist_items\":items if len(items)>=2 else\
-          \ [],\n                                \"sublist_ranks\":ranks if len(items)>=2\
-          \ else [],\"is_sublist\":len(items)>=2})\n            records.append(row)\n\
-          \        recent_lines.append(evidence_raw)\n    return records\n\ndef main(answer_raw:\
-          \ str, brand_name: str, company_name: str = \"\", comps_list: str = \"\"\
-          , query: str = \"\") -> dict:\n    # answer_text必须保留answer_raw逐字符原文，禁止清洗、strip或压缩空格。\n\
-          \    answer = str(answer_raw or \"\")\n    aliases = build_aliases(brand_name,\
-          \ company_name)\n    brand_aliases = build_aliases(brand_name, \"\") if\
-          \ split_declared(brand_name) else build_aliases(\"\", company_name)\n  \
-          \  brand_aliases.extend(derive_query_target_aliases(query, brand_aliases))\n\
-          \    # 查询本身是具体产品词时，query-derived alias属于同粒度硬别名；公司法定全称只保留所有权辅助作用。\n    brand_strict_aliases\
-          \ = [x for x in brand_aliases if float(x.get(\"confidence\", 0)) >= 0.90]\n\
-          \    company_fallback_aliases = [x[\"alias\"] for x in brand_aliases\n \
-          \                               if x.get(\"type\") in {\"industry_core\"\
-          ,\"distinctive_core\"}\n                                and float(x.get(\"\
-          confidence\", 0)) >= (0.78 if split_declared(brand_name) else 0.90)\n  \
-          \                              and len(re.sub(r\"[^0-9A-Za-z\\u4e00-\\u9fff]+\"\
-          , \"\", str(x.get(\"alias\") or \"\"))) >= 3]\n    catalog = make_catalog(answer)\n\
-          \    block_codes = {\"heading\": \"H\", \"table_row\": \"T\", \"list_item\"\
-          : \"L\", \"paragraph\": \"P\"}\n    llm_catalog = []\n    for x in catalog:\n\
-          \        text = str(x.get(\"text\", \"\"));code = block_codes.get(x.get(\"\
-          block_type\"), \"P\")\n        if code == \"P\" and re.match(r\"^\\s*(?:[一二三四五六七八九十]+[、.．]|第[一二三四五六七八九十0-9]+(?:部分|章|类|模块))\"\
-          , text):code = \"H\"\n        llm_catalog.append([x[\"id\"], code, text])\n\
-          \    return {\n        \"answer_text\": answer,\n        \"analysis_text\"\
-          : visible_text(answer),\n        \"answer_total_len\": char_count(answer),\n\
-          \        \"sentence_catalog\": json.dumps(catalog, ensure_ascii=False),\n\
-          \        \"llm_sentence_catalog\": json.dumps(llm_catalog, ensure_ascii=False,\
-          \ separators=(\",\", \":\")),\n        \"target_aliases\": json.dumps(aliases,\
-          \ ensure_ascii=False),\n        \"brand_aliases\": json.dumps(brand_aliases,\
-          \ ensure_ascii=False),\n        \"brand_alias_strings\": json.dumps([x[\"\
-          alias\"] for x in brand_aliases], ensure_ascii=False),\n        \"brand_strict_alias_strings\"\
-          : json.dumps([x[\"alias\"] for x in brand_strict_aliases], ensure_ascii=False),\n\
-          \        \"company_fallback_alias_strings\": json.dumps(company_fallback_aliases,\
-          \ ensure_ascii=False),\n        \"target_alias_strings\": json.dumps([x[\"\
-          alias\"] for x in aliases], ensure_ascii=False),\n        \"competitor_hints\"\
-          : json.dumps(parse_hints(comps_list), ensure_ascii=False),\n        \"query\"\
-          : re.sub(r\"\\s+\", \" \", str(query or \"\")).strip()\n    }"
+        code: "import html\nimport json\nimport re\nfrom typing import Any, Dict, List\n\nLEGAL_SUFFIXES = [\n    \"股份有限公司\", \"有限责任公司\", \"集团有限公司\", \"有限公司\", \"责任公司\", \"集团\", \"公司\"\n]\nINDUSTRY_SUFFIXES = [\n    \"驾驶员教考中心\", \"驾驶员培训中心\", \"教考中心\", \"宠物食品\", \"环保设备\", \"智能设备\",\n    \"数字科技\", \"品牌设计\", \"机电设备\", \"咨询服务\", \"科技传媒\", \"网络科技\", \"信息技术\",\n    \"电子科技\", \"通信科技\", \"给排水设备\", \"玻璃钢设备\", \"肛肠医院\", \"专科医院\", \"医院\",\n    \"电子产品商贸\", \"电子产品贸易\", \"电子产品\", \"商贸\", \"贸易\",\n    \"科技发展\", \"驾校\", \"设计\", \"科技\", \"设备\"\n]\nREGION_PREFIXES = [\n    \"北京市\", \"上海市\", \"天津市\", \"重庆市\", \"内蒙古自治区\", \"广西壮族自治区\", \"宁夏回族自治区\",\n    \"新疆维吾尔自治区\", \"西藏自治区\", \"北京\", \"上海\", \"天津\", \"重庆\", \"广东\", \"浙江\", \"江苏\",\n    \"山东\", \"河北\", \"河南\", \"湖北\", \"湖南\", \"江西\", \"福建\", \"四川\", \"云南\", \"贵州\", \"安徽\",\n    \"陕西\", \"山西\", \"辽宁\", \"吉林\", \"黑龙江\", \"甘肃\", \"青海\", \"海南\", \"广西\", \"宁夏\", \"新疆\",\n    \"西藏\", \"内蒙古\", \"深圳\", \"广州\", \"杭州\", \"南京\", \"成都\", \"武汉\", \"南昌\", \"呼和浩特\", \"漯河\"\n]\nWEAK_ALIASES = {\"科技\", \"智能\", \"环保\", \"设备\", \"食品\", \"设计\", \"医院\", \"驾校\", \"服务\", \"公司\", \"集团\"}\nGENERIC_PARENTHETICAL = {\"中国\", \"中国大陆\", \"大陆\", \"国内\", \"全球\", \"国际\", \"总部\", \"官方\"}\n# 明确的母品牌—产品品牌关系用于客户边界硬校验。这里只放所有权稳定、歧义低的家族名；\n# 其余长尾关系仍由全局实体LLM结合query判断，避免把普通品类词误当客户别名。\nBRAND_FAMILIES = {\n    \"苹果\": [\"Apple\", \"iPhone\", \"iPad\", \"Mac\", \"MacBook\", \"AirPods\", \"Apple Watch\"]\n}\n\ndef visible_text(text: Any) -> str:\n    \"\"\"只移除不可见格式与URL；不改写可见文字、标点或Emoji。\"\"\"\n    value=html.unescape(str(text or \"\"))\n    value=re.sub(r\"!\\[([^\\]]*)\\]\\([^)]*\\)\",r\"\\1\",value)\n    value=re.sub(r\"\\[([^\\]]+)\\]\\([^)]*\\)\",r\"\\1\",value)\n    value=re.sub(r\"https?://[^\\s)]+\",\"\",value)\n    value=re.sub(r\"<[^>]+>\",\"\",value)\n    value=re.sub(r\"(?m)^\\s{0,3}#{1,6}\\s*\",\"\",value)\n    value=re.sub(r\"(?m)^\\s*>\\s?\",\"\",value)\n    value=value.replace(\"```\",\"\").replace(\"**\",\"\").replace(\"__\",\"\").replace(\"`\",\"\")\n    value=re.sub(r\"\\\\([.#*+\\-])\",r\"\\1\",value)\n    return value\n\ndef catalog_text(text: Any) -> str:\n    \"\"\"证据目录移除图片、URL与强调符，但保留Markdown标题/编号结构供切分。\"\"\"\n    value=html.unescape(str(text or \"\"))\n    value=re.sub(r\"!\\[[^\\]]*\\]\\([^)]*\\)\",\"\",value)\n    value=re.sub(r\"\\[([^\\]]+)\\]\\([^)]*\\)\",r\"\\1\",value)\n    value=re.sub(r\"https?://[^\\s)]+\",\"\",value)\n    value=re.sub(r\"<[^>]+>\",\"\",value)\n    # answer_raw 可能把整张 Markdown 表格压成一行。保留加粗单元格边界，\n    # 供 exact_units 将“**需求方向** | 推荐对象 | 说明”逐行恢复；写入目录前再移除标记。\n    value=re.sub(r\"\\*\\*\\s*([^*\\n]{1,160}?)\\s*\\*\\*\",lambda m:\"\\ue000\"+m.group(1)+\"\\ue001\",value)\n    value=value.replace(\"```\",\"\").replace(\"**\",\"\").replace(\"__\",\"\").replace(\"`\",\"\")\n    value=re.sub(r\"\\\\([.#*+\\-])\",r\"\\1\",value)\n    return value\n\ndef char_count(text: Any) -> int:\n    # 统一按用户可见正文计数：空白、URL和Markdown控制符不计；可见标点、数字、Emoji均计入。\n    return len(re.sub(r\"\\s+\", \"\", visible_text(text)))\n\ndef match_text(text: Any) -> str:\n    value = visible_text(text).replace(\"　\", \" \")\n    return re.sub(r\"\\s+\", \" \", value).strip()\n\ndef split_declared(value: Any) -> List[str]:\n    if isinstance(value, list):\n        raw = value\n    else:\n        text = str(value or \"\").strip()\n        if not text:\n            return []\n        # 不按普通空格和斜杠拆分，保护English multi-word brand与合法名称。\n        raw = re.split(r\"\\|\\||[、，,；;\\n]+\", text)\n    out = []\n    for item in raw:\n        name = re.sub(r\"\\s+\", \" \", str(item or \"\")).strip(\" \\t|,，;；\")\n        if name and name not in out:\n            out.append(name)\n    return out\n\ndef strip_once(text: str, suffixes: List[str]) -> str:\n    for suffix in sorted(suffixes, key=len, reverse=True):\n        if text.endswith(suffix) and len(text) >= len(suffix) + 2:\n            return text[:-len(suffix)].strip()\n    return text\n\ndef strip_region(text: str) -> str:\n    for prefix in sorted(REGION_PREFIXES, key=len, reverse=True):\n        if text.startswith(prefix) and len(text) >= len(prefix) + 2:\n            return text[len(prefix):].strip()\n    return text\n\ndef valid_alias(text: str) -> bool:\n    core = re.sub(r\"[^0-9A-Za-z\\u4e00-\\u9fff]+\", \"\", text)\n    return len(core) >= 2 and text not in WEAK_ALIASES\n\ndef build_aliases(brand_name: Any, company_name: Any) -> List[Dict[str, Any]]:\n    declared_brand = split_declared(brand_name)\n    declared_company = split_declared(company_name)\n    company_fallback = not declared_brand and bool(declared_company)\n    result = []\n    seen = {}\n    def add(alias, alias_type, confidence, source):\n        alias = re.sub(r\"\\s+\", \" \", str(alias or \"\")).strip()\n        key = re.sub(r\"[^0-9A-Za-z\\u4e00-\\u9fff]+\", \"\", alias).casefold()\n        if not valid_alias(alias) or not key:\n            return\n        old = seen.get(key)\n        if old is not None:\n            # 同一别名可能被多条来源命中。保留置信度最高的一条，避免派生别名先登记后\n            # 把用户显式填写的 declared 判成重复丢弃（“重庆天籁”派生出的 0.78 “天籁”\n            # 会挤掉用户单独填写的 1.00 “天籁”）。置信度相同时保留先登记的来源。\n            if float(confidence) > float(old.get(\"confidence\", 0) or 0):\n                old[\"alias\"] = alias\n                old[\"type\"] = alias_type\n                old[\"confidence\"] = confidence\n                old[\"source\"] = source\n            return\n        seen[key] = {\"alias\": alias, \"type\": alias_type, \"confidence\": confidence, \"source\": source}\n        result.append(seen[key])\n    for name in declared_brand + declared_company:\n        add(name, \"declared\", 1.0, name)\n        for inner in re.findall(r\"[（(]([^）)]{2,30})[）)]\",name):\n            inner=inner.strip()\n            if inner not in REGION_PREFIXES and inner not in GENERIC_PARENTHETICAL:add(inner,\"parenthetical_alias\",0.90,name)\n        bracketless = re.sub(r\"[（(][^）)]*[）)]\", \"\", name).strip()\n        add(bracketless, \"bracketless\", 0.95, name)\n        legal_core = bracketless\n        for _ in range(2):\n            nxt = strip_once(legal_core, LEGAL_SUFFIXES)\n            if nxt == legal_core: break\n            legal_core = nxt\n        add(legal_core, \"legal_core\", 0.92, name)\n        industry_core = legal_core\n        for _ in range(2):\n            nxt = strip_once(industry_core, INDUSTRY_SUFFIXES)\n            if nxt == industry_core: break\n            industry_core = nxt\n        # brand_name为空时，公司名是唯一目标来源。剥除法律/行业后缀得到的独特品牌核心\n        # 应进入硬匹配层，例如“香奈儿(中国)贸易有限公司”→“香奈儿”。\n        add(industry_core, \"industry_core\", 0.93 if company_fallback else 0.82, name)\n        no_region = strip_region(industry_core)\n        # 公司名回退时，去掉注册地后的独特核心同样是目标硬别名；\n        # brand_name非空时仍保持低置信，仅作辅助理解，避免改变显式品牌粒度。\n        add(no_region, \"distinctive_core\", 0.93 if company_fallback else 0.78, name)\n    declared_scope=\" \".join(declared_brand+declared_company+[str(x.get(\"alias\") or \"\") for x in result])\n    declared_norm=re.sub(r\"[^0-9A-Za-z\\u4e00-\\u9fff]+\",\"\",declared_scope).casefold()\n    for owner,family in BRAND_FAMILIES.items():\n        owner_norm=re.sub(r\"[^0-9A-Za-z\\u4e00-\\u9fff]+\",\"\",owner).casefold()\n        if owner_norm and owner_norm in declared_norm:\n            add(owner,\"brand_family_owner\",0.98,owner)\n            for member in family:add(member,\"brand_family_member\",0.96,owner)\n    return result\n\ndef parse_hints(value: Any) -> List[Dict[str, Any]]:\n    text = str(value or \"\").strip()\n    if not text:\n        return []\n    try: data = json.loads(text)\n    except Exception: data = None\n    if isinstance(data, dict): data = data.get(\"competitors\", data.get(\"items\", [data]))\n    out = []\n    if isinstance(data, list):\n        for item in data:\n            if isinstance(item, dict):\n                canonical = str(item.get(\"brand\") or item.get(\"name\") or \"\").strip()\n                aliases = item.get(\"aliases\", [])\n                aliases = split_declared(aliases) if isinstance(aliases, str) else [str(x).strip() for x in aliases if str(x).strip()]\n            else:\n                canonical = str(item or \"\").strip(); aliases = []\n            if canonical: out.append({\"canonical\": canonical, \"aliases\": list(dict.fromkeys([canonical] + aliases))})\n    else:\n        for name in split_declared(text): out.append({\"canonical\": name, \"aliases\": [name]})\n    return out\n\nQUERY_NOISE = (\n    \"推荐\", \"排行榜\", \"排名\", \"哪个好\", \"哪家\", \"怎么样\", \"怎么选\", \"价格\", \"多少钱\",\n    \"官网\", \"品牌\", \"公司\", \"厂家\", \"服务商\", \"男士\", \"女士\", \"香水\", \"产品\", \"测评\",\n    \"评测\", \"好用吗\", \"值得买吗\", \"选择\", \"分级\", \"推荐清单\", \"哪款\"\n)\n\ndef derive_query_target_aliases(query: Any, brand_aliases: List[Dict[str, Any]]) -> List[Dict[str, Any]]:\n    \"\"\"当brand_name是公司法定全称、query却是具体产品/品牌词时，补齐查询语义目标。\n    只在query中已经出现声明品牌核心且清除通用查询词后仍有明确剩余词时生成，\n    不凭空从正文或模型输出创造别名。\"\"\"\n    q = re.sub(r\"\\s+\", \" \", str(query or \"\")).strip()\n    if not q:\n        return []\n    result=[];seen={re.sub(r\"[^0-9A-Za-z\\u4e00-\\u9fff]+\", \"\", str(x.get(\"alias\") or \"\")).casefold() for x in brand_aliases}\n    compact_q = re.sub(r\"[^0-9A-Za-z\\u4e00-\\u9fff]+\", \"\", q).casefold()\n    for row in brand_aliases:\n        alias = str(row.get(\"alias\") or \"\").strip(); an = re.sub(r\"[^0-9A-Za-z\\u4e00-\\u9fff]+\", \"\", alias).casefold()\n        if len(an) < 2 or an not in compact_q:\n            continue\n        candidate = q\n        for noise in sorted(QUERY_NOISE, key=len, reverse=True):\n            candidate = candidate.replace(noise, \"\")\n        candidate = re.sub(r\"[\\s、，,：:？！!?（）()]+\", \"\", candidate)\n        cn = re.sub(r\"[^0-9A-Za-z\\u4e00-\\u9fff]+\", \"\", candidate).casefold()\n        if len(cn) <= len(an) or an not in cn:\n            continue\n        if len(cn) < len(an) + 2:\n            continue\n        if cn not in seen:\n            result.append({\"alias\": candidate, \"type\": \"query_product_alias\", \"confidence\": 0.98, \"source\": q})\n            seen.add(cn)\n    return result\n\ndef exact_units(line: str) -> List[tuple]:\n    \"\"\"按标点、Markdown标题/编号项和转折切成互不重叠的最小证据单元。\n    搜索结果与模型回答经常被压成一行，不能只按换行切分；标题/编号边界必须\n    先切开，否则一条“缺点”会吞掉后续多个产品模块。\"\"\"\n    boundaries = {0, len(line)}\n    for m in re.finditer(r\"[。！？!?；;]\", line):\n        boundaries.add(m.end())\n    # 支持“### 3\\\\. 产品”“## 模块”以及未转义的Markdown标题。\n    for m in re.finditer(r\"(?<!\\S)#{1,6}\\s+\", line):\n        if m.start()>0:boundaries.add(m.start())\n    # 单行压缩表格中，每个加粗的首列单元格都是新数据行。只在加粗内容后紧跟\n    # 管道符时切分，避免普通正文加粗或列表项被误拆成表格。\n    for m in re.finditer(r\"\\ue000[^\\ue001\\n]{1,160}\\ue001\\s*\\|\",line):\n        if m.start()>0:boundaries.add(m.start())\n    # 产品卡片常用“香调/气质/适合/缺点/✅/⚠️”作为无标点字段边界，\n    # 这些边界必须拆开，避免把中性参数和后面的正负评价合并。\n    # 字段标签即使与前一短语粘连（如“插件缺点：默认推送”）也必须切开；\n    # 否定语境“并不适合”不作为字段标签处理。\n    for m in re.finditer(r\"(?:✅|⚠️|❌|(?:优点|缺点|香调|气质|优势|劣势)[：:]|(?<!不)适合[：:])\", line):\n        if m.start()>0:boundaries.add(m.start())\n    # 支持同一物理行中的编号/项目符号；\\\\. 是 answer_raw 常见的转义写法。\n    for m in re.finditer(r\"(?<![0-9A-Za-z\\u4e00-\\u9fff])(?:\\d{1,2}\\\\?[.)、：:]|[①②③④⑤⑥⑦⑧⑨⑩])\\s*|(?<!\\S)[*•·▪◦]\\s+\", line):\n        table_start=line.rfind(\"\\ue000\",0,m.start())\n        if table_start>=0:\n            table_end=line.find(\"\\ue000\",table_start+1)\n            if table_end<0:table_end=len(line)\n            # 推荐单元格内部的“1.品牌、2.品牌”属于同一表格行，保留给分榜解析，\n            # 不能按普通编号列表切断管道结构。\n            if table_start<=m.start()<table_end and line[table_start:table_end].count(\"|\")>=2:continue\n        open_paren=max(line.rfind(\"(\",0,m.start()),line.rfind(\"（\",0,m.start()))\n        close_paren=max(line.rfind(\")\",0,m.start()),line.rfind(\"）\",0,m.start()))\n        if open_paren>close_paren and re.search(r\"[A-Za-z\\u4e00-\\u9fff]\",line[open_paren+1:m.start()]):continue\n     # “### 1\\\\. 产品”中的1\\\\.属于标题内容，不再额外切出孤立的“###”。\n        prefix=line[max(0,m.start()-8):m.start()]\n        if re.search(r\"#{1,6}\\s+$\",prefix):continue\n        if m.start()>0:boundaries.add(m.start())\n    # 转折词归入后一单元，使“但亮度不足”可独立判负；不切“而且”。\n    for m in re.finditer(r\"然而|但是|不过|反而|但|而(?!且)|却\", line):\n        if m.start() > 0:\n            boundaries.add(m.start())\n    points = sorted(boundaries); out = []\n    for left, right in zip(points, points[1:]):\n        piece = line[left:right]\n        if piece.strip():\n            # 去掉切分边界两侧的空白，但保留正文字符及可回填offset。\n            ltrim=len(piece)-len(piece.lstrip());rtrim=len(piece.rstrip())\n            clean=piece.strip().replace(\"\\ue000\",\"\").replace(\"\\ue001\",\"\")\n            out.append((left+ltrim,left+rtrim,clean))\n    return out\n\nSUBLIST_AXIS_RE=re.compile(r\"需求方向|适用场景|使用场景|目标人群|适用人群|预算(?:方向|档位)?|风格(?:方向)?|用途|使用空间|装修需求|选购需求\")\nSUBLIST_ITEM_HEADER_RE=re.compile(r\"推荐(?:品牌|产品|机构|平台|服务商|供应商|方案|对象)?|可选(?:品牌|产品|机构|平台|方案)?|选择\")\n\ndef split_rank_items(value: Any):\n    \"\"\"拆出推荐单元格中的有序实体；不从说明列或普通正文猜测品牌。\"\"\"\n    out=[];ranks=[]\n    for item in re.split(r\"[、，,；;]+\",str(value or \"\")):\n        item=re.sub(r\"^[\\s*•·▪◦\\-]+|[\\s*•·▪◦\\-]+$\",\"\",item)\n        rank=0\n        m=re.match(r\"^(?:Top|No\\.?)\\s*([1-9]\\d*)\\s*[:：.、)）-]?\\s*\",item,re.I)\n        if not m:m=re.match(r\"^第\\s*([1-9]\\d*)\\s*(?:名|位)\\s*[:：.、)）-]?\\s*\",item)\n        if not m:m=re.match(r\"^([1-9]\\d*)\\s*[.、)）:：-]\\s*\",item)\n        if m:\n            rank=int(m.group(1));item=item[m.end():].strip()\n        if 1 < len(re.sub(r\"[^0-9A-Za-z\\u4e00-\\u9fff]+\",\"\",item)) <= 60 and item not in out:\n            out.append(item);ranks.append(rank)\n    return out,ranks\n\ndef make_catalog(answer: str) -> List[Dict[str, Any]]:\n    records = []; heading = \"\"; cursor = 0; recent_lines=[]; table_seq=0; table_row_seq=0; sublist_table=False\n    lines = answer.splitlines(keepends=True)\n    if answer and not lines: lines = [answer]\n    for line_no, raw_with_end in enumerate(lines, 1):\n        raw = raw_with_end[:-2] if raw_with_end.endswith(\"\\r\\n\") else (raw_with_end[:-1] if raw_with_end.endswith((\"\\n\", \"\\r\")) else raw_with_end)\n        line_start = cursor; cursor += len(raw_with_end)\n        evidence_raw = catalog_text(raw)\n        stripped = evidence_raw.strip()\n        if not stripped or re.match(r\"^\\s*\\|?[\\-:|\\s]{3,}\\|?\\s*$\", stripped): continue\n        is_heading = bool(re.match(r\"^\\s{0,3}#{1,6}\\s+\", evidence_raw))\n        is_table = (stripped.count(\"|\") >= 2 and len([cell for cell in stripped.split(\"|\") if cell.strip()]) >= 3) or stripped == \"表格\"\n        is_list = bool(re.match(r\"^\\s*(?:[*•·▪◦]\\s+|\\d+\\\\?[.)、]\\s*|[①②③④⑤⑥⑦⑧⑨⑩]\\s*)\", evidence_raw))\n        if is_heading: heading = evidence_raw\n        context_before=\"\\n\".join(recent_lines[-4:])\n        for left, right, piece in exact_units(evidence_raw):\n            # 同一raw行内各单元可能分别是标题、编号项或段落，不能沿用整行block。\n            unit_stripped=piece.strip()\n            unit_heading=bool(re.match(r\"^#{1,6}\\s+\",unit_stripped))\n            unit_table=(unit_stripped.count(\"|\") >= 2 and len([cell for cell in unit_stripped.split(\"|\") if cell.strip()]) >= 3) or unit_stripped==\"表格\"\n            unit_list=bool(re.match(r\"^(?:[*•·▪◦]\\s+|\\d+\\\\?[.)、]\\s*|[①②③④⑤⑥⑦⑧⑨⑩]\\s*)\",unit_stripped))\n            unit_block=\"heading\" if unit_heading else (\"table_row\" if unit_table else (\"list_item\" if unit_list else \"paragraph\"))\n            if unit_heading:\n                heading=piece\n                if piece.count(\"|\")>=4:\n                    table_seq+=1;table_row_seq=0\n                    sublist_table=bool(SUBLIST_AXIS_RE.search(piece) and SUBLIST_ITEM_HEADER_RE.search(piece))\n            row={\n                \"id\": f\"S{len(records)+1:04d}\", \"text\": piece, \"match_text\": match_text(piece),\n                \"char_count\": char_count(piece), \"line_no\": line_no, \"block_type\": unit_block,\n                # answer_raw常被压成单一物理行；line_text必须限定为当前最小单元，\n                # 否则序号识别和实体归属会把整篇回答当成同一产品作用域。\n                \"context_heading\": heading, \"line_text\": piece,\n                \"context_before\": context_before,\n                \"start\": line_start + left, \"end\": line_start + right\n            }\n            if unit_table and not unit_heading:\n                cells=[re.sub(r\"\\s+\",\" \",x).strip(\" |\") for x in piece.split(\"|\")]\n                cells=[x for x in cells if x]\n                if len(cells)>=3:\n                    table_row_seq+=1\n                    items,ranks=split_rank_items(cells[1]) if sublist_table else ([],[])\n                    row.update({\"table_id\":f\"T{table_seq:03d}\",\"table_row_id\":f\"R{table_row_seq:03d}\",\n                                \"table_cells\":cells[:3],\"sublist_label\":cells[0] if len(items)>=2 else \"\",\n                                \"sublist_items\":items if len(items)>=2 else [],\n                                \"sublist_ranks\":ranks if len(items)>=2 else [],\"is_sublist\":len(items)>=2})\n            records.append(row)\n        recent_lines.append(evidence_raw)\n    return records\n\ndef main(answer_raw: str, brand_name: str, company_name: str = \"\", comps_list: str = \"\", query: str = \"\") -> dict:\n    # answer_text必须保留answer_raw逐字符原文，禁止清洗、strip或压缩空格。\n    answer = str(answer_raw or \"\")\n    aliases = build_aliases(brand_name, company_name)\n    brand_aliases = build_aliases(brand_name, \"\") if split_declared(brand_name) else build_aliases(\"\", company_name)\n    brand_aliases.extend(derive_query_target_aliases(query, brand_aliases))\n    # 查询本身是具体产品词时，query-derived alias属于同粒度硬别名；公司法定全称只保留所有权辅助作用。\n    brand_strict_aliases = [x for x in brand_aliases if float(x.get(\"confidence\", 0)) >= 0.90]\n    company_fallback_aliases = [x[\"alias\"] for x in brand_aliases\n                                if x.get(\"type\") in {\"industry_core\",\"distinctive_core\"}\n                                and float(x.get(\"confidence\", 0)) >= (0.78 if split_declared(brand_name) else 0.90)\n                                and len(re.sub(r\"[^0-9A-Za-z\\u4e00-\\u9fff]+\", \"\", str(x.get(\"alias\") or \"\"))) >= 3]\n    catalog = make_catalog(answer)\n    block_codes = {\"heading\": \"H\", \"table_row\": \"T\", \"list_item\": \"L\", \"paragraph\": \"P\"}\n    llm_catalog = []\n    for x in catalog:\n        text = str(x.get(\"text\", \"\"));code = block_codes.get(x.get(\"block_type\"), \"P\")\n        if code == \"P\" and re.match(r\"^\\s*(?:[一二三四五六七八九十]+[、.．]|第[一二三四五六七八九十0-9]+(?:部分|章|类|模块))\", text):code = \"H\"\n        llm_catalog.append([x[\"id\"], code, text])\n    return {\n        \"answer_text\": answer,\n        \"analysis_text\": visible_text(answer),\n        \"answer_total_len\": char_count(answer),\n        \"sentence_catalog\": json.dumps(catalog, ensure_ascii=False),\n        \"llm_sentence_catalog\": json.dumps(llm_catalog, ensure_ascii=False, separators=(\",\", \":\")),\n        \"target_aliases\": json.dumps(aliases, ensure_ascii=False),\n        \"brand_aliases\": json.dumps(brand_aliases, ensure_ascii=False),\n        \"brand_alias_strings\": json.dumps([x[\"alias\"] for x in brand_aliases], ensure_ascii=False),\n        \"brand_strict_alias_strings\": json.dumps([x[\"alias\"] for x in brand_strict_aliases], ensure_ascii=False),\n        \"company_fallback_alias_strings\": json.dumps(company_fallback_aliases, ensure_ascii=False),\n        \"target_alias_strings\": json.dumps([x[\"alias\"] for x in aliases], ensure_ascii=False),\n        \"competitor_hints\": json.dumps(parse_hints(comps_list), ensure_ascii=False),\n        \"query\": re.sub(r\"\\s+\", \" \", str(query or \"\")).strip()\n    }"
         code_language: python3
         desc: 保留完整原文证据目录供代码回填；额外生成ID/结构/原文三列的LLM紧凑目录，避免重复上下文与offset元数据进入模型
         outputs:
@@ -2742,6 +2820,26 @@ workflow:
           - '1792051864333'
           - sentiment_word_cloud_summary
           variable: sentiment_word_cloud_summary
+        - value_selector:
+          - '1792051864333'
+          - positive
+          variable: positive
+        - value_selector:
+          - '1792051864333'
+          - positive_rule
+          variable: positive_rule
+        - value_selector:
+          - '1792051864333'
+          - positive_reason
+          variable: positive_reason
+        - value_selector:
+          - '1792051864333'
+          - positive_evidence
+          variable: positive_evidence
+        - value_selector:
+          - '1792051864333'
+          - counter_evidence
+          variable: counter_evidence
         selected: false
         title: 结束
         type: end
@@ -2759,27 +2857,7 @@ workflow:
       type: custom
       width: 244
     - data:
-        code: "from typing import Any\n\ndef main(brand_detected: Any, rank_pos: Any,\
-          \ is_top_recommend: Any,\n         sentiment_score: Any, sentiment_label:\
-          \ Any, sentiment_reasoning: Any,\n         brand_sentiment_analysis: Any,\
-          \ is_ranking: Any,\n         competitor_mentions: Any, competitor_pos: Any,\
-          \ competitor_count: Any,\n         summary: Any, word_cloud_tags: Any, matched_brand:\
-          \ Any,\n         sentiment_classic_words: Any,\n         sentiment_word_clouds:\
-          \ Any = None, sentiment_word_cloud_summary: Any = None) -> dict:\n    return\
-          \ {\n        \"branch_result\": {\n            \"brand_detected\": brand_detected,\n\
-          \            \"rank_pos\": rank_pos,\n            \"is_top_recommend\":\
-          \ is_top_recommend,\n            \"sentiment_score\": sentiment_score,\n\
-          \            \"sentiment_label\": sentiment_label,\n            \"sentiment_reasoning\"\
-          : sentiment_reasoning,\n            \"brand_sentiment_analysis\": brand_sentiment_analysis,\n\
-          \            \"is_ranking\": is_ranking,\n            \"competitor_mentions\"\
-          : competitor_mentions,\n            \"competitor_pos\": competitor_pos,\n\
-          \            \"competitor_count\": competitor_count,\n            \"summary\"\
-          : summary,\n            \"key_tags\": word_cloud_tags,\n            \"matched_brand\"\
-          : matched_brand,\n            \"sentiment_classic_words\": sentiment_classic_words,\n\
-          \            \"sentiment_word_clouds\": sentiment_word_clouds or {\"positive\"\
-          : [], \"neutral\": [], \"negative\": []},\n            \"sentiment_word_cloud_summary\"\
-          : sentiment_word_cloud_summary or {\"positive_count\": 0, \"neutral_count\"\
-          : 0, \"negative_count\": 0, \"total_count\": 0},\n        }\n    }"
+        code: "from typing import Any\n\n\ndef main(brand_detected: Any, rank_pos: Any, is_top_recommend: Any,\n         sentiment_score: Any, sentiment_label: Any, sentiment_reasoning: Any,\n         brand_sentiment_analysis: Any, is_ranking: Any,\n         competitor_mentions: Any, competitor_pos: Any, competitor_count: Any,\n         summary: Any, word_cloud_tags: Any, matched_brand: Any,\n         sentiment_classic_words: Any,\n         sentiment_word_clouds: Any = None, sentiment_word_cloud_summary: Any = None,\n         positive_result: Any = None) -> dict:\n    positive = positive_result if isinstance(positive_result, dict) else {}\n    return {\n        \"branch_result\": {\n            \"brand_detected\": brand_detected,\n            \"rank_pos\": rank_pos,\n            \"is_top_recommend\": is_top_recommend,\n            \"sentiment_score\": sentiment_score,\n            \"sentiment_label\": sentiment_label,\n            \"sentiment_reasoning\": sentiment_reasoning,\n            \"brand_sentiment_analysis\": brand_sentiment_analysis,\n            \"is_ranking\": is_ranking,\n            \"competitor_mentions\": competitor_mentions,\n            \"competitor_pos\": competitor_pos,\n            \"competitor_count\": competitor_count,\n            \"summary\": summary,\n            \"key_tags\": word_cloud_tags,\n            \"matched_brand\": matched_brand,\n            \"sentiment_classic_words\": sentiment_classic_words,\n            \"sentiment_word_clouds\": sentiment_word_clouds or {\"positive\": [], \"neutral\": [], \"negative\": []},\n            \"sentiment_word_cloud_summary\": sentiment_word_cloud_summary or {\"positive_count\": 0, \"neutral_count\": 0, \"negative_count\": 0, \"total_count\": 0},\n            \"positive\": positive.get(\"positive\") or \"\",\n            \"positive_rule\": positive.get(\"positive_rule\") or \"\",\n            \"positive_reason\": positive.get(\"positive_reason\") or \"\",\n            \"positive_evidence\": positive.get(\"positive_evidence\") or [],\n            \"counter_evidence\": positive.get(\"counter_evidence\") or [],\n        }\n    }\n"
         code_language: python3
         desc: 将现有逻辑的计算结果整理为单 End 节点可读取的统一对象，不改变任何业务计算。
         outputs:
@@ -2858,6 +2936,10 @@ workflow:
           - '17774728161280'
           - sentiment_word_cloud_summary
           variable: sentiment_word_cloud_summary
+        - value_selector:
+          - '1792200000005'
+          - output
+          variable: positive_result
       height: 114
       id: '1792051864331'
       position:
@@ -2896,28 +2978,7 @@ workflow:
       type: custom
       width: 244
     - data:
-        code: "from typing import Any\n\ndef main(branch_result: Any) -> dict:\n \
-          \   if not isinstance(branch_result, dict):\n        raise ValueError(\"\
-          本次路径未返回可发布的监控结果\")\n    return {\n        \"brand_detected\": str(branch_result.get(\"\
-          brand_detected\", \"false\")),\n        \"rank_pos\": str(branch_result.get(\"\
-          rank_pos\", \"\")),\n        \"is_top_recommend\": str(branch_result.get(\"\
-          is_top_recommend\", \"false\")),\n        \"sentiment_score\": str(branch_result.get(\"\
-          sentiment_score\", \"0.000\")),\n        \"sentiment_label\": str(branch_result.get(\"\
-          sentiment_label\", \"neutral\")),\n        \"sentiment_reasoning\": str(branch_result.get(\"\
-          sentiment_reasoning\", \"\")),\n        \"brand_sentiment_analysis\": branch_result.get(\"\
-          brand_sentiment_analysis\") or {},\n        \"is_ranking\": str(branch_result.get(\"\
-          is_ranking\", \"false\")),\n        \"competitor_mentions\": branch_result.get(\"\
-          competitor_mentions\") or [],\n        \"competitor_pos\": str(branch_result.get(\"\
-          competitor_pos\", \"\")),\n        \"competitor_count\": str(branch_result.get(\"\
-          competitor_count\", \"0\")),\n        \"summary\": str(branch_result.get(\"\
-          summary\", \"\")),\n        \"key_tags\": branch_result.get(\"key_tags\"\
-          ) or [],\n        \"matched_brand\": str(branch_result.get(\"matched_brand\"\
-          , \"\")),\n        \"sentiment_classic_words\": branch_result.get(\"sentiment_classic_words\"\
-          ) or [],\n        \"sentiment_word_clouds\": branch_result.get(\"sentiment_word_clouds\"\
-          ) or {\"positive\": [], \"neutral\": [], \"negative\": []},\n        \"\
-          sentiment_word_cloud_summary\": branch_result.get(\"sentiment_word_cloud_summary\"\
-          ) or {\"positive_count\": 0, \"neutral_count\": 0, \"negative_count\": 0,\
-          \ \"total_count\": 0},\n    }"
+        code: "from typing import Any\n\n\ndef main(branch_result: Any) -> dict:\n    if not isinstance(branch_result, dict):\n        raise ValueError(\"本次路径未返回可发布的监控结果\")\n    return {\n        \"brand_detected\": str(branch_result.get(\"brand_detected\", \"false\")),\n        \"rank_pos\": str(branch_result.get(\"rank_pos\", \"\")),\n        \"is_top_recommend\": str(branch_result.get(\"is_top_recommend\", \"false\")),\n        \"sentiment_score\": str(branch_result.get(\"sentiment_score\", \"0.000\")),\n        \"sentiment_label\": str(branch_result.get(\"sentiment_label\", \"neutral\")),\n        \"sentiment_reasoning\": str(branch_result.get(\"sentiment_reasoning\", \"\")),\n        \"brand_sentiment_analysis\": branch_result.get(\"brand_sentiment_analysis\") or {},\n        \"is_ranking\": str(branch_result.get(\"is_ranking\", \"false\")),\n        \"competitor_mentions\": branch_result.get(\"competitor_mentions\") or [],\n        \"competitor_pos\": str(branch_result.get(\"competitor_pos\", \"\")),\n        \"competitor_count\": str(branch_result.get(\"competitor_count\", \"0\")),\n        \"summary\": str(branch_result.get(\"summary\", \"\")),\n        \"key_tags\": branch_result.get(\"key_tags\") or [],\n        \"matched_brand\": str(branch_result.get(\"matched_brand\", \"\")),\n        \"sentiment_classic_words\": branch_result.get(\"sentiment_classic_words\") or [],\n        \"sentiment_word_clouds\": branch_result.get(\"sentiment_word_clouds\") or {\"positive\": [], \"neutral\": [], \"negative\": []},\n        \"sentiment_word_cloud_summary\": branch_result.get(\"sentiment_word_cloud_summary\") or {\"positive_count\": 0, \"neutral_count\": 0, \"negative_count\": 0, \"total_count\": 0},\n        \"positive\": str(branch_result.get(\"positive\") or \"\"),\n        \"positive_rule\": str(branch_result.get(\"positive_rule\") or \"\"),\n        \"positive_reason\": str(branch_result.get(\"positive_reason\") or \"\"),\n        \"positive_evidence\": branch_result.get(\"positive_evidence\") or [],\n        \"counter_evidence\": branch_result.get(\"counter_evidence\") or [],\n    }\n"
         code_language: python3
         desc: 将本次路径的统一结果拆为 End 节点所需的固定字段与类型。
         outputs:
@@ -2972,6 +3033,21 @@ workflow:
           sentiment_word_cloud_summary:
             children: null
             type: object
+          positive:
+            children: null
+            type: string
+          positive_rule:
+            children: null
+            type: string
+          positive_reason:
+            children: null
+            type: string
+          positive_evidence:
+            children: null
+            type: array[string]
+          counter_evidence:
+            children: null
+            type: array[string]
         selected: false
         title: 5.3 发布本次路径结果
         type: code
@@ -3037,56 +3113,7 @@ workflow:
       type: custom
       width: 244
     - data:
-        code: "import json\nfrom typing import Any\n\ndef as_object(value: Any) ->\
-          \ dict:\n    if isinstance(value, dict):\n        return value\n    if isinstance(value,\
-          \ str):\n        try:\n            parsed = json.loads(value)\n        \
-          \    return parsed if isinstance(parsed, dict) else {}\n        except (TypeError,\
-          \ ValueError):\n            return {}\n    return {}\n\ndef as_list(value:\
-          \ Any) -> list:\n    if isinstance(value, list):\n        return value\n\
-          \    if isinstance(value, str):\n        try:\n            parsed = json.loads(value)\n\
-          \            return parsed if isinstance(parsed, list) else []\n       \
-          \ except (TypeError, ValueError):\n            return []\n    return []\n\
-          \ndef text(value: Any, default: str = \"\") -> str:\n    if value is None\
-          \ or value == \"\":\n        return default\n    if isinstance(value, bool):\n\
-          \        return \"true\" if value else \"false\"\n    return str(value)\n\
-          \ndef main(http_body: Any) -> dict:\n    raw = as_object(http_body)\n  \
-          \  if not raw:\n        raise ValueError(\"Dify 工作流未返回任何内容，请检查 HTTP 节点地址与网络\"\
-          )\n    if raw.get(\"code\") and not raw.get(\"data\"):\n        raise ValueError(text(raw.get(\"\
-          message\") or raw.get(\"msg\"), \"Dify 工作流调用失败\"))\n\n    data = raw.get(\"\
-          data\")\n    data = as_object(data) if not isinstance(data, dict) else data\n\
-          \n    # 子工作流失败必须显式报错，不能静默退化为默认值（否则会被误判为品牌未提及）。\n    status = text(data.get(\"\
-          status\") or raw.get(\"status\") or \"\").lower()\n    if status and status\
-          \ not in (\"succeeded\", \"success\", \"completed\"):\n        err = text(data.get(\"\
-          error\") or raw.get(\"error\") or data.get(\"message\") or raw.get(\"message\"\
-          ),\n                   \"子工作流执行失败\")\n        raise ValueError(f\"Dify 子工作流状态\
-          \ {status}：{err}\")\n\n    outputs = data.get(\"outputs\")\n    if outputs\
-          \ is None:\n        outputs = raw.get(\"outputs\")\n    if outputs is None\
-          \ and status in (\"succeeded\", \"success\", \"completed\"):\n        raise\
-          \ ValueError(\"Dify 子工作流已成功但未返回 outputs 字段\")\n    if isinstance(outputs,\
-          \ str):\n        outputs = as_object(outputs)\n    if not isinstance(outputs,\
-          \ dict) or not outputs:\n        raise ValueError(\"Dify 工作流未返回可解析的 outputs\
-          \ 对象\")\n    # 业务字段缺失同样视为失败，避免把空结果当成“品牌未提及”。\n    if \"brand_detected\"\
-          \ not in outputs:\n        raise ValueError(\"Dify 子工作流 outputs 缺少 brand_detected\
-          \ 字段\")\n\n    tags = outputs.get(\"key_tags\", outputs.get(\"word_cloud_tags\"\
-          , []))\n    return {\"branch_result\": {\n        \"brand_detected\": text(outputs.get(\"\
-          brand_detected\"), \"false\"),\n        \"rank_pos\": text(outputs.get(\"\
-          rank_pos\")),\n        \"is_top_recommend\": text(outputs.get(\"is_top_recommend\"\
-          ), \"false\"),\n        \"sentiment_score\": text(outputs.get(\"sentiment_score\"\
-          ), \"0.000\"),\n        \"sentiment_label\": text(outputs.get(\"sentiment_label\"\
-          ), \"neutral\"),\n        \"sentiment_reasoning\": text(outputs.get(\"sentiment_reasoning\"\
-          )),\n        \"brand_sentiment_analysis\": as_object(outputs.get(\"brand_sentiment_analysis\"\
-          )),\n        \"is_ranking\": text(outputs.get(\"is_ranking\"), \"false\"\
-          ),\n        \"competitor_mentions\": as_list(outputs.get(\"competitor_mentions\"\
-          )),\n        \"competitor_pos\": text(outputs.get(\"competitor_pos\")),\n\
-          \        \"competitor_count\": text(outputs.get(\"competitor_count\"), \"\
-          0\"),\n        \"summary\": text(outputs.get(\"summary\")),\n        \"\
-          key_tags\": as_list(tags),\n        \"matched_brand\": text(outputs.get(\"\
-          matched_brand\")),\n        \"sentiment_classic_words\": as_list(outputs.get(\"\
-          sentiment_classic_words\")),\n        \"sentiment_word_clouds\": as_object(outputs.get(\"\
-          sentiment_word_clouds\")) or {\"positive\": [], \"neutral\": [], \"negative\"\
-          : []},\n        \"sentiment_word_cloud_summary\": as_object(outputs.get(\"\
-          sentiment_word_cloud_summary\")) or {\"positive_count\": 0, \"neutral_count\"\
-          : 0, \"negative_count\": 0, \"total_count\": 0},\n    }}"
+        code: "import json\nfrom typing import Any\n\n\ndef as_object(value: Any) -> dict:\n    if isinstance(value, dict):\n        return value\n    if isinstance(value, str):\n        try:\n            parsed = json.loads(value)\n        except (TypeError, ValueError):\n            return {}\n        return parsed if isinstance(parsed, dict) else {}\n    return {}\n\n\ndef as_list(value: Any) -> list:\n    if isinstance(value, list):\n        return value\n    if isinstance(value, str):\n        try:\n            parsed = json.loads(value)\n        except (TypeError, ValueError):\n            return []\n        return parsed if isinstance(parsed, list) else []\n    return []\n\n\ndef text(value: Any, default: str = \"\") -> str:\n    if value is None or value == \"\":\n        return default\n    if isinstance(value, bool):\n        return \"true\" if value else \"false\"\n    return str(value)\n\n\ndef main(http_body: Any) -> dict:\n    raw = as_object(http_body)\n    if not raw:\n        raise ValueError(\"Dify 工作流未返回任何内容，请检查 HTTP 节点地址与网络\")\n    if raw.get(\"code\") and not raw.get(\"data\"):\n        raise ValueError(text(raw.get(\"message\") or raw.get(\"msg\"), \"Dify 工作流调用失败\"))\n\n    data = raw.get(\"data\")\n    data = as_object(data) if not isinstance(data, dict) else data\n\n    # 子工作流失败必须显式报错，不能静默退化为默认值（否则会被误判为品牌未提及）。\n    status = text(data.get(\"status\") or raw.get(\"status\") or \"\").lower()\n    if status and status not in (\"succeeded\", \"success\", \"completed\"):\n        err = text(data.get(\"error\") or raw.get(\"error\") or data.get(\"message\") or raw.get(\"message\"),\n                   \"子工作流执行失败\")\n        raise ValueError(f\"Dify 子工作流状态 {status}：{err}\")\n\n    outputs = data.get(\"outputs\")\n    if outputs is None:\n        outputs = raw.get(\"outputs\")\n    if outputs is None and status in (\"succeeded\", \"success\", \"completed\"):\n        raise ValueError(\"Dify 子工作流已成功但未返回 outputs 字段\")\n    if isinstance(outputs, str):\n        outputs = as_object(outputs)\n    if not isinstance(outputs, dict) or not outputs:\n        raise ValueError(\"Dify 工作流未返回可解析的 outputs 对象\")\n    # 业务字段缺失同样视为失败，避免把空结果当成“品牌未提及”。\n    if \"brand_detected\" not in outputs:\n        raise ValueError(\"Dify 子工作流 outputs 缺少 brand_detected 字段\")\n\n    tags = outputs.get(\"key_tags\", outputs.get(\"word_cloud_tags\", []))\n    # 旁路走外部子工作流，不在本文件内产出正面率；字段保留为空值，避免下游缺 key。\n    return {\"branch_result\": {\n        \"brand_detected\": text(outputs.get(\"brand_detected\"), \"false\"),\n        \"rank_pos\": text(outputs.get(\"rank_pos\")),\n        \"is_top_recommend\": text(outputs.get(\"is_top_recommend\"), \"false\"),\n        \"sentiment_score\": text(outputs.get(\"sentiment_score\"), \"0.000\"),\n        \"sentiment_label\": text(outputs.get(\"sentiment_label\"), \"neutral\"),\n        \"sentiment_reasoning\": text(outputs.get(\"sentiment_reasoning\")),\n        \"brand_sentiment_analysis\": as_object(outputs.get(\"brand_sentiment_analysis\")),\n        \"is_ranking\": text(outputs.get(\"is_ranking\"), \"false\"),\n        \"competitor_mentions\": as_list(outputs.get(\"competitor_mentions\")),\n        \"competitor_pos\": text(outputs.get(\"competitor_pos\")),\n        \"competitor_count\": text(outputs.get(\"competitor_count\"), \"0\"),\n        \"summary\": text(outputs.get(\"summary\")),\n        \"key_tags\": as_list(tags),\n        \"matched_brand\": text(outputs.get(\"matched_brand\")),\n        \"sentiment_classic_words\": as_list(outputs.get(\"sentiment_classic_words\")),\n        \"sentiment_word_clouds\": as_object(outputs.get(\"sentiment_word_clouds\")) or {\"positive\": [], \"neutral\": [], \"negative\": []},\n        \"sentiment_word_cloud_summary\": as_object(outputs.get(\"sentiment_word_cloud_summary\")) or {\"positive_count\": 0, \"neutral_count\": 0, \"negative_count\": 0, \"total_count\": 0},\n        \"positive\": \"\",\n        \"positive_rule\": \"\",\n        \"positive_reason\": \"\",\n        \"positive_evidence\": [],\n        \"counter_evidence\": [],\n    }}\n"
         code_language: python3
         desc: 兼容 Dify blocking 响应的 data.outputs、outputs 及 JSON 字符串形式；调用失败或缺少业务输出时显式报错。
         outputs:

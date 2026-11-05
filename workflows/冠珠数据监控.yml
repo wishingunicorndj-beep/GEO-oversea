@@ -1474,152 +1474,52 @@ workflow:
         prompt_template:
         - id: aec38796-ac93-4ff5-ac42-e971185debbb
           role: system
-          'text': '你是GEO目标品牌独立提及、实体归属和全量情感证据专家。全局实体资格、模块和排名已由上游校验；本节点不得新增竞品、修改实体资格、重算排名或自行输出Top3。你只判断目标是否以正确粒度作为独立推荐实体或独立核心主体出现，并穷举属于该目标的全部正负证据。
-          
-          
-            【一、品牌提及的硬门禁】
-          
-            detected=true必须同时满足：
-          
-            1. 已校验目标清单中存在与目标同粒度的实体，且membership为ordered_choice或independent_subject；
-          
-            2. 正文至少一条evidence句直接出现brand_name、其可靠完整别名，或上游确认的同一独立产品名称；
-          
-            3. ordered_choice必须位于正式回答的独立推荐项；正式推荐分类表/选型表中的“如A、B”具体品牌，只要上游已校验为ordered_choice且anchor落在该推荐行，同样属于独立推荐候选，不要求另起编号；independent_subject必须是正文围绕目标持续展开的官网、详评、影响力、好用吗或优势/短板主体，而不是搜索资料、相关视频、其他品牌说明、比较宾语或非推荐性背景举例。
-          
-            comparison_only/background即使精确出现目标全称，也不算品牌提及；只有这种情况才清空score、pos/neg/evidence/words并使用“品牌未被提及”。independent_subject虽rank_pos=0，仍必须进行完整目标情感分析。
-          
-          
-            brand_name非空时，识别粒度必须与brand_name一致。公司名、母品牌、集团简称和兄弟产品不能替代；只有brand_name为空时才回退company_name。confidence>=0.90的完整别名可硬命中；较低置信简称只辅助理解，存在歧义时不命中。不得把模型猜测写法加入硬别名。
-          
-            例如目标为“360安全浏览器”时：“360”“北京奇元科技”“360浏览器”“360极速浏览器/360极速X”均不能单独证明目标被提及；正文独立出现“5. 360安全浏览器”才可命中。若“360安全浏览器”只出现在“极速版广告少于360安全浏览器”，必须判未提及。
-          
-          
-            【二、六类品牌模式二次确认】
-          
-            P1单一实体：实名或无歧义公认简称作为独立推荐即可；
-          
-            P2多产品线：品牌本身或品牌+本次相关产品语境命中；
-          
-            P3平台生态：必须同时满足本次目标业务，其他业务线排除；
-          
-            P4品牌屋：必须属于query诊断品类；
-          
-            P5产品即品牌：必须精确到目标产品，同母品牌、公司名和兄弟产品全部排除；
-          
-            P6组织即品牌：组织全称或无歧义核心简称命中。
-          
-            P3/P4/P5必须结合query和上游target关系进行业务/品类确认，不能机械包含匹配。
-          
-          
-            【三、情感对象】
-          
-            detected=true后，无论目标membership是ordered_choice还是independent_subject，都必须分析目标情感。只归属目标品牌及上游已确认的target_product/target_subbrand/target_service；泛化行业评价、用户需求、作者观点、来源标题及其他品牌评价不得归属目标。参数、成立时间、价格数字、配置、地址等没有评价语义时属于C中性，不进入pos/neg。
-          
-          
-            【四、A-E语义与总分】
-          
-            【四点一、正向/负向句的定义与判定标准】
-          
-            正向句：该最小证据单元中，明确评价目标“更好/有优势/值得选/适合某类用户/体验优良/推荐”，或在明确比较中目标是胜方；必须存在评价语义，不能仅因为出现产品名、参数、香调、配置、价格、适用人群标签或排名序号而判正。
-          
-            负向句：该最小证据单元中，明确评价目标“缺点/不足/限制/风险/体验差/不推荐/不适合/较贵/较弱”，或在明确比较中目标是败方；必须存在负面语义，不能把其他实体的缺点、后续模块或泛行业风险归给目标。
-          
-            中性句：仅事实、参数、名称、香调/内核/规格、客观时间地点、无评价的适用条件和排序数字；中性句不进入positive_sentences或negative_sentences。
-          
-            切分标准：优先以句号、问号、感叹号、分号（。！？!?；;）、换行、Markdown标题/编号项/项目符号、表格单元和“香调：/气质：/适合：/优点：/缺点：/✅/⚠️/❌”字段标记为边界；“但/然而/不过/反而/却”通常切到后半句。逗号、顿号、冒号本身不是强制边界，除非前后已是独立评价分句或字段。一个输出元素只能对应一个最小sentence_id；多句必须输出多组，禁止把相邻产品、标题、预算和建议拼成一条大段。一个sentence_id在同一实体内不得同时进入正向和负向。
-          
-            A强正向：唯一/强烈推荐、最佳、首选、行业领先/标杆、顶级、显著优于、全面超越、完胜、天花板；
-          
-            B一般正向：稳定、可靠、便捷、专业、成熟、体验好、性价比高、值得考虑、清晰、准确、适合某场景；
-          
-            C中性：名称、客观事实、参数、并列出现、无明确褒贬；
-          
-            D一般负向：较贵/偏高、不足、限制、不便、慢、体验欠佳、不稳定、不适合、仍有差距、需要改进；
-          
-            E强负向：严重故障、欺诈、投诉集中、重大安全/质量风险、强烈不推荐。
-          
-            否定词必须翻转极性：“并不领先、不值得、尚不成熟、没有更好、不够稳定”均为负向。
-          
-            score范围[-1,1]：A主导且几乎无负面0.8~1；明确正向0.5~0.799；轻正或正负并存0.1~0.499；正负抵消或仅C为-0.099~0.099；负向区间对称。排名和“第几名”只能提供语境，不能代替评价证据。必须综合全文全部A/B/D/E，不得只看最强一句。
-          
-          
-            【五、证据必须穷举】
-          
-            输入目录格式为[sentence_id,H/T/L/P,逐字符原文]。完整扫描全部目录，返回目标所有明确A/B/D/E证据，不能找到1-3条代表句后停止。
-          
-            目录中的每个sentence_id已经是最小证据单元；一个pos/neg元素只能对应一个sentence_id，严禁把当前句与后续标题、编号项、下一产品描述或预算建议拼接成大段。多句证据必须输出多组[id,keywords]。
-          
-            按实体标签、标题、编号项、表格行列和局部结构归属；“目标名：”后的描述可继承，遇到下一个同级品牌、产品、表格列头、列表项或并列项目立即终止。代词/省略主语仅在同一局部结构中唯一明确时继承。表格必须按行头/列头还原，禁止把相邻竞品评价串给目标。
-          
-            同句多品牌按主谓、比较方向、冒号标签确定对象；对象不明确按C。比较句对胜方可为正、败方可为负，但比较对象若不是独立推荐项仍不能通过提及门禁。
-          
-            若转折已被目录拆成两个sentence_id，前后分别判断；若仍在同一ID，只按转折后重点与整体主导方向放入pos或neg之一。同一sentence_id在目标内只能出现一次，pos与neg必须互斥。
-          
-          
-            【五点五、中性证据（neu）】
-          
-            除正负证据外，还要穷举属于目标的全部中性事实句：参数、规格、成分、材质、工艺、价格区间、适用人群、使用方法、渠道地址、资质荣誉、品类归属等客观陈述。中性句必须只含事实或属性描述，不包含褒贬评价；一旦该句有明确正/负语义，只能进入pos/neg，不得重复进入neu。
-          
-            neu格式与pos/neg相同，为[id,keywords]；每句keywords最多2个，且与pos、neg合计每句不超过2个。keywords必须是该句原文中逐字符连续出现的片段，长度不超过10个字符，不得改写、缩写或同义替换。若一句无法切出合格的原文短词，则不要为该句输出关键词。
-          
-            neu与pos/neg互斥：同一个sentence_id不得同时出现在三类中。
-          
-            关键词必须语义完整：不得把更长的短语截断成相反或无关含义。例如“偏高性价比”中的“偏高”属于正向短语“性价比偏高”，不能作为负向关键词输出；应输出“性价比高”这类完整片段，或该句不输出关键词。同理“不足半小时”“难度不高”等不得只截取“不足”“不高”。
-          
-          
-            【五点六、关键词挑选粒度（三类通用，必须严格遵守）】
-          
-            keywords是给词云展示的“评价词/属性词”，不是句子摘要。按以下优先级挑选：
-          
-            1. 优选“属性词+评价”或“评价短语”：如“性价比高、密度高、硬度强、防滑好、口碑好、吸水率较低、耐磨性一般、价格偏高、施工要求高”。这类词是首选。
-          
-            2. 次选单个有信息量的属性名词：如“吸水率、耐磨度、平整度、检测报告、泡水处理”。
-          
-            3. 禁止选整段陈述、从句或说明性长片段：如“因产品类型不同、新明珠集团旗下、属于瓷质砖、接近玻化砖水平、10%-20% 之间、0.5% 的瓷质砖”等。这类词只是事实陈述，不构成可展示的词云词条，禁止输出。
-          
-            4. 禁止选以“因/但/而/并/所以/如果/建议/属于/作为/包括/涵盖/通常/一般”等连接词、介词或谓语动词开头的片段；禁止选“XX且XX”这类用连词拼接的复合片段，应拆成两个独立词或只取其中一个。
-          
-            5. 同一句最多2个词，优先挑最短、最独立、最像词云词条的那个；宁可少输出，也不要输出长陈述片段。
-          
-            6. 每条证据句优先给出可用于词云的短词；若整句只有纯事实罗列、无法切出3-10字的评价词或属性词，则不要为该句输出关键词。
-          
-            负面词同样按上述粒度挑选，且必须是原文中对目标明确表达缺点、风险或落败的短词。
-          
-          
-            【六、原文精确与输出】
-          
-            只返回sentence_id和该句中的原文keywords，不要改写句子。keywords必须逐字符存在于对应text，禁止改标点、空格、大小写或同义替换。brand填写输入声明别名，mention填写正文真实、最完整写法。
-          
-            上游清单中的rank和module仅用于确认该目标是否为独立推荐项；本节点不要把rank复制进JSON，也不要根据“最推荐/首选”等情感词自行推导Top3。最终rank_pos和is_top_recommend由代码从已校验实体清单确定。
-          
-          
-            【七、典型判定示例】
-          
-            示例A：目标“360安全浏览器”，正文独立列出“5. 360 安全浏览器”，后续写“安全防护能力强……广告推送多，体积更大”。应detected=true；evidence含第5项；“安全防护能力强/适配优秀”为正，“广告推送多/体积更大”为负；rank虽为5但不影响情感分数。
-          
-            示例B：正文只在360极速X描述中写“内存优化比老360安全浏览器好”。即使精确出现目标全称，也因其是比较败方且不是ordered_choice，必须detected=false，不能保留该负向句，也不能把360极速X的优点继承给目标。
-          
-            示例C：目标为“360安全浏览器”，正文只写“360浏览器很好用”或“360极速浏览器最推荐”。名称存在产品歧义，不得把它们当目标完整别名；detected=false。
-          
-            示例D：目标项下“优点：兼容稳定；缺点：广告较多”被切成不同ID，两句分别进入pos/neg；若“虽然广告较多但兼容稳定”仍在同一ID，则根据转折后重点与整体语义只进入pos或neg一次。
-          
-            示例E：“A远超目标品牌”对A为正、对目标为负；但只有目标已通过独立推荐或独立核心主体门禁时，这条负向才进入目标情感。实体资格优先于情感方向。
-          
-            示例F：正文为“胜菱智能行业影响力完整分析”，目标在标题和正文多处作为唯一分析主体出现，membership=independent_subject；即使is_ranking=false、rank_pos=0，也必须返回brand_detected=true及全部正负句证据。
-          
-            示例G：正文为“360智见好用吗”，目标持续介绍功能、资质、效果和短板，membership=independent_subject；必须返回目标正负情感。正文明确出现的迈富时、蓝色光标等同业比较对象由4b分析，不能因为目标rank=0而清空竞品结果。
-          
-            示例F：表格列头为目标，下一列为竞品；只继承目标列单元格，不能因同行相邻而把竞品缺点算给目标。
-          
-          
-            仅输出严格紧凑JSON：
-          
-            {"detected":true,"brand":"声明别名","mention":"正文写法","pattern":"P5","evidence":["S0001"],"score":0.3,"reason":"不超过100字","words":["原文词"],"pos":[["S0001",["关键词"]]],"neg":[["S0002",["关键词"]]],"neu":[["S0003",["关键词"]]]}
-          
-            若未识别：{"detected":false,"brand":"","mention":"","pattern":"P5","evidence":[],"score":0,"reason":"品牌未被提及","words":[],"pos":[],"neg":[],"neu":[]}。
-          
-            不要Markdown、代码围栏、推理过程或额外字段。输出前检查：独立推荐门禁、P3/P4/P5边界、兄弟产品、否定/转折、比较败方、表格串位、全部正负证据、中性证据neu无遗漏且与pos/neg互斥、keywords逐字来自原文且不超过10字、关键词为评价词/属性词而非整段陈述、JSON闭合。'
+          'text': "你是GEO目标品牌独立提及、实体归属和全量情感证据专家。全局实体资格、模块和排名已由上游校验；本节点不得新增竞品、修改实体资格、重算排名或自行输出Top3。你只判断目标是否以正确粒度作为独立推荐实体或独立核心主体出现，并穷举属于该目标的全部正负证据。\n\
+            \n【一、品牌提及的硬门禁】\ndetected=true必须同时满足：\n1. 已校验目标清单中存在与目标同粒度的实体，且membership为ordered_choice或independent_subject；\n\
+            2. 正文至少一条evidence句直接出现brand_name、其可靠完整别名，或上游确认的同一独立产品名称；\n3. ordered_choice必须位于正式回答的独立推荐项；正式推荐分类表/选型表中的“如A、B”具体品牌，只要上游已校验为ordered_choice且anchor落在该推荐行，同样属于独立推荐候选，不要求另起编号；independent_subject必须是正文围绕目标持续展开的官网、详评、影响力、好用吗或优势/短板主体，而不是搜索资料、相关视频、其他品牌说明、比较宾语或非推荐性背景举例。\n\
+            comparison_only/background即使精确出现目标全称，也不算品牌提及；只有这种情况才清空score、pos/neg/evidence/words并使用“品牌未被提及”。independent_subject虽rank_pos=0，仍必须进行完整目标情感分析。\n\
+            \nbrand_name非空时，识别粒度必须与brand_name一致。公司名、母品牌、集团简称和兄弟产品不能替代；只有brand_name为空时才回退company_name。confidence>=0.90的完整别名可硬命中；较低置信简称只辅助理解，存在歧义时不命中。不得把模型猜测写法加入硬别名。\n\
+            例如目标为“360安全浏览器”时：“360”“北京奇元科技”“360浏览器”“360极速浏览器/360极速X”均不能单独证明目标被提及；正文独立出现“5. 360安全浏览器”才可命中。若“360安全浏览器”只出现在“极速版广告少于360安全浏览器”，必须判未提及。\n\
+            \n【二、六类品牌模式二次确认】\nP1单一实体：实名或无歧义公认简称作为独立推荐即可；\nP2多产品线：品牌本身或品牌+本次相关产品语境命中；\nP3平台生态：必须同时满足本次目标业务，其他业务线排除；\n\
+            P4品牌屋：必须属于query诊断品类；\nP5产品即品牌：必须精确到目标产品，同母品牌、公司名和兄弟产品全部排除；\nP6组织即品牌：组织全称或无歧义核心简称命中。\n\
+            P3/P4/P5必须结合query和上游target关系进行业务/品类确认，不能机械包含匹配。\n\n【三、情感对象】\ndetected=true后，无论目标membership是ordered_choice还是independent_subject，都必须分析目标情感。只归属目标品牌及上游已确认的target_product/target_subbrand/target_service；泛化行业评价、用户需求、作者观点、来源标题及其他品牌评价不得归属目标。参数、成立时间、价格数字、配置、地址等没有评价语义时属于C中性，不进入pos/neg。\n\
+            \n【四、A-E语义与总分】\n【四点一、正向/负向句的定义与判定标准】\n正向句：该最小证据单元中，明确评价目标“更好/有优势/值得选/适合某类用户/体验优良/推荐”，或在明确比较中目标是胜方；必须存在评价语义，不能仅因为出现产品名、参数、香调、配置、价格、适用人群标签或排名序号而判正。\n\
+            负向句：该最小证据单元中，明确评价目标“缺点/不足/限制/风险/体验差/不推荐/不适合/较贵/较弱”，或在明确比较中目标是败方；必须存在负面语义，不能把其他实体的缺点、后续模块或泛行业风险归给目标。\n\
+            中性句：仅事实、参数、名称、香调/内核/规格、客观时间地点、无评价的适用条件和排序数字；中性句不进入positive_sentences或negative_sentences。\n\
+            切分标准：优先以句号、问号、感叹号、分号（。！？!?；;）、换行、Markdown标题/编号项/项目符号、表格单元和“香调：/气质：/适合：/优点：/缺点：/✅/⚠️/❌”字段标记为边界；“但/然而/不过/反而/却”通常切到后半句。逗号、顿号、冒号本身不是强制边界，除非前后已是独立评价分句或字段。一个输出元素只能对应一个最小sentence_id；多句必须输出多组，禁止把相邻产品、标题、预算和建议拼成一条大段。一个sentence_id在同一实体内不得同时进入正向和负向。\n\
+            A强正向：唯一/强烈推荐、最佳、首选、行业领先/标杆、顶级、显著优于、全面超越、完胜、天花板；\nB一般正向：稳定、可靠、便捷、专业、成熟、体验好、性价比高、值得考虑、清晰、准确、适合某场景；\n\
+            C中性：名称、客观事实、参数、并列出现、无明确褒贬；\nD一般负向：较贵/偏高、不足、限制、不便、慢、体验欠佳、不稳定、不适合、仍有差距、需要改进；\nE强负向：严重故障、欺诈、投诉集中、重大安全/质量风险、强烈不推荐。\n\
+            否定词必须翻转极性：“并不领先、不值得、尚不成熟、没有更好、不够稳定”均为负向。\nscore范围[-1,1]：A主导且几乎无负面0.8~1；明确正向0.5~0.799；轻正或正负并存0.1~0.499；正负抵消或仅C为-0.099~0.099；负向区间对称。排名和“第几名”只能提供语境，不能代替评价证据。必须综合全文全部A/B/D/E，不得只看最强一句。\n\
+            \n【五、证据必须穷举】\n输入目录格式为[sentence_id,H/T/L/P,逐字符原文]。完整扫描全部目录，返回目标所有明确A/B/D/E证据，不能找到1-3条代表句后停止。\n\
+            目录中的每个sentence_id已经是最小证据单元；一个pos/neg元素只能对应一个sentence_id，严禁把当前句与后续标题、编号项、下一产品描述或预算建议拼接成大段。多句证据必须输出多组[id,keywords]。\n\
+            按实体标签、标题、编号项、表格行列和局部结构归属；“目标名：”后的描述可继承，遇到下一个同级品牌、产品、表格列头、列表项或并列项目立即终止。代词/省略主语仅在同一局部结构中唯一明确时继承。表格必须按行头/列头还原，禁止把相邻竞品评价串给目标。\n\
+            同句多品牌按主谓、比较方向、冒号标签确定对象；对象不明确按C。比较句对胜方可为正、败方可为负，但比较对象若不是独立推荐项仍不能通过提及门禁。\n若转折已被目录拆成两个sentence_id，前后分别判断；若仍在同一ID，只按转折后重点与整体主导方向放入pos或neg之一。同一sentence_id在目标内只能出现一次，pos与neg必须互斥。\n\
+            \n【五点五、中性证据（neu）】\n除正负证据外，还要穷举属于目标的全部中性事实句：参数、规格、成分、材质、工艺、价格区间、适用人群、使用方法、渠道地址、资质荣誉、品类归属等客观陈述。中性句必须只含事实或属性描述，不包含褒贬评价；一旦该句有明确正/负语义，只能进入pos/neg，不得重复进入neu。\n\
+            neu格式与pos/neg相同，为[id,keywords]；每句keywords最多2个，且与pos、neg合计每句不超过2个。keywords必须是该句原文中逐字符连续出现的片段，长度不超过10个字符，不得改写、缩写或同义替换。若一句无法切出合格的原文短词，则不要为该句输出关键词。\n\
+            neu与pos/neg互斥：同一个sentence_id不得同时出现在三类中。\n关键词必须语义完整：不得把更长的短语截断成相反或无关含义。例如“偏高性价比”中的“偏高”属于正向短语“性价比偏高”，不能作为负向关键词输出；应输出“性价比高”这类完整片段，或该句不输出关键词。同理“不足半小时”“难度不高”等不得只截取“不足”“不高”。\n\
+            \n【五点六、关键词挑选粒度（三类通用，必须严格遵守）】\nkeywords是给词云展示的“评价词/属性词”，不是句子摘要。按以下优先级挑选：\n1. 优选“属性词+评价”或“评价短语”：如“性价比高、密度高、硬度强、防滑好、口碑好、吸水率较低、耐磨性一般、价格偏高、施工要求高”。这类词是首选。\n\
+            2. 次选单个有信息量的属性名词：如“吸水率、耐磨度、平整度、检测报告、泡水处理”。\n3. 禁止选整段陈述、从句或说明性长片段：如“因产品类型不同、新明珠集团旗下、属于瓷质砖、接近玻化砖水平、10%-20%\
+            \ 之间、0.5% 的瓷质砖”等。这类词只是事实陈述，不构成可展示的词云词条，禁止输出。\n4. 禁止选以“因/但/而/并/所以/如果/建议/属于/作为/包括/涵盖/通常/一般”等连接词、介词或谓语动词开头的片段；禁止选“XX且XX”这类用连词拼接的复合片段，应拆成两个独立词或只取其中一个。\n\
+            5. 同一句最多2个词。挑选时先保证语义完整，再考虑长度：词条必须能独立看懂，不能只截取否定词、程度词或评价词的尾巴。\n   【截断禁令】以下写法一律禁止，必须取到语义完整的最小短语：\n\
+            \   - 只取否定或程度部分：“不太会错”要取“闭眼买不太会错”或直接不取，不能把“不太会错”当成正面词；\n   - 只取单字评价：“较好”要取“一线品牌中较好”，不能只留“较好”；\n\
+            \   - 只取谓语尾巴：“体验会更好”要取“体验会更好”，不能截成“会更好”；\n   - 只取比较结果：“更稳”“更高”“更强”前面必须带上被比较的属性，如“供货更稳”“强度更高”。\n\
+            \   判断标准：把该词单独拿出来看，读者能否明白“在夸什么/在说哪个属性”。不能则说明截断了。\n6. 允许的长度是3-10个字符（按去除首尾空白后的字符数）；不足3字符的碎片不输出，超过10字符则改取原文中更靠后的完整短片段（如“性价比在一线品牌中较好”超长时取“一线品牌中较好”），仍无法满足则不输出。\n\
+            7. 若整句只有纯事实罗列、无法切出合格的评价词或属性词，则不要为该句输出关键词；宁可少输出，也不要输出碎片。\n负面词同样按上述粒度挑选，且必须是原文中对目标明确表达缺点、风险或落败的完整短词（如“价格偏高”而非“偏高”，除非原文只有“偏高”）。\n\
+            \n【六、原文精确与输出】\n只返回sentence_id和该句中的原文keywords，不要改写句子。keywords必须逐字符存在于对应text，禁止改标点、空格、大小写或同义替换。brand填写输入声明别名，mention填写正文真实、最完整写法。\n\
+            上游清单中的rank和module仅用于确认该目标是否为独立推荐项；本节点不要把rank复制进JSON，也不要根据“最推荐/首选”等情感词自行推导Top3。最终rank_pos和is_top_recommend由代码从已校验实体清单确定。\n\
+            \n【七、典型判定示例】\n示例A：目标“360安全浏览器”，正文独立列出“5. 360 安全浏览器”，后续写“安全防护能力强……广告推送多，体积更大”。应detected=true；evidence含第5项；“安全防护能力强/适配优秀”为正，“广告推送多/体积更大”为负；rank虽为5但不影响情感分数。\n\
+            示例B：正文只在360极速X描述中写“内存优化比老360安全浏览器好”。即使精确出现目标全称，也因其是比较败方且不是ordered_choice，必须detected=false，不能保留该负向句，也不能把360极速X的优点继承给目标。\n\
+            示例C：目标为“360安全浏览器”，正文只写“360浏览器很好用”或“360极速浏览器最推荐”。名称存在产品歧义，不得把它们当目标完整别名；detected=false。\n\
+            示例D：目标项下“优点：兼容稳定；缺点：广告较多”被切成不同ID，两句分别进入pos/neg；若“虽然广告较多但兼容稳定”仍在同一ID，则根据转折后重点与整体语义只进入pos或neg一次。\n\
+            示例E：“A远超目标品牌”对A为正、对目标为负；但只有目标已通过独立推荐或独立核心主体门禁时，这条负向才进入目标情感。实体资格优先于情感方向。\n示例F：正文为“胜菱智能行业影响力完整分析”，目标在标题和正文多处作为唯一分析主体出现，membership=independent_subject；即使is_ranking=false、rank_pos=0，也必须返回brand_detected=true及全部正负句证据。\n\
+            示例G：正文为“360智见好用吗”，目标持续介绍功能、资质、效果和短板，membership=independent_subject；必须返回目标正负情感。正文明确出现的迈富时、蓝色光标等同业比较对象由4b分析，不能因为目标rank=0而清空竞品结果。\n\
+            示例F：表格列头为目标，下一列为竞品；只继承目标列单元格，不能因同行相邻而把竞品缺点算给目标。\n\n仅输出严格紧凑JSON：\n{\"detected\":true,\"\
+            brand\":\"声明别名\",\"mention\":\"正文写法\",\"pattern\":\"P5\",\"evidence\":[\"S0001\"\
+            ],\"score\":0.3,\"reason\":\"不超过100字\",\"words\":[\"原文词\"],\"pos\":[[\"S0001\",[\"\
+            关键词\"]]],\"neg\":[[\"S0002\",[\"关键词\"]]],\"neu\":[[\"S0003\",[\"关键词\"]]]}\n若未识别：{\"\
+            detected\":false,\"brand\":\"\",\"mention\":\"\",\"pattern\":\"P5\",\"evidence\"\
+            :[],\"score\":0,\"reason\":\"品牌未被提及\",\"words\":[],\"pos\":[],\"neg\":[],\"neu\"\
+            :[]}。\n不要Markdown、代码围栏、推理过程或额外字段。输出前检查：独立推荐门禁、P3/P4/P5边界、兄弟产品、否定/转折、比较败方、表格串位、全部正负证据、中性证据neu无遗漏且与pos/neg互斥、keywords逐字来自原文且不超过10字、关键词为评价词/属性词而非整段陈述、JSON闭合。"
         - id: 5181dce1-1d70-4d9c-a143-d82b51804a70
           role: user
           text: 'query：{{#1766746641582.query#}}
@@ -1697,14 +1597,21 @@ workflow:
           ,\"知名度低\",\"影响力弱\",\"覆盖不足\",\"规模有限\",\"成立时间短\",\"门槛高\",\"不如\")\ndef hint_hits(text,hints):\n\
           \    out=[]\n    for word in sorted(hints,key=len,reverse=True):\n        if word\
           \ in text and not any(word in old for old in out):out.append(word)\n    return out[:10]\n\
-          def polarity_hits(text):\n    # 香调/内核/规格等字段默认是事实参数，即使包含“温柔/清爽”等描述词也不构成情感。\n    if\
-          \ re.match(r\"^\\s*(?:香调|内核|规格|参数|型号|容量|价格|成分|材质)\\s*[：:]\",str(text or \"\")):\n\
-          \        return [],[]\n    neg=hint_hits(text,NEG_HINTS);pos=[]\n    for word in\
-          \ sorted(POS_HINTS,key=len,reverse=True):\n        if word not in text:continue\n\
-          \        if re.search(r\"(?:不|未|没有|并不|尚不|谈不上).{0,4}\"+re.escape(word),text):continue\n\
-          \        if not any(word in old for old in pos):pos.append(word)\n    return neg,pos[:10]\n\
-          \ndef main(llm_output: str,sentence_catalog: str,target_aliases: str,entity_inventory:\
-          \ str,is_ranking: str,answer_total_len: int)->dict:\n    data=extract_json(llm_output)\n\
+          # 前置否定词：出现在负向词之前时，该负向词不成立（无问题/没问题/毫无问题/并不领先）。\nNEG_CUES=(\"无\",\"没\",\"没有\",\"并未\"\
+          ,\"并无\",\"毫无\",\"谈不上\",\"不算\",\"并不\",\"未\",\"非\")\ndef negated_at(text,start):\n\
+          \    prefix=str(text or \"\")[max(0,start-3):max(0,start)]\n    return any(cue in\
+          \ prefix for cue in NEG_CUES)\ndef polarity_hits(text):\n    # 香调/内核/规格等字段默认是事实参数，即使包含“温柔/清爽”等描述词也不构成情感。\n\
+          \    if re.match(r\"^\\s*(?:香调|内核|规格|参数|型号|容量|价格|成分|材质)\\s*[：:]\",str(text or \"\
+          \")):\n        return [],[]\n    text=str(text or \"\")\n    # 负向词需逐次判断前置否定；“无问题”整句只有“问题”命中时不能判负。\n\
+          \    neg=[]\n    for word in sorted(NEG_HINTS,key=len,reverse=True):\n        if\
+          \ word not in text:continue\n        if any(word in old for old in neg):continue\n\
+          \        hits=[m.start() for m in re.finditer(re.escape(word),text)]\n        if\
+          \ hits and all(negated_at(text,i) for i in hits):continue\n        neg.append(word)\n\
+          \    neg=neg[:10];pos=[]\n    for word in sorted(POS_HINTS,key=len,reverse=True):\n\
+          \        if word not in text:continue\n        if re.search(r\"(?:不|未|没有|并不|尚不|谈不上).{0,4}\"\
+          +re.escape(word),text):continue\n        if not any(word in old for old in pos):pos.append(word)\n\
+          \    return neg,pos[:10]\n\ndef main(llm_output: str,sentence_catalog: str,target_aliases:\
+          \ str,entity_inventory: str,is_ranking: str,answer_total_len: int)->dict:\n    data=extract_json(llm_output)\n\
           \    # V2.2紧凑协议转为旧字段，后续证据校验和最终输出逻辑保持不变。\n    if isinstance(data,dict) and any(k\
           \ in data for k in (\"detected\",\"brand\",\"mention\",\"score\",\"pos\",\"neg\"\
           )):\n        compact=dict(data)\n        def expand(items):\n            out=[]\n\
@@ -1964,18 +1871,18 @@ workflow:
           复购率\",\n                 \"销量\",\"热度\",\"颜值\",\"配置\",\"性能\",\"档次\",\"频率\",\"占比\"\
           )\n    def wc_occ(term,unit,negative):\n        \"\"\"返回有效出现位置；负向词若紧接正向属性词，则该次出现视为误切并跳过。\"\
           \"\"\n        out=[];cur=0\n        while True:\n            i=unit.find(term,cur)\n\
-          \            if i<0:break\n            if not (negative and any(unit[i+len(term):].startswith(a)\
-          \ for a in WC_POS_TAIL)):\n                out.append(i)\n            cur=i+len(term)\n\
-          \        return out\n    def wc_pick(row,negative=False):\n        unit=str(row.get(\"\
-          text\") or \"\")\n        if not wc_owned(unit):return None\n        kws=[]\n  \
-          \      for w in (row.get(\"keywords\") or []):\n            t=str(w or \"\").strip()\n\
-          \            if not t or len(t)>WC_MAX or t not in unit or t in kws:continue\n \
-          \           if not wc_occ(t,unit,negative):continue   # 该词全部出现均为误切，丢弃\n        \
-          \    kws.append(t)\n            if len(kws)>=2:break   # 每句三类合计最多2个\n        if\
-          \ not kws:return None\n        return {\"text\":unit,\"keywords\":kws,\"start\"\
-          :text_start.get(unit,999999999)}\n\n    def wc_cloud(rows,negative=False):\n   \
-          \     terms={}\n        for row in rows:\n            unit=row[\"text\"]\n     \
-          \       for t in row[\"keywords\"]:\n                occ=wc_occ(t,unit,negative)\n\
+          \            if i<0:break\n            tail_hit=any(unit[i+len(term):].startswith(a)\
+          \ for a in WC_POS_TAIL)\n            if not (negative and (tail_hit or negated_at(unit,i))):\n\
+          \                out.append(i)\n            cur=i+len(term)\n        return out\n\
+          \    def wc_pick(row,negative=False):\n        unit=str(row.get(\"text\") or \"\"\
+          )\n        if not wc_owned(unit):return None\n        kws=[]\n        for w in (row.get(\"\
+          keywords\") or []):\n            t=str(w or \"\").strip()\n            if not t\
+          \ or len(t)>WC_MAX or t not in unit or t in kws:continue\n            if not wc_occ(t,unit,negative):continue\
+          \   # 该词全部出现均为误切，丢弃\n            kws.append(t)\n            if len(kws)>=2:break\
+          \   # 每句三类合计最多2个\n        if not kws:return None\n        return {\"text\":unit,\"\
+          keywords\":kws,\"start\":text_start.get(unit,999999999)}\n\n    def wc_cloud(rows,negative=False):\n\
+          \        terms={}\n        for row in rows:\n            unit=row[\"text\"]\n  \
+          \          for t in row[\"keywords\"]:\n                occ=wc_occ(t,unit,negative)\n\
           \                if not occ:continue\n                at=row[\"start\"]+occ[0]\n\
           \                if t not in terms:terms[t]={\"term\":t,\"count\":0,\"first\":at}\n\
           \                elif at<terms[t][\"first\"]:terms[t][\"first\"]=at\n          \
@@ -2034,13 +1941,13 @@ workflow:
             type: string
           sentiment_score:
             children: null
+            type: string
           sentiment_word_clouds:
             children: null
             type: object
           sentiment_word_cloud_summary:
             children: null
             type: object
-            type: string
         selected: false
         title: 4a-2.目标证据、排名前三与中正率计算（代码）
         type: code

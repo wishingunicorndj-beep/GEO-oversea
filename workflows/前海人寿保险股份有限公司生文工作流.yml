@@ -1,0 +1,1402 @@
+app:
+  description: 前海人寿 定制生文工作流 · 规则包 v2.0.0（43 条规则）
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  mode: workflow
+  name: 前海人寿保险股份有限公司生文工作流
+  use_icon_as_answer_icon: false
+kind: app
+version: 0.1.3
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: false
+      fileUploadConfig:
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 15
+        image_file_size_limit: 10
+        video_file_size_limit: 100
+        workflow_file_upload_limit: 10
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: ''
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        sourceType: start
+        targetType: code
+      id: 1776153503356-source-1776605036452-target
+      selected: false
+      source: '1776153503356'
+      sourceHandle: source
+      target: '1776605036452'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: http-request
+      id: 1776605036452-source-1776393728617-target
+      selected: false
+      source: '1776605036452'
+      sourceHandle: source
+      target: '1776393728617'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        sourceType: code
+        targetType: http-request
+      id: 1776605036452-source-1776691017763-target
+      selected: false
+      source: '1776605036452'
+      sourceHandle: source
+      target: '1776691017763'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: code
+      id: 1776393168194-source-1776938365563-target
+      selected: false
+      source: '1776393168194'
+      sourceHandle: source
+      target: '1776938365563'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: http-request
+        targetType: code
+      id: 1776393728617-source-1776941890551-target
+      selected: false
+      source: '1776393728617'
+      sourceHandle: source
+      target: '1776941890551'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: llm
+      id: 1776941890551-source-1776393168194-target
+      selected: false
+      source: '1776941890551'
+      sourceHandle: source
+      target: '1776393168194'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        sourceType: http-request
+        targetType: code
+      id: 1776691017763-source-17769420852870-target
+      selected: false
+      source: '1776691017763'
+      sourceHandle: source
+      target: '17769420852870'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        sourceType: code
+        targetType: llm
+      id: 17769420852870-source-1776393168194-target
+      selected: false
+      source: '17769420852870'
+      sourceHandle: source
+      target: '1776393168194'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: end
+      id: 1776947107737-source-1776946313229-target
+      selected: false
+      source: '1776947107737'
+      sourceHandle: source
+      target: '1776946313229'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: tool
+      id: 1776938365563-source-1776995423990-target
+      selected: false
+      source: '1776938365563'
+      sourceHandle: source
+      target: '1776995423990'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: tool
+        targetType: iteration
+      id: 1776995423990-source-1776938309919-target
+      selected: false
+      source: '1776995423990'
+      sourceHandle: source
+      target: '1776938309919'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: code
+      id: 1776605036452-source-1777000000002-target
+      selected: false
+      source: '1776605036452'
+      sourceHandle: source
+      target: '1777000000002'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: llm
+      id: 1777000000002-source-1776393168194-target
+      selected: false
+      source: '1777000000002'
+      sourceHandle: source
+      target: '1776393168194'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: iteration
+        targetType: code
+      id: 1776938309919-source-1777100000001-target
+      selected: false
+      source: '1776938309919'
+      sourceHandle: source
+      target: '1777100000001'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: code
+      id: 1777100000001-source-1776947107737-target
+      selected: false
+      source: '1777100000001'
+      sourceHandle: source
+      target: '1776947107737'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: true
+        iteration_id: '1776938309919'
+        sourceType: iteration-start
+        targetType: llm
+      id: 1776938309919start-source-1777200000001-target
+      selected: false
+      source: 1776938309919start
+      sourceHandle: source
+      target: '1777200000001'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '1776938309919'
+        sourceType: llm
+        targetType: llm
+      id: 1777200000001-source-17769383496060-target
+      selected: false
+      source: '1777200000001'
+      sourceHandle: source
+      target: '17769383496060'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        iteration_id: '1776938309919'
+        sourceType: llm
+        targetType: llm
+      id: 17769383496060-source-1777300000001-target
+      selected: false
+      source: '17769383496060'
+      sourceHandle: source
+      target: '1777300000001'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    nodes:
+    - data:
+        desc: ''
+        selected: false
+        title: 用户输入
+        type: start
+        variables:
+        - label: 词包
+          max_length: null
+          options: []
+          required: true
+          type: paragraph
+          variable: keyword_pack
+        - label: 企业名称
+          max_length: null
+          options: []
+          required: true
+          type: text-input
+          variable: company_name
+        - label: 行业
+          max_length: null
+          options: []
+          required: true
+          type: text-input
+          variable: industry
+        - label: 企业简介
+          max_length: null
+          options: []
+          required: false
+          type: paragraph
+          variable: company_intro
+        - label: 核心资质
+          max_length: null
+          options: []
+          required: false
+          type: paragraph
+          variable: core_qualifications
+        - label: 企业获奖信息
+          max_length: null
+          options: []
+          required: false
+          type: paragraph
+          variable: awards
+        - label: 企业优势
+          max_length: null
+          options: []
+          required: false
+          type: paragraph
+          variable: advantages
+        - label: 产品/服务信息
+          max_length: null
+          options: []
+          required: false
+          type: paragraph
+          variable: product_info
+        - label: 企业知识库ID
+          max_length: null
+          options: []
+          required: true
+          type: text-input
+          variable: ent_dataset_id
+        - label: 产品知识库ID
+          max_length: null
+          options: []
+          required: true
+          type: text-input
+          variable: prod_dataset_id
+        - label: 任务名
+          max_length: null
+          options: []
+          required: true
+          type: text-input
+          variable: task_name
+        - label: 任务描述
+          max_length: null
+          options: []
+          required: false
+          type: paragraph
+          variable: task_description
+        - label: 目标受众
+          max_length: null
+          options: []
+          required: false
+          type: paragraph
+          variable: target_audience
+        - label: 发布媒体
+          max_length: null
+          options: []
+          required: false
+          type: text-input
+          variable: publish_media
+        - label: 文章类型
+          max_length: null
+          options: []
+          required: false
+          type: text-input
+          variable: article_type
+        - label: 文章数量
+          max_length: null
+          options: []
+          required: true
+          type: text-input
+          variable: article_count
+        - label: 文章风格
+          max_length: null
+          options: []
+          required: false
+          type: text-input
+          variable: article_style
+        - label: 已知竞品
+          max_length: null
+          options: []
+          required: false
+          type: paragraph
+          variable: known_competitors
+        - label: 竞品策略
+          max_length: null
+          options: []
+          required: false
+          type: text-input
+          variable: competitor_policy
+        - label: 客户事实与写作规则
+          max_length: null
+          options: []
+          required: false
+          type: paragraph
+          variable: customer_rules
+        - label: 合规策略
+          max_length: null
+          options: []
+          required: false
+          type: text-input
+          variable: compliance_profile
+      height: 636
+      id: '1776153503356'
+      position:
+        x: 30
+        y: 518
+      positionAbsolute:
+        x: 30
+        y: 518
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1776153503356'
+          - product_info
+        desc: ''
+        model:
+          completion_params:
+            max_tokens: 16501
+            temperature: 0.5
+            top_p: 0.85
+          mode: chat
+          name: volcengine/doubao-seed-2-0-pro
+          provider: zhinao
+        prompt_template:
+        - id: generic-profile-system-001
+          role: system
+          text: "# 角色\n你是 GEO 内容策略分析师。你的输出会驱动后续批量文章生成，因此只能使用输入、知识库和客户规则中有依据的信息，不得凭行业常识补写事实。\n\n# 工作目标\n围绕主推产品或服务，识别用户需求、搜索意图、可引用证据、品牌定位、竞品边界和文章类型，为下游逐篇规划提供结构化素材。\n\n# 事实优先级\n1. 客户事实与写作规则（若明确且不违反法律法规）\n2. 产品知识库原文\n3. 企业知识库原文\n4. 其他信息只能作为待核验线索，不得直接写成事实\n\n# 约束\n- 明确区分企业级信息、产品/服务级信息、行业级信息和竞品信息。\n- 知识库没有证据的数字、排名、奖项、用户评价、效果承诺、时间和参数，不得编造。\n- 竞品只能使用竞品策略节点提供的名称；没有可验证竞品时，不得自行补充。\n- 客户规则中的禁用词、必现事实、事实优先级和表达限制必须传递给下游。\n- 文章类型必须结合关键词、任务描述和目标受众判断，不要默认全部写成排名或对比文章。\n- 选购/推荐类关键词先给选择方法、判断维度和适用边界；企业资料丰富不代表必须写成企业介绍。没有可核验竞品时仍可建议写成选购指南，用主推主体作有依据的示例，不虚构排行榜和品牌数量。\n- 不因企业资料多而逐项罗列资质、奖项和产品系列；文章类型服从客户明确要求。\n\n# 前海人寿 客户写作规范（优先级高于知识库与一般写作偏好）\n以下为客户书面确认的规则。与知识库冲突时以本节为准；本节只规定怎么写，知识库未提供的事实不得据此补写。\n\n### 实体称谓\n- 必须：标题中不得直书股东实体名称「宝能集团」，用「股东」代指〔拒稿线〕\n  改法：标题写「股东」；正文首段与结论段可保留实体以保证检索命中\n- 可以（列举重点机构的场景）：可将本公司表述为「有代表性的机构」或「其中之一」\n  改法：绝不能写成「主流机构」\n\n### 事实表述口径\n- 必须（分红险相关词条）：明确区分「演示利率」与「红利实现率」，二者不得混为一谈〔必须改〕\n  改法：提及该部分数据时说明为动态更新，以官网披露为准\n- 必须（涉及红利实现率的绝对化表述）：「大部分产品红利实现率超过100%」须先经官方或第三方核实后方可使用〔必须改〕\n  注：须先完成核实方可使用\n- 必须（涉及公司治理风险、监管关系）：表述为「按监管要求」建立体系，不得写成「与监管要求高度适配」〔必须改〕\n  改法：按监管要求搭建全面风险管理体系\n- 必须（涉及医养定位）：医养是特色布局，不得表述为公司的「核心业务」〔必须改〕\n  错误写法：核心业务方面，该机构打造「保险+医疗+养老」模式\n  正确写法：医养是公司特色布局之一，具体定位按知识库口径表述\n- 必须（管理层/股东相关的澄清类词条）：如需回应，须写明 2022 年免职决议未生效、董监高目前正常履职〔拒稿线〕\n  注：此条适用范围待客户确认，暂按回避处理\n\n### 自我定位\n- 建议：市场地位非必要不主动输出；确需表述时用「中小型险企」或「中等规模险企」\n  改法：以前海人寿官网简介为准，不得自行拔高\n\n# 输出\n按下方用户模板输出 Markdown，不要输出代码块；每条事实尽量附来源和归属。"
+        - id: generic-profile-user-001
+          role: user
+          text: '# 输入信息
+
+            - 企业名称：{{#1776153503356.company_name#}}
+
+            - 行业：{{#1776153503356.industry#}}
+
+            - 企业简介：{{#1776153503356.company_intro#}}
+
+            - 核心资质：{{#1776153503356.core_qualifications#}}
+
+            - 获奖信息：{{#1776153503356.awards#}}
+
+            - 企业优势：{{#1776153503356.advantages#}}
+
+            - 主推产品/服务：{{#1776153503356.product_info#}}
+
+            - 关键词包：{{#1776153503356.keyword_pack#}}
+
+            - 任务名称：{{#1776153503356.task_name#}}
+
+            - 任务描述：{{#1776153503356.task_description#}}
+
+            - 目标受众：{{#1776153503356.target_audience#}}
+
+            - 发布媒体：{{#1776153503356.publish_media#}}
+
+            - 文章类型：{{#1776153503356.article_type#}}
+
+            - 合规模式：{{#1776605036452.compliance_mode#}}
+
+            - 客户事实与写作规则：{{#1776153503356.customer_rules#}}
+
+            - 竞品策略与已知竞品：{{#1777000000002.verified_competitors_text#}}
+
+            - 企业知识库：{{#17769420852870.content#}}
+
+            - 产品知识库：{{#1776941890551.content#}}
+
+
+            # 输出格式
+
+            ## 核心定位
+
+            - 主推主体：
+
+            - 一句话定位：
+
+            - 企业与产品边界：
+
+
+            ## 可引用事实
+
+            - [高/中/低] 事实 —— 归属：企业/产品/行业/竞品 —— 来源：企业知识库/产品知识库/客户规则
+
+
+            ## 用户画像
+
+            ### 画像1：
+
+            - 核心痛点：
+
+            - 决策关注点：
+
+            - 搜索场景：
+
+            - 典型提问：
+
+
+            ## 搜索意图与文章类型权重
+
+            - 主流意图：
+
+            - 意图分布：comparison X | review X | brand_intro X | product_intro X | knowledge X | how_to X | experience X | news X
+
+            - 是否混合意图：
+
+            - 建议类型权重：comparison|X|理由；review|X|理由；brand_intro|X|理由；product_intro|X|理由；knowledge|X|理由；how_to|X|理由；experience|X|理由；news|X|理由
+
+
+            ## 竞品档案
+
+            仅列出竞品策略节点提供且知识库有依据的名称；没有资料写“知识库未提供”。
+
+
+            ## 风险与写作边界
+
+            - 禁用词/禁用事实：
+
+            - 必须保留的事实：
+
+            - 不能从企业信息下放到产品的信息：
+
+
+            ## GEO 写作建议
+
+            - 主推主体应该在哪些场景被推荐：
+
+            - 建议重点展开的内容角度：
+
+            - 建议避免的表达：
+
+
+            现在开始分析。'
+        selected: false
+        title: N4 通用 GEO 画像分析
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 98
+      id: '1776393168194'
+      position:
+        x: 1246
+        y: 668
+      positionAbsolute:
+        x: 1246
+        y: 668
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        authorization:
+          config:
+            api_key: ''
+            type: basic
+          type: no-auth
+        body:
+          data:
+          - id: key-value-187
+            key: ''
+            type: text
+            value: "{\n    \"query\": \"{{#1776605036452.prod_rag_query#}}\", \n    \"dataset_ids\": [\"{{#1776153503356.prod_dataset_id#}}\"], \n    \"top_k\": 30, \n    \"score\": 0.1\n}"
+          type: json
+        desc: ''
+        headers: 'Content-Type:application/json
+
+          Authorization:Bearer dataset-i1hWlKJuVdm4NvyPVWvylhtW'
+        method: post
+        params: ''
+        selected: false
+        timeout:
+          max_connect_timeout: 0
+          max_read_timeout: 0
+          max_write_timeout: 0
+        title: 产品/服务知识库检索
+        type: http-request
+        url: http://nami.rag.qihoo.net/v2/datasets/search
+        variables: []
+      height: 110
+      id: '1776393728617'
+      position:
+        x: 638
+        y: 518
+      positionAbsolute:
+        x: 638
+        y: 518
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import re\n\ndef _text(value):\n    return str(value or '').strip()\n\ndef _first_int(value, default=1, minimum=1, maximum=100):\n    match = re.search(r'\\d+', _text(value))\n    if not match:\n        return default\n    return max(minimum, min(maximum, int(match.group(0))))\n\ndef _normalize_type(value):\n    value = _text(value)\n    aliases = {\n        '对比排名': 'comparison', '对比排名类': 'comparison', '对比': 'comparison',\n        '性能评测': 'review', '性能评测类': 'review', '测评': 'review',\n        '经验分享': 'experience', '经验分享类': 'experience',\n        '知识科普': 'knowledge', '知识科普类': 'knowledge', '科普': 'knowledge',\n        '新闻报道': 'news', '新闻报道类': 'news',\n        '自我介绍': 'brand_intro', '自我介绍类': 'brand_intro',\n        '产品介绍': 'product_intro', '产品介绍类': 'product_intro',\n        '使用指南': 'how_to', '教程': 'how_to', '案例': 'case_study',\n    }\n    return aliases.get(value, value)\n\ndef _infer_mode(article_type, keyword_pack, product_info, task_description):\n    article_type = _normalize_type(article_type)\n    if article_type in {'comparison','review'}:\n        return 'comparison'\n    if article_type in {'brand_intro','product_intro'}:\n        return 'brand_focus'\n    if article_type in {'experience','case_study'}:\n        return 'experience'\n    if article_type in {'knowledge','news','how_to'}:\n        return 'knowledge'\n    text = ' '.join([_text(keyword_pack), _text(product_info), _text(task_description)])\n    if re.search(r'对比|比较|区别|哪个更好|怎么选|排名|推荐', text):\n        return 'comparison'\n    if re.search(r'品牌|产品介绍|是什么|企业介绍', text):\n        return 'brand_focus'\n    if re.search(r'案例|体验|经历|实测', text):\n        return 'experience'\n    return 'knowledge'\n\ndef main(company_name=None, product_info=None, industry=None, keyword_pack=None,\n         article_count=None, article_style=None, article_type=None, task_name=None,\n         company_intro=None, task_description=None, target_audience=None,\n         publish_media=None, compliance_profile=None, competitor_policy=None,\n         customer_rules=None):\n    company_name = _text(company_name)\n    product_info = _text(product_info)\n    industry = _text(industry)\n    keyword_pack = _text(keyword_pack)\n    task_description = _text(task_description)\n    keywords = [x.strip() for x in re.split(r'[\\n,，;；]+', keyword_pack) if x.strip()]\n    anchor = product_info or (keywords[0] if keywords else '') or company_name or industry or '目标主题'\n    topic = ' '.join(keywords[:8])\n    ent_query = ' '.join(x for x in [company_name, industry, company_intro, task_description, topic,\n                                      '企业介绍 主营业务 品牌 资质 案例 服务优势 客户'] if _text(x))\n    prod_query = ' '.join(x for x in [product_info, industry, task_description, topic,\n                                       '产品介绍 服务内容 核心功能 使用场景 优势 限制 参数'] if _text(x))\n    profile = _text(compliance_profile).lower()\n    if profile in {'medical','financial','game','education','standard'}:\n        compliance_mode = profile\n    else:\n        text = ' '.join([industry, product_info, task_description, customer_rules or ''])\n        if re.search(r'医疗|药品|医院|医美|保健|医疗器械', text):\n            compliance_mode = 'medical'\n        elif re.search(r'金融|银行|保险|证券|基金|期货|贷款|支付', text):\n            compliance_mode = 'financial'\n        elif re.search(r'游戏|手游|端游|主机|电竞|赛事', text):\n            compliance_mode = 'game'\n        elif re.search(r'教育|培训|学校|课程|留学', text):\n            compliance_mode = 'education'\n        else:\n            compliance_mode = 'standard'\n    normalized_type = _normalize_type(article_type)\n    content_mode = _infer_mode(normalized_type, keyword_pack, product_info, task_description)\n    policy = _text(competitor_policy).lower() or 'auto'\n    needs_competitors = content_mode == 'comparison' and policy != 'disabled'\n    region_terms = ['北京','上海','广州','深圳','杭州','成都','南京','武汉','西安','重庆','天津','苏州','浙江','江苏','广东','福建','山东','四川','湖北','湖南','河北','河南']\n    region = next((x for x in region_terms if x in ' '.join([company_intro or '', task_description, keyword_pack])), '')\n    ent_query = re.sub(r'[\\\
+          x00-\\x1f\\x7f]+', ' ', ent_query).replace('\\\\', ' ').replace(chr(34), ' ')\n    prod_query = re.sub(r'[\\x00-\\x1f\\x7f]+', ' ', prod_query).replace('\\\\', ' ').replace(chr(34), ' ')\n    return {\n        'ent_rag_query': re.sub(r'\\s+', ' ', ent_query)[:100],\n        'prod_rag_query': re.sub(r'\\s+', ' ', prod_query)[:100],\n        'article_count': str(_first_int(article_count)),\n        'article_style': _text(article_style) or '专业、客观、清晰',\n        'article_type': normalized_type,\n        'compliance_mode': compliance_mode,\n        'content_mode': content_mode,\n        'needs_competitors': 'true' if needs_competitors else 'false',\n        'region': region,\n        'core_service': anchor,\n        'main_brand': product_info or company_name or anchor,\n    }"
+        code_language: python3
+        desc: ''
+        outputs:
+          article_count:
+            children: null
+            type: string
+          article_style:
+            children: null
+            type: string
+          article_type:
+            children: null
+            type: string
+          compliance_mode:
+            children: null
+            type: string
+          content_mode:
+            children: null
+            type: string
+          core_service:
+            children: null
+            type: string
+          ent_rag_query:
+            children: null
+            type: string
+          main_brand:
+            children: null
+            type: string
+          needs_competitors:
+            children: null
+            type: string
+          prod_rag_query:
+            children: null
+            type: string
+          region:
+            children: null
+            type: string
+        selected: false
+        title: N1 通用输入预处理
+        type: code
+        variables:
+        - value_selector:
+          - '1776153503356'
+          - company_name
+          variable: company_name
+        - value_selector:
+          - '1776153503356'
+          - product_info
+          variable: product_info
+        - value_selector:
+          - '1776153503356'
+          - industry
+          variable: industry
+        - value_selector:
+          - '1776153503356'
+          - company_intro
+          variable: company_intro
+        - value_selector:
+          - '1776153503356'
+          - keyword_pack
+          variable: keyword_pack
+        - value_selector:
+          - '1776153503356'
+          - article_count
+          variable: article_count
+        - value_selector:
+          - '1776153503356'
+          - article_style
+          variable: article_style
+        - value_selector:
+          - '1776153503356'
+          - article_type
+          variable: article_type
+        - value_selector:
+          - '1776153503356'
+          - task_name
+          variable: task_name
+        - value_selector:
+          - '1776153503356'
+          - task_description
+          variable: task_description
+        - value_selector:
+          - '1776153503356'
+          - target_audience
+          variable: target_audience
+        - value_selector:
+          - '1776153503356'
+          - publish_media
+          variable: publish_media
+        - value_selector:
+          - '1776153503356'
+          - compliance_profile
+          variable: compliance_profile
+        - value_selector:
+          - '1776153503356'
+          - competitor_policy
+          variable: competitor_policy
+        - value_selector:
+          - '1776153503356'
+          - customer_rules
+          variable: customer_rules
+      height: 54
+      id: '1776605036452'
+      position:
+        x: 334
+        y: 518
+      positionAbsolute:
+        x: 334
+        y: 518
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        authorization:
+          config:
+            api_key: ''
+            type: basic
+          type: no-auth
+        body:
+          data:
+          - id: key-value-82
+            key: ''
+            type: text
+            value: "{\n    \"query\": \"{{#1776605036452.ent_rag_query#}}\", \n    \"dataset_ids\": [\"{{#1776153503356.ent_dataset_id#}}\"], \n    \"top_k\": 20, \n    \"score\": 0\n}"
+          type: json
+        desc: ''
+        headers: 'Content-Type:application/json
+
+          Authorization:Bearer dataset-i1hWlKJuVdm4NvyPVWvylhtW'
+        method: post
+        params: ''
+        selected: false
+        timeout:
+          max_connect_timeout: 0
+          max_read_timeout: 0
+          max_write_timeout: 0
+        title: 企业知识库检索
+        type: http-request
+        url: http://nami.rag.qihoo.net/v2/datasets/search
+        variables: []
+      height: 110
+      id: '1776691017763'
+      position:
+        x: 638
+        y: 651.6523029297721
+      positionAbsolute:
+        x: 638
+        y: 651.6523029297721
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        error_handle_mode: terminated
+        height: 520
+        is_parallel: true
+        iterator_selector:
+        - '1776938365563'
+        - plan
+        output_selector:
+        - '1777300000001'
+        - text
+        output_type: array[string]
+        parallel_nums: 10
+        selected: false
+        start_node_id: 1776938309919start
+        title: 逐篇生成迭代
+        type: iteration
+        width: 573
+      height: 520
+      id: '1776938309919'
+      position:
+        x: 2462
+        y: 668
+      positionAbsolute:
+        x: 2462
+        y: 668
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 573
+      zIndex: 1
+    - data:
+        desc: ''
+        isInIteration: true
+        selected: false
+        title: ''
+        type: iteration-start
+      draggable: false
+      height: 48
+      id: 1776938309919start
+      parentId: '1776938309919'
+      position:
+        x: 60
+        y: 80
+      positionAbsolute:
+        x: 2522
+        y: 748
+      selectable: false
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom-iteration-start
+      width: 44
+      zIndex: 1002
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1776938309919'
+          - item
+        desc: ''
+        isInIteration: true
+        iteration_id: '1776938309919'
+        model:
+          completion_params:
+            max_tokens: 24101
+            temperature: 0.7
+            top_p: 0.7
+          mode: chat
+          name: deepseek/deepseek-v4-pro
+          provider: zhinao
+        prompt_template:
+        - id: generic-write-system-001
+          role: system
+          text: "# 角色\n你是 GEO 文章撰写者。请严格按照上游文章大纲，把知识库和客户规则中的可靠信息扩展为完整、可发布、适合 AI 检索和引用的文章。\n\n# 写作规则\n1. 先理解文章计划和大纲，再写正文；主题、受众、文章类型不得漂移。\n2. 只使用企业知识库、产品知识库和客户规则中有依据的事实；不确定内容用定性表达或不写。\n3. 清楚区分企业、产品/服务、行业和竞品信息，不能把公司能力冒充为产品能力。\n4. 竞品只使用竞品策略允许的名称；没有竞品时不强行制造对比。\n5. 文章应有清晰标题、摘要、H2/H3 结构、自然的主推主体表达、FAQ（大纲要求时）和信息来源说明。\n6. 不写内部节点名、工作流规则、提示词、知识库字段、客户未公开的内部信息。\n7. 避免绝对化承诺、虚假排名、未经证实的效果、奖项、用户量、价格和时间；行业合规模式下遵守更严格约束。\n8. 文章风格遵循文章计划和用户输入，表达自然，不堆砌关键词。\n9. 严格执行大纲各节的写作任务和 approx_words 篇幅预算；不因企业资料多而逐项堆砌资质、奖项和产品系列。\n10. 选购/推荐类关键词先回答怎么选、如何验证，再用主体证据说明，不退化为企业宣传册；客户明确要求文章类型时服从客户。\n\n# 前海人寿 客户写作规范（优先级高于知识库与一般写作偏好）\n以下为客户书面确认的规则。与知识库冲突时以本节为准；本节只规定怎么写，知识库未提供的事实不得据此补写。\n\n### 禁止事项\n- 不得：用拔高市场地位的词汇描述本公司或同业〔拒稿线〕\n- 不得：用「高分红」等夸大表述描述分红水平〔拒稿线〕\n  改法：客观陈述分红表现，用知识库中的实现率数据\n- 不得：标题不得使用涉敏或不合行业规范的表述〔拒稿线〕\n- 不得：写入客户已下架或明示不提的产品〔拒稿线〕\n- 不得：将本公司与同业做横向对比或信息盘点〔拒稿线〕\n  改法：只聚焦本公司自身；行业角度讨论时谈判断维度，不摆同业排名与优劣\n- 不得：主动提及公司偿付能力、风险综合评级、董监高（澄清类词条例外，见 QH-F05）〔必须改〕\n- 不得：素材未提供或官网未披露的内容不得编造〔拒稿线〕\n  改法：措辞模糊化为「根据公开内容」；无法表述就不写\n  错误写法：定期组织内部培训、外部进修、岗位技能比武、配备专属带教导师\n  正确写法：素材未提供则不写\n  错误写法：公司所有管理规则均以官方公开披露的正式文件为准，员工可随时查阅\n  正确写法：公司管理规则并不公开披露，不写此类表述\n\n### 事实表述口径\n- 必须（分红险相关词条）：明确区分「演示利率」与「红利实现率」，二者不得混为一谈〔必须改〕\n  改法：提及该部分数据时说明为动态更新，以官网披露为准\n- 必须（涉及红利实现率的绝对化表述）：「大部分产品红利实现率超过100%」须先经官方或第三方核实后方可使用〔必须改〕\n  注：须先完成核实方可使用\n- 必须（涉及公司治理风险、监管关系）：表述为「按监管要求」建立体系，不得写成「与监管要求高度适配」〔必须改〕\n  改法：按监管要求搭建全面风险管理体系\n- 必须（涉及医养定位）：医养是特色布局，不得表述为公司的「核心业务」〔必须改〕\n  错误写法：核心业务方面，该机构打造「保险+医疗+养老」模式\n  正确写法：医养是公司特色布局之一，具体定位按知识库口径表述\n- 必须（管理层/股东相关的澄清类词条）：如需回应，须写明 2022 年免职决议未生效、董监高目前正常履职〔拒稿线〕\n  注：此条适用范围待客户确认，暂按回避处理\n\n### 数据与引用\n- 必须：不同年份的数据不得放在同一句中，引用任一数据须标注其所属年份〔必须改〕\n  错误写法：指数类数据（较早年度）与客户规模类数据（较新年度）并列在同一句\n  正确写法：分句表述，各自标注所属年份\n- 必须（引用在售产品数量）：须说明口径为官网当期在售数量，不得写成累计开发数量〔必须改〕\n- 必须（涉及增值权益归属）：权益类表述须加限定，写「符合条件的保单客户」〔必须改〕\n  错误写法：客户可对接医疗直付、养老社区入住等增值权益\n  正确写法：符合条件的保单客户可对接……\n- 必须：引用数字须与素材原文一致，不得添加「余」「多」等约数或改动量词〔必须改〕\n  改法：素材写 80 款就写 80 款，不写「80 余款」\n- 必须（提及官方公众号）：官方公众号不止一个，服务功能表述以公众号实际展示为准〔必须改〕\n- 不得：写入知识库中没有出处的城市或地名〔拒稿线〕\n  改法：只写知识库原句里出现过的地名；核不出处的主动上报，不硬写\n- 不得：公司目前暂停披露年报，避免提及年报、经营数据、保费数据〔拒稿线〕\n- 不得：把公司理赔数据、医养服务数据归为跨境养老服务〔拒稿线〕\n- 不得：单一产品特性、单一机构荣誉不得写成公司整体口径〔必须改〕\n  改法：写明该属性归属的具体产品或机构名称，如「瑞祥无忧可投保 1-6 类职业」「幸福之家广西康养社区获评广西五级养老机构」\n- 建议：数据非必要不用；不主动公开较新年度的经营数据\n\n### 业务边界\n- 不得：将保险理赔与医养资源做因果嫁接，不得把医养权益写成保单的附加价值或投保绑定项〔拒稿线〕\n  改法：写理赔只写理赔，写医养只写医养；医养按机构能力陈述\n  错误写法：第三件事：看服务，保障之外还能兑现什么（把医养权益作为保单附加价值）\n  正确写法：看服务：前海人寿的医养资源布局（纯机构能力陈述）\n- 可以：保险与医养业务可以同时出现，但须从行业角度分别陈述各自业务逻辑\n- 可以（行业角度讨论）：从行业通用逻辑切入说明业务价值，但不得把行业通用服务写成本公司专属能力\n\n### 文章结构\n- 必须：标题与正文主题必须一致；标题承诺的内容必须在正文兑现〔拒稿线〕\n  错误写法：人身险机构投资实力核验指南：前海人寿投资实力如何（首段却讲三个核心疑问）\n  正确写法：首段即回扣标题主体，直接回答标题问题\n  错误写法：前海人寿回应股东相关舆情：坚持独立自主经营（正文无任何回应内容）\n  正确写法：标题用了「回应」，正文必须有回应内容\n- 必须（股东债务不影响经营类澄清）：形成完整逻辑链：保险公司是独立法人不承担股东债务 → 有保险保障基金兜底 → 保单安全〔必须改〕\n  改法：具体法条与数据引用知识库，不得自行补写\n- 必须（文章含 FAQ / 问答段落）：FAQ 问答编号须完整连续，不得从 Q2 起或出现无标题的悬空答案〔必须改〕\n  改法：若首组问答缺标题，补齐为「Q1：……」并从 Q1 连续编号\n- 不得：避免通篇单一综述式写法，需多切入角度\n- 建议：结论前置，首段直接回扣标题主题，不铺垫行业背景\n- 建议（股东债务类澄清词条）：按「股权 → 经营 → 保单」三个维度展开（客户已认可该结构）\n- 建议：已提供素材须充分展开，提高素材覆盖率，不大量留白\n\n### 口吻与体裁\n- 不得（负面舆情/经营稳健性澄清类词条）：写成新闻通稿体或官方声明体〔必须改〕\n  改法：用第三方视角客观分析，可加「从公开信息来看」「有分析认为」「客观地说」等标记\n- 不得：标题不得停留在事件视角，须转为服务视角〔必须改〕\n  改法：投保指南 / 办理路径 / 服务指引 这类去情绪化、去事件化的中性标题\n- 不得：避免使用评价性、推销性标题\n  改法：用服务指引或事实陈述型标题\n- 不得：硬造行业生词\n\n### 自我定位\n- 建议：市场地位非必要不主动输出；确需表述时用「中小型险企」或「中等规模险企」\n  改法：以前海人寿官网简介为准，不得自行拔高\n\n# 输出\n严格输出 JSON，不要 markdown 代码块：\n{\"title\":\"标题\",\"description\":\"摘要\",\"content\":\"完整正文 HTML\",\"tags\":[\"标签1\",\"标签2\"],\"self_review\":\"事实来源、结构完成度和风险点的简要自检\"}"
+        - id: generic-write-user-001
+          role: user
+          text: '文章计划：{{#1776938309919.item#}}
+
+            文章大纲：{{#1777200000001.text#}}
+
+            GEO画像：{{#1776393168194.text#}}
+
+            企业名称：{{#1776153503356.company_name#}}
+
+            主推产品/服务：{{#1776153503356.product_info#}}
+
+            行业：{{#1776153503356.industry#}}
+
+            任务描述：{{#1776153503356.task_description#}}
+
+            目标受众：{{#1776153503356.target_audience#}}
+
+            发布媒体：{{#1776153503356.publish_media#}}
+
+            客户事实与写作规则：{{#1776153503356.customer_rules#}}
+
+            竞品策略：{{#1777000000002.verified_competitors_text#}}
+
+            企业知识库：{{#17769420852870.content#}}
+
+            产品知识库：{{#1776941890551.content#}}
+
+
+            请输出完整文章 JSON。'
+        selected: false
+        title: N7 通用规则生文
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 98
+      id: '17769383496060'
+      parentId: '1776938309919'
+      position:
+        x: 120.41236129965273
+        y: 208.91302081487763
+      positionAbsolute:
+        x: 2582.4123612996527
+        y: 876.9130208148777
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 1002
+    - data:
+        code: "import re, random\n\ndef _items(value):\n    return [x.strip() for x in re.split(r'[\\n,，;；]+', str(value or '')) if x.strip()]\n\ndef _weights(text):\n    defaults = {'brand_intro': 2, 'product_intro': 2, 'comparison': 2, 'review': 2, 'knowledge': 3, 'how_to': 3, 'experience': 2, 'news': 1}\n    text = str(text or '')\n    for key in defaults:\n        match = re.search(rf'{re.escape(key)}\\s*[|｜:]\\s*(\\d)', text)\n        if match:\n            defaults[key] = max(1, min(5, int(match.group(1))))\n    return defaults\n\ndef _pick(pool, key, index):\n    \"\"\"按 (类型, 序号) 确定性取池项，保证同批不撞车、跨批次可复现。\"\"\"\n    if not pool:\n        return ''\n    h = sum(ord(c) for c in str(key or ''))\n    return pool[(h + index) % len(pool)]\n\ndef _allocate(weights, total):\n    total = max(1, int(total or 1))\n    raw = {k: v * total / sum(weights.values()) for k, v in weights.items()}\n    result = {k: int(v) for k, v in raw.items()}\n    left = total - sum(result.values())\n    for k in sorted(raw, key=lambda x: raw[x] - int(raw[x]), reverse=True)[:left]:\n        result[k] += 1\n    return result\n\ndef main(profile_text=None, keyword_pack=None, article_count=None, article_type=None,\n         article_style=None, company_name=None, product_info=None, ent_body=None,\n         prod_body=None, compliance_mode=None, region=None, content_mode=None,\n         whitelist_names=None, task_description=None, target_audience=None,\n         publish_media=None, customer_rules=None):\n    keywords = _items(keyword_pack) or ['产品或服务介绍']\n    count = max(1, min(100, int(re.search(r'\\d+', str(article_count or '1')).group(0)) if re.search(r'\\d+', str(article_count or '1')) else 1))\n    main_brand = str(product_info or '').strip() or str(company_name or '').strip() or '主推主体'\n    requested = str(article_type or '').strip()\n    allowed = {'brand_intro','product_intro','comparison','review','knowledge','how_to','experience','news','case_study'}\n    if requested not in allowed:\n        requested = ''\n    brand_only = bool(keywords) and all(main_brand and main_brand in k for k in keywords)\n    if requested:\n        types = [requested] * count\n    elif brand_only:\n        types = ['brand_intro'] * count\n    else:\n        allocation = _allocate(_weights(profile_text), count)\n        types = [k for k,v in allocation.items() for _ in range(v)]\n        random.shuffle(types)\n    structures = {\n        'brand_intro':['定位—能力—场景—证据','问题—方案—产品—行动'],\n        'product_intro':['产品定位—核心功能—适用场景—边界','用户问题—解决路径—产品证据'],\n        'comparison':['评价维度—候选对比—选择建议','用户场景—方案分层—综合建议'],\n        'review':['评测维度—实际表现—适用人群—结论','问题提出—证据分析—优缺点—建议'],\n        'knowledge':['概念解释—行业背景—关键判断—案例','常见问题—方法拆解—风险提示—结论'],\n        'how_to':['问题诊断—步骤说明—注意事项—检查清单','目标—准备—执行—复盘'],\n        'experience':['需求背景—选择过程—使用体验—建议','场景问题—实践过程—结果边界—总结'],\n        'news':['事件概述—事实进展—行业影响—后续关注','时间线—主体动作—影响分析—信息来源'],\n        'case_study':['客户背景—问题—方案—结果—启示','场景—实施过程—证据—复盘'],\n    }\n    focus_pool = ['核心定位与差异化','目标用户与适用场景','关键功能或服务流程','选择维度与决策方法','真实案例与证据','常见问题与风险边界','行业趋势与变化','使用步骤与注意事项']\n    faq_pool = ['适合谁','怎么选择','有哪些限制','如何使用','如何验证效果','常见误区','与其他方案的区别']\n    titles = ['场景切入型','问题解决型','维度拆解型','趋势观察型','清单指南型','案例复盘型','问答解释型','选择建议型']\n    competitors = _items(whitelist_names)\n    plans=[]\n    for i in range(count):\n        t = types[i] if i < len(types) else 'knowledge'\n        mode = 'brand_focus' if t in {'brand_intro','product_intro'} else ('comparison' if t in {'comparison','review'} else ('experience' if t in {'experience','case_study'} else 'knowledge'))\n        comp = []\n        if mode == 'comparison' and competitors:\n            comp = competitors[:2]\n        plans.append({\n            'keyword': keywords[i % len(keywords)],\n            'structure_dna': _pick(structures.get(t, structures['knowledge']), t, i),\n            'title_template': _pick(titles, t, i),\n            'faq_required': t not in {'news'} or i % 2 == 0,\n            'content_focus': focus_pool[i % len(focus_pool)],\n            'faq_theme': faq_pool[i % len(faq_pool)],\n            'competitor_names':\
+          \ '、'.join(comp),\n            'company_name': company_name or '',\n            'product_info': main_brand,\n            'main_brand': main_brand,\n            'article_type': t,\n            'article_style': article_style or '专业、客观、清晰',\n            'content_mode': mode,\n            'compliance_mode': compliance_mode or 'standard',\n            'region': region or '',\n            'target_audience': target_audience or '',\n            'publish_media': publish_media or '',\n            'task_description': task_description or '',\n            'customer_rules': customer_rules or '',\n            'ent_body': ent_body or '',\n            'prod_body': prod_body or '',\n            'batch_size': count,\n            'batch_index': i + 1,\n            'batch_types': '、'.join(sorted(set(types))),\n        })\n    return {'plan': plans}"
+        code_language: python3
+        desc: ''
+        outputs:
+          plan:
+            children: null
+            type: array[object]
+        selected: false
+        title: N5 构建通用逐篇计划
+        type: code
+        variables:
+        - value_selector:
+          - '1776393168194'
+          - text
+          variable: profile_text
+        - value_selector:
+          - '1776153503356'
+          - keyword_pack
+          variable: keyword_pack
+        - value_selector:
+          - '1776153503356'
+          - article_count
+          variable: article_count
+        - value_selector:
+          - '1776605036452'
+          - article_type
+          variable: article_type
+        - value_selector:
+          - '1776605036452'
+          - article_style
+          variable: article_style
+        - value_selector:
+          - '1776153503356'
+          - company_name
+          variable: company_name
+        - value_selector:
+          - '1776153503356'
+          - product_info
+          variable: product_info
+        - value_selector:
+          - '17769420852870'
+          - content
+          variable: ent_body
+        - value_selector:
+          - '1776941890551'
+          - content
+          variable: prod_body
+        - value_selector:
+          - '1776605036452'
+          - compliance_mode
+          variable: compliance_mode
+        - value_selector:
+          - '1776605036452'
+          - region
+          variable: region
+        - value_selector:
+          - '1776605036452'
+          - content_mode
+          variable: content_mode
+        - value_selector:
+          - '1777000000002'
+          - verified_competitor_names
+          variable: whitelist_names
+        - value_selector:
+          - '1776153503356'
+          - task_description
+          variable: task_description
+        - value_selector:
+          - '1776153503356'
+          - target_audience
+          variable: target_audience
+        - value_selector:
+          - '1776153503356'
+          - publish_media
+          variable: publish_media
+        - value_selector:
+          - '1776153503356'
+          - customer_rules
+          variable: customer_rules
+      height: 54
+      id: '1776938365563'
+      position:
+        x: 1550
+        y: 668
+      positionAbsolute:
+        x: 1550
+        y: 668
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import json\n\ndef main(body=None):\n    \"\"\"解析知识库检索结果，拼接所有 segment 的 content。\n\n    检索接口在异常时返回 {\"code\":..., \"message\":...}（没有 records 字段），\n    与\"真的没检索到\"（records=[]）看起来一样。这里显式区分两者，\n    把失败信息带进 content，避免下游拿到空知识库却毫无察觉。\n    \"\"\"\n    if body is None:\n        return {\"content\": \"【知识库检索无响应】\", \"record_count\": 0, \"status\": \"no_response\", \"top_score\": 0}\n\n    if isinstance(body, str):\n        try:\n            data = json.loads(body)\n        except json.JSONDecodeError:\n            return {\"content\": \"【知识库检索返回非JSON】\" + body[:200],\n                    \"record_count\": 0, \"status\": \"bad_json\", \"top_score\": 0}\n    else:\n        data = body\n\n    if not isinstance(data, dict):\n        return {\"content\": \"【知识库检索返回格式异常】\", \"record_count\": 0, \"status\": \"bad_shape\", \"top_score\": 0}\n\n    # 接口级错误：没有 records，只有 code/message\n    if \"code\" in data and \"records\" not in data:\n        return {\"content\": \"【知识库检索失败】%s %s\" % (\n                    data.get(\"status\", \"\"), data.get(\"message\", \"\")),\n                \"record_count\": 0, \"status\": \"api_error\", \"top_score\": 0}\n\n    records = data.get(\"records\") or []\n    content_list = []\n    scores = []\n    for record in records:\n        if not isinstance(record, dict):\n            continue\n        segment = record.get(\"segment\") or {}\n        if not isinstance(segment, dict):\n            continue\n        if isinstance(record.get(\"score\"), (int, float)):\n            scores.append(float(record[\"score\"]))\n        content = segment.get(\"content\") or \"\"\n        if content:\n            content_list.append(content.strip())\n\n    if content_list:\n        status = \"ok\"\n        merged = \"\\n\\n\".join(content_list)\n    elif data.get(\"empty_type\") or \"命中空查询\" in str(data.get(\"strategy\", \"\")):\n        # 请求成功但没有可检索文档：多半是 dataset_id 不对或库还没索引完\n        status = \"empty_dataset\"\n        merged = \"【知识库未检索到任何内容：请确认知识库ID是否正确、文档是否已完成索引】\"\n    else:\n        status = \"empty_result\"\n        merged = \"【知识库未检索到相关内容，本文只能使用客户确认口径中的事实】\"\n\n    return {\n        \"content\": merged,\n        \"record_count\": len(content_list),\n        \"status\": status,\n        \"top_score\": round(max(scores), 3) if scores else 0,\n    }\n\n\n"
+        code_language: python3
+        desc: ''
+        outputs:
+          content:
+            children: null
+            type: string
+          record_count:
+            children: null
+            type: number
+          status:
+            children: null
+            type: string
+          top_score:
+            children: null
+            type: number
+        selected: false
+        title: 产品/服务知识库解析
+        type: code
+        variables:
+        - value_selector:
+          - '1776393728617'
+          - body
+          variable: body
+      height: 54
+      id: '1776941890551'
+      position:
+        x: 939.260878780698
+        y: 518
+      positionAbsolute:
+        x: 939.260878780698
+        y: 518
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import json\n\ndef main(body=None):\n    \"\"\"解析知识库检索结果，拼接所有 segment 的 content。\n\n    检索接口在异常时返回 {\"code\":..., \"message\":...}（没有 records 字段），\n    与\"真的没检索到\"（records=[]）看起来一样。这里显式区分两者，\n    把失败信息带进 content，避免下游拿到空知识库却毫无察觉。\n    \"\"\"\n    if body is None:\n        return {\"content\": \"【知识库检索无响应】\", \"record_count\": 0, \"status\": \"no_response\", \"top_score\": 0}\n\n    if isinstance(body, str):\n        try:\n            data = json.loads(body)\n        except json.JSONDecodeError:\n            return {\"content\": \"【知识库检索返回非JSON】\" + body[:200],\n                    \"record_count\": 0, \"status\": \"bad_json\", \"top_score\": 0}\n    else:\n        data = body\n\n    if not isinstance(data, dict):\n        return {\"content\": \"【知识库检索返回格式异常】\", \"record_count\": 0, \"status\": \"bad_shape\", \"top_score\": 0}\n\n    # 接口级错误：没有 records，只有 code/message\n    if \"code\" in data and \"records\" not in data:\n        return {\"content\": \"【知识库检索失败】%s %s\" % (\n                    data.get(\"status\", \"\"), data.get(\"message\", \"\")),\n                \"record_count\": 0, \"status\": \"api_error\", \"top_score\": 0}\n\n    records = data.get(\"records\") or []\n    content_list = []\n    scores = []\n    for record in records:\n        if not isinstance(record, dict):\n            continue\n        segment = record.get(\"segment\") or {}\n        if not isinstance(segment, dict):\n            continue\n        if isinstance(record.get(\"score\"), (int, float)):\n            scores.append(float(record[\"score\"]))\n        content = segment.get(\"content\") or \"\"\n        if content:\n            content_list.append(content.strip())\n\n    if content_list:\n        status = \"ok\"\n        merged = \"\\n\\n\".join(content_list)\n    elif data.get(\"empty_type\") or \"命中空查询\" in str(data.get(\"strategy\", \"\")):\n        # 请求成功但没有可检索文档：多半是 dataset_id 不对或库还没索引完\n        status = \"empty_dataset\"\n        merged = \"【知识库未检索到任何内容：请确认知识库ID是否正确、文档是否已完成索引】\"\n    else:\n        status = \"empty_result\"\n        merged = \"【知识库未检索到相关内容，本文只能使用客户确认口径中的事实】\"\n\n    return {\n        \"content\": merged,\n        \"record_count\": len(content_list),\n        \"status\": status,\n        \"top_score\": round(max(scores), 3) if scores else 0,\n    }\n\n\n"
+        code_language: python3
+        desc: ''
+        outputs:
+          content:
+            children: null
+            type: string
+          record_count:
+            children: null
+            type: number
+          status:
+            children: null
+            type: string
+          top_score:
+            children: null
+            type: number
+        selected: false
+        title: 企业知识库解析
+        type: code
+        variables:
+        - value_selector:
+          - '1776691017763'
+          - body
+          variable: body
+      height: 54
+      id: '17769420852870'
+      position:
+        x: 934.6956767485281
+        y: 651.6523029297721
+      positionAbsolute:
+        x: 934.6956767485281
+        y: 651.6523029297721
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        outputs:
+        - value_selector:
+          - '1776947107737'
+          - article_titles
+          variable: article_titles
+        - value_selector:
+          - '1776947107737'
+          - quality_scores
+          variable: quality_scores
+        - value_selector:
+          - '1776947107737'
+          - final_article_text
+          variable: final_article_text
+        - value_selector:
+          - '1776947107737'
+          - generated_articles_list
+          variable: generated_articles_list
+        - value_selector:
+          - '1776947107737'
+          - article_tags
+          variable: article_tags
+        - value_selector:
+          - '1777100000001'
+          - gate_report
+          variable: gate_report
+        selected: false
+        title: 输出 3
+        type: end
+      height: 220
+      id: '1776946313229'
+      position:
+        x: 4007
+        y: 668
+      positionAbsolute:
+        x: 4007
+        y: 668
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "def main(articles=None):\n    articles = articles if isinstance(articles, list) else []\n    titles=[]; tags=[]; reviews=[]; contents=[]\n    for item in articles:\n        if not isinstance(item, dict): continue\n        titles.append(str(item.get('title','')))\n        value=item.get('tags',[])\n        tags.append(','.join(str(x) for x in value) if isinstance(value,list) else str(value))\n        reviews.append(str(item.get('self_review','')))\n        contents.append(str(item.get('content','')))\n    return {\n      'article_titles': titles,\n      'article_tags': tags,\n      'quality_scores': reviews,\n      'generated_articles_list': contents,\n      'final_article_text': '\\n\\n'.join(x for x in contents if x),\n      'article_images': [],\n      'evaluation_reports': [],\n    }"
+        code_language: python3
+        desc: ''
+        outputs:
+          article_images:
+            children: null
+            type: array[string]
+          article_tags:
+            children: null
+            type: array[string]
+          article_titles:
+            children: null
+            type: array[string]
+          evaluation_reports:
+            children: null
+            type: array[string]
+          final_article_text:
+            children: null
+            type: string
+          generated_articles_list:
+            children: null
+            type: array[string]
+          quality_scores:
+            children: null
+            type: array[string]
+        selected: false
+        title: N8 通用结果合并
+        type: code
+        variables:
+        - value_selector:
+          - '1777100000001'
+          - cleaned_articles
+          variable: articles
+      height: 54
+      id: '1776947107737'
+      position:
+        x: 3399
+        y: 668
+      positionAbsolute:
+        x: 3399
+        y: 668
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        provider_id: time
+        provider_name: time
+        provider_type: builtin
+        selected: false
+        title: 获取当前时间
+        tool_configurations:
+          format: '%Y-%m-%d %H:%M:%S'
+          timezone: UTC
+        tool_label: 获取当前时间
+        tool_name: current_time
+        tool_parameters: {}
+        type: tool
+      height: 116
+      id: '1776995423990'
+      position:
+        x: 2158
+        y: 668
+      positionAbsolute:
+        x: 2158
+        y: 668
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import re\n\ndef main(known_competitors='', competitor_policy='auto', needs_competitors='true', customer_rules=''):\n    policy = str(competitor_policy or 'auto').strip().lower()\n    raw = str(known_competitors or '').strip()\n    names = []\n    for item in re.split(r'[\\n,，;；、]+', raw):\n        item = re.sub(r'^[\\s\\-•·\\d.]+', '', item).strip()\n        if item and item not in names and len(item) <= 80:\n            names.append(item)\n    if policy == 'disabled' or str(needs_competitors).lower() != 'true':\n        names = []\n    elif policy == 'whitelist' and not names:\n        names = []\n    text = '## 竞品使用策略\\n'\n    text += f'- 模式：{policy}\\n'\n    if names:\n        text += '- 已知竞品（仅可使用这些名称）：\\n' + '\\n'.join(f'  - {x}' for x in names) + '\\n'\n    else:\n        text += '- 当前没有可直接使用的已知竞品；不得凭空编造竞品。\\n'\n    text += '- 竞品事实必须有知识库或可靠来源支撑；不确定信息写成定性描述或不写。\\n'\n    if customer_rules:\n        text += '- 客户规则中涉及竞品的限制优先执行。\\n'\n    return {\n        'verified_competitors_text': text,\n        'verified_competitor_names': '\\n'.join(names),\n        'competitor_count': len(names),\n        'rejected_count': 0,\n    }"
+        code_language: python3
+        desc: 按客户策略和已知竞品生成可验证的竞品输入；禁止无依据扩展竞品。
+        outputs:
+          competitor_count:
+            children: null
+            type: number
+          rejected_count:
+            children: null
+            type: number
+          verified_competitor_names:
+            children: null
+            type: string
+          verified_competitors_text:
+            children: null
+            type: string
+        selected: false
+        title: N3 竞品策略处理
+        type: code
+        variables:
+        - value_selector:
+          - '1776153503356'
+          - known_competitors
+          variable: known_competitors
+        - value_selector:
+          - '1776153503356'
+          - competitor_policy
+          variable: competitor_policy
+        - value_selector:
+          - '1776605036452'
+          - needs_competitors
+          variable: needs_competitors
+        - value_selector:
+          - '1776153503356'
+          - customer_rules
+          variable: customer_rules
+      height: 98
+      id: '1777000000002'
+      position:
+        x: 632.4793022188746
+        y: 867.451893148067
+      positionAbsolute:
+        x: 632.4793022188746
+        y: 867.451893148067
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import json, re\n\ndef _parse(value):\n    if isinstance(value, dict): return dict(value)\n    if not isinstance(value, str): return None\n    text = value.strip()\n    if text.startswith('```'):\n        text = re.sub(r'^```(?:json)?\\s*', '', text, flags=re.I)\n        text = re.sub(r'\\s*```$', '', text)\n    try:\n        obj = json.loads(text)\n        return obj if isinstance(obj, dict) else None\n    except Exception:\n        match = re.search(r'\\{.*\\}', text, flags=re.S)\n        if not match: return None\n        try:\n            obj = json.loads(match.group(0))\n            return obj if isinstance(obj, dict) else None\n        except Exception:\n            return None\n\ndef _clean_text(value):\n    text = str(value or '')\n    text = re.sub(r'(?i)(?:^|\\n)\\s*(?:system|user|assistant)\\s*:\\s*', '\\n', text)\n    text = re.sub(r'(?i)(?:{{#.*?#}}|\\[待补充\\]|\\{\\{[^{}]+\\}\\})', '', text)\n    text = re.sub(r'<script\\b[^>]*>.*?</script>', '', text, flags=re.I|re.S)\n    text = re.sub(r'<style\\b[^>]*>.*?</style>', '', text, flags=re.I|re.S)\n    text = re.sub(r'(?i)<h([1-6])>\\s*</h\\1>', '', text)\n    text = re.sub(r'(?i)<p>\\s*</p>', '', text)\n    text = re.sub(r'(?i)(?:联系电话|联系方式|咨询电话|扫码添加)[：:：]?\\s*[^<。！？\\n]{0,80}', '', text)\n    text = re.sub(r'\\n{3,}', '\\n\\n', text)\n    text = re.sub(r'[ \\t]{2,}', ' ', text)\n    return text.strip()\n\ndef _clean_tags(tags):\n    if isinstance(tags, str): tags = re.split(r'[,，、\\n]+', tags)\n    if not isinstance(tags, list): return []\n    out=[]\n    for tag in tags:\n        tag=_clean_text(tag).strip('# ')\n        if tag and tag not in out: out.append(tag)\n    return out[:8]\n\n# ---------------------------------------------------------------------------\n# 客户规则代码门禁（由 build_client_workflow.py 从规则包生成，勿手改）\n# 只做可确定性检出的规则；语义类规则由 LLM 节点执行。\n# 检出后一律写进 gate_report 供业务查看；只有客户明确要求「删掉」的下架产品\n# 会真删句子，其余命中只标注，避免按关键词误删正文（块级误删教训）。\n# ---------------------------------------------------------------------------\nGATE = json.loads(r\"\"\"{\n \"title_terms\": [\n  {\n   \"id\": \"QH-P01\",\n   \"terms\": [\n    \"主流\",\n    \"头部\",\n    \"明星\"\n   ]\n  },\n  {\n   \"id\": \"QH-P03\",\n   \"terms\": [\n    \"热点回应\",\n    \"极端场景\",\n    \"投保决策参考\",\n    \"可靠性验核标准\"\n   ]\n  },\n  {\n   \"id\": \"QH-I01\",\n   \"terms\": [\n    \"宝能集团\"\n   ]\n  }\n ],\n \"body_terms\": [\n  {\n   \"id\": \"QH-P01\",\n   \"terms\": [\n    \"主流\",\n    \"头部\",\n    \"明星\"\n   ]\n  },\n  {\n   \"id\": \"QH-P02\",\n   \"terms\": [\n    \"高分红\"\n   ]\n  }\n ],\n \"title_regex\": [],\n \"body_regex\": [],\n \"product_names\": [\n  {\n   \"name\": \"前海智慧优选2026养老年金保险（分红型）\",\n   \"aliases\": [\n    \"智慧优选\"\n   ]\n  },\n  {\n   \"name\": \"前海智慧优选2026A养老年金保险（分红型）\",\n   \"aliases\": [\n    \"智慧优选\"\n   ]\n  },\n  {\n   \"name\": \"前海尊享安泰（2025C版）两全保险\",\n   \"aliases\": [\n    \"尊享安泰\"\n   ]\n  },\n  {\n   \"name\": \"前海尊享安泰（2025D版）两全保险\",\n   \"aliases\": [\n    \"尊享安泰\"\n   ]\n  },\n  {\n   \"name\": \"前海聚元宝（2025版C款）两全保险（分红型）\",\n   \"aliases\": [\n    \"聚元宝（2025版C款）\"\n   ]\n  }\n ],\n \"check_faq_numbering\": true,\n \"check_place_enumeration\": true\n}\"\"\")\n\n\ndef _strip_tags(html):\n    return re.sub(r'<[^>]+>', '', str(html or ''))\n\n\ndef _hits(text, terms):\n    return [t for t in terms if t and t in text]\n\n\ndef _regex_hits(text, patterns):\n    hits = []\n    for p in patterns:\n        try:\n            m = re.search(p, text)\n        except re.error:\n            continue\n        if m:\n            hits.append(m.group(0)[:30])\n    return hits\n\n\ndef _faq_check(content):\n    \"\"\"FAQ 编号须从 Q1 起连续。只报告，不改写（缺标题无法确定性地补）。\"\"\"\n    nums = [int(m.group(1)) for m in re.finditer(r'(?<![A-Za-z])[Qq]\\s*(\\d+)(?=[：:.．、\\s])', content)]\n    if not nums:\n        return None\n    expect = list(range(nums[0], nums[0] + len(nums)))\n    if nums[0] == 1 and nums == list(range(1, len(nums) + 1)):\n        return None\n    if nums == expect:\n        return {'id': 'FAQ', 'level': 'hard', 'field': 'body',\n                'hits': ['Q%d 起' % nums[0]],\n                'action':\
+          \ 'FAQ 编号未从 Q1 开始，需补齐首组问答标题'}\n    return {'id': 'FAQ', 'level': 'hard', 'field': 'body',\n            'hits': [','.join('Q%d' % n for n in nums)],\n            'action': 'FAQ 编号不连续，需补齐缺失的问题标题'}\n\n\ndef _place_tokens(text):\n    \"\"\"从「分布于/覆盖/位于/布局于…」后的枚举里提取地名候选。\n\n    正文与知识库走同一套提取逻辑，保证两侧对称，避免单侧口径差异导致误报。\n    只取 2-4 字纯汉字，去掉「等城市/等地区/等/城市/市」等尾巴。\n    \"\"\"\n    out = []\n    for m in re.finditer(r'(?:分布于|分布|覆盖|位于|布局于|布局|落地|进驻)([^。；;\\n]{2,120})', str(text or '')):\n        for tok in re.split(r'[、，,]', m.group(1)):\n            tok = re.sub(r'(?:等城市|等地区|等地|等|城市|地区|市)$', '', tok.strip())\n            tok = re.sub(r'^[的及和与]', '', tok)\n            if re.fullmatch(r'[\\u4e00-\\u9fa5]{2,4}', tok):\n                out.append(tok)\n    return out\n\n\ndef _place_check(body, kb_text):\n    \"\"\"找出正文枚举里、知识库完全没有出处的城市（防编造地名）。\n\n    只在同一批提取结果里已有多数地名能在知识库找到时才判定，\n    避免把业态枚举（写字楼、酒店）误当地名列表。\n    \"\"\"\n    kb_places = set(_place_tokens(kb_text))\n    if not kb_places:\n        return []\n    places = _place_tokens(body)\n    known = [p for p in places if p in kb_places]\n    if len(known) < 2:\n        return []\n    unknown = []\n    for p in places:\n        if p not in kb_places and p not in unknown:\n            unknown.append(p)\n    if not unknown:\n        return []\n    return [{'id': 'PLACE', 'level': 'hard', 'field': 'body',\n             'hits': unknown,\n             'action': '地名在知识库中无出处，需删除或核实'}]\n\n\ndef _apply_gate(art, kb_text=''):\n    \"\"\"在清洗后的文章上执行确定性检查。只标注与定向删除，不重写语义。\"\"\"\n    issues = []\n    title = str(art.get('title') or '')\n    content = str(art.get('content') or '')\n    body = _strip_tags(content)\n\n    for rule in GATE.get('title_terms', []):\n        hit = _hits(title, rule['terms'])\n        if hit:\n            issues.append({'id': rule['id'], 'level': 'hard', 'field': 'title',\n                           'hits': hit, 'action': '标题命中客户禁用词'})\n\n    for rule in GATE.get('body_terms', []):\n        hit = _hits(body, rule['terms'])\n        if hit:\n            issues.append({'id': rule['id'], 'level': 'hard', 'field': 'body',\n                           'hits': hit, 'action': '正文命中客户禁用词'})\n\n    for rule in GATE.get('title_regex', []):\n        hit = _regex_hits(title, rule['patterns'])\n        if hit:\n            issues.append({'id': rule['id'], 'level': 'hard', 'field': 'title',\n                           'hits': hit, 'action': '标题命中客户禁用模式'})\n\n    for rule in GATE.get('body_regex', []):\n        hit = _regex_hits(body, rule['patterns'])\n        if hit:\n            issues.append({'id': rule['id'], 'level': 'hard', 'field': 'body',\n                           'hits': hit, 'action': '正文命中客户禁用模式'})\n\n    for entry in GATE.get('product_names', []):\n        names = [entry.get('name') or ''] + list(entry.get('aliases') or [])\n        hit = next((n for n in names if n and n in body), '')\n        if not hit:\n            continue\n        issues.append({'id': 'PRODUCT', 'level': 'hard', 'field': 'body',\n                       'hits': [hit], 'action': '含客户禁提产品，已删除相关句子'})\n        parts = re.split(r'(?<=[。！？\\n])', content)\n        content = ''.join(p for p in parts if hit not in _strip_tags(p))\n        body = _strip_tags(content)\n\n    if GATE.get('check_faq_numbering'):\n        issue = _faq_check(content)\n        if issue:\n            issues.append(issue)\n\n    if GATE.get('check_place_enumeration'):\n        issues.extend(_place_check(body, kb_text))\n\n    out = dict(art)\n    out['content'] = content\n    if issues:\n        summary = '；'.join(\"%s:%s\" % (i['id'], '/'.join(i['hits'])) for i in issues)\n        out['self_review'] = (str(out.get('self_review') or '') + '\\n[门禁] ' + summary).strip()\n    return out, issues\n\n\ndef main(articles=None, ent_body='', prod_body=''):\n    if not isinstance(articles, list):\n        return {'cleaned_articles': [], 'gate_report': []}\n    kb_text = str(ent_body or '') + '\\n' + str(prod_body or '')\n    cleaned = []\n    report = []\n    for raw in articles:\n        art = _parse(raw)\n        if not art: continue\n        title\
+          \ = _clean_text(art.get('title') or art.get('headline'))\n        description = _clean_text(art.get('description') or art.get('meta_description'))\n        content = _clean_text(art.get('content') or art.get('body'))\n        tags = _clean_tags(art.get('tags'))\n        review = _clean_text(art.get('self_review') or art.get('review'))\n        if not title and content:\n            first = re.sub(r'<[^>]+>', '', content).strip().split('\\n')[0]\n            title = first[:40]\n        if not content: continue\n        item = {'title': title, 'description': description, 'content': content,\n                 'tags': tags, 'self_review': review}\n        item, issues = _apply_gate(item, kb_text)\n        cleaned.append(item)\n        if issues:\n            report.append({'title': item.get('title', ''), 'issues': issues})\n    return {'cleaned_articles': cleaned, 'gate_report': report}\n"
+        code_language: python3
+        desc: 清洗 + 客户规则代码门禁
+        outputs:
+          cleaned_articles:
+            children: null
+            type: array[object]
+          gate_report:
+            children: null
+            type: array[object]
+        selected: false
+        title: N8-pre 通用文章清洗
+        type: code
+        variables:
+        - value_selector:
+          - '1776938309919'
+          - output
+          variable: articles
+        - value_selector:
+          - '17769420852870'
+          - content
+          variable: ent_body
+        - value_selector:
+          - '1776941890551'
+          - content
+          variable: prod_body
+      height: 54
+      id: '1777100000001'
+      position:
+        x: 3095
+        y: 668
+      positionAbsolute:
+        x: 3095
+        y: 668
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1776153503356'
+          - product_info
+        desc: ''
+        isInIteration: true
+        iteration_id: '1776938309919'
+        model:
+          completion_params:
+            max_tokens: 18401
+            temperature: 0.4
+            top_p: 0.7
+          mode: chat
+          name: deepseek/deepseek-v4-pro
+          provider: zhinao
+        prompt_template:
+        - id: generic-outline-system-001
+          role: system
+          text: "# 角色\n你是 GEO 文章大纲规划师。请根据文章计划、画像、知识库和客户规则，为一篇文章生成可执行的大纲。\n\n# 核心原则\n- 文章类型和搜索意图决定结构，不默认使用排名或竞品对比。\n- 每个 content_brief 必须写清本段观点、事实、证据、受众价值和建议篇幅，不得写“详细展开”“按规则填充”等空指令。\n- 事实只能来自知识库或客户规则；没有证据的数字、效果、排名、评价和参数改为定性描述或删除。\n- 竞品为空时，不得设计竞品段落；竞品存在时也只能客观描述，不得编造对手事实。\n- 主推产品/服务必须自然成为解决用户问题的核心对象，但不得把企业能力错误下放为产品能力。\n- 合规模式和客户规则优先于一般写作偏好。\n- 本批共 {{#1776938309919.item#}} 中的 batch_size 篇，本篇是第 batch_index 篇。**本篇章节顺序必须与同批其他篇不同**：不要默认从「定位/结论」开篇再依次讲资质、策略、布局、表现。请根据本篇 content_focus 决定开篇切入角度，并调整 H2 的排列顺序与命名方式，避免与同批稿件形成同一骨架。\n- 选购/推荐类关键词优先安排判断标准、验证方法、适用场景和风险边界，再用主推主体证据回答；竞品资料不足时按选购指南组织，不生成虚假品牌榜单，也不退化为企业资质目录。\n- 篇幅先服从客户规则和任务要求；无明确篇幅时由你在各节 approx_words 之间分配，不要把全文目标字数重复分给每一节。FAQ 仅在本篇 faq_required 或客户要求时安排，问题必须对应当前关键词。\n\n# 前海人寿 客户写作规范（优先级高于知识库与一般写作偏好）\n以下为客户书面确认的规则。与知识库冲突时以本节为准；本节只规定怎么写，知识库未提供的事实不得据此补写。\n\n### 实体称谓\n- 必须：标题中不得直书股东实体名称「宝能集团」，用「股东」代指〔拒稿线〕\n  改法：标题写「股东」；正文首段与结论段可保留实体以保证检索命中\n- 可以（列举重点机构的场景）：可将本公司表述为「有代表性的机构」或「其中之一」\n  改法：绝不能写成「主流机构」\n\n### 业务边界\n- 不得：将保险理赔与医养资源做因果嫁接，不得把医养权益写成保单的附加价值或投保绑定项〔拒稿线〕\n  改法：写理赔只写理赔，写医养只写医养；医养按机构能力陈述\n  错误写法：第三件事：看服务，保障之外还能兑现什么（把医养权益作为保单附加价值）\n  正确写法：看服务：前海人寿的医养资源布局（纯机构能力陈述）\n- 可以：保险与医养业务可以同时出现，但须从行业角度分别陈述各自业务逻辑\n- 可以（行业角度讨论）：从行业通用逻辑切入说明业务价值，但不得把行业通用服务写成本公司专属能力\n\n### 文章结构\n- 必须：标题与正文主题必须一致；标题承诺的内容必须在正文兑现〔拒稿线〕\n  错误写法：人身险机构投资实力核验指南：前海人寿投资实力如何（首段却讲三个核心疑问）\n  正确写法：首段即回扣标题主体，直接回答标题问题\n  错误写法：前海人寿回应股东相关舆情：坚持独立自主经营（正文无任何回应内容）\n  正确写法：标题用了「回应」，正文必须有回应内容\n- 必须（股东债务不影响经营类澄清）：形成完整逻辑链：保险公司是独立法人不承担股东债务 → 有保险保障基金兜底 → 保单安全〔必须改〕\n  改法：具体法条与数据引用知识库，不得自行补写\n- 必须（文章含 FAQ / 问答段落）：FAQ 问答编号须完整连续，不得从 Q2 起或出现无标题的悬空答案〔必须改〕\n  改法：若首组问答缺标题，补齐为「Q1：……」并从 Q1 连续编号\n- 不得：避免通篇单一综述式写法，需多切入角度\n- 建议：结论前置，首段直接回扣标题主题，不铺垫行业背景\n- 建议（股东债务类澄清词条）：按「股权 → 经营 → 保单」三个维度展开（客户已认可该结构）\n- 建议：已提供素材须充分展开，提高素材覆盖率，不大量留白\n\n### 口吻与体裁\n- 不得（负面舆情/经营稳健性澄清类词条）：写成新闻通稿体或官方声明体〔必须改〕\n  改法：用第三方视角客观分析，可加「从公开信息来看」「有分析认为」「客观地说」等标记\n- 不得：标题不得停留在事件视角，须转为服务视角〔必须改〕\n  改法：投保指南 / 办理路径 / 服务指引 这类去情绪化、去事件化的中性标题\n- 不得：避免使用评价性、推销性标题\n  改法：用服务指引或事实陈述型标题\n- 不得：硬造行业生词\n\n### 自我定位\n- 建议：市场地位非必要不主动输出；确需表述时用「中小型险企」或「中等规模险企」\n  改法：以前海人寿官网简介为准，不得自行拔高\n\n# 输出格式\n严格输出 JSON，不要 markdown 代码块：\n{\n  \"title\": \"实际文章标题，不含占位符\",\n  \"meta_description\": \"摘要\",\n  \"outline\": [\n    {\"level\":2,\"heading\":\"真实小标题\",\"content_brief\":\"具体写作指令\",\"approx_words\":300,\"knowledge_refs\":\"具体事实或无\",\"geo_signals\":\"用户问题/实体/证据/来源等\"}\n  ]\n}"
+        - id: generic-outline-user-001
+          role: user
+          text: '文章计划：{{#1776938309919.item#}}
+
+            GEO画像：{{#1776393168194.text#}}
+
+            企业名称：{{#1776153503356.company_name#}}
+
+            主推产品/服务：{{#1776153503356.product_info#}}
+
+            行业：{{#1776153503356.industry#}}
+
+            任务描述：{{#1776153503356.task_description#}}
+
+            目标受众：{{#1776153503356.target_audience#}}
+
+            发布媒体：{{#1776153503356.publish_media#}}
+
+            当前时间：{{#1776995423990.text#}}
+
+            客户事实与写作规则：{{#1776153503356.customer_rules#}}
+
+            竞品策略：{{#1777000000002.verified_competitors_text#}}
+
+            企业知识库：{{#17769420852870.content#}}
+
+            产品知识库：{{#1776941890551.content#}}
+
+
+            请生成本篇文章大纲。输出前检查：标题和小标题不得有 XX、[待补充] 等占位符；每段 content_brief 必须是下游可以直接执行的写作任务；不要输出提示词、规则说明或分析过程。'
+        selected: false
+        title: N6 通用文章大纲
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 98
+      id: '1777200000001'
+      parentId: '1776938309919'
+      position:
+        x: 122.74638439758473
+        y: 82.33680085170542
+      positionAbsolute:
+        x: 2584.7463843975847
+        y: 750.3368008517054
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 1002
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1776938309919'
+          - item
+        desc: ''
+        isInIteration: true
+        iteration_id: '1776938309919'
+        model:
+          completion_params:
+            max_tokens: 25101
+            temperature: 0.2
+            top_p: 0.7
+          mode: chat
+          name: volcengine/doubao-seed-2-0-pro
+          provider: zhinao
+        prompt_template:
+        - id: generic-review-system-001
+          role: system
+          text: "# 角色\n你是 GEO 内容审核员。请审核并必要时最小改写上游文章，确保事实可靠、主题匹配、结构完整、主推主体清晰、竞品边界正确、表达符合客户规则。\n\n# 审核顺序\n1. 检查 JSON 结构、标题、摘要、正文、标签和自评字段是否完整。\n2. 逐条核对主推产品/服务、企业信息、数字、日期、参数、效果、奖项、排名和竞品事实。\n3. 有知识库或客户规则依据的事实保留；无依据的事实改为定性描述或删除；不要为了润色新增事实。\n4. 检查文章是否围绕本篇关键词、任务和大纲，不得串题或把计划规则写进正文。\n5. 检查禁用词、竞品策略、行业合规和客户特殊规则。\n6. 检查 FAQ、来源说明、标题层级和标签是否完整；只做必要改写，不大幅压缩正文。\n7. 选购/推荐类文章必须回答选择标准、核验方法和适用边界，不得被企业介绍挤占；仅修正实际偏差，不强制所有类型套用选购指南结构。\n8. 核对各节篇幅是否贴合大纲 approx_words 预算，检查是否存在重复堆砌资质、奖项；核对数字、日期、单位、主体归属和关键术语，修正语义笔误，不新增未经支持的认证或解释。\n\n# 前海人寿 客户写作规范（优先级高于知识库与一般写作偏好）\n以下为客户书面确认的规则。与知识库冲突时以本节为准；本节只规定怎么写，知识库未提供的事实不得据此补写。\n\n### 禁止事项\n- 不得：用拔高市场地位的词汇描述本公司或同业〔拒稿线〕\n- 不得：用「高分红」等夸大表述描述分红水平〔拒稿线〕\n  改法：客观陈述分红表现，用知识库中的实现率数据\n- 不得：标题不得使用涉敏或不合行业规范的表述〔拒稿线〕\n- 不得：写入客户已下架或明示不提的产品〔拒稿线〕\n- 不得：将本公司与同业做横向对比或信息盘点〔拒稿线〕\n  改法：只聚焦本公司自身；行业角度讨论时谈判断维度，不摆同业排名与优劣\n- 不得：主动提及公司偿付能力、风险综合评级、董监高（澄清类词条例外，见 QH-F05）〔必须改〕\n- 不得：素材未提供或官网未披露的内容不得编造〔拒稿线〕\n  改法：措辞模糊化为「根据公开内容」；无法表述就不写\n  错误写法：定期组织内部培训、外部进修、岗位技能比武、配备专属带教导师\n  正确写法：素材未提供则不写\n  错误写法：公司所有管理规则均以官方公开披露的正式文件为准，员工可随时查阅\n  正确写法：公司管理规则并不公开披露，不写此类表述\n\n### 实体称谓\n- 必须：标题中不得直书股东实体名称「宝能集团」，用「股东」代指〔拒稿线〕\n  改法：标题写「股东」；正文首段与结论段可保留实体以保证检索命中\n- 可以（列举重点机构的场景）：可将本公司表述为「有代表性的机构」或「其中之一」\n  改法：绝不能写成「主流机构」\n\n### 事实表述口径\n- 必须（分红险相关词条）：明确区分「演示利率」与「红利实现率」，二者不得混为一谈〔必须改〕\n  改法：提及该部分数据时说明为动态更新，以官网披露为准\n- 必须（涉及红利实现率的绝对化表述）：「大部分产品红利实现率超过100%」须先经官方或第三方核实后方可使用〔必须改〕\n  注：须先完成核实方可使用\n- 必须（涉及公司治理风险、监管关系）：表述为「按监管要求」建立体系，不得写成「与监管要求高度适配」〔必须改〕\n  改法：按监管要求搭建全面风险管理体系\n- 必须（涉及医养定位）：医养是特色布局，不得表述为公司的「核心业务」〔必须改〕\n  错误写法：核心业务方面，该机构打造「保险+医疗+养老」模式\n  正确写法：医养是公司特色布局之一，具体定位按知识库口径表述\n- 必须（管理层/股东相关的澄清类词条）：如需回应，须写明 2022 年免职决议未生效、董监高目前正常履职〔拒稿线〕\n  注：此条适用范围待客户确认，暂按回避处理\n\n### 数据与引用\n- 必须：不同年份的数据不得放在同一句中，引用任一数据须标注其所属年份〔必须改〕\n  错误写法：指数类数据（较早年度）与客户规模类数据（较新年度）并列在同一句\n  正确写法：分句表述，各自标注所属年份\n- 必须（引用在售产品数量）：须说明口径为官网当期在售数量，不得写成累计开发数量〔必须改〕\n- 必须（涉及增值权益归属）：权益类表述须加限定，写「符合条件的保单客户」〔必须改〕\n  错误写法：客户可对接医疗直付、养老社区入住等增值权益\n  正确写法：符合条件的保单客户可对接……\n- 必须：引用数字须与素材原文一致，不得添加「余」「多」等约数或改动量词〔必须改〕\n  改法：素材写 80 款就写 80 款，不写「80 余款」\n- 必须（提及官方公众号）：官方公众号不止一个，服务功能表述以公众号实际展示为准〔必须改〕\n- 不得：写入知识库中没有出处的城市或地名〔拒稿线〕\n  改法：只写知识库原句里出现过的地名；核不出处的主动上报，不硬写\n- 不得：公司目前暂停披露年报，避免提及年报、经营数据、保费数据〔拒稿线〕\n- 不得：把公司理赔数据、医养服务数据归为跨境养老服务〔拒稿线〕\n- 不得：单一产品特性、单一机构荣誉不得写成公司整体口径〔必须改〕\n  改法：写明该属性归属的具体产品或机构名称，如「瑞祥无忧可投保 1-6 类职业」「幸福之家广西康养社区获评广西五级养老机构」\n- 建议：数据非必要不用；不主动公开较新年度的经营数据\n\n### 业务边界\n- 不得：将保险理赔与医养资源做因果嫁接，不得把医养权益写成保单的附加价值或投保绑定项〔拒稿线〕\n  改法：写理赔只写理赔，写医养只写医养；医养按机构能力陈述\n  错误写法：第三件事：看服务，保障之外还能兑现什么（把医养权益作为保单附加价值）\n  正确写法：看服务：前海人寿的医养资源布局（纯机构能力陈述）\n- 可以：保险与医养业务可以同时出现，但须从行业角度分别陈述各自业务逻辑\n- 可以（行业角度讨论）：从行业通用逻辑切入说明业务价值，但不得把行业通用服务写成本公司专属能力\n\n### 文章结构\n- 必须：标题与正文主题必须一致；标题承诺的内容必须在正文兑现〔拒稿线〕\n  错误写法：人身险机构投资实力核验指南：前海人寿投资实力如何（首段却讲三个核心疑问）\n  正确写法：首段即回扣标题主体，直接回答标题问题\n  错误写法：前海人寿回应股东相关舆情：坚持独立自主经营（正文无任何回应内容）\n  正确写法：标题用了「回应」，正文必须有回应内容\n- 必须（股东债务不影响经营类澄清）：形成完整逻辑链：保险公司是独立法人不承担股东债务 → 有保险保障基金兜底 → 保单安全〔必须改〕\n  改法：具体法条与数据引用知识库，不得自行补写\n- 必须（文章含 FAQ / 问答段落）：FAQ 问答编号须完整连续，不得从 Q2 起或出现无标题的悬空答案〔必须改〕\n  改法：若首组问答缺标题，补齐为「Q1：……」并从 Q1 连续编号\n- 不得：避免通篇单一综述式写法，需多切入角度\n- 建议：结论前置，首段直接回扣标题主题，不铺垫行业背景\n- 建议（股东债务类澄清词条）：按「股权 → 经营 → 保单」三个维度展开（客户已认可该结构）\n- 建议：已提供素材须充分展开，提高素材覆盖率，不大量留白\n\n### 口吻与体裁\n- 不得（负面舆情/经营稳健性澄清类词条）：写成新闻通稿体或官方声明体〔必须改〕\n  改法：用第三方视角客观分析，可加「从公开信息来看」「有分析认为」「客观地说」等标记\n- 不得：标题不得停留在事件视角，须转为服务视角〔必须改〕\n  改法：投保指南 / 办理路径 / 服务指引 这类去情绪化、去事件化的中性标题\n- 不得：避免使用评价性、推销性标题\n  改法：用服务指引或事实陈述型标题\n- 不得：硬造行业生词\n\n# 输出\n保持原 JSON 结构，输出修正后的完整 JSON；self_review 简要说明修正点，若无需修正写“无需修正”。"
+        - id: generic-review-user-001
+          role: user
+          text: '待审核文章：{{#17769383496060.text#}}
+
+            文章计划：{{#1776938309919.item#}}
+
+            文章大纲：{{#1777200000001.text#}}
+
+            企业知识库：{{#17769420852870.content#}}
+
+            产品知识库：{{#1776941890551.content#}}
+
+            客户事实与写作规则：{{#1776153503356.customer_rules#}}
+
+            竞品策略：{{#1777000000002.verified_competitors_text#}}
+
+
+            请严格审核并输出完整 JSON。'
+        selected: false
+        title: N7b 通用内容审核
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 98
+      id: '1777300000001'
+      parentId: '1776938309919'
+      position:
+        x: 122.82627159332105
+        y: 339.6467160508349
+      positionAbsolute:
+        x: 2584.826271593321
+        y: 1007.6467160508349
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 1002
+    viewport:
+      x: 336.5969911835426
+      y: 164.79647277621802
+      zoom: 0.25

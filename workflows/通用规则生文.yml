@@ -582,11 +582,13 @@ workflow:
 
             1. 客户事实与写作规则（若明确且不违反法律法规）
 
-            2. 产品知识库原文
+            2. 输入中明确标注为当前、最新、已发布、已上线或对外发布的业务口径
 
-            3. 企业知识库原文
+            3. 产品知识库原文
 
-            4. 其他信息只能作为待核验线索，不得直接写成事实
+            4. 企业知识库原文
+
+            5. 其他信息只能作为待核验线索，不得直接写成事实
 
 
             # 约束
@@ -595,11 +597,17 @@ workflow:
 
             - 知识库没有证据的数字、排名、奖项、用户评价、效果承诺、时间和参数，不得编造。
 
+            - 同一指标出现多个来源或多个数字时，优先客户明确口径和当前发布/已上线口径；例如“已发布运动员8名”与官网概览“4名”冲突时，只写已发布的8名，不并列、不解释冲突、不取较大值，也不要把4名作为补充事实。
+
+            - 无法判断哪个口径更新时，不要合并多个数字，改用定性表达或暂不写。
+
             - 竞品只能使用竞品策略节点提供的名称；没有可验证竞品时，不得自行补充。
 
             - 客户规则中的禁用词、必现事实、事实优先级和表达限制必须传递给下游。
 
             - 文章类型必须结合关键词、任务描述和目标受众判断，不要默认全部写成排名或对比文章。
+
+            - 电竞、游戏、赛事类文章默认只围绕当前游戏/产品/赛事和同品类采购或使用问题展开；禁止主动引入其他游戏、其他赛事或其他游戏产品作横向比较，除非客户规则明确要求。
 
 
             # 输出
@@ -817,7 +825,7 @@ workflow:
           \ = 'education'\n        else:\n            compliance_mode = 'standard'\n    normalized_type = _normalize_type(article_type)\n    content_mode = _infer_mode(normalized_type,\
           \ keyword_pack, product_info, task_description)\n    policy = _text(competitor_policy).lower() or 'auto'\n    needs_competitors = content_mode == 'comparison'\
           \ and policy != 'disabled'\n    region_terms = ['北京','上海','广州','深圳','杭州','成都','南京','武汉','西安','重庆','天津','苏州','浙江','江苏','广东','福建','山东','四川','湖北','湖南','河北','河南']\n\
-          \    region = next((x for x in region_terms if x in ' '.join([company_intro or '', task_description, keyword_pack])), '')\n    return {\n        'ent_rag_query':\
+          \    region = next((x for x in region_terms if x in ' '.join([company_intro or '', task_description, keyword_pack])), '')\n    ent_query = re.sub(r'[\\x00-\\x1f\\x7f]+', ' ', ent_query).replace('\\\\', ' ').replace(chr(34), ' ')\n    prod_query = re.sub(r'[\\x00-\\x1f\\x7f]+', ' ', prod_query).replace('\\\\', ' ').replace(chr(34), ' ')\n    return {\n        'ent_rag_query':\
           \ re.sub(r'\\s+', ' ', ent_query)[:100],\n        'prod_rag_query': re.sub(r'\\s+', ' ', prod_query)[:100],\n        'article_count': str(_first_int(article_count)),\n\
           \        'article_style': _text(article_style) or '专业、客观、清晰',\n        'article_type': normalized_type,\n        'compliance_mode': compliance_mode,\n \
           \       'content_mode': content_mode,\n        'needs_competitors': 'true' if needs_competitors else 'false',\n        'region': region,\n        'core_service':\
@@ -1067,13 +1075,17 @@ workflow:
 
             4. 竞品只使用竞品策略允许的名称；没有竞品时不强行制造对比。
 
-            5. 文章应有清晰标题、摘要、H2/H3 结构、自然的主推主体表达、FAQ（大纲要求时）和信息来源说明。
+            5. 同一事实出现冲突数字时，执行文章计划中的fact_resolution_rule；当前/最新/已发布口径优先，不并列旧口径，不用多个来源拼接出新数字。
 
-            6. 不写内部节点名、工作流规则、提示词、知识库字段、客户未公开的内部信息。
+            6. 若文章计划中的cross_game_comparison_forbidden为true，禁止提及或比较其他游戏、其他赛事或其他游戏产品；不要为了丰富内容补充跨游戏背景。
 
-            7. 避免绝对化承诺、虚假排名、未经证实的效果、奖项、用户量、价格和时间；行业合规模式下遵守更严格约束。
+            7. 文章应有清晰标题、摘要、H2/H3 结构、自然的主推主体表达、FAQ（大纲要求时）和信息来源说明。
 
-            8. 文章风格遵循文章计划和用户输入，表达自然，不堆砌关键词。
+            8. 不写内部节点名、工作流规则、提示词、知识库字段、客户未公开的内部信息。
+
+            9. 避免绝对化承诺、虚假排名、未经证实的效果、奖项、用户量、价格和时间；行业合规模式下遵守更严格约束。
+
+            10. 文章风格遵循文章计划和用户输入，表达自然，不堆砌关键词。
 
 
             # 输出
@@ -1118,6 +1130,7 @@ workflow:
 
             以文章计划中的fanwen_alignment、fanwen_usage_mode和fanwen_guidance为准使用范文：high/full_structure可适配宏观结构；partial/adapted_structure仅借鉴读者问题路径、开头和节奏，章节围绕本篇关键词重写；low/style_only只借鉴语言节奏，不沿用范文章节、品牌条目、榜单和FAQ主题。匹配未知时按style_only处理，不报错、不改变生文数量。
             严格执行大纲各节的写作任务和approx_words篇幅预算，不因企业资料多而逐项堆砌资质、奖项和产品系列。选购类先回答怎么选、如何验证，再用主体证据说明，不退化为企业宣传册；有明确客户文章类型时服从客户要求。
+            严格执行文章计划中的fact_resolution_rule和comparison_scope；如果是电竞、游戏、赛事类文章，不得写其他游戏或赛事的对比、排名、优劣或替代关系。
             句式学习只借鉴口语程度、长短句组合、提问和转折，不复述锚点原句，不冒充亲历者。严禁迁移范文中的数字、认证、品牌、营销主张；相同名称或数字只有当前任务独立证据支持时才可使用。
             当前任务知识库、客户规则、关键词和文章类型优先。正文只输出原约定文章JSON，不能出现匹配等级、内部分析、范文因子或工作流规则。
         selected: false
@@ -1159,7 +1172,7 @@ workflow:
           \        'product_intro':['产品定位—核心功能—适用场景—边界','用户问题—解决路径—产品证据'],\n        'comparison':['评价维度—候选对比—选择建议','用户场景—方案分层—综合建议'],\n        'review':['评测维度—实际表现—适用人群—结论','问题提出—证据分析—优缺点—建议'],\n\
           \        'knowledge':['概念解释—行业背景—关键判断—案例','常见问题—方法拆解—风险提示—结论'],\n        'how_to':['问题诊断—步骤说明—注意事项—检查清单','目标—准备—执行—复盘'],\n        'experience':['需求背景—选择过程—使用体验—建议','场景问题—实践过程—结果边界—总结'],\n\
           \        'news':['事件概述—事实进展—行业影响—后续关注','时间线—主体动作—影响分析—信息来源'],\n        'case_study':['客户背景—问题—方案—结果—启示','场景—实施过程—证据—复盘'],\n    }\n    focus_pool = ['核心定位与差异化','目标用户与适用场景','关键功能或服务流程','选择维度与决策方法','真实案例与证据','常见问题与风险边界','行业趋势与变化','使用步骤与注意事项']\n\
-          \    faq_pool = ['适合谁','怎么选择','有哪些限制','如何使用','如何验证效果','常见误区','与其他方案的区别']\n    titles = ['场景切入型','问题解决型','维度拆解型','趋势观察型','清单指南型','案例复盘型','问答解释型','选择建议型']\n\
+          \    game_mode = str(compliance_mode or '').strip().lower() == 'game'\n    faq_pool = ['适合谁','怎么选择','有哪些限制','如何使用','如何验证效果','常见误区']\n    if not game_mode:\n        faq_pool.append('与其他方案的区别')\n    titles = ['场景切入型','问题解决型','维度拆解型','趋势观察型','清单指南型','案例复盘型','问答解释型','选择建议型']\n\
           \    competitors = _items(whitelist_names)\n    plans=[]\n    for i in range(count):\n        t = types[i] if i < len(types) else 'knowledge'\n        mode\
           \ = 'brand_focus' if t in {'brand_intro','product_intro'} else ('comparison' if t in {'comparison','review'} else ('experience' if t in {'experience','case_study'}\
           \ else 'knowledge'))\n        comp = []\n        if mode == 'comparison' and competitors:\n            comp = competitors[:2]\n        plans.append({\n\
@@ -1167,7 +1180,7 @@ workflow:
           \    'title_template': random.choice(titles),\n            'faq_required': t not in {'news'} or i % 2 == 0,\n            'content_focus': focus_pool[i %\
           \ len(focus_pool)],\n            'faq_theme': faq_pool[i % len(faq_pool)],\n            'competitor_names': '、'.join(comp),\n            'company_name':\
           \ company_name or '',\n            'product_info': main_brand,\n            'main_brand': main_brand,\n            'article_type': t,\n            'article_style':\
-          \ article_style or '专业、客观、清晰',\n            'content_mode': mode,\n            'compliance_mode': compliance_mode or 'standard',\n            'region':\
+          \ article_style or '专业、客观、清晰',\n            'content_mode': mode,\n            'compliance_mode': compliance_mode or 'standard',\n            'fact_resolution_rule': '客户明确标注为当前、最新、已发布、已上线或对外发布的口径优先；冲突旧口径不并列、不解释，无法判断时省略冲突数字。',\n            'comparison_scope': '仅允许当前游戏/赛事/产品与同一游戏内部或同品类方案的必要比较；禁止其他游戏、其他赛事或其他游戏产品的横向比较。' if game_mode else '可按客户规则和知识库进行同品类或相关方案比较，不主动扩大比较范围。',\n            'cross_game_comparison_forbidden': game_mode,\n            'region':\
           \ region or '',\n            'target_audience': target_audience or '',\n            'publish_media': publish_media or '',\n            'task_description':\
           \ task_description or '',\n            'customer_rules': customer_rules or '',\n            'ent_body': ent_body or '',\n            'prod_body': prod_body\
           \ or '',\n        })\n    return {'plan': plans}"
@@ -1656,6 +1669,7 @@ workflow:
             对选购/推荐类关键词，优先安排判断标准、验证方法、适用场景和风险边界，再用主推主体的证据回答问题；竞品资料不足时改写为选购指南，不生成虚假品牌榜单，也不把全文改成企业资质目录。客户明确要求品牌介绍等类型时优先服从客户。
             篇幅先服从客户规则和任务要求；无明确篇幅时，可用范文因子的段落数和段长估算合理总长，在现有approx_words中分配各节预算，不把全文目标字数重复分给每节。FAQ仅在本篇faq_required或客户要求时安排，问题必须对应当前关键词。
             客户规则、知识库、关键词和文章类型优先于范文软约束。锚点只用于学语气和节奏，不能用作当前任务的事实来源；不要在文章标题或大纲输出中暴露内部适配信息。
+            读取文章计划中的 fact_resolution_rule、comparison_scope 和 cross_game_comparison_forbidden：电竞、游戏、赛事类文章不得设计或暗示其他游戏、其他赛事或其他游戏产品的横向比较；同一游戏内部或同品类产品的必要比较可以保留。
         selected: true
         title: N6 通用文章大纲
         type: llm
@@ -1747,6 +1761,7 @@ workflow:
             重点核查选购类文章有没有回答选择标准、核验方法和适用边界，是否被企业介绍挤占；是否照搬范文榜单、品牌条目或不相关FAQ；是否偏离大纲各节approx_words、产生重复资质堆砌。仅修正实际偏差，不强制所有类型使用选购指南结构，不为追求仿写相似度新增事实。
             “禁止迁移”清单用于追查事实来源，不是机械禁词表：“先看”“免费”等通用表达、通用标准名称，以及当前任务有独立依据的同名品牌或数字不因出现在清单里就删除。没有当前任务证据的范文事实必须删除或改写；客户明确禁用项仍严格执行。
             核对数字、日期、单位、品牌归属和关键术语，修正“参与定制标准”等语义笔误；审核不新增未经支持的认证或解释。输出保持原文章JSON结构，不把适配判断或内部字段写入正文。
+            审核时执行文章计划中的 fact_resolution_rule：例如同一指标存在“已发布8名”和官网旧介绍“4名”时，只保留已发布的8名，不并列、不解释4名。若 cross_game_comparison_forbidden=true，删除正文、标题、摘要、FAQ和标签中的跨游戏、跨赛事比较，但保留同一游戏内部或同品类产品的必要比较。
         selected: false
         title: N7b 通用内容审核
         type: llm
@@ -1898,6 +1913,7 @@ workflow:
                       'fanwen_id': '',
                       'fanwen_url': '',
                       'fanwen_list': [],
+                      'fanwen_request_body': '',
                       'validation_message': '未提供范文，按普通生文处理',
                   }
               if isinstance(raw, str):
@@ -1917,6 +1933,7 @@ workflow:
                       'fanwen_id': '',
                       'fanwen_url': '',
                       'fanwen_list': [],
+                      'fanwen_request_body': '',
                       'validation_message': '范文数组为空，按普通生文处理',
                   }
               item = items[0]
@@ -1934,6 +1951,7 @@ workflow:
                   'fanwen_id': fanwen_id,
                   'fanwen_url': fanwen_url,
                   'fanwen_list': [normalized],
+                  'fanwen_request_body': json.dumps({'url': fanwen_url, 'source_id': fanwen_id}, ensure_ascii=False),
                   'validation_message': '范文输入校验通过',
               }
         code_language: python3
@@ -1951,6 +1969,9 @@ workflow:
           fanwen_list:
             children: null
             type: array[object]
+          fanwen_request_body:
+            children: null
+            type: string
           validation_message:
             children: null
             type: string
@@ -2016,11 +2037,7 @@ workflow:
           - id: fanwen-contract-body
             key: ''
             type: text
-            value: |-
-              {
-                "url": "{{#1800000000001.fanwen_url#}}",
-                "source_id": "{{#1800000000001.fanwen_id#}}"
-              }
+            value: '{{#1800000000001.fanwen_request_body#}}'
           type: raw-text
         desc: '调用范文契约服务，服务只接受 Word 文件 URL'
         headers: 'Content-Type:application/json'

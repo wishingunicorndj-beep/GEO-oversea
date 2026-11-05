@@ -1124,11 +1124,13 @@ workflow:
           \ str,\n         task_name: str, company_intro: str, core_qualifications:\
           \ str,\n         awards: str, advantages: str, ent_dataset_id: str, task_description:\
           \ str,\n         prod_dataset_id: str, known_competitors_input: str = \"\
-          \"):\n\n    # 0. 输入归一化：兼容\"对比排名\"和\"对比排名类\"两种写法。\n    # 空 article_type 表示“自动混排”，不能用“对比排名类”作为默认值，否则会把整批文章锁死为排名/对比。\n\
-          \    _article_type_explicit = bool(str(article_type or '').strip())\n  \
-          \  type_normalize_map = {\n        \"对比排名\": \"对比排名类\", \"性能评测\": \"性能评测类\"\
-          ,\n        \"经验分享\": \"经验分享类\", \"知识科普\": \"知识科普类\",\n        \"新闻报道\":\
-          \ \"新闻报道类\", \"自我介绍\": \"自我介绍类\",\n    }\n    article_type = type_normalize_map.get(article_type,\
+          \",\n         custom_writing_preference: str = \"\", product_info: str =\
+          \ \"\"):\n\n    # 0. 输入归一化：兼容\"对比排名\"和\"对比排名类\"两种写法。\n    # 空 article_type\
+          \ 表示“自动混排”，不能用“对比排名类”作为默认值，否则会把整批文章锁死为排名/对比。\n    _article_type_explicit\
+          \ = bool(str(article_type or '').strip())\n    type_normalize_map = {\n\
+          \        \"对比排名\": \"对比排名类\", \"性能评测\": \"性能评测类\",\n        \"经验分享\": \"\
+          经验分享类\", \"知识科普\": \"知识科普类\",\n        \"新闻报道\": \"新闻报道类\", \"自我介绍\": \"\
+          自我介绍类\",\n    }\n    article_type = type_normalize_map.get(article_type,\
           \ article_type) if _article_type_explicit else \"\"\n\n    # 1. 核心锚词提取\n\
           \    # 关键词包同时兼容中英文逗号；英文逗号未拆分会让整包词被当成一个 query，\n    # 也会使后续地域识别在竞品全称内部误命中。\n\
           \    lines = [l.strip() for l in re.split(r'[，,\\n]+', keyword_pack or '')\
@@ -1246,26 +1248,66 @@ workflow:
           , \"新闻报道类\"]:\n        content_mode = \"knowledge\"\n    else:\n       \
           \ # article_type 为空或未识别 → 交给 N4 智能选型，暂设 auto\n        content_mode = \"\
           auto\"\n    needs_competitors = content_mode in [\"comparison\", \"experience\"\
-          , \"auto\"]\n\n\n    # ---- 已知竞品白名单提取(优先专门输入字段, 读不到再从自由文本里抠) ----\n    known_competitors\
-          \ = []\n    if known_competitors_input and known_competitors_input.strip():\n\
-          \        known_competitors = [x.strip() for x in re.split(r'[、,，;；\\n\\\
-          s]+', known_competitors_input) if x.strip() and len(x.strip()) >= 2][:15]\n\
+          , \"auto\"]\n\n\n    # ---- 可提及竞品白名单（客户词包点名允许写的竞品）----\n    # 客户口径：部分产品明确许可写若干竞品，这些竞品必须能进入正文，\n\
+          \    # 且缺失信息时补内容而不是用规避话术。允许名单优先于通用禁用表。\n    _ALLOWED_COMPETITORS_BY_PRODUCT\
+          \ = {\n        '京桥通': ('SAP', 'SAP SRM', '企企通', '京东智采', '奇秦SRM', '奇秦'),\n\
+          \        '齐业成': ('用友', '金蝶', 'SAP', 'SAP Concur'),\n        '业票通': (),\n\
+          \        '今承达': (),\n        '文书定': (),\n        '泛微': (),\n    }\n\n  \
+          \  def _detect_product_key(product_info, *extra_texts):\n        text =\
+          \ ' '.join([str(product_info or '')] + [str(x or '') for x in extra_texts])\n\
+          \        for key in ('京桥通', '齐业成', '业票通', '今承达', '文书定'):\n            if\
+          \ key in text:\n                return key\n        if '采购管理' in text: return\
+          \ '京桥通'\n        if '报销' in text or '费控' in text: return '齐业成'\n       \
+          \ if '发票' in text or '数电票' in text: return '业票通'\n        if '合同' in text:\
+          \ return '今承达'\n        if '档案' in text: return '文书定'\n        return '泛微'\n\
+          \n    def _extract_allowed_from_text(text, product_key):\n        \"\"\"\
+          从词包备注解析“竞品可以写X/Y/Z”，只取该产品默认名单之外的显式授权。\"\"\"\n        found = []\n      \
+          \  raw = str(text or '')\n        if not raw:\n            return found\n\
+          \        for m in re.finditer(r'(?:竞品)?(?:可以写|可写|允许写|可以提及|可提及|可对比)[：:]?\\\
+          s*([^\\n。；;]{2,120})', raw):\n            seg = m.group(1)\n           \
+          \ # 遇到否定词即截断：其后的名字属于禁用名单，不能当成可写竞品。\n            seg = re.split(r'不写|不提及|不出现|禁止|不得|不要|别写|避免',\
+          \ seg, maxsplit=1)[0]\n            for name in re.split(r'[、,，/／]|以及|和|及',\
+          \ seg):\n                name = re.sub(r'^(?:以及|和|及|等|其他的?|其他)', '', name.strip())\n\
+          \                name = re.sub(r'(?:这三个?|这几个?|等)$', '', name).strip()\n\
+          \                name = name.strip('（）()【】[] ')\n                if not\
+          \ name or len(name) < 2 or len(name) > 20:\n                    continue\n\
+          \                if re.search(r'^[0-9]+$', name):\n                    continue\n\
+          \                # 排除描述性短语（\"其他不是很出名的\"\"等厂商\"），它们不是具体竞品名。\n           \
+          \     if re.search(r'出名|知名|出名|等厂商|等其他|一些|若干|之类|类似|以上|以下', name):\n     \
+          \               continue\n                # 排除“不写/禁止”等否定出现在名字内的情况\n    \
+          \            if re.search(r'不写|不提及|禁止|不得', name):\n                    continue\n\
+          \                found.append(name)\n        return found\n\n    _product_key_detect\
+          \ = _detect_product_key(product_info, task_name, task_description)\n   \
+          \ allowed_from_words = _extract_allowed_from_text(custom_writing_preference,\
+          \ _product_key_detect)\n    allowed_list = list(_ALLOWED_COMPETITORS_BY_PRODUCT.get(_product_key_detect,\
+          \ ()))\n    for name in allowed_from_words:\n        if name and name not\
+          \ in allowed_list:\n            allowed_list.append(name)\n\n    # ----\
+          \ 已知竞品白名单提取(优先专门输入字段, 读不到再从自由文本里抠) ----\n    known_competitors = []\n  \
+          \  if known_competitors_input and known_competitors_input.strip():\n   \
+          \     known_competitors = [x.strip() for x in re.split(r'[、,，;；\\n\\s]+',\
+          \ known_competitors_input) if x.strip() and len(x.strip()) >= 2][:15]\n\
           \    if not known_competitors:\n        _combined = ' '.join([str(x or '')\
           \ for x in [task_description, advantages, company_intro]])\n        for\
           \ _pat in [r'已知竞品[：:]\\s*([^\\n]+)', r'竞品白名单[：:]\\s*([^\\n]+)', r'竞争对手[：:]\\\
           s*([^\\n]+)']:\n            _m = re.search(_pat, _combined)\n          \
           \  if _m:\n                known_competitors = [x.strip() for x in re.split(r'[、,，;；\\\
           s]+', _m.group(1)) if x.strip() and len(x.strip()) >= 2][:15]\n        \
-          \        break\n\n    return {\n        \"ent_rag_query\":  clean_q(ent_rag_query),\n\
-          \        \"prod_rag_query\": clean_q(prod_rag_query),\n        \"article_type\"\
-          :   article_type,\n        \"article_style\":  article_style or \"专业客观\"\
-          ,\n        \"article_count\":  str(int(article_count) if article_count else\
-          \ 1),\n        \"compliance_mode\": compliance_mode,\n        \"content_mode\"\
-          : content_mode,\n        \"needs_competitors\": \"true\" if needs_competitors\
-          \ else \"false\",\n        \"region\": region or \"全国\",\n        \"region_source\"\
-          : region_source,\n        \"region_confidence\": region_confidence,\n  \
-          \      \"core_service\": core_anchor,\n        \"known_competitors\": \"\
-          、\".join(known_competitors),\n    }"
+          \        break\n\n    # 可提及竞品并入白名单：客户点名的竞品必须能进入正文，排在最前。\n    _merged_allowed\
+          \ = []\n    for _n in allowed_list:\n        if _n and _n not in _merged_allowed:\n\
+          \            _merged_allowed.append(_n)\n    for _n in known_competitors:\n\
+          \        if _n and _n not in _merged_allowed:\n            _merged_allowed.append(_n)\n\
+          \    known_competitors = _merged_allowed[:20]\n\n    return {\n        \"\
+          ent_rag_query\":  clean_q(ent_rag_query),\n        \"prod_rag_query\": clean_q(prod_rag_query),\n\
+          \        \"article_type\":   article_type,\n        \"article_style\": \
+          \ article_style or \"专业客观\",\n        \"article_count\":  str(int(article_count)\
+          \ if article_count else 1),\n        \"compliance_mode\": compliance_mode,\n\
+          \        \"content_mode\": content_mode,\n        \"needs_competitors\"\
+          : \"true\" if needs_competitors else \"false\",\n        \"region\": region\
+          \ or \"全国\",\n        \"region_source\": region_source,\n        \"region_confidence\"\
+          : region_confidence,\n        \"core_service\": core_anchor,\n        \"\
+          known_competitors\": \"、\".join(known_competitors),\n        \"allowed_competitors\"\
+          : \"、\".join(allowed_list),\n        \"product_key\": _product_key_detect,\n\
+          \    }"
         code_language: python3
         desc: ''
         outputs:
@@ -1306,6 +1348,12 @@ workflow:
             children: null
             type: string
           region_source:
+            children: null
+            type: string
+          allowed_competitors:
+            children: null
+            type: string
+          product_key:
             children: null
             type: string
         selected: false
@@ -1387,6 +1435,16 @@ workflow:
           - known_competitors
           value_type: string
           variable: known_competitors_input
+        - variable: custom_writing_preference
+          value_selector:
+          - '1776153503356'
+          - custom_writing_preference
+          value_type: string
+        - variable: product_info
+          value_selector:
+          - '1776153503356'
+          - product_info
+          value_type: string
       height: 54
       id: '1776605036452'
       position:
@@ -4203,10 +4261,10 @@ workflow:
           \ [\n        \"无评分(纯叙述)\",\n        \"5星制(★★★★★)\",\n        \"10分制(8.5/10)\"\
           ,\n        \"100分制(92/100)\",\n        \"雷达分维度评分(4-6维各打分)\",\n        \"\
           颁奖式无具体分数(给奖项)\"\n    ]\n\n    # === 排名方式池 (决定品牌对比在文中怎么呈现) ===\n    ranking_approaches\
-          \ = [\n        \"直接排名(TOP1/TOP2/TOP3,主推综合第一)\",\n        \"维度+综合排名(每维度各品牌排名,最后综合排名)\"\
-          ,\n        \"场景下排名(每场景推荐不同品牌,主推所在场景排第一)\",\n\n        \"预算分档排名(每预算档推荐,主推所在档位排第一)\"\
-          ,\n        \"颁奖式排名(各奖项颁给不同品牌,主推拿最重奖项)\",\n        \"问答中排名(每个Q&A答案嵌入品牌推荐,主推第一个被推荐)\"\
-          ,\n        \"决策步骤排名(每决策步骤嵌入品牌案例,主推案例排第一)\",\n    ]\n    default_structures\
+          \ = [\n        \"盘点式(按公开维度分类陈述,不编号、不分先后、不评高低)\",\n        \"维度盘点(每个维度分组陈述各对象公开事实,组内不排序)\"\
+          ,\n        \"场景盘点(按适用场景分组,说明各自适配条件,不比较优劣)\",\n        \"分档盘点(按预算/规模档位分类陈述,不指定档位内最优)\"\
+          ,\n        \"结论盘点(归纳各对象已验证事实,主推对象以事实密度呈现,不冠以第一)\",\n        \"问答盘点(每个Q&A回答并列陈述公开信息,不指定推荐顺序)\"\
+          ,\n        \"决策步骤盘点(按选型步骤嵌入可核验事实,不标注名次)\",\n    ]\n    default_structures\
           \ = structures_map.get(article_type,\n        [\"问答串联型\",\"维度横评型\",\"品牌逐评型\"\
           ,\"场景匹配型\",\"决策流程型\",\"清单型\",\"问题倒推型\",\"排行点评型\"])\n\n    organizing = [\"\
           按预算档位\",\"按使用场景\",\"按企业规模\",\"按服务类型\",\"按区域覆盖\",\"按需求侧重\"]\n    hooks =\
@@ -4242,17 +4300,16 @@ workflow:
           \    \"3个核心\", \"5大关键\", \"7项重要\"\n    ]\n    # 标题组合模板 — 按结构类型分组, 硬匹配\n\
           \    # 标题骨架(半成品) — N5 只给结构方向, N6 根据大纲内容补充创意\n    # [待补充] 是留给 N6 填的空位\n \
           \   # 标题组合模板 — 按结构类型分组(40个), 每个含5维度槽位 + 1个 [____] 给 N6 自由填\n    combo_by_structure\
-          \ = {\n        \"排行点评型\": [\n            \"{time}{keyword}TOP榜：{intent}[____]\"\
-          ,\n            \"{time}{keyword}实力排名{number}对比[____]\",\n            \"\
-          {persona}：{time}{keyword}排行[____]\",\n            \"{keyword}哪家强？{time}{number}维度实测[____]\"\
-          ,\n            \"{scene}{keyword}排名：{intent}[____]\",\n        ],\n    \
-          \    \"维度横评型\": [\n            \"{time}{keyword}{number}维度深度横评[____]\",\n\
-          \            \"{keyword}{number}指标对比：{intent}[____]\",\n            \"{persona}：{keyword}怎么比？{number}维度拆解[____]\"\
-          ,\n            \"{time}{keyword}全维度测评：{intent}[____]\",\n            \"\
-          {scene}{keyword}{number}硬指标实测[____]\",\n        ],\n        \"场景匹配型\": [\n\
-          \            \"{persona}选{keyword}的{number}经验[____]\",\n            \"不同需求怎么选{keyword}？{time}场景攻略[____]\"\
-          ,\n            \"{time}{keyword}场景适配指南：{intent}[____]\",\n            \"\
-          {scene}：{keyword}按需求这样选才对[____]\",\n            \"{persona}，你的需求适合哪种{keyword}[____]\"\
+          \ = {\n        \"排行点评型\": [\n            \"{time}{keyword}盘点：{intent}[____]\"\
+          ,\n            \"{time}{keyword}公开信息盘点[____]\",\n            \"{persona}：{time}{keyword}选型盘点[____]\"\
+          ,\n            \"{keyword}哪家强？{time}{number}维度实测[____]\",\n            \"\
+          {scene}{keyword}排名：{intent}[____]\",\n        ],\n        \"维度横评型\": [\n\
+          \            \"{time}{keyword}{number}维度深度横评[____]\",\n            \"{keyword}{number}指标对比：{intent}[____]\"\
+          ,\n            \"{persona}：{keyword}怎么比？{number}维度拆解[____]\",\n        \
+          \    \"{time}{keyword}全维度测评：{intent}[____]\",\n            \"{scene}{keyword}{number}硬指标实测[____]\"\
+          ,\n        ],\n        \"场景匹配型\": [\n            \"{persona}选{keyword}的{number}经验[____]\"\
+          ,\n            \"不同需求怎么选{keyword}？{time}场景攻略[____]\",\n            \"{time}{keyword}场景适配指南：{intent}[____]\"\
+          ,\n            \"{scene}：{keyword}按需求这样选才对[____]\",\n            \"{persona}，你的需求适合哪种{keyword}[____]\"\
           ,\n        ],\n        \"品牌逐评型\": [\n            \"{time}{keyword}品牌深度解析：{intent}[____]\"\
           ,\n            \"{keyword}各品牌优劣一览：{number}维度实拍[____]\",\n            \"\
           {persona}：{keyword}品牌怎么挑不踩坑[____]\",\n            \"{time}{keyword}品牌口碑{number}拆解[____]\"\
@@ -4324,8 +4381,8 @@ workflow:
           \ text))\n        guide_hits = len(re.findall(r'怎么选|如何选择|购买流程|怎么找|注意什么|避坑|怎么联系|预约|咨询',\
           \ text))\n        knowledge_hits = len(re.findall(r'是什么|有什么用|使用攻略|添加后|恢复原状|过敏|安全隐患|应用',\
           \ text))\n        experience_hits = len(re.findall(r'口碑|靠谱|值得信赖|有保障|经验丰富|实惠|性价比',\
-          \ text))\n        weights['对比排名类'] = max(1, weights.get('对比排名类', 2) + min(2,\
-          \ rank_hits // 8))\n        weights['性能评测类'] = max(1, weights.get('性能评测类',\
+          \ text))\n        # 客户要求榜单/排名类尽可能不用：词包含排名/榜时不再放大对比排名类权重。\n        weights['对比排名类']\
+          \ = min(weights.get('对比排名类', 2), 2)\n        weights['性能评测类'] = max(1, weights.get('性能评测类',\
           \ 2) + min(3, review_hits // 8))\n        weights['选型指南类'] = max(1, weights.get('选型指南类',\
           \ 2) + min(3, guide_hits // 6))\n        weights['知识科普类'] = max(1, weights.get('知识科普类',\
           \ 1) + min(2, knowledge_hits // 5))\n        weights['经验分享类'] = max(1, weights.get('经验分享类',\
@@ -4408,7 +4465,7 @@ workflow:
           \ if k != kw]\n        n_sub = min(3, len(sub_kw_pool))\n        sub_kws\
           \ = random.sample(sub_kw_pool, n_sub) if sub_kw_pool else []\n\n       \
           \ # 当前文章的类型（每篇可能不同）\n        cur_type = type_list[i] if i < len(type_list)\
-          \ else article_type or \"对比排名类\"\n        custom_article_type_label = custom_type_labels[i]\
+          \ else article_type or \"选型指南类\"\n        custom_article_type_label = custom_type_labels[i]\
           \ if i < len(custom_type_labels) else \"\"\n\n        # 使用当前文章的类型选择结构池\n\
           \        cur_structures = structures_map.get(cur_type, default_structures)\n\
           \        combo = None\n        # 子维度去重: 优先选历史使用最少的\n        def pick_least_used(pool,\
@@ -4889,32 +4946,112 @@ workflow:
           \ actions, stats\n\n_PRODUCT_FORBIDDEN_TERMS = {\n    # 同时覆盖品牌简称、产品线、主体简称和常见产品写法，避免只拦截一个词形。\n\
           \    '京桥通': ('金蝶','金蝶云','金蝶云星瀚','金蝶国际','金蝶软件','用友','用友BIP','用友网络','甄云','甄云科技','甄云采购管理','甄云采购管理平台','致远','致远互联','蓝凌','蓝凌软件'),\n\
           \    '齐业成': ('合思','合思费控','合思信息','北京合思','每刻','每刻报销','每刻科技','杭州每刻','致远','致远互联','蓝凌','蓝凌软件'),\n\
-          \    '业票通': ('金蝶','金蝶云','金蝶云星瀚','金蝶国际','金蝶软件','合思','合思费控','合思信息','北京合思','每刻','每刻报销','每刻科技','杭州每刻'),\n\
+          \    '业票通': ('金蝶','金蝶云','金蝶云星瀚','金蝶国际','金蝶软件','合思','合思费控','合思信息','北京合思','每刻','每刻报销','每刻科技','杭州每刻','百望','百望云','百望发票管理软件'),\n\
           \    '今承达': ('甄零','甄零科技','甄云','甄云科技','致远','致远互联'),\n    '文书定': ('合思','合思费控','合思信息','北京合思','每刻','每刻报销','每刻科技','杭州每刻'),\n\
           \    '泛微': ('致远','致远互联','蓝凌','蓝凌软件')\n}\n_PRODUCT_COST_TERMS = ('价格','报价','成本','ROI','投入产出','收费','费用预算','采购预算','运维费','实施费','授权费','订阅费')\n\
           _PROCUREMENT_TECH_TERMS = ('技术架构','技术参数','技术能力','性能评测','性能实测','并发','API接口','SLA','系统架构','容灾恢复')\n\
-          \ndef _product_key_v10(product_info, title=''):\n    title_text = str(title\
-          \ or '')\n    # 标题是本篇 plan/item 的最小可用产品信号，优先于多产品 product_info。\n    if '京桥通'\
-          \ in title_text or '采购管理' in title_text: return '京桥通'\n    if '齐业成' in title_text\
-          \ or '智能报账' in title_text or '费控' in title_text or '报销管理' in title_text:\
-          \ return '齐业成'\n    if '业票通' in title_text or '数电票' in title_text or '发票管理'\
-          \ in title_text: return '业票通'\n    if '今承达' in title_text or '数智合同' in title_text\
-          \ or '合同管理' in title_text: return '今承达'\n    if '文书定' in title_text or '档案管理'\
-          \ in title_text or '电子会计档案' in title_text: return '文书定'\n    text = str(product_info\
-          \ or '') + '\\n' + title_text\n    if '京桥通' in text or '采购管理' in text: return\
-          \ '京桥通'\n    if '齐业成' in text or '智能报账' in text or '费控' in text or '报销管理'\
-          \ in text: return '齐业成'\n    if '业票通' in text or '数电票' in text or '发票管理'\
-          \ in text: return '业票通'\n    if '今承达' in text or '数智合同' in text or '合同管理'\
-          \ in text: return '今承达'\n    if '文书定' in text or '档案管理' in text or '电子会计档案'\
-          \ in text: return '文书定'\n    return '泛微'\n\ndef _normalize_product_info_v12(product_info,\
-          \ title='', content=''):\n    raw = str(product_info or '').strip()\n  \
-          \  if raw and raw.lower() not in ('null','none','{}','[]'):\n        return\
-          \ raw\n    text = str(title or '') + '\\n' + str(content or '')\n    if\
-          \ '采购管理' in text or '京桥通' in text: return '京桥通采购管理'\n    if '发票管理' in text\
-          \ or '业票通' in text or '数电票' in text: return '业票通数电票'\n    if '电子会计档案' in\
-          \ text or '文书定' in text or '档案管理' in text: return '文书定档案管理'\n    if '合同管理'\
-          \ in text or '今承达' in text or '数智合同' in text: return '今承达数智合同'\n    if '报销管理'\
-          \ in text or '齐业成' in text or '智能报账' in text: return '齐业成智能报账'\n    return\
+          \n_SUB_BRANDS = ('京桥通','齐业成','业票通','今承达','文书定')\n\n# 客户已确认的竞品品牌->运营主体口径。联网校验会把同名子公司（如“契约锁（海南）科技有限公司”）\n\
+          # 当成运营主体，必须在出口层纠正；brand 命中即替换为正确主体全称。\n_CONFIRMED_COMPETITOR_ENTITY = {\n\
+          \    '契约锁': '上海亘岩网络科技公司',\n}\n\ndef _normalize_brand_naming(text):\n   \
+          \ \"\"\"客户硬约束：业务命名统一为“泛微·XX”，USBkey 统一为“USB key”。\n    只修正已出现的连写/错分隔，不新增业务主体。\"\
+          \"\"\n    out = str(text or '')\n    for brand in _SUB_BRANDS:\n       \
+          \ out = re.sub(r'泛微\\s*[·•・\\-—_]?\\s*' + brand, '泛微·' + brand, out)\n \
+          \   out = re.sub(r'[Uu][Ss][Bb]\\s*[Kk][Ee][Yy]', 'USB key', out)\n    return\
+          \ out\n\ndef _fix_competitor_entity(text):\n    \"\"\"纠正竞品运营主体口径；若同句含错误主体的工商数据（信用代码/注册资本），整句删除。\n\
+          \    只处理客户已确认的品牌，不推断其他主体。\"\"\"\n    out = str(text or '')\n    for brand,\
+          \ entity in _CONFIRMED_COMPETITOR_ENTITY.items():\n        if brand not\
+          \ in out:\n            continue\n        wrong_re = re.compile(\n      \
+          \      re.escape(brand) + r'\\s*[（(][^）)]{0,12}[）)]\\s*[\\u4e00-\\u9fff]{0,10}(?:有限公司|股份有限公司|公司)')\n\
+          \        if not wrong_re.search(out):\n            continue\n        # 同句出现信用代码/注册资本等可核验工商数据时，这些数据属于错误主体，整句删除。\n\
+          \        evidence_re = re.compile(r'统一社会信用代码|信用代码|注册资本|法定代表人|注册地址')\n  \
+          \      chunks = _sentence_chunks_v2(out)\n        kept = []\n        dropped\
+          \ = 0\n        for chunk in chunks:\n            plain = re.sub(r'<[^>]+>',\
+          \ '', chunk)\n            if wrong_re.search(plain) and evidence_re.search(plain):\n\
+          \                dropped += 1\n                continue\n            kept.append(chunk)\n\
+          \        # 只有确实删过才采用新串；全部删完也必须生效，不能回退成原文。\n        out = ''.join(kept) if\
+          \ dropped else out\n        # 剩余只含主体名的表述，直接纠正为确认主体。\n        out = wrong_re.sub(entity,\
+          \ out)\n    return out\n\n_EMPTY_CELL_FILL = '未查询到公开信息，具体可向服务商核验'\n\n# 客户点名的可提及竞品：缺失信息时补内容，不填规避话术。\n\
+          _ALLOWED_COMPETITOR_TERMS = ('SAP SRM', 'SAP Concur', 'SAP', '企企通', '京东智采',\
+          \ '奇秦SRM', '奇秦')\n\ndef _fill_empty_table_cells(content):\n    \"\"\"方案A：表格空单元格填客户认可的规避话术，保留表格结构。\n\
+          \    只处理<td>为空/纯空白的情况；<th>表头不填，避免污染字段名。\"\"\"\n    out = str(content or\
+          \ '')\n    if not out or '<td' not in out.lower():\n        return out,\
+          \ 0\n    filled = 0\n    skipped = 0\n\n    # 占位词同样视为无内容：客户要求统一用固定规避话术，不保留“信息有限”等表述。\n\
+          \    _placeholder_inner = re.compile(r'^(?:信息有限|公开信息未披露|未公开披露|待核验|待确认|未查询到公开信息?|公开资料未提供|以官方资料为准|以实际为准|需向服务商核验|可向服务商核验)[。．\\\
+          .]?$')\n\n    def _row_is_allowed_competitor(pos):\n        \"\"\"判断该单元格所在行是否为客户点名可提及竞品（需补内容，不用规避话术）。\"\
+          \"\"\n        start = out.rfind('<tr', 0, pos)\n        if start < 0:\n\
+          \            return False\n        end = out.find('</tr', pos)\n       \
+          \ row = out[start:(end + 5 if end > 0 else len(out))]\n        row_plain\
+          \ = re.sub(r'<[^>]+>', '', row)\n        return any(t in row_plain for t\
+          \ in _ALLOWED_COMPETITOR_TERMS)\n\n    def _fill(m):\n        nonlocal filled,\
+          \ skipped\n        # 用分组重建标签，不能对空 inner 做 replace（空串会在每个字符间插入）。\n      \
+          \  inner = m.group(2).strip()\n        if inner and not _placeholder_inner.match(inner):\n\
+          \            return m.group(0)\n        # 白名单竞品由正文补内容，不留规避话术（保留空位交给模型/下游补写）。\n\
+          \        if _row_is_allowed_competitor(m.start()):\n            skipped\
+          \ += 1\n            return m.group(0)\n        filled += 1\n        return\
+          \ m.group(1) + _EMPTY_CELL_FILL + m.group(3)\n\n    out = re.sub(r'(<td\\\
+          b[^>]*>)([\\s\\S]*?)(</td\\s*>)', _fill, out, flags=re.I)\n    return out,\
+          \ filled\n\ndef _table_top_level_spans(text):\n    \"\"\"返回顶层 <table> 的\
+          \ (start,end) 区间；嵌套表包含在外层区间内，避免正则截断。\"\"\"\n    spans, stack = [], []\n\
+          \    for m in re.finditer(r'<table\\b|</table\\s*>', text, flags=re.I):\n\
+          \        if m.group(0).lower().startswith('</'):\n            if stack:\n\
+          \                start = stack.pop()\n                if not stack:\n  \
+          \                  spans.append((start, m.end()))\n        else:\n     \
+          \       stack.append(m.start())\n    return spans\n\ndef _cell_span(attrs):\n\
+          \    m = re.search(r'colspan\\s*=\\s*[\"\\']?(\\d+)', str(attrs or ''),\
+          \ flags=re.I)\n    if not m:\n        return 1\n    try:\n        return\
+          \ max(1, min(12, int(m.group(1))))\n    except Exception:\n        return\
+          \ 1\n\ndef _normalize_table_columns(content):\n    \"\"\"表格列数对齐：以表头（或众数列数）为准，为缺列行补规避话术单元格，保持表格方正。\n\
+          \    只处理顶层表；检测到嵌套表时跳过，避免破坏结构。\"\"\"\n    out = str(content or '')\n    if\
+          \ not out or '<table' not in out.lower():\n        return out, 0\n    added_total\
+          \ = 0\n    spans = _table_top_level_spans(out)\n    # 从后往前替换，避免偏移错位。\n \
+          \   for start, end in reversed(spans):\n        table = out[start:end]\n\
+          \        inner = table[7:-8] if len(table) > 15 else ''\n        if re.search(r'<table\\\
+          b', inner, flags=re.I):\n            continue  # 嵌套表不动，防止结构损坏\n        rows\
+          \ = list(re.finditer(r'<tr\\b[^>]*>[\\s\\S]*?</tr\\s*>', table, flags=re.I))\n\
+          \        if len(rows) < 2:\n            continue\n        row_info = []\n\
+          \        for m in rows:\n            row = m.group(0)\n            cells\
+          \ = re.findall(r'<(?:td|th)\\b([^>]*)>', row, flags=re.I)\n            total\
+          \ = sum(_cell_span(a) for a in cells)\n            is_header = bool(re.search(r'<th\\\
+          b', row, flags=re.I)) and not re.search(r'<td\\b', row, flags=re.I)\n  \
+          \          row_info.append([m, row, total, is_header, len(cells)])\n   \
+          \     header_totals = [r[2] for r in row_info if r[3]]\n        if header_totals:\n\
+          \            target = max(header_totals)\n        else:\n            from\
+          \ collections import Counter\n            target = Counter(r[2] for r in\
+          \ row_info).most_common(1)[0][0]\n        if target < 2 or target > 12:\n\
+          \            continue\n        new_table = table\n        for m, row, total,\
+          \ is_header, _ncells in reversed(row_info):\n            if is_header or\
+          \ total >= target:\n                continue\n            pad = target -\
+          \ total\n            pad_html = ('<td>' + _EMPTY_CELL_FILL + '</td>') *\
+          \ pad\n            # 直接在闭合标签前插入：用 subn 拿不到就跳过，不能靠 re.match 猜闭合串。\n     \
+          \       new_row, cnt = re.subn(r'(</tr\\s*>)$', pad_html + r'\\1', row,\
+          \ count=1, flags=re.I)\n            if not cnt:\n                new_row,\
+          \ cnt = re.subn(r'(</tr\\s*>)', pad_html + r'\\1', row, count=1, flags=re.I)\n\
+          \            if cnt and new_row != row:\n                added_total +=\
+          \ pad\n                new_table = new_table.replace(row, new_row, 1)\n\
+          \        if new_table != table:\n            out = out[:start] + new_table\
+          \ + out[end:]\n    return out, added_total\n\ndef _product_key_v10(product_info,\
+          \ title=''):\n    title_text = str(title or '')\n    # 标题是本篇 plan/item 的最小可用产品信号，优先于多产品\
+          \ product_info。\n    if '京桥通' in title_text or '采购管理' in title_text: return\
+          \ '京桥通'\n    if '齐业成' in title_text or '智能报账' in title_text or '费控' in title_text\
+          \ or '报销管理' in title_text: return '齐业成'\n    if '业票通' in title_text or '数电票'\
+          \ in title_text or '发票管理' in title_text: return '业票通'\n    if '今承达' in title_text\
+          \ or '数智合同' in title_text or '合同管理' in title_text: return '今承达'\n    if\
+          \ '文书定' in title_text or '档案管理' in title_text or '电子会计档案' in title_text:\
+          \ return '文书定'\n    text = str(product_info or '') + '\\n' + title_text\n\
+          \    if '京桥通' in text or '采购管理' in text: return '京桥通'\n    if '齐业成' in text\
+          \ or '智能报账' in text or '费控' in text or '报销管理' in text: return '齐业成'\n  \
+          \  if '业票通' in text or '数电票' in text or '发票管理' in text: return '业票通'\n \
+          \   if '今承达' in text or '数智合同' in text or '合同管理' in text: return '今承达'\n\
+          \    if '文书定' in text or '档案管理' in text or '电子会计档案' in text: return '文书定'\n\
+          \    return '泛微'\n\ndef _normalize_product_info_v12(product_info, title='',\
+          \ content=''):\n    raw = str(product_info or '').strip()\n    if raw and\
+          \ raw.lower() not in ('null','none','{}','[]'):\n        return raw\n  \
+          \  text = str(title or '') + '\\n' + str(content or '')\n    if '采购管理' in\
+          \ text or '京桥通' in text: return '京桥通采购管理'\n    if '发票管理' in text or '业票通'\
+          \ in text or '数电票' in text: return '业票通数电票'\n    if '电子会计档案' in text or\
+          \ '文书定' in text or '档案管理' in text: return '文书定档案管理'\n    if '合同管理' in text\
+          \ or '今承达' in text or '数智合同' in text: return '今承达数智合同'\n    if '报销管理' in\
+          \ text or '齐业成' in text or '智能报账' in text: return '齐业成智能报账'\n    return\
           \ '泛微数智化'\n\ndef _sanitize_product_contract_v10(title, content, product_info,\
           \ description='', tags=None):\n    product = _product_key_v10(product_info,\
           \ title)\n    banned = _PRODUCT_FORBIDDEN_TERMS.get(product, ())\n    actions=[]\n\
@@ -4923,27 +5060,36 @@ workflow:
           \ list(tags or []) if isinstance(tags, list) else []\n    def _remove_forbidden_blocks(value,\
           \ term):\n        \"\"\"按结构删除竞品对象，禁止把品牌名替换成残缺的“其他同类服务商+原主体”。\"\"\"\n   \
           \     if not value or term not in value:\n            return value, False\n\
-          \        changed=False\n        # 列表项/表格行是独立竞品对象，整块删除。\n        for tag\
-          \ in ('li','tr'):\n            pat=r'<'+tag+r'\\b[^>]*>[\\s\\S]*?'+re.escape(term)+r'[\\\
-          s\\S]*?</'+tag+r'\\s*>'\n            value,n=re.subn(pat,'',value,flags=re.I)\n\
-          \            changed = changed or bool(n)\n        # 独立段落只保留一次中性核验边界，不保留被替换后的主体残片。\n\
-          \        pat=r'<p\\b[^>]*>[\\s\\S]*?'+re.escape(term)+r'[\\s\\S]*?</p\\\
-          s*>'\n        value,n=re.subn(pat,'<p>未纳入当前产品对比白名单的其他服务商信息，需向对应厂商索取正式材料核验。</p>',value,flags=re.I)\n\
-          \        changed = changed or bool(n)\n        # 裸文本/句子级兜底：整句删除，不做词内替换。\n\
-          \        if term in value:\n            parts=re.split(r'(?<=[。！？；])',value)\n\
-          \            kept=[]\n            for part in parts:\n                if\
-          \ term in part:\n                    changed=True\n                    continue\n\
-          \                kept.append(part)\n            value=''.join(kept)\n  \
-          \      return value,changed\n    def _remove_anonymized_competitor_blocks(value):\n\
-          \        \"\"\"兼容上游模型已把禁用品牌改写成“其他同类服务商”的残留列表项。\"\"\"\n        if not value\
-          \ or '其他同类服务商' not in value:\n            return value,False\n        changed=False\n\
-          \        for tag in ('li','tr'):\n            pat=r'<'+tag+r'\\b[^>]*>[\\\
-          s\\S]*?其他同类服务商[\\s\\S]*?</'+tag+r'\\s*>'\n            value,n=re.subn(pat,'',value,flags=re.I)\n\
-          \            changed=changed or bool(n)\n        pat=r'<p\\b[^>]*>[\\s\\\
-          S]*?其他同类服务商[\\s\\S]*?</p\\s*>'\n        value,n=re.subn(pat,'<p>未纳入当前产品对比白名单的其他服务商信息，需向对应厂商索取正式材料核验。</p>',value,flags=re.I)\n\
-          \        changed=changed or bool(n)\n        return value,changed\n    for\
-          \ term in banned:\n        if term in clean_title:\n            clean_title\
-          \ = clean_title.replace(term, '')\n            actions.append('标题删除禁用竞品：'\
+          \        changed=False\n        # 列表项/表格行是独立竞品对象，整块删除。\n        # 必须逐块判断：非贪婪跨块匹配会从表头一路吞到含竞品的行，连表头一起删掉。\n\
+          \        for tag in ('li','tr'):\n            def _drop_row(m, _t=term):\n\
+          \                block = m.group(0)\n                return '' if _t in\
+          \ re.sub(r'<[^>]+>', '', block) else block\n            value,n=re.subn(r'<'+tag+r'\\\
+          b[^>]*>[\\s\\S]*?</'+tag+r'\\s*>', _drop_row, value, flags=re.I)\n     \
+          \       changed = changed or bool(n)\n        # 独立段落只保留一次中性核验边界，不保留被替换后的主体残片。\n\
+          \        # 必须逐段判断：非贪婪跨段匹配会把多个正常段落一起吞掉。\n        def _drop_para(m):\n   \
+          \         block = m.group(0)\n            if term in re.sub(r'<[^>]+>',\
+          \ '', block):\n                return '<p>未纳入当前产品对比白名单的其他服务商信息，需向对应厂商索取正式材料核验。</p>'\n\
+          \            return block\n        value,n=re.subn(r'<p\\b[^>]*>[\\s\\S]*?</p\\\
+          s*>', _drop_para, value, flags=re.I)\n        changed = changed or bool(n)\n\
+          \        # 裸文本/句子级兜底：整句删除，不做词内替换。\n        if term in value:\n         \
+          \   parts=re.split(r'(?<=[。！？；])',value)\n            kept=[]\n        \
+          \    for part in parts:\n                if term in part:\n            \
+          \        changed=True\n                    continue\n                kept.append(part)\n\
+          \            value=''.join(kept)\n        return value,changed\n    def\
+          \ _remove_anonymized_competitor_blocks(value):\n        \"\"\"兼容上游模型已把禁用品牌改写成“其他同类服务商”的残留列表项。\"\
+          \"\"\n        if not value or '其他同类服务商' not in value:\n            return\
+          \ value,False\n        changed=False\n        for tag in ('li','tr'):\n\
+          \            def _drop_anon_row(m):\n                block = m.group(0)\n\
+          \                return '' if '其他同类服务商' in re.sub(r'<[^>]+>', '', block)\
+          \ else block\n            value,n=re.subn(r'<'+tag+r'\\b[^>]*>[\\s\\S]*?</'+tag+r'\\\
+          s*>', _drop_anon_row, value, flags=re.I)\n            changed=changed or\
+          \ bool(n)\n        def _drop_anon_para(m):\n            block = m.group(0)\n\
+          \            return ('<p>未纳入当前产品对比白名单的其他服务商信息，需向对应厂商索取正式材料核验。</p>'\n   \
+          \                 if '其他同类服务商' in re.sub(r'<[^>]+>', '', block) else block)\n\
+          \        value,n=re.subn(r'<p\\b[^>]*>[\\s\\S]*?</p\\s*>', _drop_anon_para,\
+          \ value, flags=re.I)\n        changed=changed or bool(n)\n        return\
+          \ value,changed\n    for term in banned:\n        if term in clean_title:\n\
+          \            clean_title = clean_title.replace(term, '')\n            actions.append('标题删除禁用竞品：'\
           \ + term)\n        clean_content,removed = _remove_forbidden_blocks(clean_content,term)\n\
           \        if removed:\n            actions.append('正文替换禁用竞品：' + term)\n \
           \       if term in clean_description:\n            clean_description = clean_description.replace(term,\
@@ -4952,29 +5098,70 @@ workflow:
           \ '').strip()]\n    clean_content,anon_removed=_remove_anonymized_competitor_blocks(clean_content)\n\
           \    if anon_removed:\n        actions.append('删除上游匿名竞品列表/段落残留')\n    #\
           \ 泛微的腾讯/企微信息属于明确禁用主题；其余子品牌同样不允许把母公司该信息当作产品事实。\n    for term in ('腾讯战略投资','企业微信战略合作伙伴'):\n\
-          \        if term in clean_title or term in clean_content:\n            clean_title\
-          \ = clean_title.replace(term, '')\n            clean_content = clean_content.replace(term,\
-          \ '企业主体资质信息')\n            actions.append('删除企业战略合作禁用主题：' + term)\n    #\
-          \ 业票通禁止成本/价格文案：删除含明确商务成本断言的整句，保留发票业务语义。\n    if product == '业票通':\n    \
-          \    chunks = _sentence_chunks_v2(clean_content)\n        kept=[]\n    \
-          \    for chunk in chunks:\n            plain = re.sub(r'<[^>]+>', '', chunk)\n\
-          \            if any(term in plain for term in _PRODUCT_COST_TERMS):\n  \
-          \              # “费用发票/费用报销/费用管理”是业务场景词，不作为成本文案删除。\n                if not\
-          \ re.search(r'费用(?:发票|报销|管理|类型|场景)', plain) or re.search(r'价格|报价|成本|ROI|投入产出|收费|运维费|实施费|授权费|订阅费',\
-          \ plain):\n                    actions.append('业票通删除成本/价格句：' + plain[:80])\n\
-          \                    continue\n            kept.append(chunk)\n        clean_content=''.join(kept)\n\
-          \    # 京桥通不写技术类文章：对标题/小标题命中的技术主轴做应用化改名，避免继续规划技术评测叙事。\n    if product ==\
-          \ '京桥通':\n        for term in _PROCUREMENT_TECH_TERMS:\n            if term\
-          \ in clean_title:\n                clean_title = clean_title.replace(term,\
+          \        if term in clean_title:\n            clean_title = clean_title.replace(term,\
+          \ '')\n            actions.append('删除企业战略合作禁用主题：' + term)\n        if term\
+          \ in clean_content:\n            # 整句删除，不做同义替换：替换会产出“是企业主体资质信息”这类病句。\n \
+          \           _kept=[]\n            for _chunk in _sentence_chunks_v2(clean_content):\n\
+          \                if term in re.sub(r'<[^>]+>', '', _chunk):\n          \
+          \          continue\n                _kept.append(_chunk)\n            clean_content=''.join(_kept)\n\
+          \            actions.append('删除企业战略合作禁用主题：' + term)\n    # 业票通禁止成本/价格文案：删除含明确商务成本断言的整句，保留发票业务语义。\n\
+          \    if product == '业票通':\n        chunks = _sentence_chunks_v2(clean_content)\n\
+          \        kept=[]\n        for chunk in chunks:\n            plain = re.sub(r'<[^>]+>',\
+          \ '', chunk)\n            _is_heading = bool(re.match(r'\\s*<h[1-6]\\b',\
+          \ chunk, re.I))\n            if any(term in plain for term in _PRODUCT_COST_TERMS):\n\
+          \                # “费用发票/费用报销/费用管理”是业务场景词，不作为成本文案删除。\n                _is_cost\
+          \ = not re.search(r'费用(?:发票|报销|管理|类型|场景)', plain) or re.search(r'价格|报价|成本|ROI|投入产出|收费|运维费|实施费|授权费|订阅费',\
+          \ plain)\n                if _is_cost:\n                    if _is_heading:\n\
+          \                        # 标题不可整块删除，否则丢失H2/H3结构，只摘掉成本词。\n              \
+          \          _fixed = plain\n                        for term in _PRODUCT_COST_TERMS:\n\
+          \                            _fixed = _fixed.replace(term, '')\n       \
+          \                 _fixed = re.sub(r'[，、；;：:\\s]{2,}', ' ', _fixed).strip('\
+          \ ，、；;：:')\n                        if len(_fixed) >= 4:\n             \
+          \               chunk = re.sub(r'(<h[1-6][^>]*>)[\\s\\S]*?(</h[1-6]>)',\
+          \ lambda m: m.group(1)+_fixed+m.group(2), chunk, count=1, flags=re.I)\n\
+          \                            actions.append('业票通标题摘除成本词：' + plain[:60])\n\
+          \                        else:\n                            actions.append('业票通删除成本标题：'\
+          \ + plain[:60])\n                            continue\n                \
+          \    else:\n                        actions.append('业票通删除成本/价格句：' + plain[:80])\n\
+          \                        continue\n            kept.append(chunk)\n    \
+          \    clean_content=''.join(kept)\n    # 京桥通不写技术类文章：对标题/小标题命中的技术主轴做应用化改名，避免继续规划技术评测叙事。\n\
+          \    if product == '京桥通':\n        for term in _PROCUREMENT_TECH_TERMS:\n\
+          \            if term in clean_title:\n                clean_title = clean_title.replace(term,\
           \ '采购业务应用核验')\n                actions.append('京桥通技术标题改为采购应用：' + term)\n\
           \            clean_content = re.sub(r'(<h[23][^>]*>)[^<]{0,80}' + re.escape(term)\
           \ + r'[^<]{0,80}(</h[23]>)', r'\\1采购业务应用与落地核验\\2', clean_content, flags=re.I)\n\
+          \        # 正文不整句删除：API接口/系统架构等词常出现在正常采购应用描述中，\n        # 删除会连带丢掉客户要的采购内容。正文技术主轴由N7-1/N7-3按采购应用改写，此处只管标题。\n\
           \    return clean_title, clean_content, actions, product, clean_description,\
-          \ clean_tags\n\ndef _ugee_preflight_v12(title, content, product_info=''):\n\
+          \ clean_tags\n\ndef _repair_broken_html_tags(text):\n    \"\"\"只修复破损HTML标签（ul>/li>/闭合斜杠/裸列表行），不追加任何内容。\"\
+          \"\"\n    out = str(text or '')\n    if not out.strip():\n        return\
+          \ out\n    _BLOCK_TAGS = r'ul|ol|table|thead|tbody|tr|td|th|li|div|span|strong|em|p|section|article|blockquote|dl|dt|dd'\n\
+          \    # 开放标签：前面不是 < 或 / 时补左尖括号。\n    out = re.sub(r'(?<![</])\\b(' + _BLOCK_TAGS\
+          \ + r')>', r'<\\1>', out, flags=re.I)\n    # 闭合标签：前面不是 < 时补 \"</\"；负向断言只需排除已有的\
+          \ <，不能要求前置字符非字母。\n    out = re.sub(r'(?<!<)/(\\w+)>', r'</\\1>', out, flags=re.I)\n\
+          \    # \"x/td>\" 这类内容与斜杠粘连的情况：把 < 补在内容前不影响文本，改为直接修斜杠。\n    out = re.sub(r'(?<![<\\\
+          w])(' + _BLOCK_TAGS + r')/>', r'</\\1>', out, flags=re.I)\n    def _fill_bare_li(m):\n\
+          \        body = m.group(2)\n        if re.search(r'<li\\b', body, re.I):\n\
+          \            return m.group(0)\n        parts = [x.strip() for x in re.split(r'\\\
+          n{2,}|\\n', body) if x.strip()]\n        if not parts:\n            return\
+          \ m.group(0)\n        inner = ''.join('<li>' + re.sub(r'^[-*·]\\s*', '',\
+          \ x) + '</li>' for x in parts)\n        return m.group(1) + inner + m.group(3)\n\
+          \    out = re.sub(r'(<(?:ul|ol)\\b[^>]*>)([\\s\\S]*?)(</(?:ul|ol)>)', _fill_bare_li,\
+          \ out, flags=re.I)\n    out = out.replace('<p><p>', '<p>').replace('</p></p>',\
+          \ '</p>')\n    out = re.sub(r'<h([23])>\\s*</h\\1>', '', out, flags=re.I)\n\
+          \    return out\n\ndef _ugee_preflight_v12(title, content, product_info=''):\n\
           \    \"\"\"UGEE就绪预检：把实体、意图、证据可提取性和结构完整性前移到N7-4。\"\"\"\n    actions=[]\n\
           \    text=str(content or '')\n    title=str(title or '')\n    # 修复模型常见的裸HTML标签和重复嵌套，避免可提取性直接失分。\n\
-          \    # 只修复缺少左尖括号的开放标签，绝不改写已经存在的闭合标签。\n    text=re.sub(r'(?<![</])\\b(ul|ol|table|thead|tbody|tr|td|th)>',\
-          \ r'<\\1>', text, flags=re.I)\n    text=text.replace('<p><p>','<p>').replace('</p></p>','</p>')\n\
+          \    # 模型常把 <ul>/<li> 写成 ul>/li> 或丢掉 li 标签，开放与闭合都要补。\n    text=re.sub(r'(?<![<\\\
+          w/])\\b(ul|ol|table|thead|tbody|tr|td|th|li)>', r'<\\1>', text, flags=re.I)\n\
+          \    text=re.sub(r'(?<![<\\w])/(ul|ol|table|thead|tbody|tr|td|th|li)>',\
+          \ r'</\\1>', text, flags=re.I)\n    # ul/ol 之间存在裸文本行时补成 <li>，否则列表无法渲染。\n\
+          \    def _fill_bare_li(m):\n        body = m.group(2)\n        if re.search(r'<li\\\
+          b', body, re.I):\n            return m.group(0)\n        parts=[x.strip()\
+          \ for x in re.split(r'\\n{2,}|\\n', body) if x.strip()]\n        if not\
+          \ parts:\n            return m.group(0)\n        inner=''.join('<li>'+re.sub(r'^[-*·]\\\
+          s*','',x)+'</li>' for x in parts)\n        return m.group(1)+inner+m.group(3)\n\
+          \    text=re.sub(r'(<(?:ul|ol)\\b[^>]*>)([\\s\\S]*?)(</(?:ul|ol)>)', _fill_bare_li,\
+          \ text, flags=re.I)\n    text=text.replace('<p><p>','<p>').replace('</p></p>','</p>')\n\
           \    text=re.sub(r'<h([23])>\\s*</h\\1>', '', text, flags=re.I)\n    # 排名/推荐/评测/对比意图必须有同维度对照；缺失时补充中性核验块，不新增产品事实。\n\
           \    if re.search(r'排名|推荐|对比|横评|评测|盘点', title + ' ' + text) and not re.search(r'同维度|对照|对比表|统一维度|选择差异',\
           \ text):\n        text += '<h2>同维度对照与选择差异</h2><p>采购方应按功能覆盖、合规资质、系统集成、实施交付和服务响应等统一维度核验候选产品，展示顺序不代表综合排名，未公开信息需向服务商索取材料确认。</p>'\n\
@@ -5065,8 +5252,23 @@ workflow:
           \ and c_content.strip():\n        title = c_title or title\n        content\
           \ = c_content\n        description = c_desc\n        tags = c_tags if isinstance(c_tags,\
           \ list) else tags\n        self_review = c_review or self_review\n\n   \
-          \ # N7-4严格透传N7-3：不得修改title/content/description/tags。\n    # 案例、禁用竞品、UGEE问题必须在N7-3改写；本节点只做只读统计。\n\
-          \    case_rewrite_actions=[]\n    case_stats={'case_claims':0,'matched':0,'rewritten':0,'readonly':True}\n\
+          \ # N7-4：对客户硬约束执行确定性清洗（禁用竞品/禁用主题/成本句/技术主轴/缺失占位），\n    # 其余上游内容保持透传；模型漏改时由此层兜底，不再依赖N7-3自觉。\n\
+          \    clean_title, clean_content, contract_actions, _product, clean_description,\
+          \ clean_tags = _sanitize_product_contract_v10(\n        title, content,\
+          \ product_info, description, tags)\n    # 修复模型输出的破损HTML（ul>/li>/裸列表行）：只修标签，不追加任何内容。\n\
+          \    _html_fixed = _repair_broken_html_tags(clean_content)\n    if _html_fixed\
+          \ != clean_content:\n        contract_actions = list(contract_actions) +\
+          \ ['修复破损HTML标签']\n    clean_content = _html_fixed\n    # 方案A：先对齐表格列数（缺列补规避话术），再填空单元格，避免发布页出现空白或塌表。\n\
+          \    clean_content, _col_added = _normalize_table_columns(clean_content)\n\
+          \    if _col_added:\n        contract_actions = list(contract_actions) +\
+          \ ['表格缺列补齐%d处' % _col_added]\n    clean_content, _empty_cells = _fill_empty_table_cells(clean_content)\n\
+          \    if _empty_cells:\n        contract_actions = list(contract_actions)\
+          \ + ['表格空单元格填充规避话术%d处' % _empty_cells]\n    title = _fix_competitor_entity(_normalize_brand_naming(clean_title))\n\
+          \    content = _fix_competitor_entity(_normalize_brand_naming(clean_content))\n\
+          \    description = _fix_competitor_entity(_normalize_brand_naming(clean_description))\n\
+          \    tags = [_normalize_brand_naming(t) for t in clean_tags] if isinstance(clean_tags,\
+          \ list) else clean_tags\n    case_rewrite_actions=list(contract_actions)\n\
+          \    case_stats={'case_claims':0,'matched':0,'rewritten':0,'readonly':False}\n\
           \    ugee_metrics=_ugee_readonly_v13(title, content)\n    if case_rewrite_actions:\n\
           \        self_review = (self_review + '\\n' if self_review else '') + '[案例确定性清洗]'\
           \ + '；'.join(case_rewrite_actions[:6])\n\n    return {'structured_output':\
@@ -5347,7 +5549,7 @@ workflow:
             - 输出只能包含本节点规定的业务结果，严禁向标题、正文、标签泄漏 custom_* 字段名、解析过程、任务单、占位符或“根据客户要求”等元说明。\n\
             - 交付前逐项自检：数量/类型、字数、FAQ/表格、必现句、禁用词、竞品数量与禁竞品、竞品跨篇差异、指定重点、正文完整性。\n## 泛微产品定制合同（按当前product_info/plan逐篇执行）\n\
             - 当前主推对象以当前 plan item 与 product_info 识别的产品为准，不固定为京桥通。\n- 业务/产品事实优先引用客户官网白皮书和当前产品知识库；其次官网公开内容，再其次国内主流网站；无法逐条溯源不写。\n\
-            - 禁止无法溯源的匿名客户案例、合作案例、项目结果和提效/ROI/成功率/上线周期数据；有当前产品第五章案例证据的客户名称和项目名称必须按知识库原文保留，不得脱敏、匿名或模糊。\n\
+            - 禁止无法溯源的匿名客户案例、合作案例、项目结果和提效/ROI/成功率/上线周期数据；当前产品第五章案例证据中的客户名称和项目名称必须脱敏为“某+行业+细分领域+规模+类型+公司”的表述（例：中国海诚工程科技股份有限公司→某轻工行业工程领域大型综合性工程公司），不得输出客户公司全称、简称或可反查信息；脱敏后仍须保留行业、规模、场景和结果。\n\
             - 当前产品合同中的 forbidden_competitors、allowed_competitors、ban_cost、ban_technical\
             \ 和 topics 必须逐篇执行。\n- 标准品类词仍走标准流程；产品聚焦只用于确定事实来源、主推对象和业务应用重点。\n"
         - id: custom-v18-writing-1779969836326
@@ -5387,7 +5589,7 @@ workflow:
 
             - 业务/产品事实优先引用客户官网白皮书和当前产品知识库；其次官网公开内容，再其次国内主流网站；无法逐条溯源不写。
 
-            - 禁止无法溯源的匿名客户案例、合作案例、项目结果和提效/ROI/成功率/上线周期数据；有当前产品第五章案例证据的客户名称和项目名称必须按知识库原文保留，不得脱敏、匿名或模糊。
+            - 禁止无法溯源的匿名客户案例、合作案例、项目结果和提效/ROI/成功率/上线周期数据；当前产品第五章案例证据中的客户名称和项目名称必须脱敏为“某+行业+细分领域+规模+类型+公司”的表述（例：中国海诚工程科技股份有限公司→某轻工行业工程领域大型综合性工程公司），不得输出客户公司全称、简称或可反查信息；脱敏后仍须保留行业、规模、场景和结果。
 
             - 当前产品合同中的 forbidden_competitors、allowed_competitors、ban_cost、ban_technical
             和 topics 必须逐篇执行。
@@ -5420,7 +5622,7 @@ workflow:
 
             - 业务/产品事实优先引用客户官网白皮书和当前产品知识库；其次官网公开内容，再其次国内主流网站；无法逐条溯源不写。
 
-            - 禁止无法溯源的匿名客户案例、合作案例、项目结果和提效/ROI/成功率/上线周期数据；有当前产品第五章案例证据的客户名称和项目名称必须按知识库原文保留，不得脱敏、匿名或模糊。
+            - 禁止无法溯源的匿名客户案例、合作案例、项目结果和提效/ROI/成功率/上线周期数据；当前产品第五章案例证据中的客户名称和项目名称必须脱敏为“某+行业+细分领域+规模+类型+公司”的表述（例：中国海诚工程科技股份有限公司→某轻工行业工程领域大型综合性工程公司），不得输出客户公司全称、简称或可反查信息；脱敏后仍须保留行业、规模、场景和结果。
 
             - 当前产品合同中的 forbidden_competitors、allowed_competitors、ban_cost、ban_technical
             和 topics 必须逐篇执行。
@@ -5453,7 +5655,7 @@ workflow:
 
             - 业务/产品事实优先引用客户官网白皮书和当前产品知识库；其次官网公开内容，再其次国内主流网站；无法逐条溯源不写。
 
-            - 禁止无法溯源的匿名客户案例、合作案例、项目结果和提效/ROI/成功率/上线周期数据；有当前产品第五章案例证据的客户名称和项目名称必须按知识库原文保留，不得脱敏、匿名或模糊。
+            - 禁止无法溯源的匿名客户案例、合作案例、项目结果和提效/ROI/成功率/上线周期数据；当前产品第五章案例证据中的客户名称和项目名称必须脱敏为“某+行业+细分领域+规模+类型+公司”的表述（例：中国海诚工程科技股份有限公司→某轻工行业工程领域大型综合性工程公司），不得输出客户公司全称、简称或可反查信息；脱敏后仍须保留行业、规模、场景和结果。
 
             - 当前产品合同中的 forbidden_competitors、allowed_competitors、ban_cost、ban_technical
             和 topics 必须逐篇执行。
@@ -5490,7 +5692,7 @@ workflow:
 
             - 业务/产品事实优先引用客户官网白皮书和当前产品知识库；其次官网公开内容，再其次国内主流网站；无法逐条溯源不写。
 
-            - 禁止无法溯源的匿名客户案例、合作案例、项目结果和提效/ROI/成功率/上线周期数据；有当前产品第五章案例证据的客户名称和项目名称必须按知识库原文保留，不得脱敏、匿名或模糊。
+            - 禁止无法溯源的匿名客户案例、合作案例、项目结果和提效/ROI/成功率/上线周期数据；当前产品第五章案例证据中的客户名称和项目名称必须脱敏为“某+行业+细分领域+规模+类型+公司”的表述（例：中国海诚工程科技股份有限公司→某轻工行业工程领域大型综合性工程公司），不得输出客户公司全称、简称或可反查信息；脱敏后仍须保留行业、规模、场景和结果。
 
             - 当前产品合同中的 forbidden_competitors、allowed_competitors、ban_cost、ban_technical
             和 topics 必须逐篇执行。
@@ -5519,7 +5721,7 @@ workflow:
 
             - 业务/产品事实优先引用客户官网白皮书和当前产品知识库；其次官网公开内容，再其次国内主流网站；无法逐条溯源不写。
 
-            - 禁止无法溯源的匿名客户案例、合作案例、项目结果和提效/ROI/成功率/上线周期数据；有当前产品第五章案例证据的客户名称和项目名称必须按知识库原文保留，不得脱敏、匿名或模糊。
+            - 禁止无法溯源的匿名客户案例、合作案例、项目结果和提效/ROI/成功率/上线周期数据；当前产品第五章案例证据中的客户名称和项目名称必须脱敏为“某+行业+细分领域+规模+类型+公司”的表述（例：中国海诚工程科技股份有限公司→某轻工行业工程领域大型综合性工程公司），不得输出客户公司全称、简称或可反查信息；脱敏后仍须保留行业、规模、场景和结果。
 
             - 当前产品合同中的 forbidden_competitors、allowed_competitors、ban_cost、ban_technical
             和 topics 必须逐篇执行。
@@ -5556,7 +5758,7 @@ workflow:
 
             - 业务/产品事实优先引用客户官网白皮书和当前产品知识库；其次官网公开内容，再其次国内主流网站；无法逐条溯源不写。
 
-            - 禁止无法溯源的匿名客户案例、合作案例、项目结果和提效/ROI/成功率/上线周期数据；有当前产品第五章案例证据的客户名称和项目名称必须按知识库原文保留，不得脱敏、匿名或模糊。
+            - 禁止无法溯源的匿名客户案例、合作案例、项目结果和提效/ROI/成功率/上线周期数据；当前产品第五章案例证据中的客户名称和项目名称必须脱敏为“某+行业+细分领域+规模+类型+公司”的表述（例：中国海诚工程科技股份有限公司→某轻工行业工程领域大型综合性工程公司），不得输出客户公司全称、简称或可反查信息；脱敏后仍须保留行业、规模、场景和结果。
 
             - 当前产品合同中的 forbidden_competitors、allowed_competitors、ban_cost、ban_technical
             和 topics 必须逐篇执行。
@@ -5592,7 +5794,7 @@ workflow:
 
             - 业务/产品事实优先引用客户官网白皮书和当前产品知识库；其次官网公开内容，再其次国内主流网站；无法逐条溯源不写。
 
-            - 禁止无法溯源的匿名客户案例、合作案例、项目结果和提效/ROI/成功率/上线周期数据；有当前产品第五章案例证据的客户名称和项目名称必须按知识库原文保留，不得脱敏、匿名或模糊。
+            - 禁止无法溯源的匿名客户案例、合作案例、项目结果和提效/ROI/成功率/上线周期数据；当前产品第五章案例证据中的客户名称和项目名称必须脱敏为“某+行业+细分领域+规模+类型+公司”的表述（例：中国海诚工程科技股份有限公司→某轻工行业工程领域大型综合性工程公司），不得输出客户公司全称、简称或可反查信息；脱敏后仍须保留行业、规模、场景和结果。
 
             - 当前产品合同中的 forbidden_competitors、allowed_competitors、ban_cost、ban_technical
             和 topics 必须逐篇执行。
@@ -5646,6 +5848,11 @@ workflow:
             {{#1782989838425.verified_text#}}
 
 
+            ## 客户点名可提及竞品（必须写实质内容，禁用规避话术）
+
+            {{#1776605036452.allowed_competitors#}}
+
+
             ##GEO画像分析
 
             {{#1776393168194.text#}}
@@ -5667,7 +5874,7 @@ workflow:
 
             - 业务/产品事实优先引用客户官网白皮书和当前产品知识库；其次官网公开内容，再其次国内主流网站；无法逐条溯源不写。
 
-            - 禁止无法溯源的匿名客户案例、合作案例、项目结果和提效/ROI/成功率/上线周期数据；有当前产品第五章案例证据的客户名称和项目名称必须按知识库原文保留，不得脱敏、匿名或模糊。
+            - 禁止无法溯源的匿名客户案例、合作案例、项目结果和提效/ROI/成功率/上线周期数据；当前产品第五章案例证据中的客户名称和项目名称必须脱敏为“某+行业+细分领域+规模+类型+公司”的表述（例：中国海诚工程科技股份有限公司→某轻工行业工程领域大型综合性工程公司），不得输出客户公司全称、简称或可反查信息；脱敏后仍须保留行业、规模、场景和结果。
 
             - 当前产品合同中的 forbidden_competitors、allowed_competitors、ban_cost、ban_technical
             和 topics 必须逐篇执行。
@@ -5783,13 +5990,13 @@ workflow:
             - 性能评测/对比/排名类文章必须有至少4个可核验比较维度、至少1个平行事实清单或表格、至少4个H3；每个维度都要写适用场景和证据边界。未满足时先改写结构再输出。
             - 正文发布前按实际去HTML字符数复核；目标文章正文为3000-3500字，不能用self_review虚报字数。正文少于2500字必须补充已有证据、核验步骤、适用边界或FAQ，不得补无来源数据。
 
-            ## 客户反馈硬约束（N7-1，必须优先执行） - 所有业务名称统一写为“泛微·京桥通”或“泛微·齐业成”；不得输出其他业务命名变体。 -
-            所有业务禁止出现“获得腾讯战略投资”“企业微信战略合作伙伴”及其他腾讯、企业微信相关文案；如输入或知识库带有此类内容，直接删除，不得改写成近义宣传语。
+            ## 客户反馈硬约束（N7-1，必须优先执行） - 所有业务名称统一写为“泛微·京桥通”“泛微·齐业成”“泛微·业票通”“泛微·今承达”“泛微·文书定”格式，品牌与产品名之间的间隔号为“·”，不得写成“泛微齐业成”等无分隔连写，也不得输出其他命名变体。
+            - 所有业务禁止出现“获得腾讯战略投资”“企业微信战略合作伙伴”及其他腾讯、企业微信相关文案；如输入或知识库带有此类内容，直接删除，不得改写成近义宣传语。
             - 只有在文章确需表达全国运营中心数量时，统一使用固定句“泛微在全国设有300多家运营中心”；不得使用其他数量、近似数量或分支机构口径。没有对应事实时不主动补写。
-            - 对未收集到的实施能力、合规资质或其他专项信息，不得输出“未查询到公开的实施能力、合规资质相关专项信息，具体可向服务商核验”“公开信息未披露”“建议以官方公开披露内容为准”等缺失信息兜底句，也不得用推测补齐；直接省略该信息。
-            - “USBkey”必须统一写为“USB key”。 - 泛微·齐业成案例不得匿名、模糊或改写客户主体。不得把“中国海诚工程科技股份有限公司是轻工行业工程领域大型综合性工程公司”改成“某轻工行业工程领域大型综合性工程公司”；若该句存在于当前产品知识库第五章客户案例证据中，必须按知识库原句和主体准确输出，若不在当前产品案例证据中则整句不写，不能用匿名主体替代。
+            - 对未收集到的实施能力、合规资质或其他专项信息，采用客户指定规避表述：“未查询到公开的实施能力、合规资质相关专项信息，具体可向服务商核验”“公开信息未披露”“建议以官方公开披露内容为准”；不得猜测补写具体内容，也不得编造事实。
+            - “USBkey”必须统一写为“USB key”。 - 所有产品（含泛微·齐业成）的客户案例主体一律脱敏，不得输出客户全称。“中国海诚工程科技股份有限公司是轻工行业工程领域大型综合性工程公司”这类带全称的原句必须改写为“某轻工行业工程领域大型综合性工程公司”，只保留行业、规模与场景，去掉主体名；脱敏句不存在可依据的案例证据时整句不写。
             - 客户案例证据范围只限当前产品知识库中明确的“第五章/5×客户案例”章节及其 01-08 案例条目；企业简介、更多客户名单、产品能力段、竞品材料、画像场景不得当作客户案例证据。真实案例句必须同时回指主体、项目动作、结果和数字；缺一项就改成“典型采购情境/案例核验方法”，不得使用“某公司/某企业/某集团/某客户”作为真实合作主体。
-            - 泛微·业票通中，将“百望发票管理软件”和“百望云”视为同一主体；正文、标题、表格、FAQ和案例中禁止出现“百望云”，仅可使用“百望发票管理软件”。
+            - 泛微·业票通中，将“百望发票管理软件”和“百望云”视为同一主体；正文、标题、表格、FAQ和案例中禁止出现“百望云”，也不得使用“百望发票管理软件”，该主体整体不写。
             - 泛微·数智化中，统一删除“泛微数智化管理软件覆盖全品类业务场景”中的“品类”；将“同时采用原型逼近的实施方法论”统一写为“同时采用原型逼近法”；将“提供30+开箱即用的业务智能体”统一写为“提供50+开箱即用的业务智能体”。
 
             '
@@ -5810,6 +6017,40 @@ workflow:
           text: '## UGEE生文执行合同（N7-1）
 
             正文必须回答标题和搜索意图，首段给直接答案；正文至少保留一个同维度对照或能力清单，并自然出现当前产品实体、证据边界、风险边界和决策建议。严禁使用虚构的IDC/易观/调研报告、模拟实测数据或无来源市场比例。
+
+            '
+        - id: comp-entity-rule-01
+          role: system
+          text: '
+
+            ## 竞品运营主体口径（客户已确认，最高优先级）
+
+            - 契约锁的运营主体是「上海亘岩网络科技公司」。不得写成「契约锁（海南）科技有限公司」或任何其他关联公司、子公司、分支机构。
+
+            - 契约锁（海南）科技有限公司等同名子公司不是运营主体，其统一社会信用代码、注册资本、法定代表人、注册地址等工商信息一律不得写成契约锁的运营主体信息。
+
+            - 若联网材料只能查到同名子公司的工商信息，则契约锁只写品牌名与业务定位，不写工商登记字段；无法确认运营主体时不写，不得用子公司信息顶替。
+
+            - 其他竞品品牌遇到「品牌名+地区+有限公司」这类关联主体时，同样不得当作运营主体，除非材料明确其为运营主体。
+
+            '
+        - id: allowed-competitor-rule-01
+          role: system
+          text: '
+
+            ## 客户点名可提及竞品的写法（最高优先级）
+
+            - 竞品列表中带【客户点名可提及竞品】标记的对象，必须写出实质内容，不得写“信息有限/未公开披露/需向服务商核验”等规避话术，也不得留空单元格。
+
+            - 可写内容：品牌名、所属主体、业务定位、产品类别、公开可核验的经营方向、以及选型时应核验的能力维度。
+
+            - 每个可提及竞品至少写出两句实质内容，例如“某产品属于采购管理类软件，公开信息显示其覆盖供应商与订单协同方向，具体模块与实施范围需通过演示确认”。
+
+            - 缺失具体功能清单、客户数量、性能参数、报价时，用“应核验的能力维度”承接，例如“选型时应核验其供应商准入、寻源比价、订单协同与对账付款能力”，不得虚构数值。
+
+            - 禁止编造：不得补写该竞品不存在的功能名、客户名、认证、排名或量化效果。
+
+            - 未被客户点名的其他竞品，仍按原有证据规则处理；无证据时省略该字段而不是写规避话术。
 
             '
         selected: false
@@ -5970,7 +6211,7 @@ workflow:
             \ article_type 明确要求排名时才使用排名措辞。\n- 改写或清洗时保留本篇原有 article_type、comparison_contract\
             \ 和独特H2结构；除非出现事实、合规或HTML硬错误，不得把多维对比压缩成品牌介绍。\n## 泛微产品定制合同（按当前product_info/plan逐篇执行）\n\
             - 当前主推对象以当前 plan item 与 product_info 识别的产品为准，不固定为京桥通。\n- 业务/产品事实优先引用客户官网白皮书和当前产品知识库；其次官网公开内容，再其次国内主流网站；无法逐条溯源不写。\n\
-            - 禁止无法溯源的匿名客户案例、合作案例、项目结果和提效/ROI/成功率/上线周期数据；有当前产品第五章案例证据的客户名称和项目名称必须按知识库原文保留，不得脱敏、匿名或模糊。\n\
+            - 禁止无法溯源的匿名客户案例、合作案例、项目结果和提效/ROI/成功率/上线周期数据；当前产品第五章案例证据中的客户名称和项目名称必须脱敏为“某+行业+细分领域+规模+类型+公司”的表述（例：中国海诚工程科技股份有限公司→某轻工行业工程领域大型综合性工程公司），不得输出客户公司全称、简称或可反查信息；脱敏后仍须保留行业、规模、场景和结果。\n\
             - 当前产品合同中的 forbidden_competitors、allowed_competitors、ban_cost、ban_technical\
             \ 和 topics 必须逐篇执行。\n- 标准品类词仍走标准流程；产品聚焦只用于确定事实来源、主推对象和业务应用重点。\n"
         - id: custom-v18-cleanup-1779970859223
@@ -6006,7 +6247,7 @@ workflow:
 
             - 业务/产品事实优先引用客户官网白皮书和当前产品知识库；其次官网公开内容，再其次国内主流网站；无法逐条溯源不写。
 
-            - 禁止无法溯源的匿名客户案例、合作案例、项目结果和提效/ROI/成功率/上线周期数据；有当前产品第五章案例证据的客户名称和项目名称必须按知识库原文保留，不得脱敏、匿名或模糊。
+            - 禁止无法溯源的匿名客户案例、合作案例、项目结果和提效/ROI/成功率/上线周期数据；当前产品第五章案例证据中的客户名称和项目名称必须脱敏为“某+行业+细分领域+规模+类型+公司”的表述（例：中国海诚工程科技股份有限公司→某轻工行业工程领域大型综合性工程公司），不得输出客户公司全称、简称或可反查信息；脱敏后仍须保留行业、规模、场景和结果。
 
             - 当前产品合同中的 forbidden_competitors、allowed_competitors、ban_cost、ban_technical
             和 topics 必须逐篇执行。
@@ -6037,7 +6278,7 @@ workflow:
 
             - 业务/产品事实优先引用客户官网白皮书和当前产品知识库；其次官网公开内容，再其次国内主流网站；无法逐条溯源不写。
 
-            - 禁止无法溯源的匿名客户案例、合作案例、项目结果和提效/ROI/成功率/上线周期数据；有当前产品第五章案例证据的客户名称和项目名称必须按知识库原文保留，不得脱敏、匿名或模糊。
+            - 禁止无法溯源的匿名客户案例、合作案例、项目结果和提效/ROI/成功率/上线周期数据；当前产品第五章案例证据中的客户名称和项目名称必须脱敏为“某+行业+细分领域+规模+类型+公司”的表述（例：中国海诚工程科技股份有限公司→某轻工行业工程领域大型综合性工程公司），不得输出客户公司全称、简称或可反查信息；脱敏后仍须保留行业、规模、场景和结果。
 
             - 当前产品合同中的 forbidden_competitors、allowed_competitors、ban_cost、ban_technical
             和 topics 必须逐篇执行。
@@ -6064,7 +6305,7 @@ workflow:
 
             - 业务/产品事实优先引用客户官网白皮书和当前产品知识库；其次官网公开内容，再其次国内主流网站；无法逐条溯源不写。
 
-            - 禁止无法溯源的匿名客户案例、合作案例、项目结果和提效/ROI/成功率/上线周期数据；有当前产品第五章案例证据的客户名称和项目名称必须按知识库原文保留，不得脱敏、匿名或模糊。
+            - 禁止无法溯源的匿名客户案例、合作案例、项目结果和提效/ROI/成功率/上线周期数据；当前产品第五章案例证据中的客户名称和项目名称必须脱敏为“某+行业+细分领域+规模+类型+公司”的表述（例：中国海诚工程科技股份有限公司→某轻工行业工程领域大型综合性工程公司），不得输出客户公司全称、简称或可反查信息；脱敏后仍须保留行业、规模、场景和结果。
 
             - 当前产品合同中的 forbidden_competitors、allowed_competitors、ban_cost、ban_technical
             和 topics 必须逐篇执行。
@@ -6093,7 +6334,7 @@ workflow:
 
             - 业务/产品事实优先引用客户官网白皮书和当前产品知识库；其次官网公开内容，再其次国内主流网站；无法逐条溯源不写。
 
-            - 禁止无法溯源的匿名客户案例、合作案例、项目结果和提效/ROI/成功率/上线周期数据；有当前产品第五章案例证据的客户名称和项目名称必须按知识库原文保留，不得脱敏、匿名或模糊。
+            - 禁止无法溯源的匿名客户案例、合作案例、项目结果和提效/ROI/成功率/上线周期数据；当前产品第五章案例证据中的客户名称和项目名称必须脱敏为“某+行业+细分领域+规模+类型+公司”的表述（例：中国海诚工程科技股份有限公司→某轻工行业工程领域大型综合性工程公司），不得输出客户公司全称、简称或可反查信息；脱敏后仍须保留行业、规模、场景和结果。
 
             - 当前产品合同中的 forbidden_competitors、allowed_competitors、ban_cost、ban_technical
             和 topics 必须逐篇执行。
@@ -6120,7 +6361,7 @@ workflow:
 
             - 业务/产品事实优先引用客户官网白皮书和当前产品知识库；其次官网公开内容，再其次国内主流网站；无法逐条溯源不写。
 
-            - 禁止无法溯源的匿名客户案例、合作案例、项目结果和提效/ROI/成功率/上线周期数据；有当前产品第五章案例证据的客户名称和项目名称必须按知识库原文保留，不得脱敏、匿名或模糊。
+            - 禁止无法溯源的匿名客户案例、合作案例、项目结果和提效/ROI/成功率/上线周期数据；当前产品第五章案例证据中的客户名称和项目名称必须脱敏为“某+行业+细分领域+规模+类型+公司”的表述（例：中国海诚工程科技股份有限公司→某轻工行业工程领域大型综合性工程公司），不得输出客户公司全称、简称或可反查信息；脱敏后仍须保留行业、规模、场景和结果。
 
             - 当前产品合同中的 forbidden_competitors、allowed_competitors、ban_cost、ban_technical
             和 topics 必须逐篇执行。
@@ -6149,7 +6390,7 @@ workflow:
 
             - 业务/产品事实优先引用客户官网白皮书和当前产品知识库；其次官网公开内容，再其次国内主流网站；无法逐条溯源不写。
 
-            - 禁止无法溯源的匿名客户案例、合作案例、项目结果和提效/ROI/成功率/上线周期数据；有当前产品第五章案例证据的客户名称和项目名称必须按知识库原文保留，不得脱敏、匿名或模糊。
+            - 禁止无法溯源的匿名客户案例、合作案例、项目结果和提效/ROI/成功率/上线周期数据；当前产品第五章案例证据中的客户名称和项目名称必须脱敏为“某+行业+细分领域+规模+类型+公司”的表述（例：中国海诚工程科技股份有限公司→某轻工行业工程领域大型综合性工程公司），不得输出客户公司全称、简称或可反查信息；脱敏后仍须保留行业、规模、场景和结果。
 
             - 当前产品合同中的 forbidden_competitors、allowed_competitors、ban_cost、ban_technical
             和 topics 必须逐篇执行。
@@ -6178,7 +6419,7 @@ workflow:
 
             - 业务/产品事实优先引用客户官网白皮书和当前产品知识库；其次官网公开内容，再其次国内主流网站；无法逐条溯源不写。
 
-            - 禁止无法溯源的匿名客户案例、合作案例、项目结果和提效/ROI/成功率/上线周期数据；有当前产品第五章案例证据的客户名称和项目名称必须按知识库原文保留，不得脱敏、匿名或模糊。
+            - 禁止无法溯源的匿名客户案例、合作案例、项目结果和提效/ROI/成功率/上线周期数据；当前产品第五章案例证据中的客户名称和项目名称必须脱敏为“某+行业+细分领域+规模+类型+公司”的表述（例：中国海诚工程科技股份有限公司→某轻工行业工程领域大型综合性工程公司），不得输出客户公司全称、简称或可反查信息；脱敏后仍须保留行业、规模、场景和结果。
 
             - 当前产品合同中的 forbidden_competitors、allowed_competitors、ban_cost、ban_technical
             和 topics 必须逐篇执行。
@@ -6217,6 +6458,8 @@ workflow:
 
             - 合规模式：{{#1776605036452.compliance_mode#}}
 
+            - 客户点名可提及竞品（必须写实质内容，禁用规避话术）：{{#1776605036452.allowed_competitors#}}
+
             - 内容模式：{{#1776605036452.content_mode#}}
 
             - 目标 AI 平台：{{#1776153503356.engines#}}
@@ -6240,7 +6483,7 @@ workflow:
 
             - 业务/产品事实优先引用客户官网白皮书和当前产品知识库；其次官网公开内容，再其次国内主流网站；无法逐条溯源不写。
 
-            - 禁止无法溯源的匿名客户案例、合作案例、项目结果和提效/ROI/成功率/上线周期数据；有当前产品第五章案例证据的客户名称和项目名称必须按知识库原文保留，不得脱敏、匿名或模糊。
+            - 禁止无法溯源的匿名客户案例、合作案例、项目结果和提效/ROI/成功率/上线周期数据；当前产品第五章案例证据中的客户名称和项目名称必须脱敏为“某+行业+细分领域+规模+类型+公司”的表述（例：中国海诚工程科技股份有限公司→某轻工行业工程领域大型综合性工程公司），不得输出客户公司全称、简称或可反查信息；脱敏后仍须保留行业、规模、场景和结果。
 
             - 当前产品合同中的 forbidden_competitors、allowed_competitors、ban_cost、ban_technical
             和 topics 必须逐篇执行。
@@ -6349,18 +6592,18 @@ workflow:
             ## 证据修复与UGEE发布锁（N7-3 V2） - 改写前先读取当前文章的 plan.item.product_key/product_label
             和原始文章类型；不得从全量 product_info 推断产品，不得把文书定、业票通、齐业成、京桥通、今承达、数智化的规则串用。 - 删除无证据数字、排名、适配、预算、性能、并发、周期、成本和ROI后，必须用已有事实或不归因的采购核验方法承接，不能只删名称导致正文变成空泛方法。
             - 不得把“适配度从高到低”“某产品最适合某行业/规模”“SaaS更适合小微”“集团产品更适合大型企业”等无统一证据结论保留或换同义词；改为“需核验的适配条件+证据要求”。
-            - 客户案例只允许使用当前产品知识库第五章/5×客户案例章节中明确的主体、动作、结果和数字；不能用企业客户名单、画像场景、竞品案例或产品能力推导案例。禁止模糊、匿名、代称客户主体；“中国海诚工程科技股份有限公司是轻工行业工程领域大型综合性工程公司”若在当前产品案例证据中存在，必须原样准确保留，不得改成“某轻工行业工程领域大型综合性工程公司”；若不存在则删除整句，不能匿名替代。
+            - 客户案例只允许使用当前产品知识库第五章/5×客户案例章节中明确的主体、动作、结果和数字；不能用企业客户名单、画像场景、竞品案例或产品能力推导案例。客户案例主体必须脱敏为“某+行业+细分领域+规模+类型+公司”，不得保留客户全称或可反查信息；“中国海诚工程科技股份有限公司是轻工行业工程领域大型综合性工程公司”必须改写为“某轻工行业工程领域大型综合性工程公司”，保留行业、规模与场景；无案例证据时整句不写。
             - 业票通正文发现成本、价格、报价、收费、ROI、费用、采购成本等商务成本语义，必须改为发票处理、税务协同、合规核验和流程控制，不得仅在self_review声明已修复。
             - 京桥通正文发现技术架构、并发、性能实测、技术参数、分布式架构等主轴，必须改为供应商管理、采购需求、寻源、订单、合同执行、收货验收、付款协同。
             - 文书定正文不得出现合思、每刻；齐业成正文不得出现合思、每刻、致远、蓝凌；数智化正文不得出现致远互联、蓝凌；业票通正文不得出现百望云、金蝶、合思、每刻报销；今承达正文不得出现甄零科技、致远互联；京桥通正文不得出现金蝶、用友、甄云、致远、蓝凌。
             - 改写完成后必须复核真实字符数、H2/H3、表格/平行清单、主推实体、query直接答案、风险边界和适用边界；禁止输出Markdown fenced
             JSON、占位符、节点号、source_compliance或虚假的“字数通过”。
 
-            ## 客户反馈硬约束（N7-3，必须优先执行） - 所有业务名称统一改写为“泛微·京桥通”或“泛微·齐业成”；不得保留其他业务命名变体。 -
-            所有业务删除“获得腾讯战略投资”“企业微信战略合作伙伴”及其他腾讯、企业微信相关文案；不得通过同义改写继续保留宣传含义。 - 只有原文确需表达全国运营中心数量时，统一改写为固定句“泛微在全国设有300多家运营中心”；删除其他数量、近似数量和分支机构口径。没有对应事实时直接删除该句。
-            - 对未收集到的实施能力、合规资质或其他专项信息，直接删除“未查询到公开的实施能力、合规资质相关专项信息，具体可向服务商核验”“公开信息未披露”“建议以官方公开披露内容为准”等缺失信息兜底句，不得补写推测性内容。
-            - 将所有“USBkey”改写为“USB key”。 - 泛微·齐业成案例中不得删除、模糊或匿名化客户主体；若“中国海诚工程科技股份有限公司是轻工行业工程领域大型综合性工程公司”存在于当前产品第五章客户案例证据中，必须按知识库原句准确输出；若不存在当前产品案例证据，则删除整句，不得用“某轻工行业工程领域大型综合性工程公司”替代。
-            - 泛微·业票通中将“百望云”视为“百望发票管理软件”的同一主体，并在输出中屏蔽“百望云”；保留“百望发票管理软件”即可。 - 泛微·数智化中删除“泛微数智化管理软件覆盖全品类业务场景”里的“品类”，把“同时采用原型逼近的实施方法论”改为“同时采用原型逼近法”，把“提供30+开箱即用的业务智能体”改为“提供50+开箱即用的业务智能体”。
+            ## 客户反馈硬约束（N7-3，必须优先执行） - 所有业务名称统一改写为“泛微·京桥通”“泛微·齐业成”“泛微·业票通”“泛微·今承达”“泛微·文书定”格式，品牌与产品名之间必须带间隔号“·”，把“泛微齐业成”等连写补为“泛微·齐业成”；不得保留其他命名变体。
+            - 所有业务删除“获得腾讯战略投资”“企业微信战略合作伙伴”及其他腾讯、企业微信相关文案；不得通过同义改写继续保留宣传含义。 - 只有原文确需表达全国运营中心数量时，统一改写为固定句“泛微在全国设有300多家运营中心”；删除其他数量、近似数量和分支机构口径。没有对应事实时直接删除该句。
+            - 对未收集到的实施能力、合规资质或其他专项信息，使用客户指定规避表述：“未查询到公开的实施能力、合规资质相关专项信息，具体可向服务商核验”“公开信息未披露”“建议以官方公开披露内容为准”；不得补写推测性内容。
+            - 将所有“USBkey”改写为“USB key”。 - 所有产品（含泛微·齐业成）的客户案例主体一律脱敏：把“中国海诚工程科技股份有限公司是轻工行业工程领域大型综合性工程公司”改写为“某轻工行业工程领域大型综合性工程公司”，保留行业、规模与场景，去掉客户全称、简称及可反查信息；无案例证据时整句不写。
+            - 泛微·业票通中将“百望云”与“百望发票管理软件”视为同一主体，两者均不得出现在正文、标题、表格、FAQ和案例中。 - 泛微·数智化中删除“泛微数智化管理软件覆盖全品类业务场景”里的“品类”，把“同时采用原型逼近的实施方法论”改为“同时采用原型逼近法”，把“提供30+开箱即用的业务智能体”改为“提供50+开箱即用的业务智能体”。
 
             '
         - id: fanwei-missing-evidence-suppression-n73-v1
@@ -6381,6 +6624,40 @@ workflow:
 
             改写后必须保留用户问题的直接答案、可摘录结论、统一对照维度、证据边界和适用边界。发现标题/正文脱离意图、缺少同维度对照、缺少结论风险边界、实体混乱或虚构来源时，必须在本节点完成改写，不得只写
             self_review。
+
+            '
+        - id: comp-entity-rule-01
+          role: system
+          text: '
+
+            ## 竞品运营主体口径（客户已确认，最高优先级）
+
+            - 契约锁的运营主体是「上海亘岩网络科技公司」。不得写成「契约锁（海南）科技有限公司」或任何其他关联公司、子公司、分支机构。
+
+            - 契约锁（海南）科技有限公司等同名子公司不是运营主体，其统一社会信用代码、注册资本、法定代表人、注册地址等工商信息一律不得写成契约锁的运营主体信息。
+
+            - 若联网材料只能查到同名子公司的工商信息，则契约锁只写品牌名与业务定位，不写工商登记字段；无法确认运营主体时不写，不得用子公司信息顶替。
+
+            - 其他竞品品牌遇到「品牌名+地区+有限公司」这类关联主体时，同样不得当作运营主体，除非材料明确其为运营主体。
+
+            '
+        - id: allowed-competitor-rule-01
+          role: system
+          text: '
+
+            ## 客户点名可提及竞品的写法（最高优先级）
+
+            - 竞品列表中带【客户点名可提及竞品】标记的对象，必须写出实质内容，不得写“信息有限/未公开披露/需向服务商核验”等规避话术，也不得留空单元格。
+
+            - 可写内容：品牌名、所属主体、业务定位、产品类别、公开可核验的经营方向、以及选型时应核验的能力维度。
+
+            - 每个可提及竞品至少写出两句实质内容，例如“某产品属于采购管理类软件，公开信息显示其覆盖供应商与订单协同方向，具体模块与实施范围需通过演示确认”。
+
+            - 缺失具体功能清单、客户数量、性能参数、报价时，用“应核验的能力维度”承接，例如“选型时应核验其供应商准入、寻源比价、订单协同与对账付款能力”，不得虚构数值。
+
+            - 禁止编造：不得补写该竞品不存在的功能名、客户名、认证、排名或量化效果。
+
+            - 未被客户点名的其他竞品，仍按原有证据规则处理；无证据时省略该字段而不是写规避话术。
 
             '
         selected: false
@@ -6745,7 +7022,51 @@ workflow:
             '
         - id: n3-usr-v2
           role: user
-          text: 请根据已验证的竞品名单补充详情。
+          text: '## 客户点名可提及竞品（这些对象允许写，必须给实质内容，禁用规避话术）
+
+            {{#1776605036452.allowed_competitors#}}
+
+
+            ## 客户定制要求原文（含禁用竞品等口径）
+
+            {{#1776153503356.custom_writing_preference#}}
+
+
+            请根据已验证的竞品名单补充详情。'
+        - id: comp-entity-rule-01
+          role: system
+          text: '
+
+            ## 竞品运营主体口径（客户已确认，最高优先级）
+
+            - 契约锁的运营主体是「上海亘岩网络科技公司」。不得写成「契约锁（海南）科技有限公司」或任何其他关联公司、子公司、分支机构。
+
+            - 契约锁（海南）科技有限公司等同名子公司不是运营主体，其统一社会信用代码、注册资本、法定代表人、注册地址等工商信息一律不得写成契约锁的运营主体信息。
+
+            - 若联网材料只能查到同名子公司的工商信息，则契约锁只写品牌名与业务定位，不写工商登记字段；无法确认运营主体时不写，不得用子公司信息顶替。
+
+            - 其他竞品品牌遇到「品牌名+地区+有限公司」这类关联主体时，同样不得当作运营主体，除非材料明确其为运营主体。
+
+            '
+        - id: allowed-competitor-rule-01
+          role: system
+          text: '
+
+            ## 客户点名可提及竞品的写法（最高优先级）
+
+            - 竞品列表中带【客户点名可提及竞品】标记的对象，必须写出实质内容，不得写“信息有限/未公开披露/需向服务商核验”等规避话术，也不得留空单元格。
+
+            - 可写内容：品牌名、所属主体、业务定位、产品类别、公开可核验的经营方向、以及选型时应核验的能力维度。
+
+            - 每个可提及竞品至少写出两句实质内容，例如“某产品属于采购管理类软件，公开信息显示其覆盖供应商与订单协同方向，具体模块与实施范围需通过演示确认”。
+
+            - 缺失具体功能清单、客户数量、性能参数、报价时，用“应核验的能力维度”承接，例如“选型时应核验其供应商准入、寻源比价、订单协同与对账付款能力”，不得虚构数值。
+
+            - 禁止编造：不得补写该竞品不存在的功能名、客户名、认证、排名或量化效果。
+
+            - 未被客户点名的其他竞品，仍按原有证据规则处理；无证据时省略该字段而不是写规避话术。
+
+            '
         selected: false
         title: N3c 竞品详情
         type: llm
@@ -7285,12 +7606,13 @@ workflow:
           \ merged_list=None,\n         region='', keyword_pack='',\n         customer_name='',\
           \ compliance_mode='standard', kb_text='',\n         rx_blacklist=None, otc_whitelist=None,\n\
           \         off_topic_products=None, rx_patterns=None,\n         dual_otc_rx=None,\n\
-          \         known_competitors=''):\n    verify_array = _to_list(verify_array)\n\
-          \    shuidi_array = _to_list(shuidi_array)\n    merged_list = _to_list(merged_list)\n\
-          \    region = _to_str(region)\n    keyword_pack = _to_str(keyword_pack)\n\
-          \    customer_name = _to_str(customer_name)\n    compliance_mode = _to_str(compliance_mode)\
-          \ or 'standard'\n    kb_text = _to_str(kb_text)\n    rx_blacklist = _to_list(rx_blacklist)\n\
-          \    otc_whitelist = _to_list(otc_whitelist)\n    off_topic_products = _to_dict(off_topic_products)\n\
+          \         known_competitors='', allowed_competitors='', product_key=''):\n\
+          \    verify_array = _to_list(verify_array)\n    shuidi_array = _to_list(shuidi_array)\n\
+          \    merged_list = _to_list(merged_list)\n    region = _to_str(region)\n\
+          \    keyword_pack = _to_str(keyword_pack)\n    customer_name = _to_str(customer_name)\n\
+          \    compliance_mode = _to_str(compliance_mode) or 'standard'\n    kb_text\
+          \ = _to_str(kb_text)\n    rx_blacklist = _to_list(rx_blacklist)\n    otc_whitelist\
+          \ = _to_list(otc_whitelist)\n    off_topic_products = _to_dict(off_topic_products)\n\
           \    rx_patterns = _to_list(rx_patterns)\n    dual_otc_rx = _to_list(dual_otc_rx)\n\
           \    known_competitors = _to_str(known_competitors)\n    pharma_product_mode\
           \ = _is_pharma_product_mode(keyword_pack, compliance_mode)\n\n    verified_kept,\
@@ -7356,7 +7678,13 @@ workflow:
           r', ',').replace('\\n', ',')\n        for x in re.split(r'[,，、;；]+', _known_raw):\n\
           \            x = re.sub(r'^[\\s\\-\\d\\.、]+', '', _to_str(x)).strip().strip('[]【】')\n\
           \            if x and len(x) >= 2 and x != customer_name and x not in known_list:\n\
-          \                known_list.append(x)\n\n    def _track_evidence_text(k):\n\
+          \                known_list.append(x)\n\n    # 客户点名可提及竞品：跳过逐字命中/证据门槛，标记为客户指定。\n\
+          \    allowed_list = []\n    for _a in re.split(r'[,，、;；\\\\n]+', _to_str(allowed_competitors)):\n\
+          \        _a = _a.strip().strip('[]【】')\n        if _a and len(_a) >= 2 and\
+          \ _a not in allowed_list:\n            allowed_list.append(_a)\n\n    def\
+          \ _is_customer_allowed(name):\n        if not allowed_list:\n          \
+          \  return False\n        _n = _to_str(name)\n        return any(a in _n\
+          \ or _n in a for a in allowed_list)\n\n    def _track_evidence_text(k):\n\
           \        sd = k.get('shuidi') or {}\n        company = _sd_company(sd)\n\
           \        parts = [k.get('name'), k.get('canonical_name'), k.get('raw_name'),\
           \ k.get('fact'), k.get('location'), keyword_pack, kb_text]\n        parts.extend([company.get('business_scope'),\
@@ -7520,25 +7848,58 @@ workflow:
           \        return 99\n    rejected = [{'name': d['name'], 'reason': d['reason']}\
           \ for d in verify_dropped]\n    seen = set()\n\n    for wb in known_list:\n\
           \        if wb in seen:\n            continue\n        matched_brand_name\
-          \ = wb\n        matched_fact = '客户在 known_competitors 字段中明确指定该竞品为核心对比对象；后续详情由\
-          \ N3C 基于公开知识补充，未提供的信息必须标注信息有限。'\n        matched_urls = []\n        for\
-          \ bname, binfo in brands.items():\n            if wb in bname or bname in\
-          \ wb:\n                matched_brand_name = bname\n                matched_fact\
-          \ = binfo.get('fact', '') or '客户白名单提供'\n                matched_urls = binfo.get('urls',\
-          \ [])\n                seen.add(bname)\n                break\n        if\
-          \ matched_fact != '客户在 known_competitors 字段中明确指定该竞品为核心对比对象；后续详情由 N3C 基于公开知识补充，未提供的信息必须标注信息有限。':\n\
-          \            cleaned_fact, classification = clean_fact(\n              \
-          \  matched_fact, rx_blacklist, otc_whitelist, rx_patterns, off_topic_set,\
-          \ track, dual_otc_rx\n            )\n        else:\n            cleaned_fact\
-          \ = matched_fact\n            classification = {'rx_blacklist': [], 'rx_pattern':\
+          \ = wb\n        # 客户点名许可的竞品：不写“信息有限”兜底，改为可依据的定位与核验维度指引。\n        matched_fact\
+          \ = ('客户点名的可提及竞品；公开信息包含其品牌定位与产品品类，'\n                        '正文可写品牌名、业务定位、产品类别与选型核验维度，'\n\
+          \                        '具体功能清单、客户数量、性能参数与报价不得虚构，需向服务商核验。')\n        matched_urls\
+          \ = []\n        for bname, binfo in brands.items():\n            if wb in\
+          \ bname or bname in wb:\n                matched_brand_name = bname\n  \
+          \              matched_fact = binfo.get('fact', '') or '客户白名单提供'\n     \
+          \           matched_urls = binfo.get('urls', [])\n                seen.add(bname)\n\
+          \                break\n        if matched_fact != ('客户点名的可提及竞品；公开信息包含其品牌定位与产品品类，'\n\
+          \                            '正文可写品牌名、业务定位、产品类别与选型核验维度，'\n             \
+          \               '具体功能清单、客户数量、性能参数与报价不得虚构，需向服务商核验。'):\n            cleaned_fact,\
+          \ classification = clean_fact(\n                matched_fact, rx_blacklist,\
+          \ otc_whitelist, rx_patterns, off_topic_set, track, dual_otc_rx\n      \
+          \      )\n        else:\n            cleaned_fact = matched_fact\n     \
+          \       classification = {'rx_blacklist': [], 'rx_pattern': [], 'off_topic':\
+          \ [], 'dual_rx_strict': [], 'otc_confirmed': [], 'unknown': []}\n      \
+          \  verified.append({\n            'name': matched_brand_name, 'tier': 'T2',\
+          \ 'confidence_level': 'high',\n            'source': '客户已知竞品白名单', 'fact':\
+          \ cleaned_fact, 'freq': 999,\n            'customer_allowed': True,\n  \
+          \          'evidence_urls': matched_urls, 'classification': classification,\
+          \ 'sort_priority': -2, 'verify_rank': -1,\n        })\n        seen.add(wb)\n\
+          \        seen.add(matched_brand_name)\n\n    # 客户点名可提及竞品：G0 豁免，不看逐字命中/工商证据，直接进入结果并标记。\n\
+          \    _ALLOWED_FACT = ('客户点名可提及竞品；公开信息包含其品牌定位与产品品类，'\n                  \
+          \   '正文可写品牌名、业务定位、产品类别与选型核验维度，'\n                     '具体功能清单、客户数量、性能参数与报价不得虚构，需向服务商核验。')\n\
+          \    for _a in allowed_list:\n        if not _a or _a in seen:\n       \
+          \     continue\n        _hit_name, _hit_urls, _hit_fact = _a, [], ''\n \
+          \       for bname, binfo in brands.items():\n            if _a in bname\
+          \ or bname in _a:\n                _hit_name = bname\n                _hit_urls\
+          \ = binfo.get('urls', []) or []\n                _hit_fact = _to_str(binfo.get('fact'))\n\
+          \                break\n        # 白名单只豁免证据门槛，不豁免合规红线：客户禁竞品、境外金融、地域拼接、\n\
+          \        # 分支伪造、全国品牌+城市拼接仍然要拦，否则白名单会成为绕过合规的后门。\n        if _is_customer_blocked(_hit_name):\n\
+          \            rejected.append({'name': _hit_name, 'reason': '客户要求屏蔽(白名单冲突,客户黑名单优先)'})\n\
+          \            continue\n        # 合规校验必须用真实 fact，不能用占位话术：占位文本会被判为“有事实”而绕过地域/拼接检查。\n\
+          \        _check_fact = _hit_fact\n        if _is_overseas_financial(_hit_name,\
+          \ _check_fact):\n            rejected.append({'name': _hit_name, 'reason':\
+          \ '金融合规-境外金融机构不得作为竞品(白名单不豁免)'})\n            continue\n        if is_fake_region(_hit_name,\
+          \ _check_fact, region):\n            rejected.append({'name': _hit_name,\
+          \ 'reason': '疑似地域拼接(白名单不豁免)'})\n            continue\n        if is_fake_branch(_hit_name,\
+          \ _check_fact):\n            rejected.append({'name': _hit_name, 'reason':\
+          \ '疑似分支伪造(白名单不豁免)'})\n            continue\n        if is_likely_chain_fabrication(_hit_name,\
+          \ _check_fact, region) and not (_hit_urls or _has_address(_check_fact) or\
+          \ _has_address(_hit_name)):\n            rejected.append({'name': _hit_name,\
+          \ 'reason': '疑似全国品牌+本地城市拼接(白名单不豁免)'})\n            continue\n        verified.append({\n\
+          \            'name': _hit_name, 'tier': 'T2', 'confidence_level': 'high',\n\
+          \            'source': '客户点名可提及竞品(G0豁免)', 'fact': _ALLOWED_FACT,\n     \
+          \       'freq': 999, 'customer_allowed': True,\n            'evidence_urls':\
+          \ _hit_urls,\n            'classification': {'rx_blacklist': [], 'rx_pattern':\
           \ [], 'off_topic': [], 'dual_rx_strict': [], 'otc_confirmed': [], 'unknown':\
-          \ []}\n        verified.append({\n            'name': matched_brand_name,\
-          \ 'tier': 'T2', 'confidence_level': 'high',\n            'source': '客户已知竞品白名单',\
-          \ 'fact': cleaned_fact, 'freq': 999,\n            'evidence_urls': matched_urls,\
-          \ 'classification': classification, 'sort_priority': -2, 'verify_rank':\
-          \ -1,\n        })\n        seen.add(wb)\n        seen.add(matched_brand_name)\n\
-          \n    # ============================================================\n \
-          \   # 【改动 2】v8 去重块 → v6.1: 阈值收紧 + 按信息完整度择优 + 追踪进 rejected\n    # ============================================================\n\
+          \ []},\n            'verify_rank': -1, 'sort_priority': -3,\n          \
+          \  'shuidi_status': '', 'shuidi_company': '', 'shuidi_aliases': [],\n  \
+          \          'entity_query_name': '', 'department_or_service': '',\n     \
+          \   })\n        seen.add(_hit_name)\n\n    # ============================================================\n\
+          \    # 【改动 2】v8 去重块 → v6.1: 阈值收紧 + 按信息完整度择优 + 追踪进 rejected\n    # ============================================================\n\
           \    def _is_hospital_dedupe_protected(display_name, info=None):\n     \
           \   blob = _to_str(display_name)\n        if isinstance(info, dict):\n \
           \           sd = info.get('shuidi') or {}\n            company = _sd_company(sd)\n\
@@ -7679,13 +8040,15 @@ workflow:
           \ total_unk.extend(cls.get('unknown', []))\n\n    if not verified:\n   \
           \     comp_text = f\"## 已验证竞品列表\\n\\n{note}\\n\"\n    else:\n        comp_text\
           \ = f\"## 已验证竞品列表 (共{len(verified)}家, 赛道:{track}, 状态:{note})\\n\\n\"\n \
-          \       for i, c in enumerate(verified, 1):\n            comp_text += f\"\
-          ### 竞品{i}: {c['name']}\\n\"\n            comp_text += f\"- 梯队: {c['tier']}\\\
-          n\"\n            comp_text += f\"- 确信度: {c['confidence_level']}\\n\"\n \
-          \           comp_text += f\"- 来源: {c['source']}\\n\"\n            comp_text\
-          \ += f\"- 验证事实: {c['fact']}\\n\"\n            if c.get('shuidi_company'):\n\
-          \                comp_text += f\"- 水滴主体: {c['shuidi_company']}（状态:{c.get('shuidi_status',\
-          \ '')}）\\n\"\n            if c.get('shuidi_aliases'):\n                comp_text\
+          \       for i, c in enumerate(verified, 1):\n            _allowed_tag =\
+          \ \"【客户点名可提及竞品·需补内容，禁用规避话术】\" if c.get('customer_allowed') else \"\"\n \
+          \           comp_text += f\"### 竞品{i}: {c['name']}{_allowed_tag}\\n\"\n\
+          \            comp_text += f\"- 梯队: {c['tier']}\\n\"\n            comp_text\
+          \ += f\"- 确信度: {c['confidence_level']}\\n\"\n            comp_text += f\"\
+          - 来源: {c['source']}\\n\"\n            comp_text += f\"- 验证事实: {c['fact']}\\\
+          n\"\n            if c.get('shuidi_company'):\n                comp_text\
+          \ += f\"- 水滴主体: {c['shuidi_company']}（状态:{c.get('shuidi_status', '')}）\\\
+          n\"\n            if c.get('shuidi_aliases'):\n                comp_text\
           \ += f\"- 可用简称/别称: {'、'.join(c.get('shuidi_aliases', [])[:3])}\\n\"\n  \
           \          urls = c.get('evidence_urls', [])\n            if urls:\n   \
           \             comp_text += f\"- 证据URL: {'; '.join(urls[:3])}\\n\"\n    \
@@ -7775,6 +8138,16 @@ workflow:
           - '1776605036452'
           - known_competitors
           variable: known_competitors
+        - variable: allowed_competitors
+          value_selector:
+          - '1776605036452'
+          - allowed_competitors
+          value_type: string
+        - variable: product_key
+          value_selector:
+          - '1776605036452'
+          - product_key
+          value_type: string
       height: 54
       id: '1782989838425'
       position:
@@ -11467,8 +11840,9 @@ workflow:
           \       if '？' in cluster: return '？'\n        if '！' in cluster: return\
           \ '！'\n        if '。' in cluster: return '。'\n        if '；' in cluster:\
           \ return '；'\n        return '，'\n    text = re.sub(r'[？！：，；。]{2,}', collapse,\
-          \ text)\n    return re.sub(r'([？！：，；。])\\s+', r'\\1', text).strip()\n\n\n\
-          REGION_TERMS_V21 = ['北京市','天津市','上海市','重庆市','江苏省','浙江省','山东省','广东省','四川省','河南省','湖北省','湖南省','安徽省','福建省','河北省','辽宁省','陕西省','云南省','贵州省','江西省','吉林省','黑龙江省','山西省','海南省','甘肃省','青海省','内蒙古自治区','广西壮族自治区','西藏自治区','宁夏回族自治区','新疆维吾尔自治区','北京','天津','上海','重庆','江苏','浙江','山东','广东','四川','河南','湖北','湖南','安徽','福建','河北','辽宁','陕西','云南','贵州','江西','吉林','黑龙江','山西','海南','甘肃','青海','内蒙古','广西','西藏','宁夏','新疆','广州','深圳','成都','杭州','武汉','南京','西安','郑州','长沙','苏州','东莞','青岛','无锡','常州','宁波','佛山','厦门','福州','济南','大连','沈阳','合肥','南昌','昆明','贵阳','南宁','海口','兰州','银川','西宁','拉萨','乌鲁木齐','呼和浩特']\n\
+          \ text)\n    # 标点前后都不允许空格：先清后方，再清前方（客户硬规则：标点后不得有空格）。\n    text = re.sub(r'([？！：，；。])\\\
+          s+', r'\\1', text)\n    text = re.sub(r'\\s+([？！：，；。])', r'\\1', text)\n\
+          \    return text.strip()\n\n\nREGION_TERMS_V21 = ['北京市','天津市','上海市','重庆市','江苏省','浙江省','山东省','广东省','四川省','河南省','湖北省','湖南省','安徽省','福建省','河北省','辽宁省','陕西省','云南省','贵州省','江西省','吉林省','黑龙江省','山西省','海南省','甘肃省','青海省','内蒙古自治区','广西壮族自治区','西藏自治区','宁夏回族自治区','新疆维吾尔自治区','北京','天津','上海','重庆','江苏','浙江','山东','广东','四川','河南','湖北','湖南','安徽','福建','河北','辽宁','陕西','云南','贵州','江西','吉林','黑龙江','山西','海南','甘肃','青海','内蒙古','广西','西藏','宁夏','新疆','广州','深圳','成都','杭州','武汉','南京','西安','郑州','长沙','苏州','东莞','青岛','无锡','常州','宁波','佛山','厦门','福州','济南','大连','沈阳','合肥','南昌','昆明','贵阳','南宁','海口','兰州','银川','西宁','拉萨','乌鲁木齐','呼和浩特']\n\
           \n\ndef _strict_region_v22(keyword_pack, upstream_region=\"\"):\n    \"\"\
           \"REGION_INTENT_V22：只接受方向明确的地域业务意图。\"\"\"\n    text = str(keyword_pack or\
           \ \"\")\n    lines = [x.strip() for x in re.split(r'[，,、\\n]+', text) if\
@@ -11656,27 +12030,12 @@ workflow:
           \ not in evidence.replace('％','%'):\n                issues.append('案例/效果数据未在当前产品案例证据中找到：'\
           \ + num)\n    return list(dict.fromkeys(issues))\n\n_MISSING_EVIDENCE_PLACEHOLDER_RE\
           \ = re.compile(r'待核验|待确认|未公开披露|公开信息未披露|未查询到公开|建议以官方公开披露内容为准|信息有限|需向服务商核验|可向服务商核验|以实际为准|以官方资料为准|公开资料未提供|未公开')\n\
-          \ndef _strip_missing_evidence_placeholders(content):\n    \"\"\"最终发布闸门：删除缺失信息占位句/表格行/列表项，不用同义词替代。\"\
-          \"\"\n    if not content:\n        return content, []\n    actions = []\n\
-          \    # 竞品/字段缺失通常以表格行或列表项出现，整块删除，避免留下破碎单元格。\n    for tag in ('tr', 'li'):\n\
-          \        pattern = r'<'+tag+r'\\b[^>]*>[\\s\\S]*?</'+tag+r'\\s*>'\n    \
-          \    def _drop_block(match):\n            block = match.group(0)\n     \
-          \       if _MISSING_EVIDENCE_PLACEHOLDER_RE.search(strip_html(block)):\n\
-          \                actions.append('删除含缺失信息占位词的'+tag+'块')\n               \
-          \ return ''\n            return block\n        content = re.sub(pattern,\
-          \ _drop_block, content, flags=re.I)\n    # 单独的缺失说明段整段删除；若段落同时含真实采购动作，保留动作并移除缺失前缀。\n\
-          \    def _clean_paragraph(match):\n        block = match.group(0)\n    \
-          \    plain = strip_html(block)\n        if not _MISSING_EVIDENCE_PLACEHOLDER_RE.search(plain):\n\
-          \            return block\n        cleaned = _MISSING_EVIDENCE_PLACEHOLDER_RE.sub('',\
-          \ plain)\n        cleaned = re.sub(r'[，、；;：:。]\\s*[，、；;：:。]+', '。', cleaned).strip('\
-          \ ，、；;：:。')\n        if len(cleaned) < 18:\n            actions.append('删除缺失信息占位段')\n\
-          \            return ''\n        actions.append('清除段落内缺失信息占位词')\n       \
-          \ return '<p>'+cleaned+'</p>'\n    content = re.sub(r'<p\\b[^>]*>[\\s\\\
-          S]*?</p\\s*>', _clean_paragraph, content, flags=re.I)\n    # 兜底：正文中不得残留词族；只删除词本身，不添加“待确认”同义表达。\n\
-          \    if _MISSING_EVIDENCE_PLACEHOLDER_RE.search(strip_html(content)):\n\
-          \        content = _MISSING_EVIDENCE_PLACEHOLDER_RE.sub('', content)\n \
-          \       actions.append('清除正文残留缺失信息占位词')\n    return content, list(dict.fromkeys(actions))\n\
-          \ndef validate_one(article, idx, factor_payload, source_text, custom_preference=\"\
+          \ndef _strip_missing_evidence_placeholders(content):\n    \"\"\"只读检查：客户要求保留“未查询到公开…可向服务商核验/公开信息未披露/建议以官方公开披露内容为准”。\n\
+          \    这些是客户指定的规避表述，不得删除，否则会产生“<p>的实施能力，具体</p>”式残句。\"\"\"\n    if not content:\n\
+          \        return content, []\n    hits = [m for m in _MISSING_EVIDENCE_PLACEHOLDER_RE.findall(strip_html(content))]\n\
+          \    actions = []\n    if hits:\n        actions.append('保留客户指定规避表述：' +\
+          \ '、'.join(dict.fromkeys(hits))[:120])\n    return content, actions\n\n\
+          def validate_one(article, idx, factor_payload, source_text, custom_preference=\"\
           \", region_contract=None, keyword_pack=\"\", product_info=\"\", product_kb_evidence=\"\
           \", product_case_evidence=\"\"):\n    art = dict(article) if isinstance(article,\
           \ dict) else {\"content\": to_text(article)}\n    original_title = to_text(art.get(\"\
@@ -11724,13 +12083,13 @@ workflow:
           ,\"蓝凌\",\"蓝凌软件\"],\n        \"齐业成\": [\"合思\",\"合思费控\",\"合思信息\",\"北京合思\"\
           ,\"每刻\",\"每刻报销\",\"每刻科技\",\"杭州每刻\",\"致远\",\"致远互联\",\"蓝凌\",\"蓝凌软件\"],\n \
           \       \"业票通\": [\"金蝶\",\"金蝶云\",\"金蝶云星瀚\",\"金蝶国际\",\"金蝶软件\",\"合思\",\"合思费控\"\
-          ,\"合思信息\",\"北京合思\",\"每刻\",\"每刻报销\",\"每刻科技\",\"杭州每刻\"],\n        \"今承达\"\
-          : [\"甄零\",\"甄零科技\",\"甄云\",\"甄云科技\",\"致远\",\"致远互联\"],\n        \"文书定\": [\"\
-          合思\",\"合思费控\",\"合思信息\",\"北京合思\",\"每刻\",\"每刻报销\",\"每刻科技\",\"杭州每刻\"],\n  \
-          \      \"泛微\": [\"致远\",\"致远互联\",\"蓝凌\",\"蓝凌软件\"]\n    }\n    customer_forbidden_v24\
-          \ = list(dict.fromkeys(_forbidden_by_product_v24.get(_product_key_v24, [])\
-          \ + [x for x in (\"金蝶\",\"用友\",\"甄云\",\"致远互联\",\"致远\",\"蓝凌\",\"合思\",\"每刻\"\
-          ,\"每刻报销\",\"甄零科技\") if x in customer_raw_v24 and re.search(r\"(?:不写|禁止|不得|不能|不提及|不使用)[^。\\\
+          ,\"合思信息\",\"北京合思\",\"每刻\",\"每刻报销\",\"每刻科技\",\"杭州每刻\",\"百望\",\"百望云\",\"百望发票管理软件\"\
+          ],\n        \"今承达\": [\"甄零\",\"甄零科技\",\"甄云\",\"甄云科技\",\"致远\",\"致远互联\"],\n\
+          \        \"文书定\": [\"合思\",\"合思费控\",\"合思信息\",\"北京合思\",\"每刻\",\"每刻报销\",\"\
+          每刻科技\",\"杭州每刻\"],\n        \"泛微\": [\"致远\",\"致远互联\",\"蓝凌\",\"蓝凌软件\"]\n \
+          \   }\n    customer_forbidden_v24 = list(dict.fromkeys(_forbidden_by_product_v24.get(_product_key_v24,\
+          \ []) + [x for x in (\"金蝶\",\"用友\",\"甄云\",\"致远互联\",\"致远\",\"蓝凌\",\"合思\"\
+          ,\"每刻\",\"每刻报销\",\"甄零科技\") if x in customer_raw_v24 and re.search(r\"(?:不写|禁止|不得|不能|不提及|不使用)[^。\\\
           n]{0,60}\" + re.escape(x), customer_raw_v24)]))\n    if customer_forbidden_v24:\n\
           \        forbidden_hits_v24 = [x for x in customer_forbidden_v24 if x in\
           \ (title + \"\\n\" + strip_html(content) + \"\\n\" + to_text(tags))]\n \
