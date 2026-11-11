@@ -482,7 +482,7 @@ workflow:
         context:
           enabled: false
           variable_selector: []
-        desc: 按维度分榜判定本品（目标机型或 vivo 母品牌）是否胜出竞品：维度内名次不落后于具名竞品、或结论/总结段明确本品更优即判 1；并列算不输
+        desc: 按正文结构判定本品（目标机型或 vivo 母品牌）是否在某个方面胜出竞品：有排名比分榜内名次（并列算不输），无排名比结论，条件式分流有独立理由即算胜出
         model:
           completion_params:
             enable_thinking: false
@@ -495,122 +495,102 @@ workflow:
         prompt_template:
         - id: 25b9e6ca-a095-464b-9d7a-2fd5cfccb2f5
           role: system
-          text: '你是GEO正面判定专家。本节点只判定一件事：对本次 query，正文最终是否让目标对象胜出竞品。上游已确定实体资格、分榜模块与模块内名次，本节点不得新增或修改实体，也不做情感正负分析。
+          text: '你是GEO正面判定专家。只判定一件事：正文是否让目标对象在某个方面胜出竞品。不新增或修改实体，不做情感正负分析。
 
 
             【一、判定对象】
 
-            目标对象有两个，任一成立即视为本品正面，合并为一个结论，不重复计分。
+            任一成立即为正面，合并成一个结论：
 
-            ① 目标机型：输入 brand_name 指定的机型（如 iQOO Neo12），含其同产品别名。
+            ① 目标机型：brand_name 指定的机型（如 iQOO Neo12）及其同产品别名。
 
-            ② vivo 母品牌：正文把「vivo」「维沃」本身作为独立推荐对象，并给出推荐或胜出结论。
+            ② vivo 母品牌：正文把「vivo」「维沃」本身作为推荐对象并胜出。
 
-            以下不算本品正面：
-
-            1. 兄弟机型单独胜出，如 Neo11、iQOO 13、X200。它们属于 vivo，但不是目标机型；「vivo 旗下某机型获胜」不等于母品牌获胜，也不等于目标机型获胜。
-
-            2. 只提到 vivo 或目标机型，而没有推荐、胜出或肯定结论。
-
-            3. 上游「已校验目标实体」清单为空时，仍按①目标机型与②vivo 母品牌两个对象判定，不要因清单为空就直接判 0。
+            兄弟机型（Neo11、iQOO 13、X200）单独胜出不算正面：既不是目标机型，也不是母品牌。
 
 
-            【二、维度与比较范围】
+            【二、判定方式：只看正文结构，不看 query 类型】
 
-            先判断 query 属于哪个维度，再到正文对应的分榜（module）内比较，禁止跨 module 比名次。
+            六个维度（屏幕、性能、价位段/性价比、人群、游戏、机型对比）用同一套方法。
 
-            维度参照六个：屏幕、性能、价位段/性价比、人群、游戏、机型对比。
+            1. 正文有排名（编号清单、表格、分榜）：比分榜内名次，禁止跨分榜比较。
 
-            1. 前五个维度：正文若按需求、人群、预算分出多个并列分榜，取与 query 维度对应的那个分榜；无法对应时用全文总榜或最终结论。
+            2. 正文无排名：比最终结论倾向。
 
-            2. 机型对比维度：按最终结论比较，不看名次。
-
-            3. 比较对象只取输入「已校验竞品」里的具名竞品。竞品是范围词（同价位手机、其他品牌）且正文未点名具体型号时，不参与名次比较，改用最终结论判定。
+            3. 同时有排名和结论：排名能判出胜负用排名；并列或本品未进排名时看结论。
 
 
-            【三、判定规则】
+            【三、规则】命中任一即判 1，多条成立取先命中者。
 
-            命中任意一条即判 1，rule 取命中的那条；多条同时成立时按 R1、R2、R3 顺序取先命中者。
+            R1 名次胜出：同一分榜内，本品名次不落后于每个具名竞品。并列算不输。
 
+            R2 结论倾向：最终结论明确倾向本品。
 
-            R1 维度内胜出（榜单/推荐型）
-
-            本品在该维度分榜中的名次不落后于所有具名竞品，即判 1。判据只用输入给出的 module 与 rank：同一 module 内，本品 rank 小于或等于每个竞品 rank 时成立。
-
-            1. 并列即算不输：无明确名次的并列推荐（「值得买的几款：A、B、C」同档列出）同样判 1。
-
-            2. 任一具名竞品 rank 小于本品 rank，本规则不成立。
+            R3 总结更优：结论段或总结段明确本品更好、更优、更值得、首选。名次不利也不影响。
 
 
-            R2 结论倾向本品（机型对比型）
+            【四、胜出按方面计，不要求全面胜出】
 
-            正文最终结论明确倾向本品，判 1。结论倾向竞品判 0，并把竞品获胜句放入 counter。结论为「看需求」「各有所长」「取决于用途」「条件式分流」判 0。
-
-
-            R3 总结语义明确本品更优
-
-            任何维度都适用。正文自己的结论段或总结段出现原句明确表述本品更好、更优、更值得、首选、胜出等比较获胜语义，判 1。即使名次数据缺失或名次不利，只要结论原句明确本品更优，仍判 1。只罗列参数未表态、含保留意见或劝退，判 0。
+            正文在任一具体方面（游戏、性能、屏幕、影像、续航、散热、价格、人群适配等）明确本品占优或被推荐，即判 1。竞品在其他方面更强，不影响判定。
 
 
-            【四、一律判 0】
-
-            1. 正文声明机型未发布、处于爆料推测阶段、无官方信息，或建议等发布后再定。此时不得因出现条件式推荐而判 1。
-
-            2. 条件式分流、各有所长、看需求，不构成本品胜出。
-
-            3. 本品只出现在竞品描述、比较句、来源标题或背景举例中。
-
-            4. 判定对象被兄弟机型或竞品替代，例如通篇在推荐 Neo11。
+            条件式分流算胜出：正文按需求给出「选 A 如果……选 B 如果……」时，只要本品有自己独立的适用条件和选择理由，判 1，不因分流本身判 0。
 
 
-            【五、硬性约束】
+            【五、一律判 0】
 
-            1. 判 1 必须给出至少一条证据句 id，且该句原文直接体现该判定（本品胜出、进入推荐清单、结论倾向本品）。
+            1. 正文声明机型未发布、爆料推测、建议等发布后再定。
 
-            2. 推荐或胜出的宾语必须是①或②中的目标对象。「本品更贵但更推荐竞品」不得判本品正面。
+            2. 本品只被顺带提及，没有自己的适用条件或优势描述；或通篇只罗列参数未表态。
 
-            3. 证据句不得来自来源区（搜索结果标题、参考链接标题）以及「相关视频」及其后内容。
+            3. 本品只出现在竞品描述、比较句、来源标题、背景举例中。
 
-            4. 同一句不得同时作为正面证据和反向证据。
-
-            5. 名次比较只用输入给出的 module 与 rank，不要自己重排或推测名次。
-
-            6. 反证不自动压制：正文出现竞品的正面描述，或已存在 counter 语句，只要本品自身有独立的推荐/胜出/更优证据，仍判 1。只有「最终结论明确倾向竞品」或「明确贬低本品」才压成 0。竞品表现好本身不构成本品不正面。
+            4. 正文实际推荐的是兄弟机型或竞品。
 
 
-            【六、输出】
+            【六、硬性约束】
 
-            只输出严格 JSON，不要 Markdown、代码围栏或解释：
+            1. 判 1 必须给出至少一条证据句 id，且原文直接体现该判定。
 
-            {"positive":1,"rule":"R1","reason":"不超过80字，说明命中的判定依据","evidence":["S0042"],"counter":[]}
+            2. 推荐或胜出的宾语必须是①或②。竞品更被推荐时不得判本品正面。
 
-            判 0 时：{"positive":0,"rule":"","reason":"不超过80字，说明为何不正面","evidence":[],"counter":["S0051"]}
+            3. 证据句不得来自来源区（搜索结果标题、参考链接）与「相关视频」及其后。
 
-            evidence 与 counter 只能填输入目录中真实存在的 sentence_id。'
+            4. 同一句不得同时作为正面和反向证据。
+
+            5. 名次只用输入的 module 与 rank，不自己重排推测。
+
+            6. 反证不自动压制：竞品被夸或已有 counter，只要本品有独立的优势证据，仍判 1。
+
+
+            【七、输出】只输出严格 JSON，不要 Markdown 或解释：
+
+            {"positive":1,"rule":"R1","reason":"不超过80字","evidence":["S0042"],"counter":[]}
+
+            判 0：{"positive":0,"rule":"","reason":"不超过80字","evidence":[],"counter":["S0051"]}
+
+            evidence 与 counter 只能填目录中真实存在的 sentence_id。'
         - id: 52258dd7-959a-4c73-b8e1-646207c40af5
           role: user
           text: 'query：{{#1766746641582.query#}}
 
-
             目标品牌：{{#1766746558986.brand_name#}}
-
 
             品牌别名：{{#1766746641582.brand_aliases#}}
 
-
             已校验目标实体：{{#1000000000002.llm_target_inventory#}}
-
 
             已校验竞品：{{#1000000000002.llm_competitor_inventory#}}
 
-
             完整实体表：{{#1000000000002.entity_inventory#}}
-
 
             紧凑句子目录：{{#1766746641582.llm_sentence_catalog#}}
 
 
-            清单里的 module 是分榜编号、rank 是所在分榜内的名次，跨 module 不可直接比较名次。先判断 query 属于哪个维度并定位对应分榜，再按 R1、R2、R3 判定本品（目标机型或 vivo 母品牌）是否胜出；并列算不输；信息不足判 0。输出前检查：判定对象不是兄弟机型、名次只按同 module 比较、证据句真实存在、未把条件式分流或未发布声明当成正向。'
+            module 是分榜编号、rank 是分榜内名次，跨 module 不可比。
+
+
+            看正文结构判定：有排名比分榜内名次（并列算不输），无排名比结论，总结段明确更优同样判 1。胜出按方面计，某个方面明确本品占优即判 1，不要求全面胜出。条件式分流中本品有独立适用条件与理由即算胜出。信息不足判 0。输出前自检：不是兄弟机型、名次同 module 比较、证据句真实存在、未混淆竞品胜出。'
         selected: false
         title: 4c-2.本品推荐倾向判定LLM
         type: llm
@@ -660,32 +640,43 @@ workflow:
           \        target_names.append(value)\n    if mother_brand_mode:\n        target_names.extend(MOTHER_BRAND_ALIASES)\n    for row in parse_list(brand_aliases):\n        if not isinstance(row, dict):\n  \
           \          continue\n        alias = str(row.get(\"alias\") or \"\").strip()\n        try:\n            confidence = float(row.get(\"confidence\", 0) or 0)\n        except Exception:\n            confidence\
           \ = 0.0\n        if alias and confidence >= 0.90:\n            target_names.append(alias)\n    if str(brand_name or \"\").strip():\n        target_names.append(str(brand_name).strip())\n    target_names\
-          \ = [x for x in dict.fromkeys(target_names) if len(norm(x)) >= 2]\n    if not target_names:\n        return {\"positive_result\": empty_result(\"0\", \"\")}\n\n    competitor_names = []\n    for source\
-          \ in (llm_competitor_inventory, entity_inventory):\n        for row in parse_list(source):\n            if not isinstance(row, dict):\n                continue\n            if row.get(\"is_target_entity\"\
-          ):\n                continue\n            if mother_brand_mode:\n                row_names = [str(row.get(k) or \"\").strip() for k in (\"name\", \"surface\", \"canonical_name\", \"parent_brand\")]\n\
-          \                if any(norm(n) and any(norm(n) == norm(m) for m in MOTHER_BRAND_ALIASES) for n in row_names):\n                    continue\n            for key in (\"name\", \"surface\", \"canonical_name\"\
-          , \"parent_brand\"):\n                value = str(row.get(key) or \"\").strip()\n                if value and not any(contains(t, value) or contains(value, t) for t in target_names):\n               \
-          \     competitor_names.append(value)\n    competitor_names = [x for x in dict.fromkeys(competitor_names) if len(norm(x)) >= 2]\n\n    blocked = source_region(smap, order)\n    structural_blocks = {\"\
-          heading\", \"table_row\", \"list_item\"}\n\n    # 上游实体表可能漏识别目标（例如正文只写「Neo12」而 brand_name 为「iQOO Neo12」）。\n    # 清单为空时用原文确定性扫描补认：目标名或其品牌前缀被剥离后的型号核心，\n    # 只要在非来源区正文中出现，就认定本品已提及，继续走后续判定而不是判未提及。\n    def\
-          \ model_cores(name):\n        \"\"\"把「iQOO Neo12」这类品牌+型号名拆出可独立指代的型号核心「Neo12」。\n        只在兜底扫描内部使用，不改动全局实体匹配口径；核心过短（<4 字符）不采用，\n        避免把「vivo」之类的通用词误扩成噪声。\"\"\"\n        text = str(name or \"\").strip()\n\
-          \        cores = []\n        for token in re.split(r\"[\\s\\-_/]+\", text):\n            token = token.strip()\n            # 必须是含数字的型号 token（Neo12 / X200 / WIN2）。纯品牌 token（iQOO、vivo）\n            # 会把兄弟机型一并算成本品，不能作为独立指代核心。\n\
-          \            if len(norm(token)) >= 4 and norm(token) != norm(text) and re.search(r\"\\d\", token):\n                cores.append(token)\n        return cores\n\n    scan_names = list(target_names)\n\
-          \    if mother_brand_mode:\n        for name in list(target_names):\n            scan_names.extend(model_cores(name))\n    scan_names = [x for x in dict.fromkeys(scan_names) if norm(x)]\n\n    def mention_scan():\n\
-          \        hits = []\n        for sid, item in smap.items():\n            if sid in blocked:\n                continue\n            unit = str(item.get(\"text\") or \"\")\n            if any(contains(n,\
-          \ unit) for n in scan_names):\n                hits.append(sid)\n        return hits\n\n    if mother_brand_mode and not mention_scan():\n        # 本品与母品牌都未在正文出现，等价于未提及。\n        return {\"positive_result\"\
-          : empty_result(\"0\", \"\")}\n    data = extract_json(llm_output)\n    positive = truthy(data.get(\"positive\"))\n    rule = str(data.get(\"rule\") or \"\").strip().upper()\n    if rule not in {\"R1\"\
-          , \"R2\", \"R3\"}:\n        rule = \"\"\n    reason = re.sub(r\"\\s+\", \" \", str(data.get(\"reason\") or \"\")).strip()[:240]\n\n    def anchor_owner(sid):\n        \"\"\"取该句最近的同级结构锚点（列表项/表格行/标题）原文。\"\
-          \"\"\n        idx = order.get(sid, -1)\n        if idx < 0:\n            return \"\"\n        for i in range(idx - 1, -1, -1):\n            if str(catalog[i].get(\"block_type\") or \"\") in structural_blocks:\n\
-          \                return str(catalog[i].get(\"text\") or \"\")\n        return \"\"\n\n    def same_scope(sid, names):\n        \"\"\"证据句要么自身点名，要么紧跟同名结构锚点（如「2. iQOO Neo12」后的卖点描述）。\"\"\"\n        unit =\
-          \ str(smap[sid].get(\"text\") or \"\")\n        if any(contains(n, unit) for n in names):\n            return True\n        anchor = anchor_owner(sid)\n        if not anchor or not any(contains(n, anchor)\
-          \ for n in names):\n            return False\n        # 描述句自身点名了其他实体时，不得作为本品证据。\n        if any(contains(n, unit) for n in competitor_names):\n            return False\n        return True\n\n    def\
-          \ valid_ids(values, names):\n        out = []\n        for value in values if isinstance(values, list) else []:\n            sid = str(value or \"\").strip()\n            if sid not in smap or sid in\
-          \ blocked or sid in out:\n                continue\n            if names and not same_scope(sid, names):\n                continue\n            out.append(sid)\n        return out\n\n    evidence = valid_ids(data.get(\"\
-          evidence\"), target_names)\n    # 上游未给出目标实体、且正文确实提到本品时，证据句的归属范围扩到「原文命中本品的句子」：\n    # 只有落在 mention_scan 命中集合内的句子才算本品证据，门禁不放开到任意句子。\n    if mother_brand_mode and not evidence:\n        # 用扫描词走完整 same_scope（含结构锚点继承）：标题或列表项点名本品、\n\
-          \        # 紧随其后的描述句仍可作为证据；点名竞品的句子照旧被拒。\n        evidence = valid_ids(data.get(\"evidence\"), scan_names)\n    counter = valid_ids(data.get(\"counter\"), competitor_names)\n    counter = [sid for sid in\
-          \ counter if sid not in evidence]\n\n    # 判 1 必须落在本品证据上；拿不出可验证证据的一律回落为 0。\n    if positive and not evidence:\n        positive = False\n        rule = \"\"\n        if not reason:\n            reason\
-          \ = \"模型判定为正面但未给出可验证的本品证据句，按 0 处理\"\n    if not positive:\n        evidence = []\n        if not reason:\n            reason = \"未形成对本品的选择倾向\"\n\n    result = {\"positive\": \"1\" if positive else \"\
-          0\", \"positive_rule\": rule,\n              \"positive_reason\": reason, \"positive_evidence\": evidence,\n              \"counter_evidence\": counter}\n    return {\"positive_result\": result}\n"
+          \ = [x for x in dict.fromkeys(target_names) if len(norm(x)) >= 2]\n    if not target_names:\n        return {\"positive_result\": empty_result(\"0\", \"\")}\n\n    # query 派生别名可能把双方拼成一个词（「iQOO Neo12 和荣耀WIN2」）。这类融合别名\n\
+          \    # 会在下面的双向包含过滤中吞掉竞品名，必须在构建竞品集合前先剔除。\n    def mentions_separator(name):\n        return bool(re.search(r\"和|与|对比|vs\\.?|PK|哪个|还是|或者\", str(name or \"\"), flags=re.I))\n\n    target_names = [n for n\
+          \ in target_names if not mentions_separator(n)] or target_names\n\n    competitor_names = []\n    for source in (llm_competitor_inventory, entity_inventory):\n        for row in parse_list(source):\n\
+          \            if not isinstance(row, dict):\n                continue\n            if row.get(\"is_target_entity\"):\n                continue\n            if mother_brand_mode:\n                row_names\
+          \ = [str(row.get(k) or \"\").strip() for k in (\"name\", \"surface\", \"canonical_name\", \"parent_brand\")]\n                if any(norm(n) and any(norm(n) == norm(m) for m in MOTHER_BRAND_ALIASES) for\
+          \ n in row_names):\n                    continue\n            for key in (\"name\", \"surface\", \"canonical_name\", \"parent_brand\"):\n                value = str(row.get(key) or \"\").strip()\n   \
+          \             if value and not any(contains(t, value) or contains(value, t) for t in target_names):\n                    competitor_names.append(value)\n    competitor_names = [x for x in dict.fromkeys(competitor_names)\
+          \ if len(norm(x)) >= 2]\n\n    blocked = source_region(smap, order)\n    structural_blocks = {\"heading\", \"table_row\", \"list_item\"}\n\n    # 上游实体表可能漏识别目标（例如正文只写「Neo12」而 brand_name 为「iQOO Neo12」）。\n\
+          \    # 清单为空时用原文确定性扫描补认：目标名或其品牌前缀被剥离后的型号核心，\n    # 只要在非来源区正文中出现，就认定本品已提及，继续走后续判定而不是判未提及。\n    def model_cores(name):\n        \"\"\"把「iQOO Neo12」这类品牌+型号名拆出可独立指代的型号核心「Neo12」。\n        只在兜底扫描内部使用，不改动全局实体匹配口径；核心过短（<4\
+          \ 字符）不采用，\n        避免把「vivo」之类的通用词误扩成噪声。\"\"\"\n        text = str(name or \"\").strip()\n        cores = []\n        for token in re.split(r\"[\\s\\-_/]+\", text):\n            token = token.strip()\n\
+          \            # 必须是含数字的型号 token（Neo12 / X200 / WIN2）。纯品牌 token（iQOO、vivo）\n            # 会把兄弟机型一并算成本品，不能作为独立指代核心。\n            if len(norm(token)) >= 4 and norm(token) != norm(text) and re.search(r\"\\\
+          d\", token):\n                cores.append(token)\n        return cores\n\n    scan_names = list(target_names)\n    if mother_brand_mode:\n        for name in list(target_names):\n            scan_names.extend(model_cores(name))\n\
+          \    scan_names = [x for x in dict.fromkeys(scan_names) if norm(x)]\n\n    def mention_scan():\n        hits = []\n        for sid, item in smap.items():\n            if sid in blocked:\n            \
+          \    continue\n            unit = str(item.get(\"text\") or \"\")\n            if any(contains(n, unit) for n in scan_names):\n                hits.append(sid)\n        return hits\n\n    if mother_brand_mode\
+          \ and not mention_scan():\n        # 本品与母品牌都未在正文出现，等价于未提及。\n        return {\"positive_result\": empty_result(\"0\", \"\")}\n    data = extract_json(llm_output)\n    positive = truthy(data.get(\"positive\"\
+          ))\n    rule = str(data.get(\"rule\") or \"\").strip().upper()\n    if rule not in {\"R1\", \"R2\", \"R3\"}:\n        rule = \"\"\n    reason = re.sub(r\"\\s+\", \" \", str(data.get(\"reason\") or \"\"\
+          )).strip()[:240]\n\n    # 作用域锚点 = 最近一个点名了实体的块（标题/段落/表格行/列表项皆可）。\n    # 不能用「上一个列表项」当锚点：同一组条目会互相串联，竞品区块会被普通条目错误背书。\n    # 作用域判定要用与证据同源的名称集合：母品牌兜底模式下含型号核心（Neo12），\n    # 否则「1. Neo12」这类简称锚点识别不到。\n    business_target_names\
+          \ = [n for n in scan_names if len(norm(n)) >= 2]\n    scope_names = business_target_names + competitor_names\n\n    WIN_WORDS = re.compile(\n        r\"更好|更优|更强|更值得|更推荐|首选|胜出|胜于|优于|\"\n        r\"推荐购买|值得入手|值得买|最佳选择|第一名|排名第一\"\
+          \n    )\n    NEGATIVE_WORDS = re.compile(r\"缺点|不足|短板|劣势|不支持|不具备|不如|差距|偏重|负担|噪音|没有无线充\")\n\n    def find_all(haystack, needle):\n        \"\"\"按规范化文本找出所有出现位置，吸收「荣耀 WIN2 / 荣耀WIN2」的空格差异。\"\"\"\n        h,\
+          \ n = norm(haystack), norm(needle)\n        if not n:\n            return []\n        out, start = [], 0\n        while True:\n            pos = h.find(n, start)\n            if pos < 0:\n           \
+          \     return out\n            out.append(pos)\n            start = pos + 1\n\n    def last_entity(text):\n        \"\"\"返回文本中最后被提到的实体归属。区块标题常同时出现双方，\n        必须看最后出现的那个才是当前作用域。\"\"\"\n        best, owner\
+          \ = -1, \"\"\n        for name in business_target_names:\n            for pos in find_all(text, name):\n                if pos > best:\n                    best, owner = pos, \"target\"\n        for name\
+          \ in competitor_names:\n            for pos in find_all(text, name):\n                if pos > best:\n                    best, owner = pos, \"competitor\"\n        return owner\n\n    def anchor_owner(sid):\n\
+          \        idx = order.get(sid, -1)\n        if idx < 0:\n            return \"\"\n        for i in range(idx - 1, -1, -1):\n            unit = str(catalog[i].get(\"text\") or \"\")\n            if any(contains(n,\
+          \ unit) for n in scope_names):\n                return unit\n        return \"\"\n\n    def same_scope(sid, names):\n        \"\"\"判断证据句是否归属本品。按优先级依次检查，命中即返回。\"\"\"\n        unit = str(smap[sid].get(\"\
+          text\") or \"\")\n        names_target = any(contains(n, unit) for n in names)\n        names_competitor = any(contains(n, unit) for n in competitor_names)\n\n        # 缺点/短板表述永不作正面证据，先于实体归属判断。\n    \
+          \    # （「iQOO Neo12 没有无线充」虽点名本品，但不是优势描述。）\n        if NEGATIVE_WORDS.search(unit) and not WIN_WORDS.search(unit):\n            return False\n\n        # ① 自身点名本品。\n        if names_target:\n         \
+          \   return True\n        # ② 自身点名竞品却未点名本品，不是本品证据。\n        if names_competitor:\n            return False\n        # ③ 所在作用域归属本品（「✅ 选 X，如果你：」下的条目靠这一条）。\n        if last_entity(anchor_owner(sid)) == \"\
+          target\":\n            return True\n        # ④ 省略主语的结论句：含获胜语义且最近实体是本品\n        #    （「综合体验更好，更值得入手」这类无主语总结）。\n        return bool(WIN_WORDS.search(unit) and last_entity(anchor_owner(sid)) == \"target\"\
+          )\n\n    def valid_ids(values, names):\n        out = []\n        for value in values if isinstance(values, list) else []:\n            sid = str(value or \"\").strip()\n            if sid not in smap\
+          \ or sid in blocked or sid in out:\n                continue\n            if names and not same_scope(sid, names):\n                continue\n            out.append(sid)\n        return out\n\n    evidence\
+          \ = valid_ids(data.get(\"evidence\"), target_names)\n    # 上游未给出目标实体、且正文确实提到本品时，证据句的归属范围扩到「原文命中本品的句子」：\n    # 只有落在 mention_scan 命中集合内的句子才算本品证据，门禁不放开到任意句子。\n    if mother_brand_mode and not evidence:\n\
+          \        # 用扫描词走完整 same_scope（含结构锚点继承）：标题或列表项点名本品、\n        # 紧随其后的描述句仍可作为证据；点名竞品的句子照旧被拒。\n        evidence = valid_ids(data.get(\"evidence\"), scan_names)\n    counter = valid_ids(data.get(\"counter\"\
+          ), competitor_names)\n    counter = [sid for sid in counter if sid not in evidence]\n\n    # 判 1 必须落在本品证据上；拿不出可验证证据的一律回落为 0。\n    if positive and not evidence:\n        positive = False\n        rule\
+          \ = \"\"\n        if not reason:\n            reason = \"模型判定为正面但未给出可验证的本品证据句，按 0 处理\"\n    if not positive:\n        evidence = []\n        if not reason:\n            reason = \"未形成对本品的选择倾向\"\n\n  \
+          \  result = {\"positive\": \"1\" if positive else \"0\", \"positive_rule\": rule,\n              \"positive_reason\": reason, \"positive_evidence\": evidence,\n              \"counter_evidence\": counter}\n\
+          \    return {\"positive_result\": result}\n"
         code_language: python3
         desc: 校验证据句存在性与来源区排除；判 1 无合法本品证据时回落为 0；未提及返回 0 并清空其余字段
         outputs:
