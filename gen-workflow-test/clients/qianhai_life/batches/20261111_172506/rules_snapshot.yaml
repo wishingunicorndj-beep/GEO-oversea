@@ -1,0 +1,947 @@
+# 客户规则包（由 extract_rules.py + draft_to_rules.py 自动生成）
+# 状态: draft —— 需人工复核 conflicts 与 not_rules 后转正
+# 来源: 1.公司素材（20261020）.docx, 2.关于部分重点问题的描述（20261020）.docx, 360智见GEO（服务版）客户信息提报表-前海人寿保险股份有限公司 - 品牌词(1028).xlsx, 前海人寿GEO稿件规范评审会-会议纪要1028-2.docx, 语料问题1028.docx
+
+meta:
+  client_id: qianhai_life
+  client_name: 前海人寿保险股份有限公司
+  client_short: 前海人寿
+  industry: 人身保险
+  version: 0.1.0-draft
+  compiled_at: ''
+  topology: generic-18
+  extraction:
+    model: openai/gpt-6.1-sol
+    prompt_chars: 47427
+    elapsed_s: 226.6
+    source_files:
+    - 1.公司素材（20261020）.docx
+    - 2.关于部分重点问题的描述（20261020）.docx
+    - 360智见GEO（服务版）客户信息提报表-前海人寿保险股份有限公司 - 品牌词(1028).xlsx
+    - 前海人寿GEO稿件规范评审会-会议纪要1028-2.docx
+    - 语料问题1028.docx
+  note: 由脚本从客户资料自动抽取，需人工复核后转正（version 去掉 -draft）。
+priority:
+- 客户规则 > 知识库原文 > 模型常识
+- 客户资料之间冲突时见 conflicts，未裁决前不得擅自择一
+rules:
+- id: QIANHA-01
+  category: identity
+  polarity: must_not
+  severity: fix
+  scope:
+  - title
+  statement: 标题不得直接使用“宝能集团”，应以“股东”代指
+  condition: 股东债务危机及股东负面舆情类稿件
+  scope_note: 限制标题中的股东负面实体称谓，不等于禁止正文出现该实体；纪要内另有“尽量不提”的较软措辞，见冲突清单。
+  alternative: 使用“股东债务危机，会影响前海人寿的保单吗？”等弱化实体的标题。
+  detect:
+    type: terms
+    values:
+    - 宝能集团
+  enforcement: code
+  evidence: “标题必须隐去‘宝能集团’，改用‘股东’代指。”
+  source_file: 文件5：前海人寿GEO稿件规范评审会-会议纪要1028-2.docx
+  examples:
+  - wrong: 宝能集团债务危机，会影响前海人寿的保单吗？
+    right: 股东债务危机，会影响前海人寿的保单吗？
+- id: QIANHA-02
+  category: identity
+  polarity: may
+  severity: fix
+  scope:
+  - body
+  statement: 正文允许适度提及“宝能集团”
+  condition: 股东债务危机类稿件需要保留实体以匹配词条时
+  scope_note: 属于正文有限许可，不适用于标题，也不是要求在所有稿件中主动提及。
+  enforcement: llm
+  evidence: “标题尽量不提，正文可适度提及，先观察效果。”；“属正文，客户允许保留，无需改动。”
+  source_file: 文件5：前海人寿GEO稿件规范评审会-会议纪要1028-2.docx
+- id: QIANHA-03
+  category: prohibition
+  polarity: must_not
+  severity: fix
+  scope:
+  - title
+  statement: 标题不得使用“热点回应”“极端场景”“投保决策参考”“可靠性验核标准”
+  scope_note: 这些词的明确使用场景是标题；不据此推导所有普通正文语境均禁止相同字词。
+  alternative: 使用自然、符合保险行业习惯的中性标题。
+  detect:
+    type: terms
+    values:
+    - 热点回应
+    - 极端场景
+    - 投保决策参考
+    - 可靠性验核标准
+  enforcement: code
+  evidence: “客户点名的禁用标题表述：”下列有“热点回应”“极端场景”“投保决策参考”“可靠性验核标准”。
+  source_file: 文件5：前海人寿GEO稿件规范评审会-会议纪要1028-2.docx
+- id: QIANHA-04
+  category: prohibition
+  polarity: must_not
+  severity: fix
+  scope:
+  - title
+  statement: “坚持独立自主经营”被列为受限标题表述，须按适用词条向客户确认后使用
+  condition: 涉及“坚持独立自主经营”的标题
+  scope_note: 标题规范注明“只覆盖在宝能债务危机词条”，附录却将其列入全面禁用清单，不能自行扩大或缩小禁用范围。
+  alternative: 暂用不含该措辞的中性标题，并向客户确认范围。
+  enforcement: human
+  evidence: 标题禁用表述表：“坚持独立自主经营-只覆盖在宝能债务危机词条”；附录：“严禁出现……坚持独立自主经营……”
+  source_file: 文件5：前海人寿GEO稿件规范评审会-会议纪要1028-2.docx
+- id: QIANHA-05
+  category: voice
+  polarity: prefer
+  severity: advise
+  scope:
+  - title
+  statement: 标题优先采用服务指引视角，避免事件化、情绪化表达
+  condition: 保单业务、权益保障类稿件
+  scope_note: 适用于保单办理与权益保障标题，不等于要求所有产品、投资或员工关系稿件都叫“投保指南”。
+  alternative: 采用“前海人寿投保指南”“办理路径”等服务型标题。
+  enforcement: llm
+  evidence: “建议改法：改为「前海人寿投保指南」或「办理路径」这类服务指引型、去情绪化、去事件化的中性标题。”
+  source_file: 文件5：前海人寿GEO稿件规范评审会-会议纪要1028-2.docx
+- id: QIANHA-06
+  category: structure
+  polarity: must
+  severity: reject
+  scope:
+  - title
+  - body
+  statement: 标题与正文必须一致，正文必须实质展开标题所问主题
+  scope_note: 严重脱节、文不对题属于拒稿；不是要求正文只能包含标题原词，相关背景可以服务于主题。
+  alternative: 围绕标题问题重新组织正文，或按正文实际主题修改标题。
+  enforcement: llm
+  evidence: “标题与正文逻辑必须相符。存在标题与正文严重脱节、文不对题的稿件，直接拒稿。”
+  source_file: 文件5：前海人寿GEO稿件规范评审会-会议纪要1028-2.docx；文件7：语料问题1028.docx
+  examples:
+  - wrong: 标题问产品费用贵不贵，正文仅介绍医养布局。
+    right: 标题问产品费用贵不贵，正文分析费用影响因素及对应产品保障。
+- id: QIANHA-07
+  category: structure
+  polarity: must_not
+  severity: reject
+  scope:
+  - body
+  statement: 稿件不得存在大逻辑错误
+  scope_note: 大逻辑错误直接拒稿；小细节问题按修改反馈流程处理，不一概归为拒稿。
+  alternative: 先核对业务概念与论证关系，再组织文章。
+  enforcement: llm
+  evidence: “大逻辑错误、文不对题 | 直接拒稿”；“仅小细节问题 | 甲方直接修改后反馈”。
+  source_file: 文件5：前海人寿GEO稿件规范评审会-会议纪要1028-2.docx
+- id: QIANHA-08
+  category: scope
+  polarity: may
+  severity: fix
+  scope:
+  - title
+  - body
+  statement: 允许不同业务在同一稿件中出现，但须结合实际行业角度表述
+  condition: 需要同时介绍保险、医养或其他业务时
+  scope_note: 许可业务并列或合理行业分析，不许可把不同业务强行写成因果关系或无条件绑定权益；纪要内“只写”措辞存在范围歧义，见冲突清单。
+  enforcement: llm
+  evidence: “业务可混搭，但是需要以行业角度输出”；“不是不可以与其他业务同时输出，生文需要结合实际的行业角度出发”。
+  source_file: 文件5：前海人寿GEO稿件规范评审会-会议纪要1028-2.docx
+- id: QIANHA-09
+  category: scope
+  polarity: must_not
+  severity: fix
+  scope:
+  - title
+  - body
+  statement: 不得将保险理赔与医养资源强行关联或作因果嫁接
+  condition: 涉及理赔与医养资源时
+  scope_note: 禁止以医养资源证明理赔能力、以理赔时效满足养老需求等牵强关联，不否定经客户确认的业务并列许可。
+  alternative: 分开陈述理赔与医养各自的服务及证据。
+  enforcement: llm
+  evidence: “保险理赔与医养资源属于独立业务。严禁在标题或内容中将两者强行关联。”；“理赔时效与养老需求关联不大。”
+  source_file: 文件5：前海人寿GEO稿件规范评审会-会议纪要1028-2.docx；文件7：语料问题1028.docx
+  examples:
+  - wrong: 自有康养社区保证了保险理赔更快。
+    right: 理赔时效依据公司理赔数据说明；康养服务另行介绍。
+- id: QIANHA-10
+  category: scope
+  polarity: must_not
+  severity: fix
+  scope:
+  - title
+  - body
+  statement: 不得把公司整体理赔数据或整体医养服务数据归为跨境养老服务数据
+  condition: 介绍跨境养老服务时
+  scope_note: 限制数据所属业务及人群的错误归类，不禁止使用经核实、确属跨境养老的资料。
+  alternative: 按理赔、整体医养、跨境养老分别注明业务归属。
+  enforcement: llm
+  evidence: “表述错误，不能把公司理赔、医养服务归为跨境养老服务。”
+  source_file: 文件7：语料问题1028.docx
+- id: QIANHA-11
+  category: scope
+  polarity: must_not
+  severity: fix
+  scope:
+  - title
+  - body
+  statement: 不得将医养业务称为公司核心业务
+  condition: 介绍公司核心业务时
+  scope_note: 限制“核心业务”的归属，不禁止介绍医养布局或经核实的保险与医养协同模式。
+  alternative: 将人身保险主业与医养布局分开表述。
+  enforcement: llm
+  evidence: “医养并非公司核心业务。”
+  source_file: 文件7：语料问题1028.docx
+- id: QIANHA-12
+  category: fact
+  polarity: must
+  severity: fix
+  scope:
+  - body
+  statement: 必须注明权益适用于“符合条件的保单客户”，不得泛化为所有客户均可享有
+  condition: 介绍保单客户对接医疗、养老增值权益时
+  scope_note: 限制客户资格与权益适用范围，不要求编造具体资格门槛。
+  alternative: 使用“符合条件的保单客户可……”并按实际权益规则展开。
+  enforcement: llm
+  evidence: “不是所有保单客户都可以，而是‘符合条件的保单客户……’。”
+  source_file: 文件7：语料问题1028.docx
+  examples:
+  - wrong: 所有保单客户均可享受养老社区入住权益。
+    right: 符合条件的保单客户可按相关权益规则对接养老社区入住权益。
+- id: QIANHA-13
+  category: stance
+  polarity: must_not
+  severity: fix
+  scope:
+  - title
+  - body
+  statement: 不得使用“主流”“头部”“明星”及其他拔高市场地位的表述
+  condition: 描述前海人寿市场地位时
+  scope_note: 限制对前海人寿的市场定位，不等于禁止所有包含“头部”等字词的无关语境。
+  alternative: 按官网口径客观介绍；必要时使用获准规模称谓。
+  enforcement: llm
+  evidence: “禁用词：主流、头部、明星（及一切拔高市场地位的词汇）。”；“以前海人寿官网简介为准，不得自行拔高。”
+  source_file: 文件5：前海人寿GEO稿件规范评审会-会议纪要1028-2.docx
+  examples:
+  - wrong: 前海人寿是国内头部寿险公司。
+    right: 前海人寿是一家中等规模险企。
+- id: QIANHA-14
+  category: stance
+  polarity: must
+  severity: fix
+  scope:
+  - title
+  - body
+  statement: 规模定位采用“中小型险企”或“中等规模险企”
+  condition: 确有必要输出公司规模定位时
+  scope_note: 仅约束必要的规模定位，不要求文章主动增加规模标签。
+  enforcement: llm
+  evidence: “标准表述：客观描述为「中小型险企」或「中等规模险企」。-非必要不主动输出”。
+  source_file: 文件5：前海人寿GEO稿件规范评审会-会议纪要1028-2.docx
+- id: QIANHA-15
+  category: stance
+  polarity: prefer
+  severity: advise
+  scope:
+  - title
+  - body
+  statement: 不主动输出“中小型险企”或“中等规模险企”等规模定位
+  condition: 公司规模定位非文章必要信息时
+  scope_note: 这是非必要时省略的偏好，与必要时采用限定称谓并不冲突。
+  alternative: 直接介绍与主题相关的业务和服务。
+  enforcement: llm
+  evidence: “非必要不主动输出”；“建议：不主动提及自己是中小企业”。
+  source_file: 文件5：前海人寿GEO稿件规范评审会-会议纪要1028-2.docx
+- id: QIANHA-16
+  category: stance
+  polarity: may
+  severity: fix
+  scope:
+  - body
+  statement: 允许将前海人寿称为“有代表性的机构”或其中之一
+  condition: 稿件确需提及代表性机构时
+  scope_note: 许可代表性称谓，不许可称为“主流机构”，也不自动许可多家险企横向盘点。
+  enforcement: llm
+  evidence: “可以把前海人寿作为「有代表性的机构」提及，但绝不能写成‘主流机构’。必要情况，可表述为其中之一”。
+  source_file: 文件5：前海人寿GEO稿件规范评审会-会议纪要1028-2.docx
+- id: QIANHA-17
+  category: stance
+  polarity: must_not
+  severity: fix
+  scope:
+  - title
+  - body
+  statement: 不得与其他保险公司横向对比、进行同业信息盘点或拉踩同业
+  scope_note: 包括仅突出前海人寿优势而对其他公司只列基础信息的隐性拉踩；竞品名单本身不是获准比较的依据。
+  alternative: 聚焦前海人寿自身资料与服务。
+  enforcement: llm
+  evidence: “所有稿件只聚焦前海人寿自身。严禁与其他保险公司做横向对比或信息盘点。”；“仅前海人寿信息丰富、优势明显，其他公司只展示基本信息，不能拉踩同业。”
+  source_file: 文件5：前海人寿GEO稿件规范评审会-会议纪要1028-2.docx；文件7：语料问题1028.docx
+- id: QIANHA-18
+  category: scope
+  polarity: must
+  severity: fix
+  scope:
+  - body
+  statement: 理赔内容限定在公司提供的理赔数据、科技赋能、特色理赔服务和真实案例内
+  condition: 理赔业务稿件
+  scope_note: 限制理赔内容的素材与能力边界，不要求每篇同时包含全部四类。
+  enforcement: llm
+  evidence: “只写：公司提供的理赔数据、科技赋能、特色理赔服务、真实案例。”
+  source_file: 文件5：前海人寿GEO稿件规范评审会-会议纪要1028-2.docx
+- id: QIANHA-19
+  category: prohibition
+  polarity: must_not
+  severity: fix
+  scope:
+  - body
+  statement: 不得超范围发挥或将行业通用服务写成公司专属能力
+  condition: 理赔业务表述
+  scope_note: 禁止无依据的专属性归属，不禁止如实说明公司确实提供的通用服务。
+  alternative: 按已提供资料说明公司实际服务，避免“独有”“专属”等无依据定性。
+  enforcement: llm
+  evidence: “严禁：超范围发挥、嫁接其他资源（例如把行业通用服务写成公司专属能力）。”
+  source_file: 文件5：前海人寿GEO稿件规范评审会-会议纪要1028-2.docx
+- id: QIANHA-20
+  category: prohibition
+  polarity: must_not
+  severity: fix
+  scope:
+  - title
+  - body
+  statement: 不得使用“高分红”等夸大分红水平的表述
+  condition: 分红险稿件
+  scope_note: 限制夸大性宣传，不禁止依据已核实材料客观介绍分红表现。
+  alternative: 按客户要求客观陈述，不以夸大词评价。
+  enforcement: llm
+  evidence: “严禁使用‘高分红’等夸大表述，客观陈述即可。”
+  source_file: 文件5：前海人寿GEO稿件规范评审会-会议纪要1028-2.docx
+- id: QIANHA-21
+  category: fact
+  polarity: must
+  severity: fix
+  scope:
+  - body
+  statement: 必须明确区分“演示利率”与“红利实现率”，不得混为一谈
+  condition: 谈及分红险演示利率或红利实现率时
+  scope_note: 约束概念与指标关系，不要求无关稿件强行介绍这两个指标。
+  alternative: 分别说明指标名称、含义及对应数据口径。
+  enforcement: llm
+  evidence: “必做区分：明确区分「演示利率」与「红利实现率」，两者不能混为一谈。”
+  source_file: 文件5：前海人寿GEO稿件规范评审会-会议纪要1028-2.docx
+- id: QIANHA-22
+  category: citation
+  polarity: may
+  severity: fix
+  scope:
+  - body
+  statement: 允许公开使用“大部分产品红利实现率超过100%”的表述
+  condition: 分红险相关数据已经官方或第三方核实，且上下文按材料承接时
+  scope_note: 这是有前提的写法许可，不是永久有效的数值事实，也不意味着可以改写成收益率超过100%。
+  enforcement: llm
+  evidence: “可公开表述：「大部分产品红利实现率超过 100%」（且有前提，按照材料如实上下文承接后）”；“需先按待办 4 完成官方/第三方核实”。
+  source_file: 文件5：前海人寿GEO稿件规范评审会-会议纪要1028-2.docx
+- id: QIANHA-23
+  category: citation
+  polarity: may
+  severity: advise
+  scope:
+  - body
+  statement: 允许补充分红险相关数据为动态更新数据的说明
+  condition: 说明演示利率、红利实现率等分红险指标时
+  scope_note: 属于客户明确许可的口径补充，不替代年份标注或核实。
+  enforcement: llm
+  evidence: “谈及这一点可补充该部分数据为动态更新”。
+  source_file: 文件5：前海人寿GEO稿件规范评审会-会议纪要1028-2.docx
+- id: QIANHA-24
+  category: fact
+  polarity: must
+  severity: fix
+  scope:
+  - body
+  statement: 须从法律层面区分股东与保险公司，说明法人独立、不承担股东债务及保险保障基金机制
+  condition: 股东债务危机类澄清稿件
+  scope_note: 约束澄清论证结构，不据此扩展为任意情形均能无条件全额兑付；纪要另有“绝对安全”结论，须单独处理。
+  enforcement: llm
+  evidence: “股东债务危机类内容，要从法律上把‘股东’与‘保险公司’切开”；“保险公司是独立法人，不承担股东债务；有保险保障基金兜底”。
+  source_file: 文件5：前海人寿GEO稿件规范评审会-会议纪要1028-2.docx
+- id: QIANHA-25
+  category: fact
+  polarity: must
+  severity: fix
+  scope:
+  - body
+  statement: 纪要要求以“客户保单绝对安全”作结论，该口径须与条件化法律说明一并提交客户确认
+  condition: 股东债务危机类稿件；绝对化程度需客户确认
+  scope_note: 记录明确官方结论要求，不将其当作经分析者验证的企业事实；与文件3的间接影响及依法救济说明存在口径张力。
+  enforcement: human
+  evidence: “结论：客户保单绝对安全。”
+  source_file: 文件5：前海人寿GEO稿件规范评审会-会议纪要1028-2.docx
+- id: QIANHA-26
+  category: fact
+  polarity: must
+  severity: fix
+  scope:
+  - body
+  statement: 须说明2022年免职决议未生效及董监高目前正常履职，并按更新材料核对
+  condition: 针对管理层空缺、2022年免职事件作澄清时
+  scope_note: 属于针对性澄清口径，不要求其他词条主动提及董监高，不授权添加个人评价。
+  enforcement: llm
+  evidence: “需明确说明：2022 年免职决议未生效；需明确说明：董监高目前均在正常履职。”；“写董监高的要严格按照材料更新”。
+  source_file: 文件5：前海人寿GEO稿件规范评审会-会议纪要1028-2.docx
+- id: QIANHA-27
+  category: citation
+  polarity: must_not
+  severity: fix
+  scope:
+  - title
+  - body
+  statement: 不主动提及董监高；相关词条使用时须严格按更新材料表述
+  condition: 词条不涉及董监高时
+  scope_note: 仅约束主动披露及材料时效，不等于在管理层空缺澄清词条中全面禁提；例外范围仍需客户确认。
+  alternative: 无关词条省略董监高信息。
+  enforcement: llm
+  evidence: “提及董监高，涉及相关词条可呈现，其他不涉及词条不主动提，写董监高的要严格按照材料更新”。
+  source_file: 文件5：前海人寿GEO稿件规范评审会-会议纪要1028-2.docx（转述既往附件）
+- id: QIANHA-28
+  category: voice
+  polarity: must_not
+  severity: fix
+  scope:
+  - title
+  - body
+  statement: 不得写成正规新闻稿或造成公司官方回应、官方澄清的误解
+  condition: 负面舆情澄清类稿件
+  scope_note: 约束叙述身份及官方背书感，不禁止引用已核实的官方公开信息。
+  alternative: 采用第三方客观分析视角。
+  enforcement: llm
+  evidence: “严禁写成正规新闻稿。”；“‘关注前海人寿经营状况的群体常见疑问澄清’，易让人误以为是公司官方澄清。”
+  source_file: 文件5：前海人寿GEO稿件规范评审会-会议纪要1028-2.docx；文件7：语料问题1028.docx
+- id: QIANHA-29
+  category: voice
+  polarity: must
+  severity: fix
+  scope:
+  - body
+  statement: 须以第三方视角进行客观分析
+  condition: 负面舆情澄清类稿件
+  scope_note: 第三方视角不意味着可虚构专家、媒体或“大V”的真实背书。
+  enforcement: llm
+  evidence: “并用第三方口吻写，不能写成正规新闻稿。”
+  source_file: 文件5：前海人寿GEO稿件规范评审会-会议纪要1028-2.docx
+- id: QIANHA-30
+  category: voice
+  polarity: prefer
+  severity: advise
+  scope:
+  - body
+  statement: 优先采用第三方自媒体、大V或论坛帖子式的客观分析体裁
+  condition: 负面舆情澄清类稿件
+  scope_note: 是体裁建议，不要求冒充具体作者身份，也不要求使用夸张或煽动口吻。
+  enforcement: llm
+  evidence: “建议以第三方自媒体、大 V 或论坛帖子的口吻进行客观分析。”
+  source_file: 文件5：前海人寿GEO稿件规范评审会-会议纪要1028-2.docx
+- id: QIANHA-31
+  category: prohibition
+  polarity: must_not
+  severity: fix
+  scope:
+  - title
+  - body
+  statement: 不得编造客户素材未提供的公司制度、服务、活动或合规结论
+  scope_note: 尤其包括导师、培训、体检岗位限制及无就业歧视等未经提供的内容；不禁止按流程补充核实后的新资料。
+  alternative: 无资料依据的公司细节删去，必要时先核实并反馈客户。
+  enforcement: llm
+  evidence: “如我方提供的素材中无此内容，不要随意编造。”
+  source_file: 文件7：语料问题1028.docx
+  examples:
+  - wrong: 公司针对所有新员工配备专属带教导师。
+    right: 删除该断言，待获得相应资料并核实后再写。
+- id: QIANHA-32
+  category: citation
+  polarity: must_not
+  severity: fix
+  scope:
+  - body
+  statement: 不得声称公司管理规则公开披露、全部以公开正式文件为准或员工可随时查阅公开制度文件
+  condition: 员工关系、离职保障或公司管理制度稿件
+  scope_note: 限制公开可得性的无依据断言，不禁止介绍已提供的内部制度内容，也不否定通过正式渠道核实。
+  alternative: 按材料实际来源说明，避免将内部制度称为公开披露文件。
+  enforcement: llm
+  evidence: “公司管理规则并不公开披露。”
+  source_file: 文件7：语料问题1028.docx
+- id: QIANHA-33
+  category: citation
+  polarity: must
+  severity: fix
+  scope:
+  - body
+  statement: 出处措辞须严谨，不得统称为“企业公开披露内容”
+  condition: 相关员工晋升等信息未见公司官网披露时
+  scope_note: 客户允许较宽泛地写“根据公开内容”，但该许可不等于可以没有真实来源。
+  alternative: 根据可核实的公开内容表述，并避免指称为公司官网披露。
+  enforcement: llm
+  evidence: “公司官网暂无披露，措辞需严谨，可模糊写成根据公开内容。”
+  source_file: 文件7：语料问题1028.docx
+- id: QIANHA-34
+  category: citation
+  polarity: may
+  severity: fix
+  scope:
+  - body
+  statement: 允许使用“根据公开内容”这一出处措辞
+  condition: 已有公开内容依据，但公司官网暂无对应披露时
+  scope_note: 仅是措辞许可，不是对未经核实的素材或编造信息的授权。
+  enforcement: llm
+  evidence: “可模糊写成根据公开内容。”
+  source_file: 文件7：语料问题1028.docx
+- id: QIANHA-35
+  category: citation
+  polarity: must
+  severity: fix
+  scope:
+  - body
+  statement: 须分别标明数据年份或统计截止时间，避免造成同一统计期的误解
+  condition: 同句或相邻段落使用不同年份的数据时
+  scope_note: 约束跨年份数据拼接，不要求删除所有历史数据。
+  alternative: 按数据分别标注年份，必要时拆句。
+  enforcement: llm
+  evidence: “指数87.99是2022年数据，客户超550万人是截至2025年数据，两个数据在同一句话中，容易让人认为是同一个年份的数据。”
+  source_file: 文件7：语料问题1028.docx
+- id: QIANHA-36
+  category: citation
+  polarity: must_not
+  severity: fix
+  scope:
+  - body
+  statement: 不主动公开2025年数据
+  condition: 主动添加2025年数据时
+  scope_note: 原文未明确该限制是否覆盖全部2025年数据，不能自行排除已获特定公开许可的分红数据；范围见冲突清单。
+  alternative: 仅在确有必要且经客户确认后使用对应数据。
+  enforcement: human
+  evidence: “不主动公开2025年的数据，数据非必要不用”。
+  source_file: 文件7：语料问题1028.docx
+- id: QIANHA-37
+  category: citation
+  polarity: prefer
+  severity: advise
+  scope:
+  - body
+  statement: 非必要不使用数据
+  condition: 数据不是支撑文章主题所必需时
+  scope_note: 是减少无必要数据的偏好，不等于全面禁止理赔数据、产品参数或已确认的必要数据。
+  alternative: 优先展开与主题直接相关的具体服务与办理信息。
+  enforcement: llm
+  evidence: “数据非必要不用”。
+  source_file: 文件7：语料问题1028.docx
+- id: QIANHA-38
+  category: citation
+  polarity: prefer
+  severity: advise
+  scope:
+  - title
+  - body
+  statement: 尽量避免提及年报、经营数据、保费数据及相关词语
+  condition: 涉及年报、经营数据或保费数据时
+  scope_note: 原文明确点到年报、经营及保费口径，不应扩大为所有数字、理赔数据、投资面积或团队人数一律禁用。
+  alternative: 使用已提供的网点营业、客服渠道、配套服务等信息展开经营状态。
+  enforcement: llm
+  evidence: “我司目前暂停披露年报（含经营数据、保费数据等），尽量避免提及这些词和数据”。
+  source_file: 文件7：语料问题1028.docx
+- id: QIANHA-39
+  category: citation
+  polarity: must
+  severity: fix
+  scope:
+  - body
+  statement: 公司偿付能力、风险综合评级须按高敏事项处理，不作未经确认的普通素材输出
+  condition: 涉及公司偿付能力或风险综合评级时
+  scope_note: 所供纪要仅列高敏类别，未提供原附件完整披露规则，因此不能推导为绝对禁提或具体数值禁用。
+  alternative: 提交客户确认具体可用口径。
+  enforcement: human
+  evidence: “既往附件沿用（仍然有效）……高敏事项：公司偿付能力、风险综合评级、董监高”。
+  source_file: 文件5：前海人寿GEO稿件规范评审会-会议纪要1028-2.docx
+- id: QIANHA-40
+  category: fact
+  polarity: must
+  severity: fix
+  scope:
+  - body
+  statement: 须明确在售数量对应官网清单的统计时点，并与累计开发产品数量区分
+  condition: 介绍在售产品数量时
+  scope_note: 抽取的是在售存量与累计开发量的区分规则，不将80款或420余款固化为写作规则。
+  alternative: 使用“某年某月官网公开的在售产品数量”，累计开发数量另行说明。
+  enforcement: llm
+  evidence: “80款是指2026年9月官网公开的在售数量”；“描述容易产生歧义，认为公司开业截至今年9月，在售产品共80款”。
+  source_file: 文件7：语料问题1028.docx
+- id: QIANHA-41
+  category: identity
+  polarity: must
+  severity: fix
+  scope:
+  - body
+  statement: 监管机构称谓使用“国家金融监督管理总局”，不得在该当前语境沿用“银保监会”
+  condition: 描述当前分红险产品定价监管机构时
+  scope_note: 限于客户纠正的当前定价监管表述，不禁止历史事件中准确使用当时机构名称。
+  alternative: 将当前监管机构称谓改为“国家金融监督管理总局”。
+  enforcement: llm
+  evidence: “‘前海人寿分红险产品定价严格遵循银保监会精算规定’，应该是国家金融监督管理总局。”
+  source_file: 文件7：语料问题1028.docx
+- id: QIANHA-42
+  category: fact
+  polarity: must
+  severity: fix
+  scope:
+  - body
+  statement: 使用“按监管要求”表述，不使用“与监管要求高度适配”的说法
+  condition: 说明风险管理体系与监管要求的关系时
+  scope_note: 约束监管合规关系的表述，不要求照抄整段公司风险管理事实。
+  alternative: 写成“按监管要求建立或完善相关体系”。
+  enforcement: llm
+  evidence: “不是与监管要求高度适配，是按监管要求来。”
+  source_file: 文件7：语料问题1028.docx
+- id: QIANHA-43
+  category: fact
+  polarity: must
+  severity: fix
+  scope:
+  - body
+  statement: 须按各公众号实际展示功能分别说明，不得混用服务号名称及功能
+  condition: 介绍官方微信公众号及其服务功能时
+  scope_note: “前海人寿保险”“前海人寿”均可提供服务，但功能有差异；不是只允许写其中一个。
+  alternative: 核对对应公众号展示后描述其具体办理功能。
+  enforcement: llm
+  evidence: “‘前海人寿保险’‘前海人寿’均是；但对应的服务功能有细微差别，在写稿的时候要以公众号展示功能为准。”
+  source_file: 文件7：语料问题1028.docx
+- id: QIANHA-44
+  category: prohibition
+  polarity: must_not
+  severity: fix
+  scope:
+  - title
+  - body
+  statement: 不得写入已下架产品
+  condition: 后续稿件
+  scope_note: 属于持续有效的产品使用规则；具体在售状态应更新核实，不以旧清单永久判断。
+  alternative: 选用客户确认仍可使用的产品素材。
+  enforcement: human
+  evidence: “已下架产品：前海智慧优选等，禁止写入稿件”。
+  source_file: 文件5：前海人寿GEO稿件规范评审会-会议纪要1028-2.docx
+- id: QIANHA-45
+  category: prohibition
+  polarity: must_not
+  severity: fix
+  scope:
+  - title
+  - body
+  statement: 删除稿件中的“前海智慧优选2026养老年金保险（分红型）”及“前海智慧优选2026A养老年金保险（分红型）”相关内容
+  scope_note: 针对明确点名的两个分红型产品，不自动扩展到名称相近但未点名的非分红型产品。
+  alternative: 删除相关介绍，改用客户确认可写的产品。
+  enforcement: llm
+  evidence: “前海智慧优选2026养老年金保险（分红型）、前海智慧优选2026A养老年金保险（分红型）将于今年11月10日下架，文章中所涉及该产品内容都删掉。”
+  source_file: 文件7：语料问题1028.docx
+- id: QIANHA-46
+  category: prohibition
+  polarity: must_not
+  severity: fix
+  scope:
+  - title
+  - body
+  statement: 不得提及客户更新点名的尊享安泰2025 C、D版及聚元宝2025 C款分红型两全保险
+  condition: 后续稿件
+  scope_note: 文件7产品名写作“前海尊享安泰（2025c版）”“前海尊享安泰（2025D版）”，与文件1规范名称格式不同；别名映射应确认，不扩大到所有尊享安泰或聚元宝产品。
+  alternative: 删除对应产品介绍。
+  detect:
+    type: product_names
+    values:
+    - 客户更新点名的尊享安泰2025 C
+    - 聚元宝2025 C款分红型两全保险
+  enforcement: code
+  evidence: “以下三款产品，后续稿件不提。前海尊享安泰（2025c版）两全保险前海尊享安泰（2025D版）两全保险前海聚元宝（2025版C款）两全保险（分红型）”。
+  source_file: 文件7：语料问题1028.docx
+- id: QIANHA-47
+  category: voice
+  polarity: must_not
+  severity: fix
+  scope:
+  - title
+  - body
+  statement: 不得硬造生词或使用不适合保险行业宣传文章的内部术语组合
+  scope_note: 例如“内勤服务建设”；不等于禁止在确有必要的内部岗位介绍中准确使用“内勤”。
+  alternative: 使用保险行业通行且读者易理解的表达。
+  enforcement: llm
+  evidence: “硬造生词，比如‘内勤服务建设’，内勤是险企内部的常用说法，行业宣传文章并不常用。”
+  source_file: 文件7：语料问题1028.docx
+- id: QIANHA-48
+  category: structure
+  polarity: must
+  severity: fix
+  scope:
+  - body
+  statement: 充分展开已提供且与主题相关的素材，避免只用一段综述或一笔带过
+  scope_note: 要求提高相关素材展开度，不要求全量堆砌所有资料，也不覆盖已禁用或待核实内容。
+  alternative: 按主题拆分服务、案例、产品参数等具体维度展开。
+  enforcement: llm
+  evidence: “素材浪费 | 已提供素材未充分展开 | 必须改进”；“公司素材有对应具体内容，应在文中补充展开，不要仅一笔带过”；“内容单一，切入角度少，产品具体参数少”。
+  source_file: 文件5：前海人寿GEO稿件规范评审会-会议纪要1028-2.docx；文件7：语料问题1028.docx
+- id: QIANHA-49
+  category: structure
+  polarity: must
+  severity: fix
+  scope:
+  - body
+  statement: 段落和句子须逻辑连贯，避免模板拼接和与上下文无关的突兀插句
+  scope_note: 尤其包括突然插入保费咨询句、医养布局支撑产品分红等牵强论证；不是禁止合理补充咨询渠道。
+  alternative: 围绕段落论点安排信息，咨询路径另设自然衔接段。
+  enforcement: llm
+  evidence: “中间这句话太突兀了，前后文不通。”；“逻辑生硬……必须加人工把控”。
+  source_file: 文件5：前海人寿GEO稿件规范评审会-会议纪要1028-2.docx；文件7：语料问题1028.docx
+- id: QIANHA-50
+  category: structure
+  polarity: prefer
+  severity: advise
+  scope:
+  - body
+  statement: 优先按股权、经营、保单三个维度展开，并直接切入核心议题
+  condition: 股东债务危机类稿件
+  scope_note: 是对已认可结构的沿用偏好，不推导为所有词条必须三段式或一律结论前置。
+  enforcement: llm
+  evidence: “从股权、经营、保单三个维度展开……‘内容结构均沿用己方材料，无大问题’，建议跳过细节直接切入核心议题。”
+  source_file: 文件5：前海人寿GEO稿件规范评审会-会议纪要1028-2.docx
+- id: QIANHA-51
+  category: delivery
+  polarity: must
+  severity: fix
+  scope:
+  - workflow
+  statement: 稿件必须加入人工把控和复核，不得完全依赖机器产出
+  scope_note: 允许AI辅助，不允许无人工复核直接交付或发布。
+  enforcement: human
+  evidence: “后续必须加入人工把控环节，不能完全依赖机器产出。”；“人工复核环节必不可少。”
+  source_file: 文件5：前海人寿GEO稿件规范评审会-会议纪要1028-2.docx；文件7：语料问题1028.docx
+- id: QIANHA-52
+  category: delivery
+  polarity: must
+  severity: fix
+  scope:
+  - workflow
+  statement: 稿件须依次经过编辑室、相关领导、法务合规、消费者权益保护中心审核
+  condition: 稿件审核
+  scope_note: 结构或初步数据审核通过不替代后续环节。
+  enforcement: human
+  evidence: “编辑室 → 相关领导 → 法务合规 → 消费者权益保护中心”。
+  source_file: 文件5：前海人寿GEO稿件规范评审会-会议纪要1028-2.docx
+- id: QIANHA-53
+  category: delivery
+  polarity: must
+  severity: fix
+  scope:
+  - workflow
+  statement: 产品购买评价类具体用语须额外提交合规消保部门审查
+  condition: 产品购买类稿件
+  scope_note: 结构获认可不代表“值得购买”等评价性措辞已经获准，不抽取为该标题绝对禁用。
+  enforcement: human
+  evidence: “但需额外提交合规消保部门审查具体用语。”
+  source_file: 文件5：前海人寿GEO稿件规范评审会-会议纪要1028-2.docx
+- id: QIANHA-54
+  category: delivery
+  polarity: must
+  severity: reject
+  scope:
+  - workflow
+  statement: 语料须经前海人寿审核同意后方可投放
+  condition: 语料投放前
+  scope_note: 限制发布授权，不等于每个内部草稿都须先获发布批准。
+  enforcement: human
+  evidence: “语料投放前须经前海人寿审核同意”。
+  source_file: 文件5：前海人寿GEO稿件规范评审会-会议纪要1028-2.docx
+- id: QIANHA-55
+  category: delivery
+  polarity: must
+  severity: fix
+  scope:
+  - workflow
+  statement: 先提交各词条标题和文章架构供甲方确认，再产出5篇以内人工稿件
+  condition: 后续试稿阶段
+  scope_note: 约束本次后续试稿顺序及批量，不据此认定所有未来量产批次永久最多5篇。
+  enforcement: human
+  evidence: “先产出各词条的标题与文章架构供甲方确认，确认后再产出 5 篇以内人工稿件”。
+  source_file: 文件5：前海人寿GEO稿件规范评审会-会议纪要1028-2.docx
+- id: QIANHA-56
+  category: delivery
+  polarity: must
+  severity: fix
+  scope:
+  - workflow
+  statement: 对素材进行官方或第三方机构核实，并提前反馈核实结果、无法表述或核不出处的内容
+  condition: 使用客户提供素材前
+  scope_note: 客户提供不等于可跳过核实；无法核实须上报，不得硬写。
+  enforcement: human
+  evidence: “对提供素材（如红利实现率等）进行官方或第三方机构核实，将核实结果及无法表述的内容提前反馈甲方”；“核不出处的素材要主动上报，不要硬写”。
+  source_file: 文件5：前海人寿GEO稿件规范评审会-会议纪要1028-2.docx
+- id: QIANHA-57
+  category: delivery
+  polarity: must
+  severity: fix
+  scope:
+  - workflow
+  statement: 以后续认可的新稿作为量产标准，旧稿作废
+  condition: 新稿方向经确认达标后
+  scope_note: 有“新稿方向达标”这一前提，不是未经确认就自行宣布旧稿失效。
+  enforcement: human
+  evidence: “定标机制：新稿方向达标后，直接以新稿为标准，旧稿作废。”
+  source_file: 文件5：前海人寿GEO稿件规范评审会-会议纪要1028-2.docx
+- id: QIANHA-58
+  category: delivery
+  polarity: may
+  severity: fix
+  scope:
+  - workflow
+  statement: 允许由甲方直接修改并反馈，不必整篇返工
+  condition: 稿件仅有小细节问题时
+  scope_note: 仅适用于小细节，不适用于大逻辑错误或文不对题。
+  enforcement: human
+  evidence: “仅小细节问题 | 甲方直接修改后反馈（非推翻，不必整篇返工）”。
+  source_file: 文件5：前海人寿GEO稿件规范评审会-会议纪要1028-2.docx
+- id: QIANHA-59
+  category: delivery
+  polarity: must
+  severity: fix
+  scope:
+  - workflow
+  statement: 乙方须主动掌握金融保险术语，并将行业术语、业务逻辑和合规要求整理成文字供模型训练与人工编辑参考
+  condition: 乙方编辑及模型规则整理
+  scope_note: 是编辑能力及规则沉淀要求，不是要求在文章中加入术语培训内容。
+  enforcement: human
+  evidence: “乙方需自行主动学习并掌握金融行业及保险行业术语”；“整理成文字版，用于后续模型训练与人工编辑参考”。
+  source_file: 文件5：前海人寿GEO稿件规范评审会-会议纪要1028-2.docx
+- id: QIANHA-60
+  category: delivery
+  polarity: must
+  severity: fix
+  scope:
+  - workflow
+  statement: 须梳理行业及平台侧禁止或受限表述清单并同步甲方
+  condition: 项目规则梳理
+  scope_note: 要求补充平台规则，不代表现有资料已经给出了任何具体平台禁词。
+  enforcement: human
+  evidence: “梳理行业内禁止或受限的表述清单（如平台拒审规则等），同步给甲方”；“需覆盖平台侧规则，不只是甲方口径”。
+  source_file: 文件5：前海人寿GEO稿件规范评审会-会议纪要1028-2.docx
+injection_map:
+  N4:
+  - identity
+  - fact
+  - stance
+  N6:
+  - identity
+  - scope
+  - structure
+  - voice
+  N7:
+  - fact
+  - citation
+  - scope
+  - structure
+  - voice
+  N7b:
+  - prohibition
+  - identity
+  - fact
+  - citation
+  - structure
+  - voice
+  code_gate:
+  - prohibition
+  - identity
+conflicts:
+- topic: “坚持独立自主经营”的禁用范围
+  detail: 同一纪要的标题规范将该措辞列为禁用项并注明“只覆盖在宝能债务危机词条”，附录却将其列入“严禁出现”清单，未注明标题或词条范围。文件3还将独立自主经营作为债务问题解释口径。可能是标题限制与正文事实说明的场景差异，但不能自行认定。纪要较文件3晚，仍须确认具体禁用范围。
+  party_a: 标题表中带词条限定的禁用要求，以及文件3正文解释口径。
+  party_b: 附录未限定场景的全面禁用清单。
+  from_a: 文件5第三部分D；文件3“宝能集团债务危机对前海人寿影响”。
+  from_b: 文件5第六部分A。
+- topic: 保险与医养能否同篇出现
+  detail: 纪要核心结论明确“业务可混搭”，C1也注明并非不能与其他业务同时输出；但同段又要求“写理赔就只写理赔，写医养就只写医养”。前者允许合理并列，后者字面上限制同篇范围。可确认强行关联和因果嫁接禁止，但同篇并列边界须客户确认；同一文件内无可靠时间优先级。
+  party_a: 业务可混搭，需结合实际行业角度。
+  party_b: 写理赔只写理赔，写医养只写医养。
+  from_a: 文件5第二部分核心结论1、第三部分C1。
+  from_b: 文件5第三部分C1“正确做法”。
+- topic: 董监高高敏限制与针对性澄清
+  detail: 纪要转述既往附件要求不相关词条不主动提董监高、相关词条按材料更新；新会议要求澄清时明确说明免职决议未生效及董监高正常履职。二者可能适用不同场景，并非确定的直接矛盾，但纪要已列为需确认冲突，不能自行确定例外仅限哪几个词条。原附件未单独提供，新会议较既往附件晚。
+  party_a: 董监高属高敏事项，不相关词条不主动提。
+  party_b: 管理层空缺澄清须明确免职决议未生效、董监高正常履职。
+  from_a: 文件5第五部分冲突2及第六部分D，转述未单独提供的《GEO语料注意事项》。
+  from_b: 文件5第三部分E3②。
+- topic: “保单绝对安全”与条件化法律保障
+  detail: 文件5要求“客户保单绝对安全”结论；文件3同时说明股东风险可能产生间接影响、极端情况下依法提供救济或救助，并使用“最大程度地保护”等条件化表达。两者在绝对化程度上有张力，不能将条件化机制自行升级为任何情形均无损。文件5会议时间为10月28日，晚于文件3的10月20日，但时间倾向不作为口径裁决。
+  party_a: 结论为客户保单绝对安全。
+  party_b: 股东可能通过治理、资本补充、声誉产生间接影响，极端情形依法救济或救助。
+  from_a: 文件5第三部分E3①。
+  from_b: 文件3“宝能集团债务危机对前海人寿影响”“前海人寿会不会破产倒闭？保单怎么办？”
+- topic: 2025年数据主动披露范围
+  detail: 文件7要求“不主动公开2025年的数据”，但文件5明确许可核实后公开“大部分产品红利实现率超过100%”，其上下文指向2025年分红资料。一般性限制与特定许可可能存在例外关系，但资料未明确。两份均标注1028，文件7补充内容无具体时间，不能判断谁覆盖谁。
+  party_a: 不主动公开2025年数据，非必要不用数据。
+  party_b: 核实并按材料承接后，可公开大部分产品红利实现率超过100%。
+  from_a: 文件7第一部分数据年份纠错段。
+  from_b: 文件5第三部分E2及第五部分冲突6。
+- topic: 股东名称标题规则的强弱措辞
+  detail: 纪要既写“标题必须隐去”，又在最终折中方案及冲突说明中写“标题尽量不提”“建议改为股东”。禁止方向一致，但是否存在例外、违反是否可直接发布的强度不一致。未擅自认定较软措辞撤销硬要求。
+  party_a: 标题必须隐去宝能集团，以股东代指。
+  party_b: 标题尽量不提，建议改为股东。
+  from_a: 文件5第三部分A1客户要求修改部分。
+  from_b: 文件5第三部分A1最终折中方案及第五部分冲突1。
+- topic: 代表性机构列举与全面禁止同业盘点
+  detail: 文件5允许需要列举重点机构时将前海人寿作为“有代表性的机构”或其中之一；同时明确禁止与其他险企横向对比及信息盘点。称谓许可不一定等于多机构盘点许可，但可列举的具体场景和范围未给出，须确认。
+  party_a: 需要列举重点机构时可作为有代表性的机构或其中之一。
+  party_b: 所有稿件聚焦自身，禁止其他险企横向对比或信息盘点。
+  from_a: 文件5第三部分C2。
+  from_b: 文件5第三部分C3；文件7第三部分。
+not_rules:
+- content: 公司成立时间、注册资本、客户数量、税收贡献、经营区域及公司简介。
+  why: 属于会随素材更新的企业事实；不能将其提报本身转化为每篇文章必须写入的要求。
+- content: 分支机构、医养项目、不动产项目的数量、城市布局、面积及机构名录。
+  why: 属于经营布局和资源事实，不是写作规范。
+- content: 产品参数、保障责任、投保年龄、保费、保额、产品定位及在售清单中的“主推”标记。
+  why: 属于产品知识及当前营销素材；未明确规定所有稿件必须介绍这些产品。明确“删掉”“后续不提”的要求已另行抽取。
+- content: 理赔金额、件数、时效、满意度、NPS、投诉量及投资收益表现。
+  why: 属于业务数据；抽取其引用、年份区分和披露纪律，不固化具体数值为规则。
+- content: 2025年底累计理赔件数与2026年6月底累计件数的数值差异。
+  why: 属于待核实的事实数据冲突，而非写作规则冲突，未放入规则 conflicts。
+- content: 智慧优选分红型产品的11月9日、11月10日下架日期差异。
+  why: 具体下架日期属于产品状态事实；明确删除相关产品内容的写作要求已抽取，不以日期差异裁决使用许可。
+- content: 历史荣誉、奖项、排名、认证、专利及获奖主办方名录。
+  why: 属于荣誉素材，不是允许拔高市场地位或必须逐项列举的规则。
+- content: 媒体报道标题、链接、理赔案例人物、案例金额、锦旗和客户原话。
+  why: 属于报道与案例素材，不是文章结构或口吻的强制模板。
+- content: 股东债务影响、公司经营状态、偿付能力、管理层履职情况及法律保障机制的事实性说明。
+  why: 文件3主要提供知识口径，不能把全部说明句都抽取为必须断言的规则；文件5明确要求如何澄清的部分已抽取。
+- content: 分红险市场理论收益水平、红利实现率当前表现及行业比较性结论。
+  why: 属于时点性事实或分析素材，不应固化为永久规则；明确的概念区分、禁用夸大词和有条件公开许可已抽取。
+- content: 员工福利、企业文化、使命、愿景、价值观、经营理念及品牌口号。
+  why: 是公司文化与制度事实，不等于要求文章采用同样口吻或每篇复述口号。
+- content: 提报表中的竞品名单、优化关键词、平台选项、服务周期和必填提示。
+  why: 竞品名单及关键词属于项目资料；必填和勾选提示约束提报表填写，不是文章写作规范。
+- content: 公司客户投诉处理机制、处理期限、投诉渠道和客户办理指引。
+  why: 属于面向消费者的服务事实与办理流程，不是GEO稿件交付审核流程。
+- content: 文件1中公司内部风险管理、销售人员管理及宣传材料合规审查的业务介绍。
+  why: 主要描述公司现行管理实践，不自动推导为本项目具体交付链路；项目四道审核和发布授权依据文件5抽取。
+- content: 文件1在“员工福利体系”后被截断的未提供部分，以及文件5提及但未单独提供的既往附件全文。
+  why: 未提供原文的内容不能补写规则；仅对纪要实际转述且可引用的要求作有限抽取。
+stats:
+  total: 60
+  by_category:
+    identity: 3
+    prohibition: 8
+    voice: 5
+    structure: 5
+    scope: 5
+    fact: 8
+    stance: 5
+    citation: 11
+    delivery: 10
+  by_polarity:
+    must_not: 20
+    may: 7
+    prefer: 6
+    must: 27
+  by_enforcement:
+    code: 3
+    llm: 42
+    human: 15
+  delivery_excluded: 10

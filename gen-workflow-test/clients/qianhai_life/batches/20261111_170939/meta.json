@@ -1,0 +1,12 @@
+{
+ "batch_id": "20261111_170939",
+ "label": "BOM前缀测试",
+ "created_at": "2026-11-11 17:11",
+ "article_count": 2,
+ "rules_version": "0.1.0-draft",
+ "rules_count": 60,
+ "violate": 2,
+ "hard_violate": 0,
+ "unclear": 4,
+ "pass_rate": 96.8
+}

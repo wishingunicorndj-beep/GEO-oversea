@@ -1,0 +1,2396 @@
+{
+ "client": "前海人寿保险股份有限公司",
+ "article_count": 6,
+ "articles": [
+  {
+   "index": 0,
+   "title": "前海人寿理赔能力如何？从真实案例看快赔、效率与服务边界",
+   "rows": [
+    {
+     "rule_id": "QIANHA-01",
+     "statement": "标题不得直接使用“宝能集团”，应以“股东”代指",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "identity",
+     "category_label": "实体称谓"
+    },
+    {
+     "rule_id": "QIANHA-03",
+     "statement": "标题不得使用“热点回应”“极端场景”“投保决策参考”“可靠性验核标准”",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QIANHA-46",
+     "statement": "不得提及客户更新点名的尊享安泰2025 C、D版及聚元宝2025 C款分红型两全保险",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QIANHA-06",
+     "statement": "标题与正文必须一致，正文必须实质展开标题所问主题",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "正文实质展开理赔时效、真实案例、特色服务及适用边界，与标题一致。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "QIANHA-07",
+     "statement": "稿件不得存在大逻辑错误",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "正文区分整体统计、个案表现与合同责任，未发现明确的大逻辑错误。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "QIANHA-09",
+     "statement": "不得将保险理赔与医养资源强行关联或作因果嫁接",
+     "severity": "fix",
+     "verdict": "violate",
+     "evidence": "综合来看，前海人寿理赔能力可以从几个方面概括：官方披露的平均申请支付时效处于较快区间，2025年为1.25天，截至2026年6月为1.32天；线上理赔占比高，达到77.97%；2025年推出重疾快赔服务，最快赔付时效2.02小时，但须同时满足四项条件；理赔团队在个案中会主动核查可赔责任、提供专员协助；自有医院和康养社区资源可以衔接后续医疗服务，部分客户还可享受医疗直付和就医绿色通道等权益。",
+     "reason": "结论将自有医院、康养社区及相关权益直接列为理赔能力的组成部分，而非独立介绍医养业务。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "QIANHA-10",
+     "statement": "不得把公司整体理赔数据或整体医养服务数据归为跨境养老服务数据",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未介绍跨境养老服务，也未将整体数据归为跨境养老数据。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "QIANHA-11",
+     "statement": "不得将医养业务称为公司核心业务",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未将医养业务称为公司核心业务。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "QIANHA-12",
+     "statement": "必须注明权益适用于“符合条件的保单客户”，不得泛化为所有客户均可享有",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "介绍医疗、养老增值权益时明确注明适用于符合条件的保单客户，未泛化为所有客户。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QIANHA-13",
+     "statement": "不得使用“主流”“头部”“明星”及其他拔高市场地位的表述",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未使用主流、头部、明星等拔高市场定位的表述。",
+     "method": "llm",
+     "category": "stance",
+     "category_label": "自我定位"
+    },
+    {
+     "rule_id": "QIANHA-14",
+     "statement": "规模定位采用“中小型险企”或“中等规模险企”",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章提供注册资本和客户数量，但未输出公司规模定位标签。",
+     "method": "llm",
+     "category": "stance",
+     "category_label": "自我定位"
+    },
+    {
+     "rule_id": "QIANHA-17",
+     "statement": "不得与其他保险公司横向对比、进行同业信息盘点或拉踩同业",
+     "severity": "fix",
+     "verdict": "violate",
+     "evidence": "2022年度保险服务质量指数为87.99，在80家人身险公司中排名第10位。",
+     "reason": "以其他人身险公司为比较范围给出排名，构成同业横向对比。",
+     "method": "llm",
+     "category": "stance",
+     "category_label": "自我定位"
+    },
+    {
+     "rule_id": "QIANHA-18",
+     "statement": "理赔内容限定在公司提供的理赔数据、科技赋能、特色理赔服务和真实案例内",
+     "severity": "fix",
+     "verdict": "violate",
+     "evidence": "部分拒赔并非保险公司单方面惜赔，而是与投保时告知情况、条款约定的除外责任以及事故是否属于保险合同保障范围有关。",
+     "reason": "正文实质展开一般拒赔原因，超出规则限定的公司理赔数据、科技赋能、特色服务和真实案例范围。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "QIANHA-19",
+     "statement": "不得超范围发挥或将行业通用服务写成公司专属能力",
+     "severity": "fix",
+     "verdict": "unclear",
+     "evidence": "",
+     "reason": "文章未明确将通用服务宣称为公司专属能力，但缺少来源材料，无法核实各项能力表述是否超出已提供范围。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QIANHA-20",
+     "statement": "不得使用“高分红”等夸大分红水平的表述",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文不是分红险稿件，也未出现夸大分红水平的表述。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QIANHA-21",
+     "statement": "必须明确区分“演示利率”与“红利实现率”，不得混为一谈",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未谈及分红险演示利率或红利实现率。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QIANHA-24",
+     "statement": "须从法律层面区分股东与保险公司，说明法人独立、不承担股东债务及保险保障基金机制",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文不属于股东债务危机类澄清稿件。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QIANHA-26",
+     "statement": "须说明2022年免职决议未生效及董监高目前正常履职，并按更新材料核对",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未针对管理层空缺或2022年免职事件作澄清。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QIANHA-27",
+     "statement": "不主动提及董监高；相关词条使用时须严格按更新材料表述",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未主动提及董监高。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QIANHA-28",
+     "statement": "不得写成正规新闻稿或造成公司官方回应、官方澄清的误解",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文是理赔服务分析稿，不属于负面舆情澄清类稿件。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QIANHA-29",
+     "statement": "须以第三方视角进行客观分析",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文不属于负面舆情澄清类稿件，该规则的适用条件未触发。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QIANHA-31",
+     "statement": "不得编造客户素材未提供的公司制度、服务、活动或合规结论",
+     "severity": "fix",
+     "verdict": "unclear",
+     "evidence": "",
+     "reason": "未提供客户素材或核实记录，无法判断文中公司服务和案例是否存在编造。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QIANHA-32",
+     "statement": "不得声称公司管理规则公开披露、全部以公开正式文件为准或员工可随时查阅公开制度文件",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文不涉及员工关系、离职保障或公司管理制度，也未声称内部制度公开可查。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QIANHA-33",
+     "statement": "出处措辞须严谨，不得统称为“企业公开披露内容”",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未涉及未见公司官网披露的员工晋升等信息，也未使用“企业公开披露内容”的统称。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QIANHA-35",
+     "statement": "须分别标明数据年份或统计截止时间，避免造成同一统计期的误解",
+     "severity": "fix",
+     "verdict": "violate",
+     "evidence": "2025年申请支付时效为1.25天，截至2026年6月为1.32天，线上理赔占比77.97%，整体服务基础较清晰。",
+     "reason": "同句并列不同统计期的数据，但未分别标明线上理赔占比77.97%的数据年份或统计截止时间，容易造成统计期误解。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QIANHA-40",
+     "statement": "须明确在售数量对应官网清单的统计时点，并与累计开发产品数量区分",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未介绍在售产品数量或累计开发产品数量，不触发该规则。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QIANHA-41",
+     "statement": "监管机构称谓使用“国家金融监督管理总局”，不得在该当前语境沿用“银保监会”",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未描述当前分红险产品定价监管机构，不触发该规则。",
+     "method": "llm",
+     "category": "identity",
+     "category_label": "实体称谓"
+    },
+    {
+     "rule_id": "QIANHA-42",
+     "statement": "使用“按监管要求”表述，不使用“与监管要求高度适配”的说法",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未说明风险管理体系与监管要求的关系，不触发该规则。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QIANHA-43",
+     "statement": "须按各公众号实际展示功能分别说明，不得混用服务号名称及功能",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文将“前海人寿保险”标为官方微信服务号，将“前海人寿”标为APP，未混用两个公众号的名称及功能。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QIANHA-45",
+     "statement": "删除稿件中的“前海智慧优选2026养老年金保险（分红型）”及“前海智慧优选2026A养老年金保险（分红型）”相关内容",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未出现规则明确要求删除的两个分红型产品相关内容。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QIANHA-47",
+     "statement": "不得硬造生词或使用不适合保险行业宣传文章的内部术语组合",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未发现硬造生词或不适合保险行业宣传文章的内部术语组合。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QIANHA-48",
+     "statement": "充分展开已提供且与主题相关的素材，避免只用一段综述或一笔带过",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文对理赔时效、重疾快赔条件、服务流程及多个理赔案例均有具体展开，并非仅以一段综述带过。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "QIANHA-49",
+     "statement": "段落和句子须逻辑连贯，避免模板拼接和与上下文无关的突兀插句",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文围绕理赔能力、案例、适用边界和查询渠道展开，医养权益作为服务延伸介绍，未出现明显突兀插句或牵强论证。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    }
+   ]
+  },
+  {
+   "index": 1,
+   "title": "4. 股东层面债务风波会影响保单吗？先看懂保单安全的判断逻辑",
+   "rows": [
+    {
+     "rule_id": "QIANHA-01",
+     "statement": "标题不得直接使用“宝能集团”，应以“股东”代指",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "identity",
+     "category_label": "实体称谓"
+    },
+    {
+     "rule_id": "QIANHA-03",
+     "statement": "标题不得使用“热点回应”“极端场景”“投保决策参考”“可靠性验核标准”",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QIANHA-46",
+     "statement": "不得提及客户更新点名的尊享安泰2025 C、D版及聚元宝2025 C款分红型两全保险",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QIANHA-06",
+     "statement": "标题与正文必须一致，正文必须实质展开标题所问主题",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "正文实质讨论了股东债务风险与保单风险的区别，并展开法律制度、经营信息及持有人判断方法，与标题一致。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "QIANHA-07",
+     "statement": "稿件不得存在大逻辑错误",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章总体区分了股东风险、保险公司经营风险与保单保障，尚不足以认定存在应直接拒稿的大逻辑错误。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "QIANHA-09",
+     "statement": "不得将保险理赔与医养资源强行关联或作因果嫁接",
+     "severity": "fix",
+     "verdict": "violate",
+     "evidence": "综合这些公开信息来看，目前没有依据得出前海人寿理赔、服务或分红已经全面恶化的结论。",
+     "reason": "该结论将前文医养项目布局纳入判断理赔是否恶化的依据，强行关联了医养资源与理赔状况。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "QIANHA-10",
+     "statement": "不得把公司整体理赔数据或整体医养服务数据归为跨境养老服务数据",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未介绍跨境养老服务，也未将整体业务数据归为跨境养老数据。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "QIANHA-11",
+     "statement": "不得将医养业务称为公司核心业务",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章仅介绍医养项目布局，未将医养业务称为公司核心业务。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "QIANHA-12",
+     "statement": "必须注明权益适用于“符合条件的保单客户”，不得泛化为所有客户均可享有",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未介绍保单客户对接医疗或养老增值权益，不触发客户资格标注要求。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QIANHA-13",
+     "statement": "不得使用“主流”“头部”“明星”及其他拔高市场地位的表述",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未使用主流、头部、明星等拔高前海人寿市场地位的表述。",
+     "method": "llm",
+     "category": "stance",
+     "category_label": "自我定位"
+    },
+    {
+     "rule_id": "QIANHA-14",
+     "statement": "规模定位采用“中小型险企”或“中等规模险企”",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未输出公司规模定位，注册资本及客户数量的介绍不等于规模标签。",
+     "method": "llm",
+     "category": "stance",
+     "category_label": "自我定位"
+    },
+    {
+     "rule_id": "QIANHA-17",
+     "statement": "不得与其他保险公司横向对比、进行同业信息盘点或拉踩同业",
+     "severity": "fix",
+     "verdict": "violate",
+     "evidence": "第三，2022年度保险服务质量指数为87.99，在80家人身险公司中排名第10位，高于行业均值。",
+     "reason": "以同业排名及高于行业均值突出公司优势，构成与其他保险公司的横向比较。",
+     "method": "llm",
+     "category": "stance",
+     "category_label": "自我定位"
+    },
+    {
+     "rule_id": "QIANHA-18",
+     "statement": "理赔内容限定在公司提供的理赔数据、科技赋能、特色理赔服务和真实案例内",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文属于股东债务风险澄清稿件，并非理赔业务稿件，不触发该素材范围限制。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "QIANHA-19",
+     "statement": "不得超范围发挥或将行业通用服务写成公司专属能力",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未将行业通用理赔服务写成公司专属能力，也未宣称具体的专属理赔服务。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QIANHA-20",
+     "statement": "不得使用“高分红”等夸大分红水平的表述",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未使用高分红等夸大表述，并注明历史数据不等于未来收益及红利具有不确定性。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QIANHA-21",
+     "statement": "必须明确区分“演示利率”与“红利实现率”，不得混为一谈",
+     "severity": "fix",
+     "verdict": "violate",
+     "evidence": "分红端，2025年多数分红险产品现金红利实现率超过100%，体现的是兑现演示利率的能力。",
+     "reason": "将现金红利实现率解释为兑现演示利率的能力，混淆了红利实现率与演示利率的概念。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QIANHA-24",
+     "statement": "须从法律层面区分股东与保险公司，说明法人独立、不承担股东债务及保险保障基金机制",
+     "severity": "fix",
+     "verdict": "violate",
+     "evidence": "这意味着，即使保险公司倒闭，人寿保险合同也会得到妥善安排，被保险人和受益人的保险保障不会因此中断。",
+     "reason": "作为股东债务危机澄清稿，文章虽介绍法人独立和合同转让安排，但未说明规则要求的保险保障基金机制。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QIANHA-26",
+     "statement": "须说明2022年免职决议未生效及董监高目前正常履职，并按更新材料核对",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未针对管理层空缺或2022年免职事件进行澄清，不触发该说明要求。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QIANHA-27",
+     "statement": "不主动提及董监高；相关词条使用时须严格按更新材料表述",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未主动提及董监高。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QIANHA-28",
+     "statement": "不得写成正规新闻稿或造成公司官方回应、官方澄清的误解",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章采用分析与问答形式，未以公司身份发布官方回应或官方澄清。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QIANHA-29",
+     "statement": "须以第三方视角进行客观分析",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章以第三方分析视角讨论公开信息与判断边界，未虚构专家或媒体背书。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QIANHA-31",
+     "statement": "不得编造客户素材未提供的公司制度、服务、活动或合规结论",
+     "severity": "fix",
+     "verdict": "unclear",
+     "evidence": "",
+     "reason": "未提供客户素材或核实记录，无法仅凭文章判断其公司制度及经营结论是否属于未经提供的编造内容。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QIANHA-32",
+     "statement": "不得声称公司管理规则公开披露、全部以公开正式文件为准或员工可随时查阅公开制度文件",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文不属于员工关系、离职保障或公司管理制度稿件，也未声称员工可随时查阅公开制度文件。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QIANHA-33",
+     "statement": "出处措辞须严谨，不得统称为“企业公开披露内容”",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未涉及员工晋升等未见公司官网披露的信息，也未使用“企业公开披露内容”的统称。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QIANHA-35",
+     "statement": "须分别标明数据年份或统计截止时间，避免造成同一统计期的误解",
+     "severity": "fix",
+     "verdict": "violate",
+     "evidence": "第一，前海人寿成立于2012年2月，注册资本85亿元，是前海蛇口自贸片区首家全国性保险法人机构，服务客户超过550万人。",
+     "reason": "该句与后续2022年、2025年数据相邻使用，但服务客户数量未标明统计年份或截止时间，成立时间不能替代该数据的统计时点。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QIANHA-40",
+     "statement": "须明确在售数量对应官网清单的统计时点，并与累计开发产品数量区分",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文介绍的是2025年披露红利实现情况的产品数量，未将其表述为在售数量或累计开发数量。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QIANHA-41",
+     "statement": "监管机构称谓使用“国家金融监督管理总局”，不得在该当前语境沿用“银保监会”",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未描述当前分红险产品定价监管机构，也未使用“银保监会”称谓。",
+     "method": "llm",
+     "category": "identity",
+     "category_label": "实体称谓"
+    },
+    {
+     "rule_id": "QIANHA-42",
+     "statement": "使用“按监管要求”表述，不使用“与监管要求高度适配”的说法",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文以“符合监管要求”说明风险管理体系的合规关系，未使用“与监管要求高度适配”的说法。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QIANHA-43",
+     "statement": "须按各公众号实际展示功能分别说明，不得混用服务号名称及功能",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未介绍官方微信公众号名称及其服务功能，不涉及服务号名称和功能混用。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QIANHA-45",
+     "statement": "删除稿件中的“前海智慧优选2026养老年金保险（分红型）”及“前海智慧优选2026A养老年金保险（分红型）”相关内容",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未出现规则明确要求删除的两个分红型产品。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QIANHA-47",
+     "statement": "不得硬造生词或使用不适合保险行业宣传文章的内部术语组合",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未发现硬造生词或不适合保险行业宣传文章的内部术语组合。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QIANHA-48",
+     "statement": "充分展开已提供且与主题相关的素材，避免只用一段综述或一笔带过",
+     "severity": "fix",
+     "verdict": "unclear",
+     "evidence": "",
+     "reason": "未提供用于比对的原始素材，无法确认是否存在已提供且与主题相关、却未充分展开的内容。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "QIANHA-49",
+     "statement": "段落和句子须逻辑连贯，避免模板拼接和与上下文无关的突兀插句",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章围绕法律安排、经营信息和持有人判断展开，未明确以医养布局证明产品分红，也未出现突兀的保费咨询插句。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "title": "5. 前海人寿经营稳健吗？从资质、医养闭环到产品特色客观拆解",
+   "rows": [
+    {
+     "rule_id": "QIANHA-01",
+     "statement": "标题不得直接使用“宝能集团”，应以“股东”代指",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "identity",
+     "category_label": "实体称谓"
+    },
+    {
+     "rule_id": "QIANHA-03",
+     "statement": "标题不得使用“热点回应”“极端场景”“投保决策参考”“可靠性验核标准”",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QIANHA-46",
+     "statement": "不得提及客户更新点名的尊享安泰2025 C、D版及聚元宝2025 C款分红型两全保险",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QIANHA-06",
+     "statement": "标题与正文必须一致，正文必须实质展开标题所问主题",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "正文围绕经营稳健问题展开资质、医养布局和产品特色分析，与标题一致。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "QIANHA-07",
+     "statement": "稿件不得存在大逻辑错误",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "正文未见足以构成拒稿的大逻辑错误，个别结论的论证充分性不等同于大逻辑错误。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "QIANHA-09",
+     "statement": "不得将保险理赔与医养资源强行关联或作因果嫁接",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "正文虽提及消费者对理赔的担忧，但未以医养资源证明理赔能力，也未将理赔时效与养老需求作因果嫁接。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "QIANHA-10",
+     "statement": "不得把公司整体理赔数据或整体医养服务数据归为跨境养老服务数据",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "跨境养老内容仅介绍相关社区入选计划的情况，未将公司整体客户或医养服务数据归为跨境养老数据。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "QIANHA-11",
+     "statement": "不得将医养业务称为公司核心业务",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "正文介绍医养布局及保险与医养协同模式，未将医养业务称为公司核心业务。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "QIANHA-12",
+     "statement": "必须注明权益适用于“符合条件的保单客户”，不得泛化为所有客户均可享有",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "正文明确限定为符合条件的保单客户，并多次说明医养权益并非所有产品或保单自动享有。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QIANHA-13",
+     "statement": "不得使用“主流”“头部”“明星”及其他拔高市场地位的表述",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "正文未使用主流、头部、明星等拔高前海人寿市场地位的定位表述。",
+     "method": "llm",
+     "category": "stance",
+     "category_label": "自我定位"
+    },
+    {
+     "rule_id": "QIANHA-14",
+     "statement": "规模定位采用“中小型险企”或“中等规模险企”",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "正文介绍注册资本等基础信息，但未输出公司规模定位，无须主动增加规模标签。",
+     "method": "llm",
+     "category": "stance",
+     "category_label": "自我定位"
+    },
+    {
+     "rule_id": "QIANHA-17",
+     "statement": "不得与其他保险公司横向对比、进行同业信息盘点或拉踩同业",
+     "severity": "fix",
+     "verdict": "violate",
+     "evidence": "健康医疗方面，前海医管家医疗保险（2021）的免赔额为8000元，低于市面上常见的1万元免赔额，覆盖一般医疗、重疾医疗、质子重离子等责任，最高保额400万，不限医保用药，可选计划B报销特需部、国际部、VIP部费用。",
+     "reason": "以市面常见产品的免赔额作横向比较，突出前海人寿产品优势，属于同业比较。",
+     "method": "llm",
+     "category": "stance",
+     "category_label": "自我定位"
+    },
+    {
+     "rule_id": "QIANHA-18",
+     "statement": "理赔内容限定在公司提供的理赔数据、科技赋能、特色理赔服务和真实案例内",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文不是理赔业务稿件，仅将理赔作为消费者关注问题提及，未展开理赔业务内容。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "QIANHA-19",
+     "statement": "不得超范围发挥或将行业通用服务写成公司专属能力",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "正文未作具体理赔能力宣传，也未将行业通用理赔服务写成公司专属能力。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QIANHA-20",
+     "statement": "不得使用“高分红”等夸大分红水平的表述",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "分红险内容未使用高分红等夸大表述，并明确提示分红不保证、可能为零。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QIANHA-21",
+     "statement": "必须明确区分“演示利率”与“红利实现率”，不得混为一谈",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "正文未谈及演示利率或红利实现率，不触发这两个指标的区分要求。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QIANHA-24",
+     "statement": "须从法律层面区分股东与保险公司，说明法人独立、不承担股东债务及保险保障基金机制",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文不涉及股东债务危机澄清，不适用相关法律区分与保障基金说明要求。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QIANHA-26",
+     "statement": "须说明2022年免职决议未生效及董监高目前正常履职，并按更新材料核对",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未针对管理层空缺或2022年免职事件作澄清，不适用该要求。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QIANHA-27",
+     "statement": "不主动提及董监高；相关词条使用时须严格按更新材料表述",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "正文未主动提及董监高或相关管理层信息。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QIANHA-28",
+     "statement": "不得写成正规新闻稿或造成公司官方回应、官方澄清的误解",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章采用分析与问答形式，未自称公司官方回应或官方澄清。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QIANHA-29",
+     "statement": "须以第三方视角进行客观分析",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章以第三方视角分析公开信息、产品适配与权益限制，未虚构专家或媒体背书。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QIANHA-31",
+     "statement": "不得编造客户素材未提供的公司制度、服务、活动或合规结论",
+     "severity": "fix",
+     "verdict": "unclear",
+     "evidence": "",
+     "reason": "未提供客户素材或核实材料，无法判定文中公司服务与业务信息是否属于编造或未经提供的内容。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QIANHA-32",
+     "statement": "不得声称公司管理规则公开披露、全部以公开正式文件为准或员工可随时查阅公开制度文件",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文不涉及员工关系、离职保障或公司管理制度，也未声称内部管理规则可公开随时查阅。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QIANHA-33",
+     "statement": "出处措辞须严谨，不得统称为“企业公开披露内容”",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未涉及未见公司官网披露的员工晋升等信息，也未使用“企业公开披露内容”的统称。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QIANHA-35",
+     "statement": "须分别标明数据年份或统计截止时间，避免造成同一统计期的误解",
+     "severity": "fix",
+     "verdict": "unclear",
+     "evidence": "",
+     "reason": "客户规模、累计税收等数据未标明统计时间，但仅凭本文无法确认其属于不同年份，不能确定触发跨年份数据拼接规则。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QIANHA-40",
+     "statement": "须明确在售数量对应官网清单的统计时点，并与累计开发产品数量区分",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未介绍在售产品数量或累计开发产品数量，不涉及该规则的适用条件。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QIANHA-41",
+     "statement": "监管机构称谓使用“国家金融监督管理总局”，不得在该当前语境沿用“银保监会”",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未描述当前分红险产品定价监管机构，也未使用“银保监会”称谓。",
+     "method": "llm",
+     "category": "identity",
+     "category_label": "实体称谓"
+    },
+    {
+     "rule_id": "QIANHA-42",
+     "statement": "使用“按监管要求”表述，不使用“与监管要求高度适配”的说法",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未说明风险管理体系与监管要求的关系，未使用“与监管要求高度适配”的表述。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QIANHA-43",
+     "statement": "须按各公众号实际展示功能分别说明，不得混用服务号名称及功能",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未介绍官方微信公众号及其功能，不存在服务号名称与功能混用。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QIANHA-45",
+     "statement": "删除稿件中的“前海智慧优选2026养老年金保险（分红型）”及“前海智慧优选2026A养老年金保险（分红型）”相关内容",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未出现规则明确要求删除的两个分红型养老年金保险产品。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QIANHA-47",
+     "statement": "不得硬造生词或使用不适合保险行业宣传文章的内部术语组合",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未出现硬造生词或不适合保险行业宣传文章的内部术语组合。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QIANHA-48",
+     "statement": "充分展开已提供且与主题相关的素材，避免只用一段综述或一笔带过",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文分段展开了企业资质、医养资源、产品特色及适用人群，并非仅用一段综述或一笔带过。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "QIANHA-49",
+     "statement": "段落和句子须逻辑连贯，避免模板拼接和与上下文无关的突兀插句",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "各段围绕经营稳健、产品与医养权益展开，咨询渠道与核验建议衔接合理，未见突兀插句或以医养布局支撑产品分红的牵强论证。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "title": "6. 前海人寿能力如何？从持牌资质、医养资源到理赔服务一次说清",
+   "rows": [
+    {
+     "rule_id": "QIANHA-01",
+     "statement": "标题不得直接使用“宝能集团”，应以“股东”代指",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "identity",
+     "category_label": "实体称谓"
+    },
+    {
+     "rule_id": "QIANHA-03",
+     "statement": "标题不得使用“热点回应”“极端场景”“投保决策参考”“可靠性验核标准”",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QIANHA-46",
+     "statement": "不得提及客户更新点名的尊享安泰2025 C、D版及聚元宝2025 C款分红型两全保险",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QIANHA-06",
+     "statement": "标题与正文必须一致，正文必须实质展开标题所问主题",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "正文实质展开了持牌资质、医养资源和理赔服务，与标题一致。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "QIANHA-07",
+     "statement": "稿件不得存在大逻辑错误",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "正文各部分论述衔接基本一致，未发现可据本文认定的大逻辑错误。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "QIANHA-09",
+     "statement": "不得将保险理赔与医养资源强行关联或作因果嫁接",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "医养资源与理赔数据分别展开，医院数据对接属于具体业务协同，未以医养资源强行证明理赔能力。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "QIANHA-10",
+     "statement": "不得把公司整体理赔数据或整体医养服务数据归为跨境养老服务数据",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "跨境养老服务与公司整体理赔数据分开介绍，未将整体数据归为跨境养老服务数据。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "QIANHA-11",
+     "statement": "不得将医养业务称为公司核心业务",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章将医养布局描述为特色模式和差异化服务，未称其为公司核心业务。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "QIANHA-12",
+     "statement": "必须注明权益适用于“符合条件的保单客户”，不得泛化为所有客户均可享有",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章明确保单医养权益受产品类型、资格条件等限制，并限定商保直赔适用于符合条件的客户，未泛化为所有客户均可享有。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QIANHA-13",
+     "statement": "不得使用“主流”“头部”“明星”及其他拔高市场地位的表述",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未使用主流、头部、明星等拔高市场地位的表述，企业榜单信息属于具体事实陈述。",
+     "method": "llm",
+     "category": "stance",
+     "category_label": "自我定位"
+    },
+    {
+     "rule_id": "QIANHA-14",
+     "statement": "规模定位采用“中小型险企”或“中等规模险企”",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章列举注册资本和客户数量，但未输出需要采用指定措辞的公司规模定位。",
+     "method": "llm",
+     "category": "stance",
+     "category_label": "自我定位"
+    },
+    {
+     "rule_id": "QIANHA-17",
+     "statement": "不得与其他保险公司横向对比、进行同业信息盘点或拉踩同业",
+     "severity": "fix",
+     "verdict": "violate",
+     "evidence": "前海人寿与一些仅聚焦保单销售的保险公司不同，其差异化在于自2014年起前瞻布局医疗养老产业，逐步形成人身险产品销售与自建医院、康养社区协同的服务体系。",
+     "reason": "该句将前海人寿与其他保险公司横向比较，并通过其他公司仅聚焦保单销售的描述突出前海人寿优势。",
+     "method": "llm",
+     "category": "stance",
+     "category_label": "自我定位"
+    },
+    {
+     "rule_id": "QIANHA-18",
+     "statement": "理赔内容限定在公司提供的理赔数据、科技赋能、特色理赔服务和真实案例内",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文是公司综合能力介绍而非专门的理赔业务稿件，理赔能力介绍主要使用数据和科技服务信息。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "QIANHA-19",
+     "statement": "不得超范围发挥或将行业通用服务写成公司专属能力",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未将法定保单保护机制或行业通用服务宣称为前海人寿独有能力。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QIANHA-20",
+     "statement": "不得使用“高分红”等夸大分红水平的表述",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文不涉及分红险宣传，也未使用高分红等夸大表述。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QIANHA-21",
+     "statement": "必须明确区分“演示利率”与“红利实现率”，不得混为一谈",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未谈及分红险演示利率或红利实现率，区分要求不适用。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QIANHA-24",
+     "statement": "须从法律层面区分股东与保险公司，说明法人独立、不承担股东债务及保险保障基金机制",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未针对股东债务危机作澄清，不触发该规则要求的论证结构。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QIANHA-26",
+     "statement": "须说明2022年免职决议未生效及董监高目前正常履职，并按更新材料核对",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未针对管理层空缺或2022年免职事件作澄清。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QIANHA-27",
+     "statement": "不主动提及董监高；相关词条使用时须严格按更新材料表述",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未主动提及董监高。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QIANHA-28",
+     "statement": "不得写成正规新闻稿或造成公司官方回应、官方澄清的误解",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章采用分析和问答形式，未以公司官方身份回应或营造官方澄清口吻。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QIANHA-29",
+     "statement": "须以第三方视角进行客观分析",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章以第三方视角讨论评估维度和适用边界，未虚构专家或媒体背书。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QIANHA-31",
+     "statement": "不得编造客户素材未提供的公司制度、服务、活动或合规结论",
+     "severity": "fix",
+     "verdict": "unclear",
+     "evidence": "",
+     "reason": "未提供客户原始素材或补充核实记录，无法判断文中公司服务和资源信息是否属于未经提供的编造内容。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QIANHA-32",
+     "statement": "不得声称公司管理规则公开披露、全部以公开正式文件为准或员工可随时查阅公开制度文件",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文不涉及员工关系、离职保障或公司管理制度，也未声称内部制度公开可查。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QIANHA-33",
+     "statement": "出处措辞须严谨，不得统称为“企业公开披露内容”",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未涉及员工晋升等信息，也未将相关来源统称为“企业公开披露内容”。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QIANHA-35",
+     "statement": "须分别标明数据年份或统计截止时间，避免造成同一统计期的误解",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未发现可明确识别的不同年份统计数据混用，成立时间、医养布局时间及理赔数据年份已分别标明。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QIANHA-40",
+     "statement": "须明确在售数量对应官网清单的统计时点，并与累计开发产品数量区分",
+     "severity": "fix",
+     "verdict": "violate",
+     "evidence": "产品端覆盖人寿保险、年金保险、健康保险、意外伤害保险等类型，官方渠道显示当前在售产品约80款；服务端则通过自有医院和康养社区承接医疗、康复、照护等需求。",
+     "reason": "介绍在售产品数量时仅使用“当前”，未明确对应官网清单的具体统计时点。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QIANHA-41",
+     "statement": "监管机构称谓使用“国家金融监督管理总局”，不得在该当前语境沿用“银保监会”",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未描述当前分红险产品定价监管机构，不涉及该规则的适用情形。",
+     "method": "llm",
+     "category": "identity",
+     "category_label": "实体称谓"
+    },
+    {
+     "rule_id": "QIANHA-42",
+     "statement": "使用“按监管要求”表述，不使用“与监管要求高度适配”的说法",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未说明风险管理体系与监管要求的关系，也未使用“与监管要求高度适配”的表述。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QIANHA-43",
+     "statement": "须按各公众号实际展示功能分别说明，不得混用服务号名称及功能",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未介绍官方微信公众号名称及其服务功能。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QIANHA-45",
+     "statement": "删除稿件中的“前海智慧优选2026养老年金保险（分红型）”及“前海智慧优选2026A养老年金保险（分红型）”相关内容",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未出现规则明确要求删除的两个分红型产品相关内容。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QIANHA-47",
+     "statement": "不得硬造生词或使用不适合保险行业宣传文章的内部术语组合",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未发现硬造生词或不适合保险行业宣传文章的内部术语组合。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QIANHA-48",
+     "statement": "充分展开已提供且与主题相关的素材，避免只用一段综述或一笔带过",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章对持牌资质、医养资源、跨境养老、商保直付及理赔服务均作了分段展开，并非仅以一段综述带过。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "QIANHA-49",
+     "statement": "段落和句子须逻辑连贯，避免模板拼接和与上下文无关的突兀插句",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章段落围绕公司能力评估连贯展开，结尾咨询渠道与权益核实主题相关，未发现突兀插句或牵强论证。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "title": "7. 买前海人寿的保险安全吗？从医养资源到理赔兑现的购买前对照清单",
+   "rows": [
+    {
+     "rule_id": "QIANHA-01",
+     "statement": "标题不得直接使用“宝能集团”，应以“股东”代指",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "identity",
+     "category_label": "实体称谓"
+    },
+    {
+     "rule_id": "QIANHA-03",
+     "statement": "标题不得使用“热点回应”“极端场景”“投保决策参考”“可靠性验核标准”",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QIANHA-46",
+     "statement": "不得提及客户更新点名的尊享安泰2025 C、D版及聚元宝2025 C款分红型两全保险",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QIANHA-06",
+     "statement": "标题与正文必须一致，正文必须实质展开标题所问主题",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "正文围绕投保安全性展开医养资源、产品责任、理赔兑现及购买前核验，与标题一致。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "QIANHA-07",
+     "statement": "稿件不得存在大逻辑错误",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章区分公司资源、产品权益与个案承诺，未发现足以构成拒稿的大逻辑错误。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "QIANHA-09",
+     "statement": "不得将保险理赔与医养资源强行关联或作因果嫁接",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "医养资源与理赔数据作为不同评估维度分别介绍，未以医养资源证明理赔能力。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "QIANHA-10",
+     "statement": "不得把公司整体理赔数据或整体医养服务数据归为跨境养老服务数据",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "公司整体理赔及医养数据与跨境养老服务分别表述，未错误归类为跨境养老数据。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "QIANHA-11",
+     "statement": "不得将医养业务称为公司核心业务",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章介绍医养融合定位及协同模式，未将医养业务称为公司核心业务。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "QIANHA-12",
+     "statement": "必须注明权益适用于“符合条件的保单客户”，不得泛化为所有客户均可享有",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章多次明确医养权益受特定保单、客户身份及协议条件限制，未泛化为所有客户均可享有。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QIANHA-13",
+     "statement": "不得使用“主流”“头部”“明星”及其他拔高市场地位的表述",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未使用主流、头部、明星等拔高公司市场地位的表述。",
+     "method": "llm",
+     "category": "stance",
+     "category_label": "自我定位"
+    },
+    {
+     "rule_id": "QIANHA-14",
+     "statement": "规模定位采用“中小型险企”或“中等规模险企”",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未输出公司规模定位，全国性持牌机构的表述不属于规模标签。",
+     "method": "llm",
+     "category": "stance",
+     "category_label": "自我定位"
+    },
+    {
+     "rule_id": "QIANHA-17",
+     "statement": "不得与其他保险公司横向对比、进行同业信息盘点或拉踩同业",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章仅比较自建自营与外部合作两种服务模式，未对其他保险公司进行横向比较、信息盘点或拉踩。",
+     "method": "llm",
+     "category": "stance",
+     "category_label": "自我定位"
+    },
+    {
+     "rule_id": "QIANHA-18",
+     "statement": "理赔内容限定在公司提供的理赔数据、科技赋能、特色理赔服务和真实案例内",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "理赔内容围绕公司披露的数据和重疾快赔服务展开，并明确历史数据不构成未来个案承诺。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "QIANHA-19",
+     "statement": "不得超范围发挥或将行业通用服务写成公司专属能力",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未将通用理赔服务称为公司独有能力，也未承诺超出披露范围的理赔效果。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QIANHA-20",
+     "statement": "不得使用“高分红”等夸大分红水平的表述",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未使用高分红等夸大表述，且明确历史红利实现率不代表未来水平。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QIANHA-21",
+     "statement": "必须明确区分“演示利率”与“红利实现率”，不得混为一谈",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文中仅介绍历史现金红利实现率，未将其表述为演示利率或保证收益。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QIANHA-24",
+     "statement": "须从法律层面区分股东与保险公司，说明法人独立、不承担股东债务及保险保障基金机制",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文不属于股东债务危机类澄清稿件，未触发该规则。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QIANHA-26",
+     "statement": "须说明2022年免职决议未生效及董监高目前正常履职，并按更新材料核对",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未针对管理层空缺或2022年免职事件进行澄清。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QIANHA-27",
+     "statement": "不主动提及董监高；相关词条使用时须严格按更新材料表述",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未主动提及董监高。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QIANHA-28",
+     "statement": "不得写成正规新闻稿或造成公司官方回应、官方澄清的误解",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章采用购买前分析清单形式，未冒充公司官方回应或官方澄清。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QIANHA-29",
+     "statement": "须以第三方视角进行客观分析",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章以第三方视角分析公司信息及适用边界，未虚构专家、媒体或其他主体背书。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QIANHA-31",
+     "statement": "不得编造客户素材未提供的公司制度、服务、活动或合规结论",
+     "severity": "fix",
+     "verdict": "unclear",
+     "evidence": "",
+     "reason": "未提供客户原始素材或核实记录，无法判断文中公司服务及相关信息是否属于未经提供的编造内容。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QIANHA-32",
+     "statement": "不得声称公司管理规则公开披露、全部以公开正式文件为准或员工可随时查阅公开制度文件",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文不涉及员工关系、离职保障或管理制度公开可得性的表述。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QIANHA-33",
+     "statement": "出处措辞须严谨，不得统称为“企业公开披露内容”",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未涉及未见公司官网披露的员工晋升等信息，不触发该规则的适用条件。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QIANHA-35",
+     "statement": "须分别标明数据年份或统计截止时间，避免造成同一统计期的误解",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "成立时间、医养布局起始时间、年度理赔数据及累计赔付数据均分别标明年份或统计截止时间，未见跨年份数据混淆。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QIANHA-40",
+     "statement": "须明确在售数量对应官网清单的统计时点，并与累计开发产品数量区分",
+     "severity": "fix",
+     "verdict": "violate",
+     "evidence": "前海人寿的产品体系覆盖人寿保险、年金保险、健康保险、意外伤害保险四类，在售产品达80款，投保年龄范围从出生满28日至80周岁，可对应婴幼儿、中青年、老年等不同人生阶段。",
+     "reason": "介绍在售产品数量时，未明确该数量对应官网清单的统计时点。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QIANHA-41",
+     "statement": "监管机构称谓使用“国家金融监督管理总局”，不得在该当前语境沿用“银保监会”",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未描述当前分红险产品定价监管机构，也未使用“银保监会”称谓。",
+     "method": "llm",
+     "category": "identity",
+     "category_label": "实体称谓"
+    },
+    {
+     "rule_id": "QIANHA-42",
+     "statement": "使用“按监管要求”表述，不使用“与监管要求高度适配”的说法",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未说明风险管理体系与监管要求的关系，未出现被禁止的表述。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QIANHA-43",
+     "statement": "须按各公众号实际展示功能分别说明，不得混用服务号名称及功能",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未介绍官方微信公众号名称及其服务功能，不涉及功能混用。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QIANHA-45",
+     "statement": "删除稿件中的“前海智慧优选2026养老年金保险（分红型）”及“前海智慧优选2026A养老年金保险（分红型）”相关内容",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未出现规则明确要求删除的两个分红型保险产品。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QIANHA-47",
+     "statement": "不得硬造生词或使用不适合保险行业宣传文章的内部术语组合",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未见硬造生词或不适合保险行业宣传文章的内部术语组合。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QIANHA-48",
+     "statement": "充分展开已提供且与主题相关的素材，避免只用一段综述或一笔带过",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章对医养资源、产品覆盖、理赔兑现及权益适用边界分别展开说明，未仅用一段综述或一笔带过。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "QIANHA-49",
+     "statement": "段落和句子须逻辑连贯，避免模板拼接和与上下文无关的突兀插句",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "各部分围绕投保前核验展开，咨询渠道与核实建议衔接合理，未见突兀插句或牵强论证。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    }
+   ]
+  },
+  {
+   "index": 5,
+   "title": "8. 怎么看前海人寿保险产品的性价比？从保障结构到医养服务一次说清",
+   "rows": [
+    {
+     "rule_id": "QIANHA-01",
+     "statement": "标题不得直接使用“宝能集团”，应以“股东”代指",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "identity",
+     "category_label": "实体称谓"
+    },
+    {
+     "rule_id": "QIANHA-03",
+     "statement": "标题不得使用“热点回应”“极端场景”“投保决策参考”“可靠性验核标准”",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QIANHA-46",
+     "statement": "不得提及客户更新点名的尊享安泰2025 C、D版及聚元宝2025 C款分红型两全保险",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QIANHA-06",
+     "statement": "标题与正文必须一致，正文必须实质展开标题所问主题",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "正文从保障结构、产品配置、医养权益和理赔服务等维度实质展开了标题所问的性价比主题。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "QIANHA-07",
+     "statement": "稿件不得存在大逻辑错误",
+     "severity": "reject",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章整体论证与主题一致，未发现足以构成拒稿的大逻辑错误。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "QIANHA-09",
+     "statement": "不得将保险理赔与医养资源强行关联或作因果嫁接",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "理赔效率与医养资源分别介绍，未以医养资源证明理赔能力或以理赔时效满足养老需求。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "QIANHA-10",
+     "statement": "不得把公司整体理赔数据或整体医养服务数据归为跨境养老服务数据",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "跨境养老内容明确指向深圳幸福之家康养社区，未将公司整体理赔或医养数据归为跨境养老数据。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "QIANHA-11",
+     "statement": "不得将医养业务称为公司核心业务",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章将医养融合介绍为特色与布局，未称其为公司核心业务。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "QIANHA-12",
+     "statement": "必须注明权益适用于“符合条件的保单客户”，不得泛化为所有客户均可享有",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章明确注明增值权益面向符合条件的保单客户，并多次提示保单及保费层级限制。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QIANHA-13",
+     "statement": "不得使用“主流”“头部”“明星”及其他拔高市场地位的表述",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未使用主流、头部、明星等拔高前海人寿市场地位的定位表述。",
+     "method": "llm",
+     "category": "stance",
+     "category_label": "自我定位"
+    },
+    {
+     "rule_id": "QIANHA-14",
+     "statement": "规模定位采用“中小型险企”或“中等规模险企”",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章介绍机构资质及经营数据，但未作需采用指定用语的公司规模定位。",
+     "method": "llm",
+     "category": "stance",
+     "category_label": "自我定位"
+    },
+    {
+     "rule_id": "QIANHA-17",
+     "statement": "不得与其他保险公司横向对比、进行同业信息盘点或拉踩同业",
+     "severity": "fix",
+     "verdict": "violate",
+     "evidence": "医养融合能力，是前海人寿区别于多数寿险公司的重要特色，但权益获取有条件。",
+     "reason": "该句将前海人寿的医养能力与多数寿险公司横向比较，突出其相对优势。",
+     "method": "llm",
+     "category": "stance",
+     "category_label": "自我定位"
+    },
+    {
+     "rule_id": "QIANHA-18",
+     "statement": "理赔内容限定在公司提供的理赔数据、科技赋能、特色理赔服务和真实案例内",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "理赔介绍主要围绕公司理赔时效、累计件数及赔付金额，未扩展至规则限定范围之外的业务内容。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "QIANHA-19",
+     "statement": "不得超范围发挥或将行业通用服务写成公司专属能力",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未将行业通用理赔服务宣称为公司专属能力，也未承诺超出所列数据的理赔结果。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QIANHA-20",
+     "statement": "不得使用“高分红”等夸大分红水平的表述",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未使用高分红等夸大表述，并明确提示分红不确定且可能为零。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QIANHA-21",
+     "statement": "必须明确区分“演示利率”与“红利实现率”，不得混为一谈",
+     "severity": "fix",
+     "verdict": "violate",
+     "evidence": "红利实现率反映的是兑现演示利率的能力，不代表未来收益，也不构成保底承诺。",
+     "reason": "该句将红利实现率解释为兑现演示利率的能力，混淆了实际红利与演示红利的比例指标和演示利率。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QIANHA-24",
+     "statement": "须从法律层面区分股东与保险公司，说明法人独立、不承担股东债务及保险保障基金机制",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文不是股东债务危机类澄清稿件，不触发该规则的说明要求。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QIANHA-26",
+     "statement": "须说明2022年免职决议未生效及董监高目前正常履职，并按更新材料核对",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未针对管理层空缺或2022年免职事件作澄清。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QIANHA-27",
+     "statement": "不主动提及董监高；相关词条使用时须严格按更新材料表述",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未主动提及董监高。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QIANHA-28",
+     "statement": "不得写成正规新闻稿或造成公司官方回应、官方澄清的误解",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文为产品分析文章，不属于负面舆情澄清类稿件。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QIANHA-29",
+     "statement": "须以第三方视角进行客观分析",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文不属于负面舆情澄清类稿件，不触发该规则的适用条件。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QIANHA-31",
+     "statement": "不得编造客户素材未提供的公司制度、服务、活动或合规结论",
+     "severity": "fix",
+     "verdict": "unclear",
+     "evidence": "",
+     "reason": "未提供客户素材或补充核实材料，无法判断文中公司制度、服务等信息是否存在编造或超出素材范围的情况。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QIANHA-32",
+     "statement": "不得声称公司管理规则公开披露、全部以公开正式文件为准或员工可随时查阅公开制度文件",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文不属于员工关系、离职保障或公司管理制度稿件，亦未声称管理制度公开可随时查阅。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QIANHA-33",
+     "statement": "出处措辞须严谨，不得统称为“企业公开披露内容”",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未涉及未见公司官网披露的员工晋升等信息，也未统称相关信息为“企业公开披露内容”。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QIANHA-35",
+     "statement": "须分别标明数据年份或统计截止时间，避免造成同一统计期的误解",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文中引用的2022年度服务质量指数、2025年分红及理赔数据和截至2025年底的累计数据均分别标明了年份或统计截止时间。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "QIANHA-40",
+     "statement": "须明确在售数量对应官网清单的统计时点，并与累计开发产品数量区分",
+     "severity": "fix",
+     "verdict": "violate",
+     "evidence": "前海人寿官方渠道当前在售产品约80款，覆盖人寿保险、年金保险、健康保险、意外伤害保险四大类。",
+     "reason": "介绍在售产品数量时仅使用“当前”，未明确对应官网清单的具体统计时点。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QIANHA-41",
+     "statement": "监管机构称谓使用“国家金融监督管理总局”，不得在该当前语境沿用“银保监会”",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未描述当前分红险产品定价监管机构，也未使用“银保监会”称谓。",
+     "method": "llm",
+     "category": "identity",
+     "category_label": "实体称谓"
+    },
+    {
+     "rule_id": "QIANHA-42",
+     "statement": "使用“按监管要求”表述，不使用“与监管要求高度适配”的说法",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文仅介绍风险管理和内部控制体系，未说明其与监管要求的关系，也未使用“与监管要求高度适配”的说法。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QIANHA-43",
+     "statement": "须按各公众号实际展示功能分别说明，不得混用服务号名称及功能",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未介绍官方微信公众号及其服务功能，不涉及服务号名称与功能混用。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "QIANHA-45",
+     "statement": "删除稿件中的“前海智慧优选2026养老年金保险（分红型）”及“前海智慧优选2026A养老年金保险（分红型）”相关内容",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未出现规则明确要求删除的两个智慧优选分红型养老年金保险产品。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "QIANHA-47",
+     "statement": "不得硬造生词或使用不适合保险行业宣传文章的内部术语组合",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未出现硬造生词或不适合保险行业宣传文章的内部术语组合。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "QIANHA-48",
+     "statement": "充分展开已提供且与主题相关的素材，避免只用一段综述或一笔带过",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文对产品矩阵、健康保障、长期规划、医养服务及理赔等相关内容分节展开，并非仅作一段综述或一笔带过。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "QIANHA-49",
+     "statement": "段落和句子须逻辑连贯，避免模板拼接和与上下文无关的突兀插句",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文各段围绕性价比判断展开，咨询渠道与权益核实建议衔接合理，未见突兀插句或以医养布局支撑产品分红的牵强论证。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    }
+   ]
+  }
+ ],
+ "skipped": [
+  {
+   "id": "QIANHA-02",
+   "why": "may 类不进合格率",
+   "statement": "正文允许适度提及“宝能集团”"
+  },
+  {
+   "id": "QIANHA-04",
+   "why": "人工流程项",
+   "statement": "“坚持独立自主经营”被列为受限标题表述，须按适用词条向客户确认后使用"
+  },
+  {
+   "id": "QIANHA-05",
+   "why": "prefer 类不进合格率",
+   "statement": "标题优先采用服务指引视角，避免事件化、情绪化表达"
+  },
+  {
+   "id": "QIANHA-08",
+   "why": "may 类不进合格率",
+   "statement": "允许不同业务在同一稿件中出现，但须结合实际行业角度表述"
+  },
+  {
+   "id": "QIANHA-15",
+   "why": "prefer 类不进合格率",
+   "statement": "不主动输出“中小型险企”或“中等规模险企”等规模定位"
+  },
+  {
+   "id": "QIANHA-16",
+   "why": "may 类不进合格率",
+   "statement": "允许将前海人寿称为“有代表性的机构”或其中之一"
+  },
+  {
+   "id": "QIANHA-22",
+   "why": "may 类不进合格率",
+   "statement": "允许公开使用“大部分产品红利实现率超过100%”的表述"
+  },
+  {
+   "id": "QIANHA-23",
+   "why": "may 类不进合格率",
+   "statement": "允许补充分红险相关数据为动态更新数据的说明"
+  },
+  {
+   "id": "QIANHA-25",
+   "why": "人工流程项",
+   "statement": "纪要要求以“客户保单绝对安全”作结论，该口径须与条件化法律说明一并提交客户确认"
+  },
+  {
+   "id": "QIANHA-30",
+   "why": "prefer 类不进合格率",
+   "statement": "优先采用第三方自媒体、大V或论坛帖子式的客观分析体裁"
+  },
+  {
+   "id": "QIANHA-34",
+   "why": "may 类不进合格率",
+   "statement": "允许使用“根据公开内容”这一出处措辞"
+  },
+  {
+   "id": "QIANHA-36",
+   "why": "人工流程项",
+   "statement": "不主动公开2025年数据"
+  },
+  {
+   "id": "QIANHA-37",
+   "why": "prefer 类不进合格率",
+   "statement": "非必要不使用数据"
+  },
+  {
+   "id": "QIANHA-38",
+   "why": "prefer 类不进合格率",
+   "statement": "尽量避免提及年报、经营数据、保费数据及相关词语"
+  },
+  {
+   "id": "QIANHA-39",
+   "why": "人工流程项",
+   "statement": "公司偿付能力、风险综合评级须按高敏事项处理，不作未经确认的普通素材输出"
+  },
+  {
+   "id": "QIANHA-44",
+   "why": "人工流程项",
+   "statement": "不得写入已下架产品"
+  },
+  {
+   "id": "QIANHA-50",
+   "why": "prefer 类不进合格率",
+   "statement": "优先按股权、经营、保单三个维度展开，并直接切入核心议题"
+  },
+  {
+   "id": "QIANHA-51",
+   "why": "人工流程项",
+   "statement": "稿件必须加入人工把控和复核，不得完全依赖机器产出"
+  },
+  {
+   "id": "QIANHA-52",
+   "why": "人工流程项",
+   "statement": "稿件须依次经过编辑室、相关领导、法务合规、消费者权益保护中心审核"
+  },
+  {
+   "id": "QIANHA-53",
+   "why": "人工流程项",
+   "statement": "产品购买评价类具体用语须额外提交合规消保部门审查"
+  },
+  {
+   "id": "QIANHA-54",
+   "why": "人工流程项",
+   "statement": "语料须经前海人寿审核同意后方可投放"
+  },
+  {
+   "id": "QIANHA-55",
+   "why": "人工流程项",
+   "statement": "先提交各词条标题和文章架构供甲方确认，再产出5篇以内人工稿件"
+  },
+  {
+   "id": "QIANHA-56",
+   "why": "人工流程项",
+   "statement": "对素材进行官方或第三方机构核实，并提前反馈核实结果、无法表述或核不出处的内容"
+  },
+  {
+   "id": "QIANHA-57",
+   "why": "人工流程项",
+   "statement": "以后续认可的新稿作为量产标准，旧稿作废"
+  },
+  {
+   "id": "QIANHA-58",
+   "why": "may 类不进合格率",
+   "statement": "允许由甲方直接修改并反馈，不必整篇返工"
+  },
+  {
+   "id": "QIANHA-59",
+   "why": "人工流程项",
+   "statement": "乙方须主动掌握金融保险术语，并将行业术语、业务逻辑和合规要求整理成文字供模型训练与人工编辑参考"
+  },
+  {
+   "id": "QIANHA-60",
+   "why": "人工流程项",
+   "statement": "须梳理行业及平台侧禁止或受限表述清单并同步甲方"
+  }
+ ],
+ "summary": {
+  "total": 198,
+  "pass": 173,
+  "violate": 16,
+  "unclear": 9,
+  "hard_violate": 0,
+  "judged": 189,
+  "pass_rate_of_judged": 91.5
+ },
+ "dedup": {
+  "article_count": 6,
+  "title_distinct": 6,
+  "title_duplicate_top": [
+   {
+    "core": "前海人寿理赔能力如何？从真实案例看快赔、效率与服务边界",
+    "count": 1
+   },
+   {
+    "core": "4. 股东层面债务风波会影响保单吗？先看懂保单安全的判断逻辑",
+    "count": 1
+   },
+   {
+    "core": "5. 前海人寿经营稳健吗？从资质、医养闭环到产品特色客观拆解",
+    "count": 1
+   }
+  ],
+  "h2_overlap_avg": 0.0,
+  "h2_overlap_max": 0.0,
+  "dominant_topics": [],
+  "sentence_reuse_ratio": 0.032,
+  "body_similarity_avg": 0.118,
+  "body_similarity_max": 0.188,
+  "warnings": []
+ },
+ "client_short": "前海人寿",
+ "rules_version": "0.1.0-draft",
+ "batch_id": "20261111_181311",
+ "batch_label": "3-8篇测评",
+ "evaluated_at": "2026-11-11 18:17"
+}

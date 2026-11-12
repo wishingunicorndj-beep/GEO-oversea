@@ -1,0 +1,12 @@
+{
+ "batch_id": "20261111_172506",
+ "label": "纯文本粘贴测试",
+ "created_at": "2026-11-11 17:26",
+ "article_count": 2,
+ "rules_version": "0.1.0-draft",
+ "rules_count": 60,
+ "violate": 4,
+ "hard_violate": 2,
+ "unclear": 1,
+ "pass_rate": 93.8
+}
