@@ -59,11 +59,18 @@
           + '<span class="src-chars">未采用</span></li>';
       }).join('');
     }
-    el('sources').innerHTML = html;
+    el('sources').innerHTML = html
+      || '<li class="is-empty">没有记录到来源文件（数据库里缺少抽取元信息）</li>';
   }
 
   function renderConflicts() {
-    var list = state.data.conflicts;
+    var list = state.data.conflicts || [];
+    var card = el('conflicts').closest('.section-card');
+    if (!list.length) {
+      if (card) card.hidden = true;
+      return;
+    }
+    if (card) card.hidden = false;
     el('conflictCount').textContent = list.length + ' 处';
     el('conflicts').innerHTML = list.map(function (c, i) {
       return '<details class="conflict">'
@@ -130,7 +137,13 @@
   }
 
   function renderNotRules() {
-    var list = state.data.not_rules;
+    var list = state.data.not_rules || [];
+    var card = el('notRules').closest('.section-card');
+    if (!list.length) {
+      if (card) card.hidden = true;
+      return;
+    }
+    if (card) card.hidden = false;
     el('notRuleCount').textContent = list.length + ' 条';
     el('notRules').innerHTML = list.map(function (n) {
       return '<tr><td class="rule-text">' + esc(n.content) + '</td>'
@@ -149,9 +162,48 @@
   }
 
   var params = new URLSearchParams(location.search);
-  var slug = params.get('slug') || localStorage.getItem('geo_last_slug') || 'qianhai_life';
-  state.slug = slug;
 
+  // 先拉客户列表：有规则包的客户才可选。不能硬编码客户名，
+  // 也不能依赖 localStorage（换机器/换环境就是脏数据）。
+  fetch('/api/clients').then(function (r) { return r.json(); }).then(function (d) {
+    var list = (d.items || []).filter(function (c) { return c.has_rules; });
+    if (!list.length) {
+      showNoClient();
+      return;
+    }
+    var want = params.get('slug') || localStorage.getItem('geo_last_slug');
+    state.slug = list.some(function (c) { return c.slug === want; })
+      ? want : list[0].slug;
+    state.clients = list;
+    renderClientSelect();
+    loadRules(state.slug);
+  }).catch(function (e) {
+    el('rules').innerHTML = '<div class="empty"><strong>连不上服务</strong>'
+      + esc(e.message) + '<div style="margin-top:12px">确认服务已启动后刷新页面</div></div>';
+  });
+
+  function showNoClient() {
+    el('stats').innerHTML = '';
+    el('sources').innerHTML = '';
+    el('conflicts').innerHTML = '';
+    el('notRules').innerHTML = '';
+    el('rules').innerHTML = '<div class="empty"><strong>还没有可评审的客户</strong>'
+      + '客户资料上传并完成抽取后，规则包才会出现在这里。'
+      + '<div style="margin-top:14px"><a class="button primary" href="./upload.html">去导入客户资料</a></div></div>';
+    el('clientSelect').innerHTML = '<option>暂无客户</option>';
+    el('clientSelect').disabled = true;
+  }
+
+  function renderClientSelect() {
+    el('clientSelect').innerHTML = state.clients.map(function (c) {
+      return '<option value="' + esc(c.slug) + '"'
+        + (c.slug === state.slug ? ' selected' : '') + '>'
+        + esc(c.slug) + ' · ' + c.rule_count + ' 条规则</option>';
+    }).join('');
+  }
+
+  function loadRules(slug) {
+    state.slug = slug;
   fetch('/api/rules/' + encodeURIComponent(slug)).then(function (r) {
     if (!r.ok) throw new Error('HTTP ' + r.status);
     return r.json();
@@ -178,8 +230,14 @@
     render();
   }).catch(function (e) {
     el('rules').innerHTML = '<div class="empty"><strong>读取规则包失败</strong>'
-      + '客户标识「' + esc(slug) + '」可能还没有规则包，或服务未启动。'
-      + '<div style="margin-top:12px"><a class="button small" href="./upload.html">去导入客户资料</a></div></div>';
+      + '客户「' + esc(slug) + '」读取失败：' + esc(e.message)
+      + '<div style="margin-top:14px"><a class="button small" href="./upload.html">去导入客户资料</a></div></div>';
+  });
+  }
+
+  el('clientSelect').addEventListener('change', function (e) {
+    localStorage.setItem('geo_last_slug', e.target.value);
+    loadRules(e.target.value);
   });
 
   document.addEventListener('change', function (e) {
@@ -244,6 +302,12 @@
   });
 
   el('exportBtn').addEventListener('click', function () {
-    location.href = '/api/download/' + encodeURIComponent(state.slug) + '/rules';
+    // 导出业务确认单（HTML 表格），不是原始 YAML
+    var a = document.createElement('a');
+    a.href = '/api/download/' + encodeURIComponent(state.slug) + '/rules-html';
+    a.download = '';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   });
 })();

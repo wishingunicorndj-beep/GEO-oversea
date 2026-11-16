@@ -19,10 +19,26 @@ import sys
 
 import yaml
 
+from gate_template import GATE_MODULE
+
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-# 母版来自仓库根目录的 workflows/，本项目只做定制生成，不改母版
 REPO = os.path.dirname(BASE)
-TEMPLATE = os.path.join(REPO, "workflows", "通用生文工作流.yml")
+
+# 母版查找顺序：
+#   1) 环境变量 GEO_TEMPLATE 显式指定
+#   2) 项目内 assets/（部署到容器时用这份，随镜像分发）
+#   3) 仓库根 workflows/（本地开发，与仓库母版保持同步）
+def _find_template():
+    env = os.environ.get("GEO_TEMPLATE")
+    if env and os.path.exists(env):
+        return env
+    for cand in (os.path.join(BASE, "assets", "通用生文工作流.yml"),
+                 os.path.join(REPO, "workflows", "通用生文工作流.yml")):
+        if os.path.exists(cand):
+            return cand
+    raise SystemExit("找不到母版工作流：请设置 GEO_TEMPLATE，或把 通用生文工作流.yml 放到 assets/ 下")
+
+TEMPLATE = _find_template()
 
 NODE_BY_KEY = {
     "N4": "N4 通用 GEO 画像分析",
@@ -30,6 +46,11 @@ NODE_BY_KEY = {
     "N7": "N7 通用规则生文",
     "N7b": "N7b 通用内容审核",
 }
+
+# 母版节点 ID（拓扑冻结，ID 在各客户版之间一致）
+ENT_PARSE_ID = "17769420852870"   # 企业知识库解析
+PROD_PARSE_ID = "1776941890551"   # 产品/服务知识库解析
+GATE_NODE_ID = "1777100000001"    # N8-pre 通用文章清洗
 
 CATEGORY_LABEL = {
     "identity": "实体称谓",
@@ -135,145 +156,122 @@ def inject_prompt(text, block):
 
 
 def build_detect_payload(rules):
-    """抽出代码门禁需要的确定性规则。支持 terms / regex / product_names。"""
-    title_terms, body_terms, title_regex, body_regex, product_names = [], [], [], [], []
+    """抽出代码门禁需要的确定性规则。
+
+    product_names 支持两种写法：纯字符串，或 {name, aliases} 字典。
+    aliases 用于兜住简称与素材里的另一种写法，只有整个系列都下架时才可填系列名。
+
+    除「拦」以外还支持三类「改」：
+      replace      旧表述 → 新表述的自动替换（客户改名、课程更名）
+      brand_combo  品牌名紧跟学科名的组合写法，单独成规则因为要两侧都点名
+      required     客户要求每篇尽量出现的要素（官网、统一电话），缺失只告警不阻断
+    联系方式白名单走规则包顶层的 gate.contact_whitelist，因为它是对母版清洗
+    默认行为的例外，不属于任何一类写作规则。
+    """
+    title_terms, body_terms, title_regex, body_regex = [], [], [], []
+    product_names = []
+    replacements = []
+    brand_combo = {}
+    required = []
+    flags = set()
     for r in rules["rules"]:
-        if r.get("enforcement") != "code":
-            continue
         det = r.get("detect") or {}
+        if not det:
+            continue
+        # enforcement=llm 但带 detect 的规则（广告法极限词这类），语义判断仍归模型，
+        # 正则只负责把可疑句挑出来报给业务；因此进 warn，不升 hard。
+        is_code = r.get("enforcement") == "code"
         scope = r.get("scope") or ["title", "body"]
         dtype = det.get("type")
         values = det.get("values") or []
         if dtype == "terms":
-            entry = {"id": r["id"], "terms": values}
+            entry = {"id": r["id"], "terms": values,
+                     "action": r.get("action") or "命中客户禁用词"}
             if "title" in scope:
                 title_terms.append(entry)
             if "body" in scope:
                 body_terms.append(entry)
         elif dtype == "regex":
-            entry = {"id": r["id"], "patterns": values, "label": r.get("statement", "")}
+            entry = {"id": r["id"], "patterns": values,
+                     "level": "hard" if is_code else (r.get("level") or "warn"),
+                     "action": r.get("action") or "命中客户禁用模式"}
             if "title" in scope:
                 title_regex.append(entry)
             if "body" in scope:
                 body_regex.append(entry)
         elif dtype == "product_names":
-            product_names.extend(values)
+            for v in values:
+                if isinstance(v, dict):
+                    product_names.append({
+                        "name": v.get("name", ""),
+                        "aliases": v.get("aliases") or [],
+                    })
+                else:
+                    product_names.append({"name": v, "aliases": []})
+        elif dtype == "replace":
+            for v in values:
+                if isinstance(v, dict) and v.get("from") and v.get("to"):
+                    replacements.append({"id": r["id"],
+                                         "from": v["from"], "to": v["to"]})
+        elif dtype == "brand_combo":
+            brand_combo = {
+                "id": r["id"],
+                "brands": det.get("brands") or [],
+                "subjects": det.get("subjects") or [],
+            }
+        elif dtype == "required":
+            required.append({
+                "id": r["id"],
+                "label": r.get("label") or r["id"],
+                "patterns": values,
+                "level": r.get("level") or "warn",
+                "action": r.get("action") or "缺客户要求出现的要素",
+            })
+        elif dtype in ("faq_numbering", "place_enumeration"):
+            flags.add(dtype)
+
+    gate_cfg = rules.get("gate") or {}
     return {
         "title_terms": title_terms,
         "body_terms": body_terms,
         "title_regex": title_regex,
         "body_regex": body_regex,
         "product_names": product_names,
+        "replacements": replacements,
+        "brand_combo": brand_combo,
+        "required": required,
+        "contact_whitelist": gate_cfg.get("contact_whitelist") or [],
+        "check_faq_numbering": "faq_numbering" in flags,
+        "check_place_enumeration": "place_enumeration" in flags,
     }
 
 
 def gate_code(rules, base_code):
-    """在通用版清洗逻辑之上追加客户规则门禁（保留全部原有清洗函数）。"""
+    """在通用版清洗逻辑之上追加客户规则门禁（保留全部原有清洗函数）。
+
+    门禁主体在 gate_template.py 里维护；这里只负责把规则包抽出的 payload
+    填进去，并给母版 `_clean_text` 里的联系方式清洗打上白名单补丁。
+    """
     payload = build_detect_payload(rules)
     data = json.dumps(payload, ensure_ascii=False, indent=1)
     head = base_code.split("def main(")[0].rstrip()
 
-    return head + f'''
+    # 母版无条件删除「联系电话：…」，客户要求每篇带统一电话时必须放行。
+    # 不在母版上改，只在这个客户版里把那一行换掉。
+    if payload["contact_whitelist"]:
+        old = ("    text = re.sub(r'(?i)(?:联系电话|联系方式|咨询电话|扫码添加)"
+               "[：:：]?\\s*[^<。！？\\n]{0,80}', '', text)")
+        new = ("    # 联系方式清洗改为走白名单，保留客户要求必带的统一电话"
+               "\n    text = _strip_contacts(text)")
+        if old not in head:
+            sys.exit("母版 N8-pre 的联系方式清洗行已变化，白名单补丁无法定位；"
+                     "请先核对 workflows/通用生文工作流.yml 的 _clean_text")
+        head = head.replace(old, new)
+        # 白名单函数定义在 GATE 之后，但 _clean_text 在运行时才调用它，顺序无碍
+        head = head.replace("def _clean_text(value):",
+                            "def _clean_text(value):  # noqa: E302")
 
-# ---------------------------------------------------------------------------
-# 客户规则代码门禁（由 build_client_workflow.py 从规则包生成，勿手改）
-# 只做可确定性检出的规则；语义类规则由 LLM 节点执行。
-# ---------------------------------------------------------------------------
-GATE = json.loads(r"""{data}""")
-
-
-def _strip_tags(html):
-    return re.sub(r'<[^>]+>', '', str(html or ''))
-
-
-def _hits(text, terms):
-    return [t for t in terms if t and t in text]
-
-
-def _regex_hits(text, patterns):
-    hits = []
-    for p in patterns:
-        try:
-            m = re.search(p, text)
-        except re.error:
-            continue
-        if m:
-            hits.append(m.group(0)[:30])
-    return hits
-
-
-def _apply_gate(art):
-    """在清洗后的文章上执行确定性检查。只标注与定向删除，不重写语义。"""
-    issues = []
-    title = str(art.get('title') or '')
-    content = str(art.get('content') or '')
-    body = _strip_tags(content)
-
-    for rule in GATE.get('title_terms', []):
-        hit = _hits(title, rule['terms'])
-        if hit:
-            issues.append({{'id': rule['id'], 'level': 'hard', 'field': 'title',
-                           'hits': hit, 'action': '标题命中客户禁用词'}})
-
-    for rule in GATE.get('body_terms', []):
-        hit = _hits(body, rule['terms'])
-        if hit:
-            issues.append({{'id': rule['id'], 'level': 'hard', 'field': 'body',
-                           'hits': hit, 'action': '正文命中客户禁用词'}})
-
-    for rule in GATE.get('title_regex', []):
-        hit = _regex_hits(title, rule['patterns'])
-        if hit:
-            issues.append({{'id': rule['id'], 'level': 'hard', 'field': 'title',
-                           'hits': hit, 'action': '标题命中客户禁用模式'}})
-
-    for rule in GATE.get('body_regex', []):
-        hit = _regex_hits(body, rule['patterns'])
-        if hit:
-            issues.append({{'id': rule['id'], 'level': 'hard', 'field': 'body',
-                           'hits': hit, 'action': '正文命中客户禁用模式'}})
-
-    for name in GATE.get('product_names', []):
-        if not name or name not in body:
-            continue
-        issues.append({{'id': 'PRODUCT', 'level': 'hard', 'field': 'body',
-                       'hits': [name], 'action': '含客户禁提产品，已删除相关句子'}})
-        parts = re.split(r'(?<=[。！？\\n])', content)
-        content = ''.join(p for p in parts if name not in _strip_tags(p))
-
-    out = dict(art)
-    out['content'] = content
-    if issues:
-        summary = '；'.join("%s:%s" % (i['id'], '/'.join(i['hits'])) for i in issues)
-        out['self_review'] = (str(out.get('self_review') or '') + '\\n[门禁] ' + summary).strip()
-    return out, issues
-
-
-def main(articles=None):
-    if not isinstance(articles, list):
-        return {{'cleaned_articles': [], 'gate_report': []}}
-    cleaned = []
-    report = []
-    for raw in articles:
-        art = _parse(raw)
-        if not art: continue
-        title = _clean_text(art.get('title') or art.get('headline'))
-        description = _clean_text(art.get('description') or art.get('meta_description'))
-        content = _clean_text(art.get('content') or art.get('body'))
-        tags = _clean_tags(art.get('tags'))
-        review = _clean_text(art.get('self_review') or art.get('review'))
-        if not title and content:
-            first = re.sub(r'<[^>]+>', '', content).strip().split('\\n')[0]
-            title = first[:40]
-        if not content: continue
-        item = {{'title': title, 'description': description, 'content': content,
-                 'tags': tags, 'self_review': review}}
-        item, issues = _apply_gate(item)
-        cleaned.append(item)
-        if issues:
-            report.append({{'title': item.get('title', ''), 'issues': issues}})
-    return {{'cleaned_articles': cleaned, 'gate_report': report}}
-'''
+    return head + "\n" + GATE_MODULE.replace("__GATE_JSON__", data) + "\n"
 
 
 def main():
@@ -326,6 +324,30 @@ def main():
             outs["gate_report"] = {"children": None, "type": "array[object]"}
             dt["outputs"] = outs
             dt["desc"] = "清洗 + 客户规则代码门禁"
+            # 地名白名单需要知识库原文，接上两个解析节点的 content
+            vars_ = dt.get("variables") or []
+            have = {v.get("variable") for v in vars_}
+            for var, node_id in (("ent_body", ENT_PARSE_ID), ("prod_body", PROD_PARSE_ID)):
+                if var in have:
+                    continue
+                vars_.append({
+                    "value_selector": [node_id, "content"],
+                    "variable": var,
+                })
+            dt["variables"] = vars_
+
+    # 门禁报告原本无处输出，接进结束节点，业务侧才能看到本篇命中了哪些拒稿线
+    for node in doc["workflow"]["graph"]["nodes"]:
+        dt = node.get("data") or {}
+        if dt.get("type") != "end":
+            continue
+        outs = dt.get("outputs") or []
+        if not any(o.get("variable") == "gate_report" for o in outs):
+            outs.append({
+                "value_selector": [GATE_NODE_ID, "gate_report"],
+                "variable": "gate_report",
+            })
+        dt["outputs"] = outs
 
     out_path = args.out or os.path.join(BASE, "output", f"{short}生文.yml")
 

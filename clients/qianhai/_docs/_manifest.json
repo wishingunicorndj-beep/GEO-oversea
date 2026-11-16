@@ -1,0 +1,51 @@
+[
+ {
+  "order": 1,
+  "source_file": "1.公司素材（20261020）.docx",
+  "text_file": "01_1_公司素材_20261020_.txt",
+  "chars": 43817,
+  "lines": 1040
+ },
+ {
+  "order": 2,
+  "source_file": "1026c6f9-de30-42cf-892f-959aa475c0e2.docx",
+  "text_file": "02_1026c6f9_de30_42cf_892f_959aa475c0e2.txt",
+  "chars": 2530,
+  "lines": 51
+ },
+ {
+  "order": 3,
+  "source_file": "2.关于部分重点问题的描述（20261020）.docx",
+  "text_file": "03_2_关于部分重点问题的描述_20261020_.txt",
+  "chars": 4699,
+  "lines": 61
+ },
+ {
+  "order": 4,
+  "source_file": "360智见GEO（服务版）客户信息提报表-前海人寿保险股份有限公司 - 品牌词(1028).xlsx",
+  "text_file": "04_360智见GEO_服务版_客户信息提报表_前海人寿保险股份有限公司_品牌词_1028_.txt",
+  "chars": 2557,
+  "lines": 35
+ },
+ {
+  "order": 5,
+  "source_file": "前海人寿GEO稿件规范评审会-会议纪要1028-2.docx",
+  "text_file": "05_前海人寿GEO稿件规范评审会_会议纪要1028_2.txt",
+  "chars": 4877,
+  "lines": 156
+ },
+ {
+  "order": 6,
+  "source_file": "测试json.txt",
+  "text_file": "06_测试json.txt",
+  "chars": 826,
+  "lines": 28
+ },
+ {
+  "order": 7,
+  "source_file": "语料问题1028.docx",
+  "text_file": "07_语料问题1028.txt",
+  "chars": 3054,
+  "lines": 32
+ }
+]

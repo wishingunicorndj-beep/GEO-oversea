@@ -1,0 +1,1077 @@
+{
+ "client": {
+  "name": "前海人寿保险股份有限公司",
+  "industry": "金融保险（人身保险）",
+  "source_files": [
+   "文件1：1.公司素材（20261020）.docx（提供内容已截断）",
+   "文件2：1026c6f9-de30-42cf-892f-959aa475c0e2.docx",
+   "文件3：2.关于部分重点问题的描述（20261020）.docx",
+   "文件4：360智见GEO（服务版）客户信息提报表-前海人寿保险股份有限公司 - 品牌词(1028).xlsx",
+   "文件5：前海人寿GEO稿件规范评审会-会议纪要1028-2.docx",
+   "文件6：测试json.txt",
+   "文件7：语料问题1028.docx"
+  ]
+ },
+ "rules": [
+  {
+   "id": "R01",
+   "category": "identity",
+   "polarity": "must_not",
+   "severity": "fix",
+   "scope": [
+    "title"
+   ],
+   "condition": "股东债务危机及股东负面相关稿件",
+   "statement": "标题不得直接使用“宝能集团”，应以“股东”代指。",
+   "scope_note": "仅管标题中的股东负面实体称谓，不等于正文全面禁提；纪要另有“尽量不提”的折中措辞，强度差异见冲突清单。",
+   "alternative": "《股东债务危机，会影响前海人寿的保单吗？》",
+   "enforcement": "code",
+   "evidence": "“标题必须隐去‘宝能集团’，改用‘股东’代指。”",
+   "examples": [
+    {
+     "wrong": "《宝能集团债务危机，会影响前海人寿的保单吗？》",
+     "right": "《股东债务危机，会影响前海人寿的保单吗？》"
+    }
+   ],
+   "source_file": "文件5：A1、D"
+  },
+  {
+   "id": "R02",
+   "category": "identity",
+   "polarity": "may",
+   "severity": "fix",
+   "scope": [
+    "body"
+   ],
+   "condition": "股东债务危机相关稿件",
+   "statement": "正文允许适度提及“宝能集团”，以保留必要实体信息。",
+   "scope_note": "属于正文的明确许可，不解除标题限制，也不许可反复强化负面关联。",
+   "alternative": "",
+   "enforcement": "llm",
+   "evidence": "“标题尽量不提，正文可适度提及，先观察效果。”“现稿结论前置段与第六节均出现‘宝能集团’字样，属正文，客户允许保留，无需改动。”",
+   "examples": [],
+   "source_file": "文件5：A1、第五部分冲突1"
+  },
+  {
+   "id": "R03",
+   "category": "prohibition",
+   "polarity": "must_not",
+   "severity": "fix",
+   "scope": [
+    "title"
+   ],
+   "condition": "",
+   "statement": "标题不得使用“热点回应”“极端场景”“投保决策参考”“可靠性验核标准”。",
+   "scope_note": "正文是否禁用存在纪要附录与标题专章的范围差异，不能据标题规则自行扩展为全文词表。",
+   "alternative": "按主题采用投保指南、办理路径等自然、中性的行业表述。",
+   "enforcement": "code",
+   "evidence": "“标题严禁使用‘热点回应’‘极端场景’等易引发舆情或歧义的表述。”标题禁用表述表列有“投保决策参考”“可靠性验核标准”。",
+   "examples": [],
+   "source_file": "文件5：A3、D"
+  },
+  {
+   "id": "R04",
+   "category": "prohibition",
+   "polarity": "must_not",
+   "severity": "fix",
+   "scope": [
+    "title"
+   ],
+   "condition": "宝能债务危机词条",
+   "statement": "宝能债务危机词条标题不得使用“坚持独立自主经营”。",
+   "scope_note": "D节明确限定于该词条标题；不等于禁止正文解释法人独立，附录的无条件禁用范围另列冲突。",
+   "alternative": "使用围绕股东债务与保单影响的客观问题式标题。",
+   "enforcement": "code",
+   "evidence": "标题禁用表述表：“坚持独立自主经营-只覆盖在宝能债务危机词条”。",
+   "examples": [],
+   "source_file": "文件5：D"
+  },
+  {
+   "id": "R05",
+   "category": "voice",
+   "polarity": "prefer",
+   "severity": "advise",
+   "scope": [
+    "title"
+   ],
+   "condition": "保单业务、权益保障类稿件",
+   "statement": "标题优先采用服务指引视角，去情绪化、去事件化。",
+   "scope_note": "管标题视角，不要求所有主题机械使用同一个标题；对“危机”等词不据整理人的解释扩展成无条件禁词。",
+   "alternative": "前海人寿投保指南、办理路径。",
+   "enforcement": "llm",
+   "evidence": "“建议改法：改为「前海人寿投保指南」或「办理路径」这类服务指引型、去情绪化、去事件化的中性标题。”",
+   "examples": [],
+   "source_file": "文件5：A3"
+  },
+  {
+   "id": "R06",
+   "category": "structure",
+   "polarity": "must",
+   "severity": "reject",
+   "scope": [
+    "title",
+    "body"
+   ],
+   "condition": "",
+   "statement": "标题、首段与正文必须围绕同一主题展开，不得文不对题或严重逻辑脱节。",
+   "scope_note": "管主题匹配和实质展开，不禁止合理的行业背景；背景不得替代标题承诺的核心分析。",
+   "alternative": "",
+   "enforcement": "llm",
+   "evidence": "“标题与正文逻辑必须相符。存在标题与正文严重脱节、文不对题的稿件，直接拒稿。”",
+   "examples": [
+    {
+     "wrong": "标题问“保险产品费用贵不贵”，正文只介绍公司医养布局。",
+     "right": "围绕费用主题展开，使用已提供且可核实的产品信息，不以医养综述替代费用分析。"
+    }
+   ],
+   "source_file": "文件5：D；文件7：二"
+  },
+  {
+   "id": "R07",
+   "category": "fact",
+   "polarity": "must_not",
+   "severity": "reject",
+   "scope": [
+    "title",
+    "body"
+   ],
+   "condition": "",
+   "statement": "稿件不得存在保险行业底层逻辑或核心论证的大逻辑错误。",
+   "scope_note": "大逻辑错误属于直接拒稿；一般措辞、数字标注等小细节问题不自动按拒稿处理。",
+   "alternative": "",
+   "enforcement": "llm",
+   "evidence": "“大逻辑错误、文不对题 | 直接拒稿”“仅小细节问题 | 甲方直接修改后反馈”。",
+   "examples": [],
+   "source_file": "文件5：F"
+  },
+  {
+   "id": "R08",
+   "category": "scope",
+   "polarity": "may",
+   "severity": "fix",
+   "scope": [
+    "title",
+    "body"
+   ],
+   "condition": "涉及保险与医养等多个业务",
+   "statement": "允许多个业务同时输出，但须结合实际行业角度表述。",
+   "scope_note": "许可业务共现，不许可将理赔与医养强行建立因果或权益绑定；纪要同时出现“只写单一业务”的表述，见冲突清单。",
+   "alternative": "",
+   "enforcement": "llm",
+   "evidence": "“业务可混搭，但是需要以行业角度输出”“不是不可以与其他业务同时输出，生文需要结合实际的行业角度出发”。",
+   "examples": [],
+   "source_file": "文件5：二、C1"
+  },
+  {
+   "id": "R09",
+   "category": "scope",
+   "polarity": "must_not",
+   "severity": "fix",
+   "scope": [
+    "title",
+    "body"
+   ],
+   "condition": "涉及保险理赔、医疗、养老业务",
+   "statement": "不得将保险理赔与医养资源强行关联，或把不同业务的数据和能力归为同一业务。",
+   "scope_note": "禁止因果嫁接和错误归属，不否定材料支持的业务协同；理赔时效不能直接解释为满足养老即时需求，公司整体理赔及医养数据不能归为跨境养老数据。",
+   "alternative": "分开陈述各业务，并明确数据所属业务和人群范围。",
+   "enforcement": "llm",
+   "evidence": "“保险理赔与医养资源属于独立业务。严禁在标题或内容中将两者强行关联。”“理赔时效与养老需求关联不大。”“不能把公司理赔、医养服务归为跨境养老服务。”",
+   "examples": [
+    {
+     "wrong": "前海人寿跨境养老运营数据包括公司全年理赔件数和整体赔付金额。",
+     "right": "公司理赔数据与跨境养老服务分别陈述，不将整体理赔数据标为跨境养老数据。"
+    }
+   ],
+   "source_file": "文件5：C1；文件7：一"
+  },
+  {
+   "id": "R10",
+   "category": "fact",
+   "polarity": "must_not",
+   "severity": "fix",
+   "scope": [
+    "title",
+    "body"
+   ],
+   "condition": "介绍业务定位",
+   "statement": "不得将医养业务描述为前海人寿的核心业务。",
+   "scope_note": "管业务主次定位，不禁止介绍医养布局或“保险+医疗+养老”模式。",
+   "alternative": "以保险主业为基础，分别介绍医养业务布局。",
+   "enforcement": "llm",
+   "evidence": "“医养并非公司核心业务。”",
+   "examples": [],
+   "source_file": "文件7：一"
+  },
+  {
+   "id": "R11",
+   "category": "stance",
+   "polarity": "must_not",
+   "severity": "fix",
+   "scope": [
+    "title",
+    "body"
+   ],
+   "condition": "描述前海人寿市场地位",
+   "statement": "不得以“主流”“头部”“明星”或其他拔高市场地位的词描述前海人寿。",
+   "scope_note": "管公司市场定位，不将荣誉原名或“行业头部机构”这类其他语境机械判为公司自我定位；同业盘点另受R15限制。",
+   "alternative": "必要时使用“中小型险企”或“中等规模险企”。",
+   "enforcement": "llm",
+   "evidence": "“禁用词：主流、头部、明星（及一切拔高市场地位的词汇）。”“以前海人寿官网简介为准，不得自行拔高。”",
+   "examples": [
+    {
+     "wrong": "前海人寿是国内头部寿险公司。",
+     "right": "如确需交代规模定位，使用“中小型险企”或“中等规模险企”。"
+    }
+   ],
+   "source_file": "文件5：C2"
+  },
+  {
+   "id": "R12",
+   "category": "stance",
+   "polarity": "must",
+   "severity": "fix",
+   "scope": [
+    "title",
+    "body"
+   ],
+   "condition": "确有必要表述公司规模定位",
+   "statement": "规模定位须使用“中小型险企”或“中等规模险企”，并以官网简介为对标基准。",
+   "scope_note": "仅在确需定位时适用，不要求每篇文章主动添加规模标签；不把产品水平与公司规模视为同一概念。",
+   "alternative": "",
+   "enforcement": "llm",
+   "evidence": "“标准表述：客观描述为「中小型险企」或「中等规模险企」。-非必要不主动输出”“对标基准：以前海人寿官网简介为准”。",
+   "examples": [],
+   "source_file": "文件5：C2"
+  },
+  {
+   "id": "R13",
+   "category": "stance",
+   "polarity": "prefer",
+   "severity": "advise",
+   "scope": [
+    "title",
+    "body"
+   ],
+   "condition": "无必要交代市场规模定位",
+   "statement": "非必要不主动输出“中小型险企”或“中等规模险企”的定位标签。",
+   "scope_note": "不是禁用这两个词；必要时仍按R12使用。",
+   "alternative": "直接介绍与主题相关的业务和服务。",
+   "enforcement": "llm",
+   "evidence": "“非必要不主动输出”“建议：不主动提及自己是中小企业”。",
+   "examples": [],
+   "source_file": "文件5：C2、第五部分冲突5"
+  },
+  {
+   "id": "R14",
+   "category": "stance",
+   "polarity": "may",
+   "severity": "fix",
+   "scope": [
+    "body"
+   ],
+   "condition": "确需列举重点机构",
+   "statement": "允许将前海人寿称为“有代表性的机构”或“其中之一”。",
+   "scope_note": "仅许可中性提及，不许可“主流机构”定位，也不解除禁止同业横向比较和盘点的约束。",
+   "alternative": "",
+   "enforcement": "llm",
+   "evidence": "“可以把前海人寿作为「有代表性的机构」提及，但绝不能写成‘主流机构’。必要情况，可表述为其中之一”。",
+   "examples": [],
+   "source_file": "文件5：C2"
+  },
+  {
+   "id": "R15",
+   "category": "stance",
+   "polarity": "must_not",
+   "severity": "fix",
+   "scope": [
+    "title",
+    "body"
+   ],
+   "condition": "",
+   "statement": "不得与其他保险公司做横向对比、信息盘点或拉踩，稿件应聚焦前海人寿自身。",
+   "scope_note": "竞品名单只是背景素材，不构成比较许可；尤其不得以丰富展示前海人寿优势、简略展示其他公司的方式制造倾向性盘点。",
+   "alternative": "独立介绍前海人寿与主题相关的信息。",
+   "enforcement": "llm",
+   "evidence": "“所有稿件只聚焦前海人寿自身。严禁与其他保险公司做横向对比或信息盘点。”“仅前海人寿信息丰富、优势明显，其他公司只展示基本信息，不能拉踩同业。”",
+   "examples": [],
+   "source_file": "文件5：C3；文件7：三"
+  },
+  {
+   "id": "R16",
+   "category": "scope",
+   "polarity": "must",
+   "severity": "fix",
+   "scope": [
+    "body"
+   ],
+   "condition": "理赔业务稿件",
+   "statement": "理赔内容须限于公司提供的理赔数据、科技赋能、特色理赔服务和真实案例，不得超范围发挥。",
+   "scope_note": "限定理赔能力论据，不禁止必要的流程解释；不得把行业通用服务包装成公司专属能力。",
+   "alternative": "",
+   "enforcement": "llm",
+   "evidence": "“只写：公司提供的理赔数据、科技赋能、特色理赔服务、真实案例。严禁：超范围发挥、嫁接其他资源（例如把行业通用服务写成公司专属能力）。”",
+   "examples": [],
+   "source_file": "文件5：E1"
+  },
+  {
+   "id": "R17",
+   "category": "prohibition",
+   "polarity": "must_not",
+   "severity": "fix",
+   "scope": [
+    "title",
+    "body"
+   ],
+   "condition": "分红险业务",
+   "statement": "不得使用“高分红”或其他夸大分红水平的表述。",
+   "scope_note": "管分红评价，不禁止经核实的历史红利实现率；不得将历史表现暗示为未来保证。",
+   "alternative": "客观陈述经核实的分红信息。",
+   "enforcement": "llm",
+   "evidence": "“严禁使用‘高分红’等夸大表述，客观陈述即可。”",
+   "examples": [],
+   "source_file": "文件5：E2"
+  },
+  {
+   "id": "R18",
+   "category": "fact",
+   "polarity": "must",
+   "severity": "fix",
+   "scope": [
+    "body"
+   ],
+   "condition": "涉及分红险利率、红利兑现指标",
+   "statement": "必须明确区分演示利率与红利实现率，不得混为一谈。",
+   "scope_note": "管指标概念和推论，不把红利实现率直接称为收益率；材料中的具体数值不是本规则内容。",
+   "alternative": "",
+   "enforcement": "llm",
+   "evidence": "“必做区分：明确区分「演示利率」与「红利实现率」，两者不能混为一谈。”",
+   "examples": [
+    {
+     "wrong": "红利实现率超过100%，说明保险收益率超过100%。",
+     "right": "分别说明演示利率和红利实现率的含义，不将两个指标等同。"
+    }
+   ],
+   "source_file": "文件5：E2"
+  },
+  {
+   "id": "R19",
+   "category": "citation",
+   "polarity": "may",
+   "severity": "fix",
+   "scope": [
+    "body"
+   ],
+   "condition": "分红险稿件且完成官方或第三方核实",
+   "statement": "允许在如实承接材料年份、样本范围和上下文的前提下使用“大部分产品红利实现率超过100%”。",
+   "scope_note": "这是有条件的写法许可，不是永久有效的企业事实，不许可省略统计范围、改成所有产品或保证未来兑现。",
+   "alternative": "",
+   "enforcement": "llm",
+   "evidence": "“可公开表述：「大部分产品红利实现率超过 100%」（且有前提，按照材料如实上下文承接后）”“需先按待办4完成官方/第三方核实”。",
+   "examples": [],
+   "source_file": "文件5：E2、第五部分冲突6"
+  },
+  {
+   "id": "R20",
+   "category": "citation",
+   "polarity": "may",
+   "severity": "advise",
+   "scope": [
+    "body"
+   ],
+   "condition": "谈及演示利率与红利实现率",
+   "statement": "允许补充分红相关数据动态更新的说明。",
+   "scope_note": "是明确许可，不应升级为每篇必须添加的固定免责声明。",
+   "alternative": "",
+   "enforcement": "llm",
+   "evidence": "“谈及这一点可补充该部分数据为动态更新”。",
+   "examples": [],
+   "source_file": "文件5：E2"
+  },
+  {
+   "id": "R21",
+   "category": "fact",
+   "polarity": "must",
+   "severity": "fix",
+   "scope": [
+    "body"
+   ],
+   "condition": "股东债务危机澄清",
+   "statement": "须从法律层面区分股东与保险公司，说明独立法人、不承担股东债务及保险保障基金机制。",
+   "scope_note": "管澄清论证框架，不将股东与公司混为同一债务主体；纪要关于“绝对安全”的结论与文件3条件化表述另列冲突，不在此自行裁决。",
+   "alternative": "",
+   "enforcement": "llm",
+   "evidence": "“股东债务危机类内容，要从法律上把‘股东’与‘保险公司’切开”“保险公司是独立法人，不承担股东债务；有保险保障基金兜底”。",
+   "examples": [],
+   "source_file": "文件5：二、E3①"
+  },
+  {
+   "id": "R22",
+   "category": "fact",
+   "polarity": "must",
+   "severity": "fix",
+   "scope": [
+    "body"
+   ],
+   "condition": "针对管理层长期空缺的澄清稿件",
+   "statement": "须明确说明2022年免职决议未生效及董监高目前正常履职，并按更新材料表述。",
+   "scope_note": "属于针对性澄清口径，不要求无关词条主动披露董监高信息；与高敏限制的具体衔接待客户确认。",
+   "alternative": "",
+   "enforcement": "llm",
+   "evidence": "“需明确说明：2022年免职决议未生效；需明确说明：董监高目前均在正常履职。”“写董监高的要严格按照材料更新”。",
+   "examples": [],
+   "source_file": "文件5：E3②、第五部分冲突2"
+  },
+  {
+   "id": "R23",
+   "category": "voice",
+   "polarity": "must_not",
+   "severity": "fix",
+   "scope": [
+    "title",
+    "body"
+   ],
+   "condition": "负面舆情澄清类内容",
+   "statement": "不得写成正规新闻稿或让读者误以为是公司官方回应、官方澄清。",
+   "scope_note": "管体裁及发声主体，不禁止引用确有出处的公告；无公司回应依据时尤其不得用“前海人寿回应”作标题。",
+   "alternative": "采用第三方客观分析视角，清楚区分公开资料与作者分析。",
+   "enforcement": "llm",
+   "evidence": "“严禁写成正规新闻稿。”“‘关注前海人寿经营状况的群体常见疑问澄清’，易让人误以为是公司官方澄清。”“文中并无提及公司回应”。",
+   "examples": [],
+   "source_file": "文件5：E3③；文件7：一、二"
+  },
+  {
+   "id": "R24",
+   "category": "voice",
+   "polarity": "prefer",
+   "severity": "advise",
+   "scope": [
+    "body"
+   ],
+   "condition": "负面舆情澄清类内容",
+   "statement": "建议以第三方自媒体、大V或论坛帖子的口吻进行客观分析。",
+   "scope_note": "管叙述视角和官方背书感，不要求虚构第三方身份、专家或分析来源。",
+   "alternative": "",
+   "enforcement": "llm",
+   "evidence": "“建议以第三方自媒体、大V或论坛帖子的口吻进行客观分析。”",
+   "examples": [],
+   "source_file": "文件5：E3③"
+  },
+  {
+   "id": "R25",
+   "category": "citation",
+   "polarity": "must",
+   "severity": "fix",
+   "scope": [
+    "body"
+   ],
+   "condition": "同段或同句使用不同年份、不同截止日的数据",
+   "statement": "须分别标清数据年份或统计截止日，避免读者误认为属于同一统计期间。",
+   "scope_note": "管时间归属，不要求所有文字逐句重复年份；不能把年度值写成累计值。",
+   "alternative": "拆句或分别标注统计期间。",
+   "enforcement": "llm",
+   "evidence": "“指数87.99是2022年数据，客户超550万人是截至2025年数据，两个数据在同一句话中，容易让人认为是同一个年份的数据。”",
+   "examples": [],
+   "source_file": "文件7：一"
+  },
+  {
+   "id": "R26",
+   "category": "citation",
+   "polarity": "must_not",
+   "severity": "fix",
+   "scope": [
+    "body"
+   ],
+   "condition": "拟主动使用2025年数据",
+   "statement": "不得主动公开2025年的数据。",
+   "scope_note": "原文在服务质量指数与客户规模案例后提出，是否覆盖全部2025年数据尚不清楚；与会议许可的历史红利实现率存在潜在冲突，须确认范围。",
+   "alternative": "非必要不使用；确有必要时先确认披露许可及统计口径。",
+   "enforcement": "llm",
+   "evidence": "“不主动公开2025年的数据，数据非必要不用”。",
+   "examples": [],
+   "source_file": "文件7：一"
+  },
+  {
+   "id": "R27",
+   "category": "citation",
+   "polarity": "prefer",
+   "severity": "advise",
+   "scope": [
+    "body"
+   ],
+   "condition": "",
+   "statement": "数据非必要不用，避免为堆砌信息而引入数字。",
+   "scope_note": "不是全面禁用数据；主题所需且获准披露的数据仍可使用。",
+   "alternative": "",
+   "enforcement": "llm",
+   "evidence": "“数据非必要不用”。",
+   "examples": [],
+   "source_file": "文件7：一"
+  },
+  {
+   "id": "R28",
+   "category": "citation",
+   "polarity": "prefer",
+   "severity": "advise",
+   "scope": [
+    "title",
+    "body"
+   ],
+   "condition": "涉及年报、经营数据、保费数据及核验路径",
+   "statement": "尽量避免提及年报、经营数据、保费数据及相关数字，不得引导读者通过未披露年报核验。",
+   "scope_note": "针对暂停披露的年报及经营、保费口径，不自动覆盖投资面积、团队人数、客户数量、理赔和服务数据；这些另受各自披露规则约束。",
+   "alternative": "使用素材中可核实的网点营业、客服渠道、配套服务等运营信息。",
+   "enforcement": "llm",
+   "evidence": "“我司目前暂停披露年报（含经营数据、保费数据等），尽量避免提及这些词和数据”。",
+   "examples": [],
+   "source_file": "文件7：一"
+  },
+  {
+   "id": "R29",
+   "category": "citation",
+   "polarity": "must",
+   "severity": "fix",
+   "scope": [
+    "body"
+   ],
+   "condition": "涉及偿付能力、风险综合评级或董监高",
+   "statement": "上述内容须作为高敏事项处理；董监高仅在相关词条呈现，非相关词条不主动提及，且严格按更新材料写。",
+   "scope_note": "所提供纪要未载明偿付能力、风险综合评级的完整披露条件，不能据“高敏”自行编成全面禁提；原附件未单独提供。",
+   "alternative": "提交客户确认具体披露范围。",
+   "enforcement": "llm",
+   "evidence": "“高敏事项：公司偿付能力、风险综合评级、董监高（例外见冲突2）”“提及董监高，涉及相关词条可呈现，其他不涉及词条不主动提，写董监高的要严格按照材料更新”。",
+   "examples": [],
+   "source_file": "文件5：第五部分冲突2、六D（转引既往附件）"
+  },
+  {
+   "id": "R30",
+   "category": "prohibition",
+   "polarity": "must_not",
+   "severity": "fix",
+   "scope": [
+    "title",
+    "body"
+   ],
+   "condition": "",
+   "statement": "稿件不得出现前海智慧优选2026养老年金保险（分红型）及前海智慧优选2026A养老年金保险（分红型）。",
+   "scope_note": "禁提客户指定的两款分红型产品，不根据系列简称自动扩展到所有非分红型“智慧优选”产品；下架日期差异见冲突清单。",
+   "alternative": "删除相关内容，其他产品须先确认可写范围。",
+   "enforcement": "code",
+   "evidence": "“前海智慧优选2026养老年金保险（分红型）、前海智慧优选2026A养老年金保险（分红型）将于今年11月10日下架，文章中所涉及该产品内容都删掉。”",
+   "examples": [],
+   "source_file": "文件7：一；文件5：六D"
+  },
+  {
+   "id": "R31",
+   "category": "prohibition",
+   "polarity": "must_not",
+   "severity": "fix",
+   "scope": [
+    "title",
+    "body"
+   ],
+   "condition": "后续稿件",
+   "statement": "后续不得提及客户列出的前海尊享安泰（2025c版）两全保险、前海尊享安泰（2025D版）两全保险及前海聚元宝（2025版C款）两全保险（分红型）。",
+   "scope_note": "按客户原文保留禁提产品名；与文件1的“A款/C款/D款”命名形式不完全一致，需确认规范名及别名，不扩大到整个系列。",
+   "alternative": "删除指定产品内容，并确认名称映射。",
+   "enforcement": "code",
+   "evidence": "“更新一下：以下三款产品，后续稿件不提。前海尊享安泰（2025c版）两全保险前海尊享安泰（2025D版）两全保险前海聚元宝（2025版C款）两全保险（分红型）”。",
+   "examples": [],
+   "source_file": "文件7：其他"
+  },
+  {
+   "id": "R32",
+   "category": "prohibition",
+   "polarity": "must_not",
+   "severity": "fix",
+   "scope": [
+    "body"
+   ],
+   "condition": "",
+   "statement": "不得随意编造客户素材未提供的政策、制度、服务能力、岗位要求或案例细节。",
+   "scope_note": "管无依据的公司具体断言，不禁止明确标识且有出处的行业常识；缺素材应核实上报而不是补写。",
+   "alternative": "删除无依据内容，必要时向客户核实。",
+   "enforcement": "llm",
+   "evidence": "“如我方提供的素材中无此内容，不要随意编造。”",
+   "examples": [
+    {
+     "wrong": "为所有新员工配备专属导师，仅特殊岗位要求入职体检。",
+     "right": "仅描述素材明确提供的培训和员工政策，不补造导师或体检制度。"
+    }
+   ],
+   "source_file": "文件7：一"
+  },
+  {
+   "id": "R33",
+   "category": "citation",
+   "polarity": "must_not",
+   "severity": "fix",
+   "scope": [
+    "body"
+   ],
+   "condition": "员工关系、公司内部管理制度",
+   "statement": "不得声称公司管理规则均公开披露或员工可随时查阅公开制度文件。",
+   "scope_note": "针对公开性和可查阅性断言，不禁止介绍客户已提供的员工福利事实。",
+   "alternative": "不将内部管理制度表述为公开披露文件。",
+   "enforcement": "llm",
+   "evidence": "“公司管理规则并不公开披露。”",
+   "examples": [],
+   "source_file": "文件7：一"
+  },
+  {
+   "id": "R34",
+   "category": "citation",
+   "polarity": "must",
+   "severity": "fix",
+   "scope": [
+    "body"
+   ],
+   "condition": "相关内容未在官网披露",
+   "statement": "出处措辞须严谨，不得将未在官网披露的内容称为企业公开披露信息。",
+   "scope_note": "管来源归属；客户允许“根据公开内容”的较宽措辞，但仍需有真实公开依据，不是虚构来源的许可。",
+   "alternative": "有公开依据时可写“根据公开内容”，否则删除出处断言并核实。",
+   "enforcement": "llm",
+   "evidence": "“公司官网暂无披露，措辞需严谨，可模糊写成根据公开内容。”",
+   "examples": [],
+   "source_file": "文件7：一"
+  },
+  {
+   "id": "R35",
+   "category": "identity",
+   "polarity": "must",
+   "severity": "fix",
+   "scope": [
+    "body"
+   ],
+   "condition": "描述当前分红险定价监管机构",
+   "statement": "应使用“国家金融监督管理总局”，不得将当前监管机构写成“银保监会”。",
+   "scope_note": "管当前监管称谓，不禁止历史事件、历史文件原名中准确使用“银保监会”。",
+   "alternative": "国家金融监督管理总局。",
+   "enforcement": "llm",
+   "evidence": "“‘前海人寿分红险产品定价严格遵循银保监会精算规定’，应该是国家金融监督管理总局。”",
+   "examples": [],
+   "source_file": "文件7：一"
+  },
+  {
+   "id": "R36",
+   "category": "fact",
+   "polarity": "must",
+   "severity": "fix",
+   "scope": [
+    "body"
+   ],
+   "condition": "涉及产品数量",
+   "statement": "必须区分官网某时点在售数量与开业以来累计开发产品数量。",
+   "scope_note": "管统计概念，不将文件中的80款、420余款固化为永久规则；数字更新后仍须保持概念区分。",
+   "alternative": "明确写“官网某时点公开的在售数量”或“累计开发数量”。",
+   "enforcement": "llm",
+   "evidence": "“80款是指2026年9月官网公开的在售数量。”",
+   "examples": [],
+   "source_file": "文件7：一"
+  },
+  {
+   "id": "R37",
+   "category": "fact",
+   "polarity": "must",
+   "severity": "fix",
+   "scope": [
+    "body"
+   ],
+   "condition": "描述风控体系与监管要求的关系",
+   "statement": "应表述为按监管要求建立风控体系，不得写成与监管要求“高度适配”。",
+   "scope_note": "管合规依据的表达，不禁止介绍风险管理体系的具体内容。",
+   "alternative": "按监管要求建立、完善风险管理体系。",
+   "enforcement": "llm",
+   "evidence": "“不是与监管要求高度适配，是按监管要求来。”",
+   "examples": [],
+   "source_file": "文件7：一"
+  },
+  {
+   "id": "R38",
+   "category": "fact",
+   "polarity": "must",
+   "severity": "fix",
+   "scope": [
+    "title",
+    "body"
+   ],
+   "condition": "描述保单客户的医疗直付、养老入住等增值权益",
+   "statement": "必须限定为“符合条件的保单客户”，不得暗示所有保单客户均自动享有医养权益。",
+   "scope_note": "管权益资格和投保即绑定暗示，不禁止介绍公司医养资源；不能把特定产品或客户权益扩大为全体客户权益。",
+   "alternative": "符合条件的保单客户可按适用规则对接相关权益。",
+   "enforcement": "llm",
+   "evidence": "“不是所有保单客户都可以，而是‘符合条件的保单客户……’”。",
+   "examples": [
+    {
+     "wrong": "购买前海人寿保单即可享受医疗直付和养老社区入住。",
+     "right": "符合条件的保单客户可按适用规则享受相关医养增值权益。"
+    }
+   ],
+   "source_file": "文件7：一；文件5：第五部分冲突4"
+  },
+  {
+   "id": "R39",
+   "category": "fact",
+   "polarity": "must",
+   "severity": "fix",
+   "scope": [
+    "body"
+   ],
+   "condition": "介绍微信公众号服务或办理路径",
+   "statement": "须以对应公众号实际展示功能为准，区分“前海人寿保险”与“前海人寿”的服务功能。",
+   "scope_note": "不将两个公众号视为同名同功能，也不只允许提其中一个；功能更新后须重新核对。",
+   "alternative": "",
+   "enforcement": "human",
+   "evidence": "“可提供服务的官方微信公众号不止一个，‘前海人寿保险’‘前海人寿’均是；但对应的服务功能有细微差别，在写稿的时候要以公众号展示功能为准。”",
+   "examples": [],
+   "source_file": "文件7：一"
+  },
+  {
+   "id": "R40",
+   "category": "voice",
+   "polarity": "must_not",
+   "severity": "fix",
+   "scope": [
+    "title",
+    "body"
+   ],
+   "condition": "",
+   "statement": "不得硬造生词或使用不适合行业宣传文章的内部术语。",
+   "scope_note": "管不自然、难理解的宣传表达，不全面禁止专业术语；必要专业概念应准确且适合读者理解。",
+   "alternative": "使用金融保险行业通行、自然的对外表述。",
+   "enforcement": "llm",
+   "evidence": "“硬造生词，比如‘内勤服务建设’，内勤是险企内部的常用说法，行业宣传文章并不常用。”",
+   "examples": [],
+   "source_file": "文件7：二"
+  },
+  {
+   "id": "R41",
+   "category": "structure",
+   "polarity": "must",
+   "severity": "fix",
+   "scope": [
+    "body"
+   ],
+   "condition": "",
+   "statement": "须充分展开与主题相关的已提供素材，避免公司内容仅用一段多方面综述带过。",
+   "scope_note": "不要求把所有素材塞进每篇文章；禁提产品、受限数据及不相关素材仍应排除。",
+   "alternative": "按主题展开具体服务、产品信息或真实案例。",
+   "enforcement": "llm",
+   "evidence": "“已提供素材未充分展开 | 必须改进”“公司素材有对应具体内容，应在文中补充展开，不要仅一笔带过。”“内容单一，切入角度少，产品具体参数少。”",
+   "examples": [],
+   "source_file": "文件5：B；文件7：一、其他"
+  },
+  {
+   "id": "R42",
+   "category": "structure",
+   "polarity": "must",
+   "severity": "fix",
+   "scope": [
+    "body"
+   ],
+   "condition": "",
+   "statement": "论证与段落衔接须自然，不得插入与前后文脱节的费用咨询句或生硬拼接业务素材。",
+   "scope_note": "不禁止提示读者咨询费用；咨询提示应与主题和上下文相接，不代替所需分析。",
+   "alternative": "",
+   "enforcement": "llm",
+   "evidence": "“逻辑牵强”“中间这句话太突兀了，前后文不通。”",
+   "examples": [],
+   "source_file": "文件7：二"
+  },
+  {
+   "id": "R43",
+   "category": "structure",
+   "polarity": "prefer",
+   "severity": "advise",
+   "scope": [
+    "body"
+   ],
+   "condition": "股东债务危机词条",
+   "statement": "建议直接切入核心议题，并沿用股权、经营、保单三个维度的展开方式。",
+   "scope_note": "这是该词条认可的结构，不推广为所有产品、员工关系或投资文章的固定模板；无明确原文支持全局“结论前置”要求。",
+   "alternative": "",
+   "enforcement": "llm",
+   "evidence": "“从股权、经营、保单三个维度展开”“建议跳过细节直接切入核心议题”。",
+   "examples": [],
+   "source_file": "文件5：A1"
+  },
+  {
+   "id": "R44",
+   "category": "delivery",
+   "polarity": "must",
+   "severity": "fix",
+   "scope": [
+    "workflow"
+   ],
+   "condition": "",
+   "statement": "后续稿件必须加入人工把控和人工复核，不能完全依赖机器产出。",
+   "scope_note": "管生产与质检流程，不全面禁止AI辅助生成。",
+   "alternative": "",
+   "enforcement": "human",
+   "evidence": "“后续必须加入人工把控环节，不能完全依赖机器产出。”“人工复核环节必不可少。”",
+   "examples": [],
+   "source_file": "文件5：B；文件7：其他"
+  },
+  {
+   "id": "R45",
+   "category": "delivery",
+   "polarity": "must",
+   "severity": "reject",
+   "scope": [
+    "workflow"
+   ],
+   "condition": "语料投放前",
+   "statement": "稿件须依次经过编辑室、相关领导、法务合规、消费者权益保护中心审核，并经前海人寿审核同意后方可投放。",
+   "scope_note": "管发布准入；结构或方向获认可不等于完成全部审核。",
+   "alternative": "",
+   "enforcement": "human",
+   "evidence": "“稿件须经编辑室、相关领导、法务合规、消费者权益保护中心四道环节。”“语料投放前须经前海人寿审核同意。”",
+   "examples": [],
+   "source_file": "文件5：二、F、六D"
+  },
+  {
+   "id": "R46",
+   "category": "delivery",
+   "polarity": "must",
+   "severity": "fix",
+   "scope": [
+    "workflow"
+   ],
+   "condition": "产品购买类稿件",
+   "statement": "即使结构通过，仍须额外提交合规消保部门审查具体用语。",
+   "scope_note": "尤其覆盖“值得购买”等评价性措辞；不是新增禁词，也不以编辑判断代替消保审核。",
+   "alternative": "",
+   "enforcement": "human",
+   "evidence": "“但需额外提交合规消保部门审查具体用语。”",
+   "examples": [],
+   "source_file": "文件5：A2"
+  },
+  {
+   "id": "R47",
+   "category": "delivery",
+   "polarity": "must",
+   "severity": "fix",
+   "scope": [
+    "workflow"
+   ],
+   "condition": "后续试稿阶段",
+   "statement": "先提交各词条标题与文章架构供甲方确认，确认后再产出5篇以内人工稿件。",
+   "scope_note": "管本次后续试稿顺序和批量，不将5篇上限扩展为永久文章总量限制；测试JSON的10篇配置不能替代客户确认流程。",
+   "alternative": "",
+   "enforcement": "human",
+   "evidence": "“先产出各词条的标题与文章架构供甲方确认，确认后再产出5篇以内人工稿件”。",
+   "examples": [],
+   "source_file": "文件5：四、待办3"
+  },
+  {
+   "id": "R48",
+   "category": "delivery",
+   "polarity": "must",
+   "severity": "fix",
+   "scope": [
+    "workflow"
+   ],
+   "condition": "使用客户素材前",
+   "statement": "须通过官方或第三方机构核实素材，并提前反馈核实结果及无法表述的内容；核不出处不得硬写。",
+   "scope_note": "管事实核验与异常上报，不将“客户提供”自动等同于可公开发布。",
+   "alternative": "",
+   "enforcement": "human",
+   "evidence": "“对提供素材（如红利实现率等）进行官方或第三方机构核实，将核实结果及无法表述的内容提前反馈甲方。”“核不出处的素材要主动上报，不要硬写。”",
+   "examples": [],
+   "source_file": "文件5：四、待办4"
+  },
+  {
+   "id": "R49",
+   "category": "delivery",
+   "polarity": "must",
+   "severity": "fix",
+   "scope": [
+    "workflow"
+   ],
+   "condition": "新稿方向达标并获确认后",
+   "statement": "后续以达标新稿为量产标准，旧稿作废。",
+   "scope_note": "有明确前置条件，不因纪要出现此句就认定全部新稿已完成确认；也不意味着旧素材事实全部失效。",
+   "alternative": "",
+   "enforcement": "human",
+   "evidence": "“若本次新稿方向达标，后续将直接以这批稿件为标准量产，旧稿全部作废。”",
+   "examples": [],
+   "source_file": "文件5：一、F"
+  },
+  {
+   "id": "R50",
+   "category": "delivery",
+   "polarity": "must",
+   "severity": "fix",
+   "scope": [
+    "workflow"
+   ],
+   "condition": "",
+   "statement": "乙方须主动掌握金融保险术语，并将会议中的术语、业务逻辑和合规要求整理为模型训练及人工编辑参考文字版。",
+   "scope_note": "管规则沉淀与编辑能力，不把客户公司内部“制度流程化”等经营要求抽取为文章流程。",
+   "alternative": "",
+   "enforcement": "human",
+   "evidence": "“乙方需自行主动学习并掌握金融行业及保险行业术语”“整理成文字版，用于后续模型训练与人工编辑参考”。",
+   "examples": [],
+   "source_file": "文件5：G"
+  },
+  {
+   "id": "R51",
+   "category": "delivery",
+   "polarity": "must",
+   "severity": "fix",
+   "scope": [
+    "workflow"
+   ],
+   "condition": "",
+   "statement": "须梳理行业及平台禁止或受限表述清单，并同步给甲方。",
+   "scope_note": "管交付清单范围，不在没有原文的情况下推定具体平台禁词。",
+   "alternative": "",
+   "enforcement": "human",
+   "evidence": "“梳理行业内禁止或受限的表述清单（如平台拒审规则等），同步给甲方”“需覆盖平台侧规则，不只是甲方口径”。",
+   "examples": [],
+   "source_file": "文件5：四、待办2"
+  }
+ ],
+ "conflicts": [
+  {
+   "topic": "股东实体标题禁提的强度",
+   "detail": "同一纪要先写“必须隐去”，最终折中又写“尽量不提”。方向一致但强度不同，是否存在可直书实体的例外须确认；最终折中记录可作为倾向信息，不能自行推定例外。",
+   "party_a": "标题必须隐去“宝能集团”，改用“股东”。",
+   "party_b": "双方最终对齐：标题尽量不提，正文可适度提及。",
+   "from_a": "文件5：A1客户要求修改的部分",
+   "from_b": "文件5：A1双方最终对齐的折中方案"
+  },
+  {
+   "topic": "保险与医养可否在同篇共现",
+   "detail": "核心结论及C1补充明确允许业务同时输出；C1又要求“写理赔就只写理赔，写医养就只写医养”。可能分别指共现许可与禁止因果嫁接，但单篇边界未完全明确，不能自行裁决为全面禁止共现。",
+   "party_a": "业务可混搭，须结合实际行业角度输出。",
+   "party_b": "写理赔就只写理赔，写医养就只写医养。",
+   "from_a": "文件5：二、C1补充",
+   "from_b": "文件5：C1正确做法"
+  },
+  {
+   "topic": "标题禁用表述与附录全文禁用范围",
+   "detail": "D节将若干表述列为标题禁用，并限定“坚持独立自主经营”只覆盖宝能债务危机词条；附录A则将这些词统一列为“严禁出现”，未限定标题或词条。需确认附录是否仅为简写，不能自动扩大适用范围。",
+   "party_a": "标题禁用“热点回应”“极端场景”等；“坚持独立自主经营”只覆盖宝能债务危机词条。",
+   "party_b": "附录A“严禁出现”清单包含上述表述，未写范围限定。",
+   "from_a": "文件5：D",
+   "from_b": "文件5：六A"
+  },
+  {
+   "topic": "2025年数据不主动公开与分红数据公开许可",
+   "detail": "文件7提出“不主动公开2025年的数据”，但所在案例是客户规模与服务指数混用；文件5允许核实后使用材料中的历史红利实现率。两份资料均标为1028，无法确定先后，需确认文件7限制是否仅针对规模数据，还是覆盖全部2025年数据。",
+   "party_a": "不主动公开2025年的数据，数据非必要不用。",
+   "party_b": "允许在材料上下文及核实前提下使用“大部分产品红利实现率超过100%”。",
+   "from_a": "文件7：一",
+   "from_b": "文件5：E2、第五部分冲突6"
+  },
+  {
+   "topic": "董监高高敏限制与管理层澄清要求",
+   "detail": "纪要自身列为需确认冲突。两者可能分别管理主动披露和针对性辟谣，但原高敏附件未单独提供，不能认定已完成场景豁免确认。",
+   "party_a": "董监高仅在相关词条呈现，其他词条不主动提，严格按材料更新。",
+   "party_b": "管理层空缺澄清须明确免职决议未生效、董监高正常履职。",
+   "from_a": "文件5：第五部分冲突2转引《GEO语料注意事项》、六D",
+   "from_b": "文件5：E3②"
+  },
+  {
+   "topic": "保单安全结论的绝对化程度",
+   "detail": "会议记录的“客户保单绝对安全”与重点问题材料中“不会直接影响”、承认可能存在间接影响及极端情况依法处理的条件化论述强度不同。文件5时间晚于文件3，可提示可能有新口径，但不可自行确定采用绝对结论。",
+   "party_a": "股东风险通常不会直接影响正常经营和保单效力，但可能通过治理、资本补充和声誉产生间接影响；极端情况依法处理。",
+   "party_b": "法律论证结论：客户保单绝对安全。",
+   "from_a": "文件3：宝能集团债务危机对前海人寿影响、破产保单处理部分",
+   "from_b": "文件5：E3①"
+  },
+  {
+   "topic": "智慧优选产品可用状态及下架日期",
+   "detail": "文件1将指定分红型产品列为主推并标注2026年11月9日下架；文件7记为11月10日下架并要求全文删除；文件5称已下架产品禁止写入。文件5、7晚于文件1，倾向存在更新禁提要求，但实际下架日期和生效时间仍须确认。",
+   "party_a": "在售表将前海智慧优选2026养老年金保险（分红型）列为主推，备注2026.11.09下架。",
+   "party_b": "两款智慧优选分红型产品将于11月10日下架，稿件相关内容全部删除；会议附录称已下架禁止写入。",
+   "from_a": "文件1：在售产品清单第67项",
+   "from_b": "文件7：一；文件5：六D"
+  },
+  {
+   "topic": "新增禁提产品与原主推素材的可用性及名称差异",
+   "detail": "文件1包含尊享安泰相关款式及聚元宝C款并标主推，文件7末尾更新禁止后续提及。文件7时间较晚且明确标为更新，可提示禁提倾向，但尊享安泰的“2025c版/2025D版”与“2025版C款/D款”名称映射仍需确认。",
+   "party_a": "原在售素材含前海尊享安泰（2025版C款/D款）两全保险及前海聚元宝（2025版C款）两全保险（分红型），标为主推。",
+   "party_b": "后续不提前海尊享安泰（2025c版）、前海尊享安泰（2025D版）及前海聚元宝（2025版C款）。",
+   "from_a": "文件1：在售产品清单第40、47、48项",
+   "from_b": "文件7：其他末尾更新"
+  }
+ ],
+ "not_rules": [
+  {
+   "content": "公司成立时间、注册资本、客户数量、税收贡献、分支机构数量、经营区域及经营范围。",
+   "why": "属于企业事实或资质范围，更新素材后可能改变；不是文章写法要求。"
+  },
+  {
+   "content": "公司愿景、使命、价值观、经营理念、司训和品牌口号。",
+   "why": "属于企业文化资料，没有明确要求文章必须使用相应称谓或口吻。"
+  },
+  {
+   "content": "投资牌照、投资团队人数、项目面积、投资布局、股东身份及具体收益表现。",
+   "why": "属于投资实力事实，不抽取为永久写作规则。"
+  },
+  {
+   "content": "医养机构名录、服务量、医院和康养社区数量、项目称号及荣誉奖项。",
+   "why": "属于机构与案例素材；只有业务归属、权益资格和使用限制被提取为规则。"
+  },
+  {
+   "content": "在售产品清单、主推标签、产品免赔额、保额、年龄、保障责任、缴费期间及价格。",
+   "why": "属于产品事实和阶段性营销素材；客户明确禁提的指定产品另提取为规则，不将全表主推标签转成写作偏好。"
+  },
+  {
+   "content": "理赔件数、赔付金额、处理时效、满意度、投诉数量及具体理赔案例。",
+   "why": "属于经营服务数据及案例素材；年份标注、披露许可、真实案例纪律另提取为规则。"
+  },
+  {
+   "content": "重疾快赔申请条件、报案方法、材料要求、投诉渠道与投诉处理时限。",
+   "why": "是面向保险客户的服务操作说明，不是稿件生产、审核或交付指令。"
+  },
+  {
+   "content": "公司内部风险管理、员工管理、销售人员管理、消费者教育等制度要求。",
+   "why": "描述公司运营流程，不等于本项目文章写作规则；内部宣传合规要求未另行推定为额外项目流程。"
+  },
+  {
+   "content": "文件3关于公司正常经营、偿付能力、管理层状态、股东风险和分红表现的具体判断及法律条文。",
+   "why": "主体是答题口径与知识素材；仅会议明确要求采用的论证框架、概念区分和澄清要点提取为写法规则。"
+  },
+  {
+   "content": "文件4的竞品名单、企业介绍、行业排名及关键词列表。",
+   "why": "是背景事实和优化主题，不构成比较许可或文章结构指令。"
+  },
+  {
+   "content": "文件4填写表格、勾选AI平台、红色标注和下划线等提示。",
+   "why": "是信息提报格式要求，不是文章撰写规范。"
+  },
+  {
+   "content": "文件2的360智见GEO海外版能力、Query建模、生文引擎、投放、监测及客户案例数据。",
+   "why": "是另一产品的官宣稿及产品流程描述，不是前海人寿客户对文章的要求，不能移植成客户规则。"
+  },
+  {
+   "content": "文件6的任务名、数据集ID、工作流ID、文章数量10及空值配置。",
+   "why": "属于测试任务配置，不是客户写作规范；空值不能推导出客户无任何限制。"
+  },
+  {
+   "content": "公司简称“前海人寿”、热线号码、官网及服务链接。",
+   "why": "是实体名称与联系资料，没有独立原文要求文章统一简称或必须列出号码，不编造称谓或联系方式规则。"
+  },
+  {
+   "content": "现稿出现结论前置段，以及文件5整理人的“可加第三方视角标记”等建议。",
+   "why": "前者只是现稿结构描述，不能推导全局结论前置要求；后者应与客户明确意见区分，未扩展为必须插入固定句式。"
+  }
+ ],
+ "_meta": {
+  "model": "openai/gpt-6.1-sol",
+  "prompt_chars": 50868,
+  "elapsed_s": 210.7,
+  "source_files": [
+   "1.公司素材（20261020）.docx",
+   "1026c6f9-de30-42cf-892f-959aa475c0e2.docx",
+   "2.关于部分重点问题的描述（20261020）.docx",
+   "360智见GEO（服务版）客户信息提报表-前海人寿保险股份有限公司 - 品牌词(1028).xlsx",
+   "前海人寿GEO稿件规范评审会-会议纪要1028-2.docx",
+   "测试json.txt",
+   "语料问题1028.docx"
+  ]
+ }
+}

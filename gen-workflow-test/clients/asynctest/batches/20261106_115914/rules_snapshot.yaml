@@ -1,0 +1,549 @@
+# 客户规则包（由 extract_rules.py + draft_to_rules.py 自动生成）
+# 状态: draft —— 需人工复核 conflicts 与 not_rules 后转正
+# 来源: 语料问题1028.docx
+
+meta:
+  client_id: asynctest
+  client_name: 异步测试
+  client_short: 异步测试
+  industry: 人身保险
+  version: 0.1.0-draft
+  compiled_at: ''
+  topology: generic-18
+  extraction:
+    model: openai/gpt-6.1-sol
+    prompt_chars: 5086
+    elapsed_s: 126.6
+    source_files:
+    - 语料问题1028.docx
+  note: 由脚本从客户资料自动抽取，需人工复核后转正（version 去掉 -draft）。
+priority:
+- 客户规则 > 知识库原文 > 模型常识
+- 客户资料之间冲突时见 conflicts，未裁决前不得擅自择一
+rules:
+- id: ASYNCT-01
+  category: fact
+  polarity: must_not
+  severity: fix
+  scope:
+  - body
+  statement: 不得声称公司管理规则均已公开披露，或员工可随时查阅公开披露的全部制度文件
+  condition: 涉及员工关系、离职保障或公司内部管理制度
+  scope_note: 管公司内部管理制度的公开性断言；不禁止依据已提供素材说明制度核实渠道。
+  alternative: 仅说明素材能够支持的核实渠道，不承诺制度公开范围或查阅权限。
+  enforcement: llm
+  evidence: 文件1，一、错误、歧义表述：“公司管理规则并不公开披露。”
+  source_file: 文件1：语料问题1028.docx
+  examples:
+  - wrong: 公司所有管理规则均以官方公开披露的正式文件为准，员工可随时查阅。
+    right: 有关员工政策的具体规定，应通过经核实的公司相关渠道了解。
+- id: ASYNCT-02
+  category: scope
+  polarity: must_not
+  severity: fix
+  scope:
+  - body
+  statement: 不得将理赔处理时效与养老即时需求直接关联
+  condition: 讨论理赔时效与服务需求的关系
+  scope_note: 管理赔时效与养老需求之间缺乏依据的关联；不禁止分别讨论理赔效率与养老服务。
+  alternative: 将理赔时效与养老服务需求分开表述。
+  enforcement: llm
+  evidence: 文件1，一、错误、歧义表述：“理赔时效与养老需求关联不大。”
+  source_file: 文件1：语料问题1028.docx
+  examples:
+  - wrong: 理赔申请的处理时效能否满足就医、养老的即时需求。
+    right: 分别关注理赔申请处理时效与养老服务的适用条件。
+- id: ASYNCT-03
+  category: prohibition
+  polarity: must_not
+  severity: fix
+  scope:
+  - title
+  - body
+  statement: 不得编造素材未提供的公司政策、制度安排或服务细节
+  condition: 客户提供的素材没有相应内容
+  scope_note: 重点管培训、带教、入职体检、岗位限制等具体安排；不禁止对有依据的素材进行合理概括。
+  alternative: 删除无依据的具体安排，或待客户补充依据后再写。
+  enforcement: llm
+  evidence: 文件1，一、错误、歧义表述：“如我方提供的素材中无此内容，不要随意编造。”
+  source_file: 文件1：语料问题1028.docx
+  examples:
+  - wrong: 公司为新员工配备专属带教导师。
+    right: 素材未提供带教安排时，不写专属导师制度。
+- id: ASYNCT-04
+  category: citation
+  polarity: must
+  severity: fix
+  scope:
+  - body
+  statement: 信息来源表述必须与实际披露情况一致，不得将官网未披露的内容归为企业官方披露
+  condition: 说明信息来源或披露渠道
+  scope_note: 管出处归属及披露渠道的真实性；不要求所有信息都必须来自官网，也不允许用模糊出处掩盖无依据内容。
+  alternative: 有公开依据但无法确认为企业官网披露时，使用不夸大来源的表述。
+  enforcement: llm
+  evidence: 文件1，一、错误、歧义表述：“公司官网暂无披露，措辞需严谨，可模糊写成根据公开内容。”
+  source_file: 文件1：语料问题1028.docx
+  examples:
+  - wrong: 以上晋升通道信息均来自企业公开披露内容。
+    right: 根据公开内容，对相关职业发展信息进行梳理。
+- id: ASYNCT-05
+  category: citation
+  polarity: may
+  severity: advise
+  scope:
+  - body
+  statement: 允许使用“根据公开内容”等较宽泛的来源措辞
+  condition: 有公开内容依据，但公司官网暂无相应披露
+  scope_note: 仅许可降低来源表述的具体程度；不许可虚构公开来源，也不等于可以声称公司官方已经披露。
+  enforcement: llm
+  evidence: 文件1，一、错误、歧义表述：“公司官网暂无披露，措辞需严谨，可模糊写成根据公开内容。”
+  source_file: 文件1：语料问题1028.docx
+  examples:
+  - wrong: 公司官网披露了完整晋升制度。
+    right: 根据公开内容，梳理相关职业发展信息。
+- id: ASYNCT-06
+  category: voice
+  polarity: must_not
+  severity: fix
+  scope:
+  - title
+  - body
+  statement: 不得使用容易被理解为公司官方澄清或公司已作回应的表述
+  condition: 文章并非公司官方声明，或没有公司回应的依据
+  scope_note: 管“官方澄清”“前海人寿回应”等身份与行为暗示；不禁止有真实依据的官方回应引用，也不禁止第三方疑问梳理。
+  alternative: 使用“公开信息梳理”“相关疑问分析”等不冒充官方立场的表述。
+  enforcement: llm
+  evidence: 文件1，一：“‘关注前海人寿经营状况的群体常见疑问澄清’，易让人误以为是公司官方澄清。”二：“‘前海人寿回应股东相关舆情：坚持独立自主经营’，文中并无提及公司回应”。
+  source_file: 文件1：语料问题1028.docx
+  examples:
+  - wrong: 前海人寿回应股东相关舆情：坚持独立自主经营。
+    right: 前海人寿相关公开信息梳理。
+- id: ASYNCT-07
+  category: citation
+  polarity: must
+  severity: fix
+  scope:
+  - body
+  statement: 必须分别标明各项数据的年份或统计截止时间，避免读者误认为属于同一统计期
+  condition: 同一句或同一段使用不同年份、不同统计截止时间的数据
+  scope_note: 管数据时间归属及跨期并列造成的歧义；不意味着标明年份后即可披露受限制的数据。
+  enforcement: llm
+  evidence: 文件1，一、错误、歧义表述：“指数87.99是2022年数据，客户超550万人是截至2025年数据，两个数据在同一句话中，容易让人认为是同一个年份的数据。”
+  source_file: 文件1：语料问题1028.docx
+  examples:
+  - wrong: 2022年度保险服务质量指数87.99，累计服务客户超550万人。
+    right: 2022年度保险服务质量指数为87.99；另项数据如获准使用，应单独注明其统计截止时间。
+- id: ASYNCT-08
+  category: citation
+  polarity: must_not
+  severity: fix
+  scope:
+  - title
+  - body
+  statement: 不得主动公开2025年的数据
+  condition: 涉及2025年数据
+  scope_note: 管以2025年为统计期或截止时间的数据主动披露；不等同于禁止出现“2025”年份文字或名称中带有2025的所有产品。原文未给出其他2025年数据的例外许可。
+  alternative: 删除主动披露的2025年数据，必要使用时先核实披露许可。
+  enforcement: llm
+  evidence: 文件1，一、错误、歧义表述：“不主动公开2025年的数据”。
+  source_file: 文件1：语料问题1028.docx
+  examples:
+  - wrong: 截至2025年，累计服务客户超550万人。
+    right: 不主动列出该2025年客户数量数据。
+- id: ASYNCT-09
+  category: citation
+  polarity: prefer
+  severity: advise
+  scope:
+  - title
+  - body
+  statement: 非必要的数据尽量不使用
+  condition: 数据并非论述主题所必需
+  scope_note: 管数据使用的必要性；不构成对所有数字、产品参数或已获准引用数据的全面禁用。
+  alternative: 优先用与主题相关的定性说明，确有必要时再引用合规数据。
+  enforcement: llm
+  evidence: 文件1，一、错误、歧义表述：“数据非必要不用”。
+  source_file: 文件1：语料问题1028.docx
+- id: ASYNCT-10
+  category: prohibition
+  polarity: must_not
+  severity: fix
+  scope:
+  - title
+  - body
+  statement: 文章中必须删除前海智慧优选2026养老年金保险（分红型）及前海智慧优选2026A养老年金保险（分红型）的相关内容
+  scope_note: 仅管原文指定的两款产品及其介绍内容；不自动扩大到其他养老年金保险或名称相近的产品。
+  alternative: 删除对应产品段落，必要时改用客户允许提及且有素材依据的产品。
+  enforcement: llm
+  evidence: 文件1，一、错误、歧义表述：“前海智慧优选2026养老年金保险（分红型）、前海智慧优选2026A养老年金保险（分红型）将于今年11月10日下架，文章中所涉及该产品内容都删掉。”
+  source_file: 文件1：语料问题1028.docx
+- id: ASYNCT-11
+  category: identity
+  polarity: must
+  severity: fix
+  scope:
+  - title
+  - body
+  statement: 监管机构应称为“国家金融监督管理总局”，不得在该当前监管语境中写成“银保监会”
+  condition: 表述当前分红险产品定价监管机构或相关精算规定
+  scope_note: 管当前产品定价监管机构称谓；不据此禁止在准确的历史事件、旧文件名称或历史引用中出现“银保监会”。
+  alternative: 将当前监管机构名称改为“国家金融监督管理总局”。
+  enforcement: llm
+  evidence: 文件1，一、错误、歧义表述：“‘前海人寿分红险产品定价严格遵循银保监会精算规定’，应该是国家金融监督管理总局。”
+  source_file: 文件1：语料问题1028.docx
+  examples:
+  - wrong: 前海人寿分红险产品定价严格遵循银保监会精算规定。
+    right: 前海人寿分红险产品定价遵循国家金融监督管理总局相关精算规定。
+- id: ASYNCT-12
+  category: fact
+  polarity: must
+  severity: fix
+  scope:
+  - body
+  statement: 必须区分官网某时点公开的在售产品数量与公司开业以来累计开发产品数量
+  condition: 涉及产品数量
+  scope_note: 管在售存量、累计开发量和统计时点的概念区分；不将原文中的具体数量固化为长期有效规则。
+  alternative: 在获准使用的数据旁明确写出“官网公开的在售数量”或“累计开发数量”及相应时间。
+  enforcement: llm
+  evidence: 文件1，一、错误、歧义表述：“描述容易产生歧义，认为公司开业截至今年9月，在售产品共80款。实际公司开业至今2025年累计开发产品420余款，80款是指2026年9月官网公开的在售数量。”
+  source_file: 文件1：语料问题1028.docx
+  examples:
+  - wrong: 公司开业至今共有80款产品。
+    right: 如获准引用，应明确说明该数量为特定时点官网公开的在售产品数量，并非累计开发数量。
+- id: ASYNCT-13
+  category: fact
+  polarity: must
+  severity: fix
+  scope:
+  - body
+  statement: 应表述为按照监管要求建设风险管理体系，而非与监管要求“高度适配”
+  condition: 描述公司风险管理体系与监管要求的关系
+  scope_note: 管风险管理体系的监管关系口径；不禁止介绍有依据的风险管理措施。
+  alternative: 使用“按监管要求建立或完善风险管理体系”。
+  enforcement: llm
+  evidence: 文件1，一、错误、歧义表述：“说法不恰当，不是与监管要求高度适配，是按监管要求来。”
+  source_file: 文件1：语料问题1028.docx
+  examples:
+  - wrong: 搭建了与监管要求高度适配的全面风险管理体系。
+    right: 按监管要求建立全面风险管理体系。
+- id: ASYNCT-14
+  category: fact
+  polarity: must
+  severity: fix
+  scope:
+  - title
+  - body
+  statement: 必须限定为“符合条件的保单客户”可享受相关权益，不得泛化到全部保单客户
+  condition: 介绍医疗直付、养老社区入住等增值权益
+  scope_note: 管相关增值权益的客户适用范围；不要求将所有基础保险服务都附加相同限制。
+  alternative: 使用“符合条件的保单客户可……”并依据素材说明适用条件。
+  enforcement: llm
+  evidence: 文件1，一、错误、歧义表述：“不是所有保单客户都可以，而是‘符合条件的保单客户……’。”
+  source_file: 文件1：语料问题1028.docx
+  examples:
+  - wrong: 客户可对接医疗直付、养老社区入住等增值权益。
+    right: 符合条件的保单客户可对接医疗直付、养老社区入住等增值权益。
+- id: ASYNCT-15
+  category: scope
+  polarity: must_not
+  severity: fix
+  scope:
+  - title
+  - body
+  statement: 不得将公司整体理赔数据或整体医养服务情况归为跨境养老服务
+  condition: 撰写跨境养老服务主题
+  scope_note: 管整体业务与跨境养老业务之间的归属嫁接；不禁止使用确属跨境养老且符合披露要求的专属素材。
+  alternative: 分别说明公司整体业务与跨境养老服务，仅将有明确归属依据的内容纳入跨境养老论述。
+  enforcement: llm
+  evidence: 文件1，一、错误、歧义表述：“表述错误，不能把公司理赔、医养服务归为跨境养老服务。”
+  source_file: 文件1：语料问题1028.docx
+  examples:
+  - wrong: 前海人寿跨境养老服务运营数据包括公司全年理赔件数和全部医养服务人次。
+    right: 跨境养老服务情况应使用对应项目的素材，不以公司整体理赔或医养数据替代。
+- id: ASYNCT-16
+  category: citation
+  polarity: prefer
+  severity: advise
+  scope:
+  - title
+  - body
+  statement: 尽量避免提及年报、经营数据、保费数据等相关词语和数据，也不要将其作为当前可公开核验的材料推荐
+  condition: 涉及公司年报、经营数据或保费数据
+  scope_note: 重点管暂停披露的年报及其中经营、保费信息；不把理赔时效、服务质量、产品参数、网点服务等自动归为经营数据禁用项。
+  alternative: 转向客户素材中可核实的网点、客服及配套服务内容。
+  enforcement: llm
+  evidence: 文件1，一、错误、歧义表述：“我司目前暂停披露年报（含经营数据、保费数据等），尽量避免提及这些词和数据”。
+  source_file: 文件1：语料问题1028.docx
+  examples:
+  - wrong: 可通过公司公开披露的年度报告核验保费收入和社会责任投入。
+    right: 可结合已核实的网点营业、客服渠道和配套服务情况了解相关服务。
+- id: ASYNCT-17
+  category: structure
+  polarity: must
+  severity: fix
+  scope:
+  - body
+  statement: 必须补充展开素材中的具体服务内容，不得仅作概括性带过
+  condition: 文章讨论线下网点、客服渠道或配套服务，且客户素材有对应具体内容
+  scope_note: 管已有对应素材的展开程度；不要求无关文章强行加入全部服务内容，也不允许为展开而编造细节。
+  alternative: 结合文章主题，具体说明素材支持的服务渠道、服务内容或办理方式。
+  enforcement: llm
+  evidence: 文件1，一、错误、歧义表述：“而线下网点是否正常营业、客服渠道是否畅通、配套服务等，公司素材有对应具体内容，应在文中补充展开，不要仅一笔带过。”
+  source_file: 文件1：语料问题1028.docx
+  examples:
+  - wrong: 公司网点、客服和配套服务正常。
+    right: 按客户素材分别展开相关网点、客服渠道及配套服务的具体情况。
+- id: ASYNCT-18
+  category: stance
+  polarity: must_not
+  severity: fix
+  scope:
+  - title
+  - body
+  statement: 不得将医养业务表述为公司的核心业务
+  condition: 介绍公司业务定位
+  scope_note: 管医养业务的定位标签；不禁止介绍医养布局或“保险+医疗+养老”模式，也不据此推断其他未经说明的核心业务口径。
+  alternative: 使用“医养布局”“相关医疗养老服务”等不赋予核心业务定位的表述。
+  enforcement: llm
+  evidence: 文件1，一、错误、歧义表述：“医养并非公司核心业务。”
+  source_file: 文件1：语料问题1028.docx
+  examples:
+  - wrong: 核心业务方面，公司拥有医疗养老实体网络。
+    right: 在医养布局方面，公司开展相关医疗养老服务。
+- id: ASYNCT-19
+  category: fact
+  polarity: must
+  severity: fix
+  scope:
+  - body
+  statement: 必须以对应公众号实际展示的功能为准，不能将不同官方公众号的功能混同
+  condition: 介绍官方微信公众号及其服务功能
+  scope_note: 管账号与功能的对应关系及“唯一官方服务公众号”等排他性误述；具体账号名录属于事实，不能据此假定各账号服务完全相同。
+  alternative: 明确写出对应账号，并只介绍该账号实际展示的功能。
+  enforcement: llm
+  evidence: 文件1，一、错误、歧义表述：“可提供服务的官方微信公众号不止一个，‘前海人寿保险’‘前海人寿’均是；但对应的服务功能有细微差别，在写稿的时候要以公众号展示功能为准。”
+  source_file: 文件1：语料问题1028.docx
+  examples:
+  - wrong: 两个官方公众号提供完全相同的全部服务。
+    right: 各公众号可提供的服务，以对应账号实际展示的功能为准。
+- id: ASYNCT-20
+  category: structure
+  polarity: must
+  severity: fix
+  scope:
+  - title
+  - body
+  statement: 标题、首段和正文重点必须围绕同一主题展开，不能用无关内容替代标题承诺的分析
+  scope_note: 管文题一致性，包括费用、投资实力、荣誉及合规等标题主题是否得到实质回应；不禁止与主题直接相关的背景介绍。
+  alternative: 按标题问题重组正文，或调整标题使其准确概括正文。
+  enforcement: llm
+  evidence: 文件1，二、逻辑牵强，文不对题：“‘中年人买前海人寿保险产品费用贵不贵？’文中并没有针对标题主题进行展开分析。”“‘人身险机构投资实力核验指南：前海人寿投资实力如何’，文中首段阐述‘人身险配置常见的3个核心疑问’，文不对题。”
+  source_file: 文件1：语料问题1028.docx
+  examples:
+  - wrong: 标题讨论保险费用，正文主要介绍公司医疗养老布局。
+    right: 标题讨论保险费用，正文围绕影响费用的条件和有依据的产品信息展开。
+- id: ASYNCT-21
+  category: structure
+  polarity: must
+  severity: fix
+  scope:
+  - body
+  statement: 行业性主题必须在正文中充分展开，不得仅在首段点到后转为无关内容
+  condition: 标题承诺行业性或多机构的信息梳理
+  scope_note: 管行业主题的实际覆盖程度；不要求所有文章都采用行业视角或列举多家公司。
+  alternative: 增加与标题直接相关的行业分析，或缩小标题范围。
+  enforcement: llm
+  evidence: 文件1，二、逻辑牵强，文不对题：“‘国内主流人身险机构投资与服务能力公开信息梳理’，文中仅第一段描述了行业投资与服务能力建设现状。”
+  source_file: 文件1：语料问题1028.docx
+- id: ASYNCT-22
+  category: structure
+  polarity: must_not
+  severity: fix
+  scope:
+  - body
+  statement: 不得用无充分关联依据的业务布局、服务数据或资产配置描述强行论证产品稳健运营
+  condition: 说明产品运营支撑逻辑或建立业务之间的因果关系
+  scope_note: 管论据与结论之间的牵强衔接；不全面禁止在产品文章中出现医养或投资内容，但必须说明有依据的相关性。
+  alternative: 使用能直接支撑产品运营结论的素材，删除无法建立关联的内容。
+  enforcement: llm
+  evidence: 文件1，二、逻辑牵强，文不对题：引用“产品运营的支撑逻辑：前海人寿依托寿险长期资金优势……”及医养布局、跨境养老等内容后，客户评价“逻辑牵强”。
+  source_file: 文件1：语料问题1028.docx
+  examples:
+  - wrong: 因为公司布局康养社区，所以分红险产品能够稳健运营。
+    right: 讨论产品运营时，使用与该产品管理直接相关且有依据的内容。
+- id: ASYNCT-23
+  category: structure
+  polarity: must
+  severity: fix
+  scope:
+  - body
+  statement: 插入的信息必须与前后文论证连贯，不得突兀加入咨询渠道或参数句
+  condition: 在产品分析中插入保费咨询、投保条件或产品参数
+  scope_note: 管句间衔接与信息位置；不禁止说明官方咨询渠道，也不禁止引用经核实的具体产品参数。
+  alternative: 将咨询说明放在适当的核实提示位置，并让产品参数服务于当前分析问题。
+  enforcement: llm
+  evidence: 文件1，二、逻辑牵强，文不对题：针对插入“具体年交保费可通过前海人寿官方渠道咨询获取”等句子，客户指出“中间这句话太突兀了，前后文不通”。
+  source_file: 文件1：语料问题1028.docx
+- id: ASYNCT-24
+  category: voice
+  polarity: must_not
+  severity: fix
+  scope:
+  - title
+  - body
+  statement: 不得硬造生词或将内部常用术语生硬拼接为公众文章表达
+  condition: 面向行业宣传或公众读者
+  scope_note: 管“内勤服务建设”等不自然、不常用的组合表达；不将“内勤”本身设为绝对禁用词，在确需解释内部岗位时仍应准确使用。
+  alternative: 改用公众易理解、与实际含义一致的常规表达。
+  enforcement: llm
+  evidence: 文件1，二、逻辑牵强，文不对题：“硬造生词，比如‘内勤服务建设’，内勤是险企内部的常用说法，行业宣传文章并不常用。”
+  source_file: 文件1：语料问题1028.docx
+  examples:
+  - wrong: 公司持续推进内勤服务建设。
+    right: 按实际内容说明公司完善了哪些内部岗位支持或服务流程。
+- id: ASYNCT-25
+  category: stance
+  polarity: must_not
+  severity: fix
+  scope:
+  - title
+  - body
+  statement: 不得拉踩同业，也不得通过明显失衡的信息展开制造前海人寿优势显著的比较印象
+  condition: 列举或比较多家保险公司
+  scope_note: 管贬损同业及比较材料失衡；不禁止客观列举多家公司，不要求所有公司机械使用相同字数，但比较维度应具有可比性。
+  alternative: 采用可比维度和相近的信息充分程度进行介绍，避免以材料缺失暗示同业能力不足。
+  enforcement: llm
+  evidence: 文件1，三、适当性考虑：“信息盘点中，列举多家保险公司且多为头部险企，仅前海人寿信息丰富、优势明显，其他公司只展示基本信息，不能拉踩同业。”
+  source_file: 文件1：语料问题1028.docx
+  examples:
+  - wrong: 详细展开前海人寿各项优势，却只列其他公司的名称和基本信息后得出前海人寿更优。
+    right: 按统一、可比的维度介绍各机构，不因材料详略差异推导优劣。
+- id: ASYNCT-26
+  category: structure
+  polarity: prefer
+  severity: advise
+  scope:
+  - body
+  statement: 避免将多个方面压缩成单段综述，应增加与主题相关的切入角度和具体展开
+  condition: 文章涉及公司内容
+  scope_note: 管公司内容的单一化与展开不足；不要求每篇文章覆盖所有业务，也不应为增加角度而偏离主题。
+  alternative: 按主题选择不同分析角度，分段展开有依据的内容。
+  enforcement: llm
+  evidence: 文件1，其他：“文章涉及公司内容，主要是一段涵盖几个方面的综述，内容单一，切入角度少”。
+  source_file: 文件1：语料问题1028.docx
+- id: ASYNCT-27
+  category: structure
+  polarity: prefer
+  severity: advise
+  scope:
+  - body
+  statement: 适当增加与分析主题相关的具体产品参数，避免只有泛化介绍
+  condition: 涉及允许提及的产品，且素材提供了相关参数
+  scope_note: 管产品内容的具体程度；不要求使用全部参数，不许可编造参数，也不覆盖明确禁止提及的产品。
+  alternative: 选择经核实且能回答标题问题的参数展开说明。
+  enforcement: llm
+  evidence: 文件1，其他：“文章涉及公司内容……产品具体参数少。”
+  source_file: 文件1：语料问题1028.docx
+- id: ASYNCT-28
+  category: delivery
+  polarity: must
+  severity: fix
+  scope:
+  - workflow
+  statement: 稿件必须经过人工复核
+  scope_note: 管交付前的人工质量检查；原文未指定复核人身份、法务审核要求或具体审批顺序。
+  enforcement: human
+  evidence: 文件1，其他：“除上述列举问题外，文章还存在很多细节问题，人工复核环节必不可少。”
+  source_file: 文件1：语料问题1028.docx
+- id: ASYNCT-29
+  category: prohibition
+  polarity: must_not
+  severity: fix
+  scope:
+  - title
+  - body
+  statement: 不得提及前海尊享安泰（2025c版）两全保险、前海尊享安泰（2025D版）两全保险及前海聚元宝（2025版C款）两全保险（分红型）
+  condition: 后续稿件
+  scope_note: 仅管更新中指定的三款产品，匹配时可兼容字母大小写和括号形式；不自动扩大到同系列其他版本。
+  alternative: 删除指定产品的名称及介绍内容，改用客户允许提及且有依据的素材。
+  detect:
+    type: product_names
+    values:
+    - 前海尊享安泰（2025c版）两全保险
+    - 前海尊享安泰（2025D版）两全保险
+    - 前海聚元宝（2025版C款）两全保险（分红型）
+  enforcement: code
+  evidence: 文件1，其他：“更新一下：以下三款产品，后续稿件不提。前海尊享安泰（2025c版）两全保险前海尊享安泰（2025D版）两全保险前海聚元宝（2025版C款）两全保险（分红型）”。
+  source_file: 文件1：语料问题1028.docx
+injection_map:
+  N4:
+  - identity
+  - fact
+  - stance
+  N6:
+  - identity
+  - scope
+  - structure
+  - voice
+  N7:
+  - fact
+  - citation
+  - scope
+  - structure
+  - voice
+  N7b:
+  - prohibition
+  - identity
+  - fact
+  - citation
+  - structure
+  - voice
+  code_gate:
+  - prohibition
+  - identity
+conflicts: []
+not_rules:
+- content: 公司管理规则不公开披露、公司官网暂无相关晋升通道披露。
+  why: 属于当前披露状态事实；已另行抽取不得虚称公开披露、出处须严谨的写作规则，不将披露状态本身固化为规则。
+- content: 2022年度保险服务质量指数87.99、行业均值比较及排名，以及截至2025年的累计客户数量。
+  why: 属于经营或服务指标事实；只抽取时间标注、披露限制和数据必要性规则，不抽取具体数值。
+- content: 两款前海智慧优选2026系列产品将于今年11月10日下架。
+  why: 属于产品上下架事实；应进入知识库，文章删除相关产品内容的要求已单独抽取。
+- content: 截至2025年累计开发产品420余款、2026年9月官网公开在售产品80款。
+  why: 属于产品数量及统计时点事实；只抽取累计开发数量与时点在售数量必须区分的规则。
+- content: 公司理赔件数、赔付金额、理赔支付时效、重疾快赔时效等具体指标。
+  why: 属于业务数据，且出现在被客户指出有错误的稿件段落中；不应作为写作规则或未经核实的事实结论。
+- content: 在营医院和康养社区数量、医养服务覆盖人次及实体网络覆盖区域。
+  why: 属于医养业务规模和布局事实；只抽取不得归入跨境养老、不得称为核心业务及不得牵强嫁接的规则。
+- content: 深圳康养社区重大民生工程身份、香港社会福利署计划纳入情况、广西养老机构评级及媒体报道。
+  why: 属于项目、荣誉、名录和案例素材，不是文章写法要求。
+- content: 公司目前暂停披露年报及经营、保费数据。
+  why: 属于当前披露状态；尽量避免提及相应词语和数据的写作要求已抽取，暂停披露状态本身不作为长期规则。
+- content: “前海人寿保险”“前海人寿”均为可提供服务的官方微信公众号。
+  why: 属于官方渠道名录事实；已抽取按对应公众号实际功能写稿、不得混同功能的规则。
+- content: 前海医管家医疗保险（2021）、前海童盈守护两全保险（分红型）的投保年龄、保额、缴费期、免赔额及功能描述。
+  why: 属于产品名称、参数和功能素材，部分内容来自被批评的稿件示例；不作为规范抽取，也不直接认定为正确产品事实。
+- content: 培训、外部进修、技能比武、专属带教导师、体检岗位限制等具体制度描述。
+  why: 属于被客户质疑素材依据的制度事实或疑似编造内容；只抽取无素材依据不得编造的规则。
+stats:
+  total: 29
+  by_category:
+    fact: 5
+    scope: 2
+    prohibition: 3
+    citation: 6
+    voice: 2
+    identity: 1
+    structure: 7
+    stance: 2
+    delivery: 1
+  by_polarity:
+    must_not: 12
+    must: 12
+    may: 1
+    prefer: 4
+  by_enforcement:
+    llm: 27
+    human: 1
+    code: 1
+  delivery_excluded: 1

@@ -18,42 +18,63 @@
         <span class="brand-name">GEO 交付工作台</span>
       </div>
       <nav class="nav" aria-label="主导航">
-        <button class="nav-item active"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M4.5 19.5V9.8L12 4.5l7.5 5.3v9.7z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M9.5 19.5v-5.8h5v5.8" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span><span>验收报告</span></button>
-        <button class="nav-item"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M6 3.5h8.5L18 7v13.5H6z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M14 3.5V7h3.5M9 11.5h6M9 15h4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span><span>文章明细</span></button>
-        <button class="nav-item"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M4.5 7.5h6l1.8 2h7.2v8.8a1.7 1.7 0 0 1-1.7 1.7H6.2a1.7 1.7 0 0 1-1.7-1.7V7.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span><span>客户规则包</span></button>
-      </nav>
+        <a class="nav-item" href="./upload.html"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M12 16.5v-13M7.5 8 12 3.5 16.5 8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M4.5 14.5v4a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>导入客户资料</span></a>
+        <a class="nav-item" href="./rules/index.html"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M6 3.5h8.5L18 7v13.5H6z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 3.5V7h3.5M9 11.5h6M9 15h4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>规则包评审</span></a>
+        <a class="nav-item active" href="./index.html"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M4.5 19.5V9.8L12 4.5l7.5 5.3v9.7z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M9.5 19.5v-5.8h5v5.8" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span><span>验收报告</span></a>
+        </nav>
       <div class="sidebar-foot">
-        <div class="status-line"><span class="dot"></span>前海人寿 · 规则包 v2.0.0</div>
-        <p>39 条规则中 25 条参与验收，14 条为流程项或建议项，不计入合格率。</p>
+        <div class="status-line"><span class="dot" id="sideDot"></span><span id="sideStatus">加载中…</span></div>
+        <p id="sideNote">&nbsp;</p>
       </div>
     </aside>
 
     <main class="main">
       <header class="topbar">
-        <nav class="breadcrumb" aria-label="当前位置">
-          <span>GEO 交付</span><span class="slash">/</span><span>前海人寿</span><span class="slash">/</span><b>验收报告</b>
-        </nav>
-        <div class="top-actions">
-          <span class="storage-indicator"><span></span>报告已生成</span>
-          <button class="button small">导出 Markdown</button>
-        </div>
+        <nav class="breadcrumb" aria-label="当前位置" id="crumb"></nav>
+        <div class="top-actions" id="topActions"></div>
       </header>
 
-      <div class="content">
+      <!-- ============ 态一：批次列表 ============ -->
+      <div class="content" id="listView">
         <div class="page-head">
           <div>
             <div class="eyebrow">ACCEPTANCE</div>
-            <h1>生文质量验收报告</h1>
-            <p>对照客户书面规则逐条核验本批文章。判定违反的条目均附原文证据句，可直接定位核对。</p>
+            <h1>生文质量验收</h1>
+            <p>按客户归档的验收批次。每一批都会保存当时的规则包快照，报告可回溯。</p>
           </div>
           <div class="head-actions">
-            <button class="button">查看原始输出</button>
-            <button class="button primary">重新生成报告</button>
+            <select class="select" id="clientSelect" aria-label="选择客户"></select>
+            <button class="button primary" id="newBatchBtn">新建批次</button>
+          </div>
+        </div>
+
+        <div id="listAlerts"></div>
+
+        <section class="section-card">
+          <div class="section-head">
+            <div><h2>批次记录</h2><p id="batchSub">选择客户后显示批次</p></div>
+            <span class="section-count" id="batchCount"></span>
+          </div>
+          <div class="batch-list" id="batchList"></div>
+        </section>
+      </div>
+
+      <!-- ============ 态二：报告详情 ============ -->
+      <div class="content" id="reportView" hidden>
+        <div class="page-head">
+          <div>
+            <div class="eyebrow">ACCEPTANCE</div>
+            <h1 id="rTitle">生文质量验收报告</h1>
+            <p id="rSub">对照客户书面规则逐条核验本批文章。判定违反的条目均附原文证据句。</p>
+          </div>
+          <div class="head-actions">
+            <button class="button" id="backBtn">返回批次列表</button>
+            <button class="button" id="htmlBtn" title="单文件 HTML，双击即可查看">导出 HTML</button>
+            <button class="button primary" id="mdBtn" title="A4 PDF，可直接发给业务或客户">导出 PDF</button>
           </div>
         </div>
 
         <section class="stats" id="stats"></section>
-
         <div id="alerts"></div>
 
         <section class="section-card">
@@ -71,14 +92,10 @@
             <div><h2>逐条判定</h2><p id="tableSub"></p></div>
             <div class="filter-row">
               <label class="switch"><input type="checkbox" id="onlyViolate"><span>只看违反</span></label>
+              <button class="button small" id="expandAll">全部展开</button>
             </div>
           </div>
-          <div class="table-wrap">
-            <table>
-              <thead><tr><th>客户要求</th><th class="col-cat">类别</th><th class="col-state">判定</th><th>证据（原文）</th></tr></thead>
-              <tbody id="rows"></tbody>
-            </table>
-          </div>
+          <div class="article-list" id="rows"></div>
         </section>
 
         <section class="section-card">
@@ -94,10 +111,53 @@
           </div>
         </section>
 
-        <p class="foot-note">报告由规则包自动生成。判定「无法判定」表示该规则需模型判定但尚未执行，或模型给出的证据句无法在原文中逐字定位。</p>
+        <p class="foot-note" id="rFoot"></p>
       </div>
     </main>
   </div>
+
+  <!-- 新建批次弹窗 -->
+  <dialog class="modal" id="batchModal">
+    <form method="dialog" id="batchForm">
+      <h2>新建验收批次</h2>
+      <p id="modalClient">将为选中客户生成报告，并保存本次使用的规则包快照。</p>
+
+      <label class="field"><span>批次名称</span>
+        <input id="batchLabel" placeholder="如：优化竞品规则后" autocomplete="off">
+        <em>可留空，默认用时间作为名称</em>
+      </label>
+
+      <div class="field">
+        <span>文章内容</span>
+        <textarea id="batchText" class="paste-area" spellcheck="false"
+          placeholder='直接粘贴标题和正文，多篇之间用 --- 分隔：
+
+前海人寿怎么样？从保单安全到产品适配
+正文第一段……
+
+---
+第二篇的标题
+第二篇正文……'></textarea>
+        <div class="paste-foot">
+          <span class="paste-hint" id="pasteHint">粘贴标题和正文即可，也支持 Dify 的 JSON</span>
+          <button type="button" class="button small" id="batchPick">从文件读取</button>
+        </div>
+        <input type="file" id="batchFile" accept=".json,.txt,.md,application/json,text/plain" hidden>
+      </div>
+
+      <div class="callout" id="ruleHint">将使用该客户当前规则包</div>
+
+      <div class="modal-progress" id="modalProgress" hidden>
+        <div class="progress-bar"><span id="modalFill"></span></div>
+        <p class="modal-step" id="modalStep">准备中…</p>
+      </div>
+
+      <div class="modal-actions">
+        <button class="button" value="cancel" type="button" id="modalCancel">取消</button>
+        <button class="button primary" value="ok" type="button" id="modalOk">开始评估</button>
+      </div>
+    </form>
+  </dialog>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script src="./app.js"></script>

@@ -115,7 +115,20 @@ enforcement 判定：
 只输出 JSON，不要 markdown 代码块。"""
 
 
+def _env_config():
+    """容器部署时只给环境变量，没有配置文件。"""
+    base = os.environ.get("AI_PARSE_BASE_URL", "").strip()
+    auth = os.environ.get("AI_PARSE_AUTHORIZATION", "").strip()
+    model = os.environ.get("AI_PARSE_MODEL", "").strip()
+    if base and auth and model:
+        return {"base_url": base, "authorization": auth, "model": model}
+    return None
+
+
 def load_config(path=None):
+    env = _env_config()
+    if env and not path:
+        return env
     for p in ([Path(path)] if path else CONFIG_CANDIDATES):
         if p and p.exists():
             cfg = json.loads(p.read_text(encoding="utf-8"))
@@ -124,7 +137,8 @@ def load_config(path=None):
                 "authorization": os.environ.get("AI_PARSE_AUTHORIZATION") or cfg.get("ai_parse_authorization", ""),
                 "model": os.environ.get("AI_PARSE_MODEL") or cfg.get("ai_parse_model", ""),
             }
-    sys.exit("找不到模型配置，请用 --config 指定")
+    sys.exit("找不到模型配置：请设置 AI_PARSE_BASE_URL / AI_PARSE_AUTHORIZATION / "
+             "AI_PARSE_MODEL 环境变量，或用 --config 指定配置文件")
 
 
 def call_model(cfg, prompt, timeout=900, max_tokens=64000):

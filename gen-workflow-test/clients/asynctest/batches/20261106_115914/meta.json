@@ -1,0 +1,12 @@
+{
+ "batch_id": "20261106_115914",
+ "label": "mp测试",
+ "created_at": "2026-11-06 12:03",
+ "article_count": 10,
+ "rules_version": "0.1.0-draft",
+ "rules_count": 29,
+ "violate": 10,
+ "hard_violate": 0,
+ "unclear": 28,
+ "pass_rate": 95.0
+}

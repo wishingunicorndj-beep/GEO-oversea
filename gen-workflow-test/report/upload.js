@@ -1,6 +1,7 @@
 (function () {
   var files = [];
   var busy = false;
+  var state = { lastLog: '' };
   var ALLOWED = ['.docx', '.xlsx', '.txt', '.md', '.csv', '.pdf'];
 
   function el(id) { return document.getElementById(id); }
@@ -77,7 +78,10 @@
       && /^[a-z0-9_]{2,40}$/.test(el('slug').value.trim())
       && el('name').value.trim() && el('short').value.trim()
       && !busy;
-    el('submitBtn').disabled = !ok;
+    // 不用 disabled：禁用的按钮点不动也不给提示，用户不知道为什么没反应。
+    // 改为视觉弱化 + 点击时逐项说明缺什么。
+    el('submitBtn').setAttribute('aria-disabled', ok ? 'false' : 'true');
+    el('submitBtn').classList.toggle('is-incomplete', !ok);
   }
 
   /* ---------------- 提交 ---------------- */
@@ -85,6 +89,71 @@
     var box = el('log');
     box.textContent += text + '\n';
     box.scrollTop = box.scrollHeight;
+  }
+
+  /* ---------------- 任务轮询 ---------------- */
+  var pollTimer = null;
+
+  function pollTask(taskId) {
+    return new Promise(function (resolve, reject) {
+      var failCount = 0;
+      function tick() {
+        fetch('/api/task/' + encodeURIComponent(taskId))
+          .then(function (r) {
+            if (!r.ok) throw new Error('HTTP ' + r.status);
+            return r.json();
+          })
+          .then(function (t) {
+            failCount = 0;
+            if (t.step) el('progressTitle').textContent = t.step;
+            if (typeof t.progress === 'number') {
+              el('progressFill').style.width = t.progress + '%';
+            }
+            if (t.log && t.log !== state.lastLog) {
+              state.lastLog = t.log;
+              appendLog(t.log);
+            }
+            if (t.status === 'done') { resolve(t.result || {}); return; }
+            if (t.status === 'failed') { reject(new Error(t.error || '任务失败')); return; }
+            pollTimer = setTimeout(tick, 2500);
+          })
+          .catch(function (e) {
+            // 偶发网络抖动不要立刻判死，连续失败 4 次才放弃
+            failCount++;
+            if (failCount >= 4) { reject(e); return; }
+            pollTimer = setTimeout(tick, 4000);
+          });
+      }
+      tick();
+    });
+  }
+
+  // 刷新后自动续上未完成的任务
+  function resumeTask() {
+    var tid = localStorage.getItem('geo_task');
+    if (!tid) return false;
+    var slug = localStorage.getItem('geo_task_slug');
+    if (slug) el('slug').value = slug;
+    setStep(3);
+    el('progressCard').hidden = false;
+    el('progressTitle').textContent = '恢复上次任务…';
+    el('progressSub').textContent = '任务 ' + tid;
+    busy = true;
+    updateSubmit();
+    pollTask(tid).then(function (result) {
+      el('progressTitle').textContent = '抽取完成';
+      el('progressFill').style.width = '100%';
+      localStorage.removeItem('geo_task');
+      setTimeout(function () {
+        window.location.href = './rules/index.html?slug=' + encodeURIComponent(el('slug').value.trim());
+      }, 800);
+    }).catch(function (e) {
+      appendLog('恢复失败：' + e.message);
+      localStorage.removeItem('geo_task');
+      busy = false;
+      updateSubmit();
+    });
+    return true;
   }
 
   function submit() {
@@ -121,18 +190,25 @@
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ slug: el('slug').value.trim() })
-        });
+        }).then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); });
       })
-      .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
       .then(function (x) {
-        if (!x.ok) throw new Error(x.d.error || '抽取失败');
+        if (!x.ok) throw new Error(x.d.error || '抽取启动失败');
+        // 抽像是异步任务：拿到 task_id 后轮询进度
+        appendLog('任务已启动，开始轮询进度…');
+        localStorage.setItem('geo_task', x.d.task_id);
+        localStorage.setItem('geo_task_slug', el('slug').value.trim());
+        return pollTask(x.d.task_id);
+      })
+      .then(function (result) {
         el('progressFill').style.width = '100%';
         el('progressTitle').textContent = '抽取完成';
-        el('progressSub').textContent = '即将进入规则包评审';
-        appendLog(x.d.log || '');
+        el('progressSub').textContent = (result.rule_count || 0) + ' 条规则，即将进入评审';
+        appendLog(result.log || '');
+        localStorage.removeItem('geo_task');
         toast('规则抽取完成，正在跳转');
         setTimeout(function () {
-          window.location.href = './rules/index.html';
+          window.location.href = './rules/index.html?slug=' + encodeURIComponent(el('slug').value.trim());
         }, 900);
       })
       .catch(function (e) {
@@ -210,5 +286,6 @@
 
   restoreForm();
   checkService();
+  resumeTask();
   updateSubmit();
 })();

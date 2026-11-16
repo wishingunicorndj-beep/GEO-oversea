@@ -1,0 +1,2676 @@
+{
+ "client": "异步测试",
+ "article_count": 10,
+ "articles": [
+  {
+   "index": 0,
+   "title": "前海人寿投资实力核验指南：资质、策略、布局与收益兑现四步清单",
+   "rows": [
+    {
+     "rule_id": "ASYNCT-29",
+     "statement": "不得提及前海尊享安泰（2025c版）两全保险、前海尊享安泰（2025D版）两全保险及前海聚元宝（2025版C款）两全保险（分红型）",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "ASYNCT-01",
+     "statement": "不得声称公司管理规则均已公开披露，或员工可随时查阅公开披露的全部制度文件",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未声称公司内部管理制度全部公开或员工可随时查阅全部制度文件。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "ASYNCT-02",
+     "statement": "不得将理赔处理时效与养老即时需求直接关联",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未讨论理赔时效与养老即时需求之间的关系。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "ASYNCT-03",
+     "statement": "不得编造素材未提供的公司政策、制度安排或服务细节",
+     "severity": "fix",
+     "verdict": "unclear",
+     "evidence": "",
+     "reason": "未提供可供对照的客户素材，无法确认文中公司安排或服务信息是否属于无依据编造。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "ASYNCT-04",
+     "statement": "信息来源表述必须与实际披露情况一致，不得将官网未披露的内容归为企业官方披露",
+     "severity": "fix",
+     "verdict": "unclear",
+     "evidence": "",
+     "reason": "未提供实际官网披露内容或其他来源材料，无法核实文中信息的出处归属是否真实。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "ASYNCT-06",
+     "statement": "不得使用容易被理解为公司官方澄清或公司已作回应的表述",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未使用官方澄清、公司回应等暗示公司声明身份或回应行为的表述。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "ASYNCT-07",
+     "statement": "必须分别标明各项数据的年份或统计截止时间，避免读者误认为属于同一统计期",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "现有文本不足以认定同一句或同一段并列使用了不同统计期的数据，成立时间也不等同于其他数据的统计期。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "ASYNCT-08",
+     "statement": "不得主动公开2025年的数据",
+     "severity": "fix",
+     "verdict": "violate",
+     "evidence": "2025年，前海人寿官网披露的44款分红险产品中，大多数产品的现金红利实现率超过100%，且多数较上年上升。",
+     "reason": "本文主动披露了归属于2025年的产品数量及红利实现率表现。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "ASYNCT-10",
+     "statement": "文章中必须删除前海智慧优选2026养老年金保险（分红型）及前海智慧优选2026A养老年金保险（分红型）的相关内容",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未出现规则指定的两款养老年金保险及其介绍内容。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "ASYNCT-11",
+     "statement": "监管机构应称为“国家金融监督管理总局”，不得在该当前监管语境中写成“银保监会”",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未在当前监管语境中将监管机构称为银保监会。",
+     "method": "llm",
+     "category": "identity",
+     "category_label": "实体称谓"
+    },
+    {
+     "rule_id": "ASYNCT-12",
+     "statement": "必须区分官网某时点公开的在售产品数量与公司开业以来累计开发产品数量",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文中44款指官网披露红利实现率的产品范围，未将其表述为在售产品总数或开业以来累计开发数量。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "ASYNCT-13",
+     "statement": "应表述为按照监管要求建设风险管理体系，而非与监管要求“高度适配”",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文采用监管框架和监管要求约束下的表述，未称风险管理体系与监管要求高度适配。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "ASYNCT-14",
+     "statement": "必须限定为“符合条件的保单客户”可享受相关权益，不得泛化到全部保单客户",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未介绍医疗直付、养老社区入住等增值权益的客户适用范围。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "ASYNCT-15",
+     "statement": "不得将公司整体理赔数据或整体医养服务情况归为跨境养老服务",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文不是跨境养老服务主题，也未将整体业务数据归为跨境养老服务。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "ASYNCT-17",
+     "statement": "必须补充展开素材中的具体服务内容，不得仅作概括性带过",
+     "severity": "fix",
+     "verdict": "unclear",
+     "evidence": "",
+     "reason": "本文涉及客服渠道，但未提供客户素材，无法判断是否遗漏了素材中需要展开的具体服务内容。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "ASYNCT-18",
+     "statement": "不得将医养业务表述为公司的核心业务",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文明确说明医养是特色布局之一而非核心业务，未违反业务定位要求。",
+     "method": "llm",
+     "category": "stance",
+     "category_label": "自我定位"
+    },
+    {
+     "rule_id": "ASYNCT-19",
+     "statement": "必须以对应公众号实际展示的功能为准，不能将不同官方公众号的功能混同",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未介绍官方微信公众号及其功能。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "ASYNCT-20",
+     "statement": "标题、首段和正文重点必须围绕同一主题展开，不能用无关内容替代标题承诺的分析",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "标题、首段及正文均围绕投资实力核验展开，并实质分析资质、策略、布局和兑现记录。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "ASYNCT-21",
+     "statement": "行业性主题必须在正文中充分展开，不得仅在首段点到后转为无关内容",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "标题聚焦单一公司的投资实力，未承诺行业性或多机构的信息梳理。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "ASYNCT-22",
+     "statement": "不得用无充分关联依据的业务布局、服务数据或资产配置描述强行论证产品稳健运营",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未用医养布局或资产配置强行证明具体产品稳健运营，并明确区分企业投资能力与保单未来收益。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "ASYNCT-23",
+     "statement": "插入的信息必须与前后文论证连贯，不得突兀加入咨询渠道或参数句",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "咨询渠道置于投保人核验信息和理解产品的建议中，与前后文衔接连贯。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "ASYNCT-24",
+     "statement": "不得硬造生词或将内部常用术语生硬拼接为公众文章表达",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未出现硬造生词或将内部常用术语生硬拼接为公众表达的情况。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "ASYNCT-25",
+     "statement": "不得拉踩同业，也不得通过明显失衡的信息展开制造前海人寿优势显著的比较印象",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未列举或比较多家保险公司，也未出现贬损同业或通过失衡比较突出前海人寿优势的内容。",
+     "method": "llm",
+     "category": "stance",
+     "category_label": "自我定位"
+    }
+   ]
+  },
+  {
+   "index": 1,
+   "title": "前海人寿投资实力核验清单：公开信息如何查、怎么看",
+   "rows": [
+    {
+     "rule_id": "ASYNCT-29",
+     "statement": "不得提及前海尊享安泰（2025c版）两全保险、前海尊享安泰（2025D版）两全保险及前海聚元宝（2025版C款）两全保险（分红型）",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "ASYNCT-01",
+     "statement": "不得声称公司管理规则均已公开披露，或员工可随时查阅公开披露的全部制度文件",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未涉及员工关系、离职保障或内部管理制度的公开性断言。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "ASYNCT-02",
+     "statement": "不得将理赔处理时效与养老即时需求直接关联",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未将理赔处理时效与养老即时需求关联。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "ASYNCT-03",
+     "statement": "不得编造素材未提供的公司政策、制度安排或服务细节",
+     "severity": "fix",
+     "verdict": "unclear",
+     "evidence": "",
+     "reason": "未提供用于比对的客户素材，无法确定文中公司安排或服务信息是否超出素材而被编造。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "ASYNCT-04",
+     "statement": "信息来源表述必须与实际披露情况一致，不得将官网未披露的内容归为企业官方披露",
+     "severity": "fix",
+     "verdict": "unclear",
+     "evidence": "",
+     "reason": "文章存在官网披露及公开信息的来源表述，但未提供实际披露材料，无法核实出处归属是否一致。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "ASYNCT-06",
+     "statement": "不得使用容易被理解为公司官方澄清或公司已作回应的表述",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文中的概念澄清属于第三方分析，未声称公司作出官方澄清或回应。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "ASYNCT-07",
+     "statement": "必须分别标明各项数据的年份或统计截止时间，避免读者误认为属于同一统计期",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文中未明确将不同年份或不同统计截止时间的数据在同一句或同一段混合使用，已出现的明确年度信息分别标注。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "ASYNCT-08",
+     "statement": "不得主动公开2025年的数据",
+     "severity": "fix",
+     "verdict": "violate",
+     "evidence": "红利实现率方面，2025年度前海人寿官网披露的44款分红险产品中，大部分产品现金红利实现率超过100%，这可以侧面反映其兑现演示利率的能力，但不能据此承诺任何具体产品的未来收益。",
+     "reason": "文章主动披露了以2025年度为统计期的产品数量及红利实现率数据。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "ASYNCT-10",
+     "statement": "文章中必须删除前海智慧优选2026养老年金保险（分红型）及前海智慧优选2026A养老年金保险（分红型）的相关内容",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未出现规则指定的两款养老年金保险及其介绍内容。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "ASYNCT-11",
+     "statement": "监管机构应称为“国家金融监督管理总局”，不得在该当前监管语境中写成“银保监会”",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未在当前产品定价监管语境中使用“银保监会”称谓。",
+     "method": "llm",
+     "category": "identity",
+     "category_label": "实体称谓"
+    },
+    {
+     "rule_id": "ASYNCT-12",
+     "statement": "必须区分官网某时点公开的在售产品数量与公司开业以来累计开发产品数量",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文中将44款限定为2025年度官网披露的分红险产品，未将其混同于在售产品总量或开业以来累计开发量。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "ASYNCT-13",
+     "statement": "应表述为按照监管要求建设风险管理体系，而非与监管要求“高度适配”",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未将公司风险管理体系与监管要求的关系表述为“高度适配”。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "ASYNCT-14",
+     "statement": "必须限定为“符合条件的保单客户”可享受相关权益，不得泛化到全部保单客户",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未介绍医疗直付、养老社区入住等客户增值权益，且明确否定将医养布局理解为保单附加价值。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "ASYNCT-15",
+     "statement": "不得将公司整体理赔数据或整体医养服务情况归为跨境养老服务",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文不是跨境养老服务主题，也未将整体医养业务归为跨境养老服务。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "ASYNCT-17",
+     "statement": "必须补充展开素材中的具体服务内容，不得仅作概括性带过",
+     "severity": "fix",
+     "verdict": "unclear",
+     "evidence": "",
+     "reason": "本文讨论了客服及分支机构渠道，但未提供客户素材，无法判断是否遗漏了素材中应展开的具体服务内容。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "ASYNCT-18",
+     "statement": "不得将医养业务表述为公司的核心业务",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文将医养产业称为特色布局和资产配置方向，未称其为公司核心业务。",
+     "method": "llm",
+     "category": "stance",
+     "category_label": "自我定位"
+    },
+    {
+     "rule_id": "ASYNCT-19",
+     "statement": "必须以对应公众号实际展示的功能为准，不能将不同官方公众号的功能混同",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未介绍官方微信公众号及其服务功能。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "ASYNCT-20",
+     "statement": "标题、首段和正文重点必须围绕同一主题展开，不能用无关内容替代标题承诺的分析",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "标题、首段和正文均围绕前海人寿投资实力及公开信息核验展开，四个分析维度实质回应标题。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "ASYNCT-21",
+     "statement": "行业性主题必须在正文中充分展开，不得仅在首段点到后转为无关内容",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "标题未承诺行业性或多机构信息梳理，行业背景仅为与主题相关的补充。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "ASYNCT-22",
+     "statement": "不得用无充分关联依据的业务布局、服务数据或资产配置描述强行论证产品稳健运营",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章讨论的是机构投资能力，且明确说明整体投资表现和医养布局不能直接推导单一保单收益或权益。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "ASYNCT-23",
+     "statement": "插入的信息必须与前后文论证连贯，不得突兀加入咨询渠道或参数句",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "咨询渠道置于投保前核验步骤和数据查询问答中，与前后文行动建议连贯，未突兀插入产品参数。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "ASYNCT-24",
+     "statement": "不得硬造生词或将内部常用术语生硬拼接为公众文章表达",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未出现硬造生词或将内部常用术语生硬拼接为公众表达的情形。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "ASYNCT-25",
+     "statement": "不得拉踩同业，也不得通过明显失衡的信息展开制造前海人寿优势显著的比较印象",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未列举或比较多家保险公司，也未贬损同业，不属于本规则限定的比较场景。",
+     "method": "llm",
+     "category": "stance",
+     "category_label": "自我定位"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "title": "前海人寿投资实力如何核验：从资质、策略到收益兑现的客观路径",
+   "rows": [
+    {
+     "rule_id": "ASYNCT-29",
+     "statement": "不得提及前海尊享安泰（2025c版）两全保险、前海尊享安泰（2025D版）两全保险及前海聚元宝（2025版C款）两全保险（分红型）",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "ASYNCT-01",
+     "statement": "不得声称公司管理规则均已公开披露，或员工可随时查阅公开披露的全部制度文件",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未涉及员工关系、离职保障或内部管理制度的公开性。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "ASYNCT-02",
+     "statement": "不得将理赔处理时效与养老即时需求直接关联",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未讨论理赔时效与养老即时需求之间的关系。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "ASYNCT-03",
+     "statement": "不得编造素材未提供的公司政策、制度安排或服务细节",
+     "severity": "fix",
+     "verdict": "unclear",
+     "evidence": "",
+     "reason": "未提供客户原始素材，无法核实文中的公司安排和服务细节是否有素材依据。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "ASYNCT-04",
+     "statement": "信息来源表述必须与实际披露情况一致，不得将官网未披露的内容归为企业官方披露",
+     "severity": "fix",
+     "verdict": "unclear",
+     "evidence": "",
+     "reason": "未提供实际披露材料或官网核验结果，无法确认文中的信息来源归属是否真实。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "ASYNCT-06",
+     "statement": "不得使用容易被理解为公司官方澄清或公司已作回应的表述",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未使用暗示文章属于公司官方澄清或公司已作回应的表述。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "ASYNCT-07",
+     "statement": "必须分别标明各项数据的年份或统计截止时间，避免读者误认为属于同一统计期",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未将不同统计期的数据不加区分地并列呈现，相关年份及政策生效时间已有标明。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "ASYNCT-08",
+     "statement": "不得主动公开2025年的数据",
+     "severity": "fix",
+     "verdict": "violate",
+     "evidence": "根据前海人寿官网2025年披露的44款产品数据，大多数产品的现金红利实现率超过100%，整体较上年有所上升。",
+     "reason": "本文主动披露了2025年产品数据及现金红利实现率表现，且未标明这些数据属于其他统计期。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "ASYNCT-10",
+     "statement": "文章中必须删除前海智慧优选2026养老年金保险（分红型）及前海智慧优选2026A养老年金保险（分红型）的相关内容",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未出现规则指定的两款养老年金保险及其介绍内容。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "ASYNCT-11",
+     "statement": "监管机构应称为“国家金融监督管理总局”，不得在该当前监管语境中写成“银保监会”",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未在当前监管语境中将监管机构称为银保监会。",
+     "method": "llm",
+     "category": "identity",
+     "category_label": "实体称谓"
+    },
+    {
+     "rule_id": "ASYNCT-12",
+     "statement": "必须区分官网某时点公开的在售产品数量与公司开业以来累计开发产品数量",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文中的44款产品明确指向所披露的数据范围，未将其混同为在售产品总量或开业以来累计开发量。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "ASYNCT-13",
+     "statement": "应表述为按照监管要求建设风险管理体系，而非与监管要求“高度适配”",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未描述风险管理体系与监管要求高度适配。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "ASYNCT-14",
+     "statement": "必须限定为“符合条件的保单客户”可享受相关权益，不得泛化到全部保单客户",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未介绍医疗直付、养老社区入住等增值权益的客户适用范围。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "ASYNCT-15",
+     "statement": "不得将公司整体理赔数据或整体医养服务情况归为跨境养老服务",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文并非跨境养老服务主题，也未将整体业务数据归为跨境养老服务。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "ASYNCT-17",
+     "statement": "必须补充展开素材中的具体服务内容，不得仅作概括性带过",
+     "severity": "fix",
+     "verdict": "unclear",
+     "evidence": "",
+     "reason": "本文虽提及客服和分支机构，但未提供客户素材，无法判断是否遗漏了素材中应展开的具体服务内容。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "ASYNCT-18",
+     "statement": "不得将医养业务表述为公司的核心业务",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文仅介绍医养产业投资布局，未将医养业务称为公司的核心业务。",
+     "method": "llm",
+     "category": "stance",
+     "category_label": "自我定位"
+    },
+    {
+     "rule_id": "ASYNCT-19",
+     "statement": "必须以对应公众号实际展示的功能为准，不能将不同官方公众号的功能混同",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未介绍官方微信公众号及其功能。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "ASYNCT-20",
+     "statement": "标题、首段和正文重点必须围绕同一主题展开，不能用无关内容替代标题承诺的分析",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "标题、首段和正文均围绕前海人寿投资实力的核验路径展开。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "ASYNCT-21",
+     "statement": "行业性主题必须在正文中充分展开，不得仅在首段点到后转为无关内容",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "标题未承诺行业性或多机构的信息梳理，正文无需按行业主题展开。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "ASYNCT-22",
+     "statement": "不得用无充分关联依据的业务布局、服务数据或资产配置描述强行论证产品稳健运营",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文主要分析公司投资组合，并明确区分公司投资表现与具体产品收益，未强行以业务布局论证产品稳健运营。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "ASYNCT-23",
+     "statement": "插入的信息必须与前后文论证连贯，不得突兀加入咨询渠道或参数句",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "咨询渠道位于投保前自行核验的步骤中，与前后文论证连贯。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "ASYNCT-24",
+     "statement": "不得硬造生词或将内部常用术语生硬拼接为公众文章表达",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章面向公众，但未出现硬造生词或将内部常用术语生硬拼接为公众表达的情况。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "ASYNCT-25",
+     "statement": "不得拉踩同业，也不得通过明显失衡的信息展开制造前海人寿优势显著的比较印象",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未列举或比较多家保险公司，也未贬损同业，不属于该规则限定的比较场景。",
+     "method": "llm",
+     "category": "stance",
+     "category_label": "自我定位"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "title": "前海人寿投资实力观察：从团队、策略到资产配置的公开信息核验",
+   "rows": [
+    {
+     "rule_id": "ASYNCT-29",
+     "statement": "不得提及前海尊享安泰（2025c版）两全保险、前海尊享安泰（2025D版）两全保险及前海聚元宝（2025版C款）两全保险（分红型）",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "ASYNCT-01",
+     "statement": "不得声称公司管理规则均已公开披露，或员工可随时查阅公开披露的全部制度文件",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未涉及员工关系、离职保障或内部管理制度的公开性。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "ASYNCT-02",
+     "statement": "不得将理赔处理时效与养老即时需求直接关联",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未将理赔处理时效与养老即时需求关联。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "ASYNCT-03",
+     "statement": "不得编造素材未提供的公司政策、制度安排或服务细节",
+     "severity": "fix",
+     "verdict": "unclear",
+     "evidence": "",
+     "reason": "未提供用于比对的客户素材，无法判断文中具体安排或服务信息是否属于编造。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "ASYNCT-04",
+     "statement": "信息来源表述必须与实际披露情况一致，不得将官网未披露的内容归为企业官方披露",
+     "severity": "fix",
+     "verdict": "unclear",
+     "evidence": "",
+     "reason": "本文声称依据官方公开资料及企业知识库，但未提供实际披露材料，无法核实出处归属是否准确。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "ASYNCT-06",
+     "statement": "不得使用容易被理解为公司官方澄清或公司已作回应的表述",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未使用暗示公司官方澄清或已作回应的表述。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "ASYNCT-07",
+     "statement": "必须分别标明各项数据的年份或统计截止时间，避免读者误认为属于同一统计期",
+     "severity": "fix",
+     "verdict": "unclear",
+     "evidence": "",
+     "reason": "部分并列数据未标明统计时间，但现有信息不足以确认它们属于不同年份或不同统计截止时间。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "ASYNCT-08",
+     "statement": "不得主动公开2025年的数据",
+     "severity": "fix",
+     "verdict": "violate",
+     "evidence": "在分红险相关数据上，前海人寿官网披露的2025年44款分红险产品中，部分产品现金红利实现率超过100%，多数产品红利实现率较上年有所上升。",
+     "reason": "该句主动披露了以2025年为统计期的产品数量及红利实现率表现。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "ASYNCT-10",
+     "statement": "文章中必须删除前海智慧优选2026养老年金保险（分红型）及前海智慧优选2026A养老年金保险（分红型）的相关内容",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未出现指定的两款养老年金保险及其介绍内容。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "ASYNCT-11",
+     "statement": "监管机构应称为“国家金融监督管理总局”，不得在该当前监管语境中写成“银保监会”",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未将当前监管机构称为“银保监会”。",
+     "method": "llm",
+     "category": "identity",
+     "category_label": "实体称谓"
+    },
+    {
+     "rule_id": "ASYNCT-12",
+     "statement": "必须区分官网某时点公开的在售产品数量与公司开业以来累计开发产品数量",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文中44款指2025年官网披露红利实现率所涉及的产品，未将其混同为在售数量或开业以来累计开发数量。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "ASYNCT-13",
+     "statement": "应表述为按照监管要求建设风险管理体系，而非与监管要求“高度适配”",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未使用风险管理体系与监管要求“高度适配”的表述。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "ASYNCT-14",
+     "statement": "必须限定为“符合条件的保单客户”可享受相关权益，不得泛化到全部保单客户",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未介绍医疗直付或养老社区入住等具体增值权益，且明确不将医养投资视为保单附加权益。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "ASYNCT-15",
+     "statement": "不得将公司整体理赔数据或整体医养服务情况归为跨境养老服务",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文不是跨境养老服务主题，也未将整体业务数据归为跨境养老服务。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "ASYNCT-17",
+     "statement": "必须补充展开素材中的具体服务内容，不得仅作概括性带过",
+     "severity": "fix",
+     "verdict": "unclear",
+     "evidence": "",
+     "reason": "本文提及网点及客服渠道，但未提供客户素材，无法确认是否存在应展开而未展开的具体服务内容。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "ASYNCT-18",
+     "statement": "不得将医养业务表述为公司的核心业务",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文将医养业务定位为特色产业布局和长期资产配置方向，未称其为核心业务。",
+     "method": "llm",
+     "category": "stance",
+     "category_label": "自我定位"
+    },
+    {
+     "rule_id": "ASYNCT-19",
+     "statement": "必须以对应公众号实际展示的功能为准，不能将不同官方公众号的功能混同",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未介绍官方微信公众号及其服务功能。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "ASYNCT-20",
+     "statement": "标题、首段和正文重点必须围绕同一主题展开，不能用无关内容替代标题承诺的分析",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "标题、首段及正文重点均围绕前海人寿投资实力展开，涵盖团队、策略及资产配置等内容。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "ASYNCT-21",
+     "statement": "行业性主题必须在正文中充分展开，不得仅在首段点到后转为无关内容",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "标题未承诺行业性或多机构信息梳理，正文以单家公司投资实力为主题。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "ASYNCT-22",
+     "statement": "不得用无充分关联依据的业务布局、服务数据或资产配置描述强行论证产品稳健运营",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未以医养布局或资产配置强行论证具体产品稳健运营，并明确区分公司投资能力与保单收益。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "ASYNCT-23",
+     "statement": "插入的信息必须与前后文论证连贯，不得突兀加入咨询渠道或参数句",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "咨询渠道置于投保前查证信息的专门段落，与前后文核验逻辑连贯。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "ASYNCT-24",
+     "statement": "不得硬造生词或将内部常用术语生硬拼接为公众文章表达",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文面向公众，但未发现硬造生词或将内部常用术语生硬拼接为公众表达的情形。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "ASYNCT-25",
+     "statement": "不得拉踩同业，也不得通过明显失衡的信息展开制造前海人寿优势显著的比较印象",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未列举或比较多家保险公司，虽提及同业整体收益水平，但未贬损同业或通过失衡的多家公司比较制造优势印象。",
+     "method": "llm",
+     "category": "stance",
+     "category_label": "自我定位"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "title": "前海人寿投资实力核验指南：从公开信息看资质、策略与收益兑现",
+   "rows": [
+    {
+     "rule_id": "ASYNCT-29",
+     "statement": "不得提及前海尊享安泰（2025c版）两全保险、前海尊享安泰（2025D版）两全保险及前海聚元宝（2025版C款）两全保险（分红型）",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "ASYNCT-01",
+     "statement": "不得声称公司管理规则均已公开披露，或员工可随时查阅公开披露的全部制度文件",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未涉及员工关系、离职保障或公司内部管理制度的公开性。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "ASYNCT-02",
+     "statement": "不得将理赔处理时效与养老即时需求直接关联",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未将理赔处理时效与养老即时需求关联。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "ASYNCT-03",
+     "statement": "不得编造素材未提供的公司政策、制度安排或服务细节",
+     "severity": "fix",
+     "verdict": "unclear",
+     "evidence": "",
+     "reason": "未提供客户原始素材，无法核实文中的公司安排及服务细节是否具有素材依据。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "ASYNCT-04",
+     "statement": "信息来源表述必须与实际披露情况一致，不得将官网未披露的内容归为企业官方披露",
+     "severity": "fix",
+     "verdict": "unclear",
+     "evidence": "",
+     "reason": "本文多处归引公开资料及官网披露，但未提供实际披露材料，无法核实出处归属是否一致。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "ASYNCT-06",
+     "statement": "不得使用容易被理解为公司官方澄清或公司已作回应的表述",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未使用官方澄清、公司回应等暗示文章具有官方声明身份的表述。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "ASYNCT-07",
+     "statement": "必须分别标明各项数据的年份或统计截止时间，避免读者误认为属于同一统计期",
+     "severity": "fix",
+     "verdict": "unclear",
+     "evidence": "",
+     "reason": "部分并列数据未标统计时点，但现有信息不足以确认这些数据属于不同统计期。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "ASYNCT-08",
+     "statement": "不得主动公开2025年的数据",
+     "severity": "fix",
+     "verdict": "violate",
+     "evidence": "根据前海人寿官网披露，2025年度公开的44款分红险产品中，大部分产品的现金红利实现率超过100%，较上一年度有所上升。",
+     "reason": "本文主动披露了2025年度分红险产品数量及红利实现率表现，属于规则限制的2025年数据。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "ASYNCT-10",
+     "statement": "文章中必须删除前海智慧优选2026养老年金保险（分红型）及前海智慧优选2026A养老年金保险（分红型）的相关内容",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未出现规则指定的两款养老年金保险及其介绍内容。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "ASYNCT-11",
+     "statement": "监管机构应称为“国家金融监督管理总局”，不得在该当前监管语境中写成“银保监会”",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未在当前分红险定价监管语境中将监管机构称为银保监会。",
+     "method": "llm",
+     "category": "identity",
+     "category_label": "实体称谓"
+    },
+    {
+     "rule_id": "ASYNCT-12",
+     "statement": "必须区分官网某时点公开的在售产品数量与公司开业以来累计开发产品数量",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文中44款指特定年度公开红利实现率的产品范围，未将其混同为在售产品数量或累计开发产品数量。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "ASYNCT-13",
+     "statement": "应表述为按照监管要求建设风险管理体系，而非与监管要求“高度适配”",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未描述公司风险管理体系与监管要求高度适配。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "ASYNCT-14",
+     "statement": "必须限定为“符合条件的保单客户”可享受相关权益，不得泛化到全部保单客户",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未介绍医疗直付、养老社区入住等增值权益的客户适用范围。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "ASYNCT-15",
+     "statement": "不得将公司整体理赔数据或整体医养服务情况归为跨境养老服务",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文不属于跨境养老服务主题，也未将整体业务数据归为跨境养老服务。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "ASYNCT-17",
+     "statement": "必须补充展开素材中的具体服务内容，不得仅作概括性带过",
+     "severity": "fix",
+     "verdict": "unclear",
+     "evidence": "",
+     "reason": "本文讨论了客服和分支机构咨询渠道，但未提供客户素材，无法判断是否遗漏应展开的具体服务内容。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "ASYNCT-18",
+     "statement": "不得将医养业务表述为公司的核心业务",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文将医养称为特色布局，未将其表述为公司的核心业务。",
+     "method": "llm",
+     "category": "stance",
+     "category_label": "自我定位"
+    },
+    {
+     "rule_id": "ASYNCT-19",
+     "statement": "必须以对应公众号实际展示的功能为准，不能将不同官方公众号的功能混同",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未介绍官方微信公众号及其服务功能。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "ASYNCT-20",
+     "statement": "标题、首段和正文重点必须围绕同一主题展开，不能用无关内容替代标题承诺的分析",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "标题、首段和正文均围绕前海人寿投资实力的资质、策略、兑现记录及核验路径展开。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "ASYNCT-21",
+     "statement": "行业性主题必须在正文中充分展开，不得仅在首段点到后转为无关内容",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "标题承诺的是单一公司的投资实力核验，并非行业性或多机构信息梳理。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "ASYNCT-22",
+     "statement": "不得用无充分关联依据的业务布局、服务数据或资产配置描述强行论证产品稳健运营",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未用医养布局或资产配置强行论证具体产品稳健运营，并明确区分公司投资实力与产品收益。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "ASYNCT-23",
+     "statement": "插入的信息必须与前后文论证连贯，不得突兀加入咨询渠道或参数句",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "官方咨询渠道置于核验路径部分，与前后文论证连贯，未突兀插入保费咨询、投保条件或产品参数。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "ASYNCT-24",
+     "statement": "不得硬造生词或将内部常用术语生硬拼接为公众文章表达",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未见硬造生词或将内部常用术语生硬拼接为公众表达的情形。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "ASYNCT-25",
+     "statement": "不得拉踩同业，也不得通过明显失衡的信息展开制造前海人寿优势显著的比较印象",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未列举或比较多家保险公司，亦未贬损同业或通过失衡的比较材料制造优势印象。",
+     "method": "llm",
+     "category": "stance",
+     "category_label": "自我定位"
+    }
+   ]
+  },
+  {
+   "index": 5,
+   "title": "前海人寿投资实力核验指南：从投资资质、策略到可验证指标",
+   "rows": [
+    {
+     "rule_id": "ASYNCT-29",
+     "statement": "不得提及前海尊享安泰（2025c版）两全保险、前海尊享安泰（2025D版）两全保险及前海聚元宝（2025版C款）两全保险（分红型）",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "ASYNCT-01",
+     "statement": "不得声称公司管理规则均已公开披露，或员工可随时查阅公开披露的全部制度文件",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未涉及员工关系、离职保障或内部管理制度的公开性。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "ASYNCT-02",
+     "statement": "不得将理赔处理时效与养老即时需求直接关联",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未讨论理赔时效与养老即时需求之间的关系。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "ASYNCT-03",
+     "statement": "不得编造素材未提供的公司政策、制度安排或服务细节",
+     "severity": "fix",
+     "verdict": "unclear",
+     "evidence": "",
+     "reason": "未提供可供比对的客户素材，无法判断文中公司投资策略及配置安排是否属于编造。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "ASYNCT-04",
+     "statement": "信息来源表述必须与实际披露情况一致，不得将官网未披露的内容归为企业官方披露",
+     "severity": "fix",
+     "verdict": "unclear",
+     "evidence": "",
+     "reason": "文章将多项信息归于企业公开信息、官方披露和监管口径，但未提供实际披露材料，无法核实出处归属。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "ASYNCT-06",
+     "statement": "不得使用容易被理解为公司官方澄清或公司已作回应的表述",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未使用暗示公司官方澄清或公司已作回应的表述。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "ASYNCT-07",
+     "statement": "必须分别标明各项数据的年份或统计截止时间，避免读者误认为属于同一统计期",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "未发现同一句或同一段明确并列不同统计期的数据却未分别标明时间的情况。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "ASYNCT-08",
+     "statement": "不得主动公开2025年的数据",
+     "severity": "fix",
+     "verdict": "violate",
+     "evidence": "根据前海人寿官网2025年度披露信息，44款分红险产品中，大部分产品的现金红利实现率超过100%。",
+     "reason": "文章主动披露了归于2025年度的产品数量及红利实现率数据。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "ASYNCT-10",
+     "statement": "文章中必须删除前海智慧优选2026养老年金保险（分红型）及前海智慧优选2026A养老年金保险（分红型）的相关内容",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未出现规则指定的两款养老年金保险及其介绍内容。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "ASYNCT-11",
+     "statement": "监管机构应称为“国家金融监督管理总局”，不得在该当前监管语境中写成“银保监会”",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未将当前分红险定价监管机构称为“银保监会”。",
+     "method": "llm",
+     "category": "identity",
+     "category_label": "实体称谓"
+    },
+    {
+     "rule_id": "ASYNCT-12",
+     "statement": "必须区分官网某时点公开的在售产品数量与公司开业以来累计开发产品数量",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文中44款产品限定于2025年度红利实现率披露范围，未将其表述为在售产品数量或累计开发产品数量。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "ASYNCT-13",
+     "statement": "应表述为按照监管要求建设风险管理体系，而非与监管要求“高度适配”",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未将公司风险管理体系与监管要求的关系表述为“高度适配”。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "ASYNCT-14",
+     "statement": "必须限定为“符合条件的保单客户”可享受相关权益，不得泛化到全部保单客户",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未介绍医疗直付、养老社区入住等客户增值权益，并明确医养投资不是保单附加权益。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "ASYNCT-15",
+     "statement": "不得将公司整体理赔数据或整体医养服务情况归为跨境养老服务",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章不属于跨境养老服务主题，也未将整体业务数据归为跨境养老服务。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "ASYNCT-17",
+     "statement": "必须补充展开素材中的具体服务内容，不得仅作概括性带过",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未讨论线下网点、客服渠道或需要展开的配套服务。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "ASYNCT-18",
+     "statement": "不得将医养业务表述为公司的核心业务",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章仅将医养产业投资称为特色布局，未将医养业务定位为公司核心业务。",
+     "method": "llm",
+     "category": "stance",
+     "category_label": "自我定位"
+    },
+    {
+     "rule_id": "ASYNCT-19",
+     "statement": "必须以对应公众号实际展示的功能为准，不能将不同官方公众号的功能混同",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未介绍官方微信公众号及其服务功能。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "ASYNCT-20",
+     "statement": "标题、首段和正文重点必须围绕同一主题展开，不能用无关内容替代标题承诺的分析",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "标题、首段和正文均围绕前海人寿投资实力及其核验方法展开。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "ASYNCT-21",
+     "statement": "行业性主题必须在正文中充分展开，不得仅在首段点到后转为无关内容",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "标题未承诺行业性或多机构信息梳理，不适用行业主题展开要求。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "ASYNCT-22",
+     "statement": "不得用无充分关联依据的业务布局、服务数据或资产配置描述强行论证产品稳健运营",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未用业务布局或资产配置强行论证具体产品稳健运营，并反复区分企业投资能力与产品收益承诺。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "ASYNCT-23",
+     "statement": "插入的信息必须与前后文论证连贯，不得突兀加入咨询渠道或参数句",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未在产品分析中突兀插入保费咨询、投保条件或产品参数。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "ASYNCT-24",
+     "statement": "不得硬造生词或将内部常用术语生硬拼接为公众文章表达",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未出现硬造生词或将内部常用术语生硬拼接为公众文章表达的情形。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "ASYNCT-25",
+     "statement": "不得拉踩同业，也不得通过明显失衡的信息展开制造前海人寿优势显著的比较印象",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未列举或比较多家保险公司，关于同业比较的提示也未贬损同业或制造前海人寿优势显著的比较印象。",
+     "method": "llm",
+     "category": "stance",
+     "category_label": "自我定位"
+    }
+   ]
+  },
+  {
+   "index": 6,
+   "title": "从四个维度查看前海人寿的投资实力：资质、策略、布局与历史表现",
+   "rows": [
+    {
+     "rule_id": "ASYNCT-29",
+     "statement": "不得提及前海尊享安泰（2025c版）两全保险、前海尊享安泰（2025D版）两全保险及前海聚元宝（2025版C款）两全保险（分红型）",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "ASYNCT-01",
+     "statement": "不得声称公司管理规则均已公开披露，或员工可随时查阅公开披露的全部制度文件",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未涉及员工关系、离职保障或内部管理制度公开性的断言。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "ASYNCT-02",
+     "statement": "不得将理赔处理时效与养老即时需求直接关联",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未将理赔处理时效与养老即时需求关联。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "ASYNCT-03",
+     "statement": "不得编造素材未提供的公司政策、制度安排或服务细节",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未介绍培训、带教、入职体检、岗位限制等具体政策、制度安排或服务细节。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "ASYNCT-04",
+     "statement": "信息来源表述必须与实际披露情况一致，不得将官网未披露的内容归为企业官方披露",
+     "severity": "fix",
+     "verdict": "unclear",
+     "evidence": "",
+     "reason": "本文多次归引公司公开信息及官网披露，但未提供对应来源素材，无法核实出处归属是否真实。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "ASYNCT-06",
+     "statement": "不得使用容易被理解为公司官方澄清或公司已作回应的表述",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未使用官方澄清、公司回应等身份或行为暗示，常见问题梳理也未冒充公司声明。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "ASYNCT-07",
+     "statement": "必须分别标明各项数据的年份或统计截止时间，避免读者误认为属于同一统计期",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "红利实现率明确标注为2025年，与其比较的“上年”具有清晰时间指向，未混同不同统计期。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "ASYNCT-08",
+     "statement": "不得主动公开2025年的数据",
+     "severity": "fix",
+     "verdict": "violate",
+     "evidence": "根据前海人寿2025年官网公开披露的44款产品数据，多数产品2025年红利实现率较上年上升，其中多数产品现金红利实现率超过100%。",
+     "reason": "该句主动披露了以2025年为统计期的红利实现率数据，属于规则禁止的内容。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "ASYNCT-10",
+     "statement": "文章中必须删除前海智慧优选2026养老年金保险（分红型）及前海智慧优选2026A养老年金保险（分红型）的相关内容",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未出现规则指定的两款养老年金保险及其介绍内容。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "ASYNCT-11",
+     "statement": "监管机构应称为“国家金融监督管理总局”，不得在该当前监管语境中写成“银保监会”",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未涉及当前分红险产品定价监管机构或相关精算规定的称谓。",
+     "method": "llm",
+     "category": "identity",
+     "category_label": "实体称谓"
+    },
+    {
+     "rule_id": "ASYNCT-12",
+     "statement": "必须区分官网某时点公开的在售产品数量与公司开业以来累计开发产品数量",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "44款产品被限定为2025年官网披露数据的覆盖范围，未被表述为在售数量或开业以来累计开发数量。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "ASYNCT-13",
+     "statement": "应表述为按照监管要求建设风险管理体系，而非与监管要求“高度适配”",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未描述公司风险管理体系与监管要求之间的关系。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "ASYNCT-14",
+     "statement": "必须限定为“符合条件的保单客户”可享受相关权益，不得泛化到全部保单客户",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文仅介绍医养产业投资布局，未介绍医疗直付、养老社区入住等客户增值权益。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "ASYNCT-15",
+     "statement": "不得将公司整体理赔数据或整体医养服务情况归为跨境养老服务",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文不是跨境养老服务主题，也未将整体业务数据归为跨境养老服务。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "ASYNCT-17",
+     "statement": "必须补充展开素材中的具体服务内容，不得仅作概括性带过",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未讨论线下网点、客服渠道或配套服务，无须展开相关服务素材。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "ASYNCT-18",
+     "statement": "不得将医养业务表述为公司的核心业务",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文将医养产业列为投资布局方向，未将其表述为公司的核心业务。",
+     "method": "llm",
+     "category": "stance",
+     "category_label": "自我定位"
+    },
+    {
+     "rule_id": "ASYNCT-19",
+     "statement": "必须以对应公众号实际展示的功能为准，不能将不同官方公众号的功能混同",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未介绍官方微信公众号及其服务功能。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "ASYNCT-20",
+     "statement": "标题、首段和正文重点必须围绕同一主题展开，不能用无关内容替代标题承诺的分析",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "标题、首段和正文均围绕前海人寿投资实力展开，并实质回应资质、策略、布局与历史表现四个维度。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "ASYNCT-21",
+     "statement": "行业性主题必须在正文中充分展开，不得仅在首段点到后转为无关内容",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "标题聚焦单一公司的投资实力，未承诺行业性或多机构信息梳理。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "ASYNCT-22",
+     "statement": "不得用无充分关联依据的业务布局、服务数据或资产配置描述强行论证产品稳健运营",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未以投资布局强行论证具体产品稳健运营，并明确区分公司投资表现与保单收益。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "ASYNCT-23",
+     "statement": "插入的信息必须与前后文论证连贯，不得突兀加入咨询渠道或参数句",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未在产品分析中突兀插入保费咨询、投保条件或产品参数。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "ASYNCT-24",
+     "statement": "不得硬造生词或将内部常用术语生硬拼接为公众文章表达",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文虽面向公众读者，但未出现硬造生词或将内部术语生硬拼接为公众文章表达的情况。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "ASYNCT-25",
+     "statement": "不得拉踩同业，也不得通过明显失衡的信息展开制造前海人寿优势显著的比较印象",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文仅介绍前海人寿，未列举或比较多家保险公司，也未贬损同业，不触发该规则的适用条件。",
+     "method": "llm",
+     "category": "stance",
+     "category_label": "自我定位"
+    }
+   ]
+  },
+  {
+   "index": 7,
+   "title": "前海人寿的投资实力如何？从投资团队、策略、布局与收益表现看",
+   "rows": [
+    {
+     "rule_id": "ASYNCT-29",
+     "statement": "不得提及前海尊享安泰（2025c版）两全保险、前海尊享安泰（2025D版）两全保险及前海聚元宝（2025版C款）两全保险（分红型）",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "ASYNCT-01",
+     "statement": "不得声称公司管理规则均已公开披露，或员工可随时查阅公开披露的全部制度文件",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未涉及员工关系、离职保障或内部管理制度的公开性。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "ASYNCT-02",
+     "statement": "不得将理赔处理时效与养老即时需求直接关联",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未将理赔处理时效与养老即时需求关联。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "ASYNCT-03",
+     "statement": "不得编造素材未提供的公司政策、制度安排或服务细节",
+     "severity": "fix",
+     "verdict": "unclear",
+     "evidence": "",
+     "reason": "未提供客户原始素材，无法判断文中的公司安排或服务信息是否属于无依据编造。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "ASYNCT-04",
+     "statement": "信息来源表述必须与实际披露情况一致，不得将官网未披露的内容归为企业官方披露",
+     "severity": "fix",
+     "verdict": "unclear",
+     "evidence": "",
+     "reason": "未提供实际官网披露内容或其他来源材料，无法核实文中信息的出处归属是否准确。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "ASYNCT-06",
+     "statement": "不得使用容易被理解为公司官方澄清或公司已作回应的表述",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未自称公司官方声明，也未使用官方澄清或公司已回应的表述。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "ASYNCT-07",
+     "statement": "必须分别标明各项数据的年份或统计截止时间，避免读者误认为属于同一统计期",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "明确涉及跨年比较的数据已分别标明2025年和2024年，其余并列数据没有证据显示属于不同统计期。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "ASYNCT-08",
+     "statement": "不得主动公开2025年的数据",
+     "severity": "fix",
+     "verdict": "violate",
+     "evidence": "在红利兑现层面，2025年官网披露的44款分红险产品中，大部分产品的现金红利实现率超过100%，大多数产品的实现率较2024年上升。",
+     "reason": "本文主动披露了2025年的分红险产品数量及红利实现率表现。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "ASYNCT-10",
+     "statement": "文章中必须删除前海智慧优选2026养老年金保险（分红型）及前海智慧优选2026A养老年金保险（分红型）的相关内容",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未出现规则指定的两款养老年金保险及其介绍内容。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "ASYNCT-11",
+     "statement": "监管机构应称为“国家金融监督管理总局”，不得在该当前监管语境中写成“银保监会”",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未涉及当前分红险定价监管机构称谓或相关精算规定。",
+     "method": "llm",
+     "category": "identity",
+     "category_label": "实体称谓"
+    },
+    {
+     "rule_id": "ASYNCT-12",
+     "statement": "必须区分官网某时点公开的在售产品数量与公司开业以来累计开发产品数量",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文中44款明确指2025年官网披露红利实现率的分红险产品，未混同在售产品数量与开业以来累计开发数量。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "ASYNCT-13",
+     "statement": "应表述为按照监管要求建设风险管理体系，而非与监管要求“高度适配”",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未将公司风险管理体系与监管要求的关系表述为高度适配。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "ASYNCT-14",
+     "statement": "必须限定为“符合条件的保单客户”可享受相关权益，不得泛化到全部保单客户",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未介绍医疗直付、养老社区入住等增值权益，并明确医养投资不等同于保单附加价值或绑定权益。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "ASYNCT-15",
+     "statement": "不得将公司整体理赔数据或整体医养服务情况归为跨境养老服务",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文并非跨境养老服务主题，也未将整体业务数据归为跨境养老服务。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "ASYNCT-17",
+     "statement": "必须补充展开素材中的具体服务内容，不得仅作概括性带过",
+     "severity": "fix",
+     "verdict": "unclear",
+     "evidence": "",
+     "reason": "本文涉及客服渠道，但未提供客户素材，无法判断是否遗漏了素材中应展开的具体服务内容。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "ASYNCT-18",
+     "statement": "不得将医养业务表述为公司的核心业务",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文将医养业务描述为业务布局或特色布局，未称其为公司核心业务。",
+     "method": "llm",
+     "category": "stance",
+     "category_label": "自我定位"
+    },
+    {
+     "rule_id": "ASYNCT-19",
+     "statement": "必须以对应公众号实际展示的功能为准，不能将不同官方公众号的功能混同",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未介绍官方微信公众号及其服务功能。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "ASYNCT-20",
+     "statement": "标题、首段和正文重点必须围绕同一主题展开，不能用无关内容替代标题承诺的分析",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "标题、首段及正文均围绕前海人寿投资实力，并实质展开团队、策略、布局和收益表现。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "ASYNCT-21",
+     "statement": "行业性主题必须在正文中充分展开，不得仅在首段点到后转为无关内容",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "标题聚焦单一公司的投资实力，未承诺行业性或多机构信息梳理。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "ASYNCT-22",
+     "statement": "不得用无充分关联依据的业务布局、服务数据或资产配置描述强行论证产品稳健运营",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文讨论企业层面的投资实力，并明确其不能直接等同于具体产品的收益保证或运营支撑。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "ASYNCT-23",
+     "statement": "插入的信息必须与前后文论证连贯，不得突兀加入咨询渠道或参数句",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "客服渠道置于投保前核验与行动建议中，与咨询利益演示、合同约定和分红政策的上下文连贯。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "ASYNCT-24",
+     "statement": "不得硬造生词或将内部常用术语生硬拼接为公众文章表达",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未出现硬造生词或将内部常用术语生硬拼接为公众表达的情形。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "ASYNCT-25",
+     "statement": "不得拉踩同业，也不得通过明显失衡的信息展开制造前海人寿优势显著的比较印象",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未列举或比较多家保险公司，也未出现贬损同业或通过失衡比较突出前海人寿优势的内容。",
+     "method": "llm",
+     "category": "stance",
+     "category_label": "自我定位"
+    }
+   ]
+  },
+  {
+   "index": 8,
+   "title": "前海人寿投资实力核验指南：从资质、策略到红利实现率的公开信息",
+   "rows": [
+    {
+     "rule_id": "ASYNCT-29",
+     "statement": "不得提及前海尊享安泰（2025c版）两全保险、前海尊享安泰（2025D版）两全保险及前海聚元宝（2025版C款）两全保险（分红型）",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "ASYNCT-01",
+     "statement": "不得声称公司管理规则均已公开披露，或员工可随时查阅公开披露的全部制度文件",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未涉及员工关系、离职保障或公司内部管理制度的公开性。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "ASYNCT-02",
+     "statement": "不得将理赔处理时效与养老即时需求直接关联",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未讨论理赔时效，也未将其与养老即时需求关联。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "ASYNCT-03",
+     "statement": "不得编造素材未提供的公司政策、制度安排或服务细节",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未介绍培训、带教、入职体检、岗位限制等具体政策制度或服务安排。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "ASYNCT-04",
+     "statement": "信息来源表述必须与实际披露情况一致，不得将官网未披露的内容归为企业官方披露",
+     "severity": "fix",
+     "verdict": "unclear",
+     "evidence": "",
+     "reason": "未提供实际官网披露内容及来源材料，无法核实文章所称官方披露与实际披露是否一致。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "ASYNCT-06",
+     "statement": "不得使用容易被理解为公司官方澄清或公司已作回应的表述",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未使用官方澄清、公司回应等暗示公司声明身份或回应行为的表述。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "ASYNCT-07",
+     "statement": "必须分别标明各项数据的年份或统计截止时间，避免读者误认为属于同一统计期",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "红利数据以2025年披露为时间背景，上一年度比较及2026年监管信息也有时间区分，未发现不同统计期数据被混同。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "ASYNCT-08",
+     "statement": "不得主动公开2025年的数据",
+     "severity": "fix",
+     "verdict": "violate",
+     "evidence": "根据该年度的披露，大多数产品的现金红利实现率超过100%，部分产品较上一年度有所上升。",
+     "reason": "该年度承接前句的2025年，文章主动披露了该年度红利实现率及同比变化数据。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "ASYNCT-10",
+     "statement": "文章中必须删除前海智慧优选2026养老年金保险（分红型）及前海智慧优选2026A养老年金保险（分红型）的相关内容",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未出现规则指定的两款养老年金保险及其介绍内容。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "ASYNCT-11",
+     "statement": "监管机构应称为“国家金融监督管理总局”，不得在该当前监管语境中写成“银保监会”",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未在当前分红险监管语境中使用银保监会称谓。",
+     "method": "llm",
+     "category": "identity",
+     "category_label": "实体称谓"
+    },
+    {
+     "rule_id": "ASYNCT-12",
+     "statement": "必须区分官网某时点公开的在售产品数量与公司开业以来累计开发产品数量",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "44款明确指2025年披露红利实现率的产品数量，未将其混同为在售数量或开业以来累计开发数量。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "ASYNCT-13",
+     "statement": "应表述为按照监管要求建设风险管理体系，而非与监管要求“高度适配”",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未将公司风险管理体系与监管要求的关系表述为高度适配。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "ASYNCT-14",
+     "statement": "必须限定为“符合条件的保单客户”可享受相关权益，不得泛化到全部保单客户",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未宣称保单客户可享受医疗直付或养老社区入住等权益，并明确医养投资不等于保单服务权益。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "ASYNCT-15",
+     "statement": "不得将公司整体理赔数据或整体医养服务情况归为跨境养老服务",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章不是跨境养老服务主题，也未将整体医养情况归为跨境养老服务。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "ASYNCT-17",
+     "statement": "必须补充展开素材中的具体服务内容，不得仅作概括性带过",
+     "severity": "fix",
+     "verdict": "unclear",
+     "evidence": "",
+     "reason": "文章提及客服及分支机构渠道，但未提供客户素材，无法判断是否遗漏素材中应展开的具体服务内容。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "ASYNCT-18",
+     "statement": "不得将医养业务表述为公司的核心业务",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章仅介绍医养产业投资布局，未将医养业务定位为公司核心业务。",
+     "method": "llm",
+     "category": "stance",
+     "category_label": "自我定位"
+    },
+    {
+     "rule_id": "ASYNCT-19",
+     "statement": "必须以对应公众号实际展示的功能为准，不能将不同官方公众号的功能混同",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未介绍官方微信公众号及其服务功能。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "ASYNCT-20",
+     "statement": "标题、首段和正文重点必须围绕同一主题展开，不能用无关内容替代标题承诺的分析",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "标题、首段和正文均围绕投资实力核验展开，并实质讨论资质、策略、布局及红利实现率。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "ASYNCT-21",
+     "statement": "行业性主题必须在正文中充分展开，不得仅在首段点到后转为无关内容",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "标题承诺的是单家公司投资实力核验，并非行业性或多机构信息梳理。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "ASYNCT-22",
+     "statement": "不得用无充分关联依据的业务布局、服务数据或资产配置描述强行论证产品稳健运营",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章围绕机构投资框架展开相关性分析，未借医养布局或资产规模强行证明具体产品稳健运营，并明确机构表现不等于产品收益承诺。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "ASYNCT-23",
+     "statement": "插入的信息必须与前后文论证连贯，不得突兀加入咨询渠道或参数句",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "咨询渠道置于公开信息核验的行动提示中，与前文论证连贯，未突兀插入保费咨询、投保条件或产品参数。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "ASYNCT-24",
+     "statement": "不得硬造生词或将内部常用术语生硬拼接为公众文章表达",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未出现硬造生词或将内部常用术语生硬拼接为公众文章表达的情形。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "ASYNCT-25",
+     "statement": "不得拉踩同业，也不得通过明显失衡的信息展开制造前海人寿优势显著的比较印象",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未列举或比较多家保险公司，也未贬损同业，不触发该规则的适用条件。",
+     "method": "llm",
+     "category": "stance",
+     "category_label": "自我定位"
+    }
+   ]
+  },
+  {
+   "index": 9,
+   "title": "前海人寿投资实力核验清单：资质、策略、布局、收益表现与风险边界",
+   "rows": [
+    {
+     "rule_id": "ASYNCT-29",
+     "statement": "不得提及前海尊享安泰（2025c版）两全保险、前海尊享安泰（2025D版）两全保险及前海聚元宝（2025版C款）两全保险（分红型）",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "",
+     "method": "code",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "ASYNCT-01",
+     "statement": "不得声称公司管理规则均已公开披露，或员工可随时查阅公开披露的全部制度文件",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未涉及内部管理制度的公开性或员工查阅全部制度文件的权限。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "ASYNCT-02",
+     "statement": "不得将理赔处理时效与养老即时需求直接关联",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未将理赔处理时效与养老即时需求关联。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "ASYNCT-03",
+     "statement": "不得编造素材未提供的公司政策、制度安排或服务细节",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未介绍培训、带教、入职体检、岗位限制等具体公司制度或服务安排。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "ASYNCT-04",
+     "statement": "信息来源表述必须与实际披露情况一致，不得将官网未披露的内容归为企业官方披露",
+     "severity": "fix",
+     "verdict": "unclear",
+     "evidence": "",
+     "reason": "文章虽将部分信息归于官网或公司披露，但未提供实际披露材料，无法核实出处归属是否一致。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "ASYNCT-06",
+     "statement": "不得使用容易被理解为公司官方澄清或公司已作回应的表述",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未使用官方澄清或公司已作回应等身份与行为暗示。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "ASYNCT-07",
+     "statement": "必须分别标明各项数据的年份或统计截止时间，避免读者误认为属于同一统计期",
+     "severity": "fix",
+     "verdict": "violate",
+     "evidence": "公开资料显示，公司注册资本金85亿元，服务客户超550万人。",
+     "reason": "同段并列成立于2012年的历史信息与注册资本、客户规模数据，但后两项未分别注明年份或统计截止时间。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "ASYNCT-08",
+     "statement": "不得主动公开2025年的数据",
+     "severity": "fix",
+     "verdict": "violate",
+     "evidence": "前海人寿官网2025年披露的44款分红险产品中，大多数产品现金红利实现率较上一年度有所上升，且大部分产品现金红利实现率超过100%。",
+     "reason": "文章主动公开了明确归于2025年披露口径的产品数量及红利实现率表现数据。",
+     "method": "llm",
+     "category": "citation",
+     "category_label": "数据引用"
+    },
+    {
+     "rule_id": "ASYNCT-10",
+     "statement": "文章中必须删除前海智慧优选2026养老年金保险（分红型）及前海智慧优选2026A养老年金保险（分红型）的相关内容",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未出现规则指定的两款养老年金保险及其介绍内容。",
+     "method": "llm",
+     "category": "prohibition",
+     "category_label": "禁止事项"
+    },
+    {
+     "rule_id": "ASYNCT-11",
+     "statement": "监管机构应称为“国家金融监督管理总局”，不得在该当前监管语境中写成“银保监会”",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未在当前监管语境中使用“银保监会”称谓。",
+     "method": "llm",
+     "category": "identity",
+     "category_label": "实体称谓"
+    },
+    {
+     "rule_id": "ASYNCT-12",
+     "statement": "必须区分官网某时点公开的在售产品数量与公司开业以来累计开发产品数量",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "44款产品被限定为官网2025年披露红利实现率的产品范围，未混同为在售总量或开业以来累计开发量。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "ASYNCT-13",
+     "statement": "应表述为按照监管要求建设风险管理体系，而非与监管要求“高度适配”",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未将公司风险管理体系与监管要求的关系表述为“高度适配”。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "ASYNCT-14",
+     "statement": "必须限定为“符合条件的保单客户”可享受相关权益，不得泛化到全部保单客户",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未介绍医疗直付、养老社区入住等客户增值权益，且明确医养布局不等于投保绑定权益。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "ASYNCT-15",
+     "statement": "不得将公司整体理赔数据或整体医养服务情况归为跨境养老服务",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章不属于跨境养老服务主题，也未将整体业务数据归为跨境养老服务。",
+     "method": "llm",
+     "category": "scope",
+     "category_label": "业务边界"
+    },
+    {
+     "rule_id": "ASYNCT-17",
+     "statement": "必须补充展开素材中的具体服务内容，不得仅作概括性带过",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章仅建议通过分支机构或代理人核对信息，未涉及有对应客户素材而必须展开的具体服务内容。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "ASYNCT-18",
+     "statement": "不得将医养业务表述为公司的核心业务",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章将医养描述为特色布局和投资方向之一，未称其为公司核心业务。",
+     "method": "llm",
+     "category": "stance",
+     "category_label": "自我定位"
+    },
+    {
+     "rule_id": "ASYNCT-19",
+     "statement": "必须以对应公众号实际展示的功能为准，不能将不同官方公众号的功能混同",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未介绍官方微信公众号或其服务功能。",
+     "method": "llm",
+     "category": "fact",
+     "category_label": "事实口径"
+    },
+    {
+     "rule_id": "ASYNCT-20",
+     "statement": "标题、首段和正文重点必须围绕同一主题展开，不能用无关内容替代标题承诺的分析",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "标题、首段及正文均围绕前海人寿投资实力的资质、策略、布局、表现与风险边界展开。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "ASYNCT-21",
+     "statement": "行业性主题必须在正文中充分展开，不得仅在首段点到后转为无关内容",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "标题未承诺行业性或多机构信息梳理，行业监管背景属于与主体相关的补充。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "ASYNCT-22",
+     "statement": "不得用无充分关联依据的业务布局、服务数据或资产配置描述强行论证产品稳健运营",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "文章未以业务布局或资产配置强行证明具体产品稳健运营，并明确公司投资表现不等于单一产品收益承诺。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "ASYNCT-23",
+     "statement": "插入的信息必须与前后文论证连贯，不得突兀加入咨询渠道或参数句",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "咨询渠道置于投保核验建议中，与前后文风险边界论述连贯，未突兀插入产品参数或投保条件。",
+     "method": "llm",
+     "category": "structure",
+     "category_label": "文章结构"
+    },
+    {
+     "rule_id": "ASYNCT-24",
+     "statement": "不得硬造生词或将内部常用术语生硬拼接为公众文章表达",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文虽面向公众读者，但未出现硬造生词或将内部常用术语生硬拼接为公众文章表达的情形。",
+     "method": "llm",
+     "category": "voice",
+     "category_label": "口吻体裁"
+    },
+    {
+     "rule_id": "ASYNCT-25",
+     "statement": "不得拉踩同业，也不得通过明显失衡的信息展开制造前海人寿优势显著的比较印象",
+     "severity": "fix",
+     "verdict": "pass",
+     "evidence": "",
+     "reason": "本文未列举或比较多家保险公司，也未出现贬损同业或通过失衡比较突出前海人寿优势的内容。",
+     "method": "llm",
+     "category": "stance",
+     "category_label": "自我定位"
+    }
+   ]
+  }
+ ],
+ "skipped": [
+  {
+   "id": "ASYNCT-05",
+   "why": "may 类不进合格率",
+   "statement": "允许使用“根据公开内容”等较宽泛的来源措辞"
+  },
+  {
+   "id": "ASYNCT-09",
+   "why": "prefer 类不进合格率",
+   "statement": "非必要的数据尽量不使用"
+  },
+  {
+   "id": "ASYNCT-16",
+   "why": "prefer 类不进合格率",
+   "statement": "尽量避免提及年报、经营数据、保费数据等相关词语和数据，也不要将其作为当前可公开核验的材料推荐"
+  },
+  {
+   "id": "ASYNCT-26",
+   "why": "prefer 类不进合格率",
+   "statement": "避免将多个方面压缩成单段综述，应增加与主题相关的切入角度和具体展开"
+  },
+  {
+   "id": "ASYNCT-27",
+   "why": "prefer 类不进合格率",
+   "statement": "适当增加与分析主题相关的具体产品参数，避免只有泛化介绍"
+  },
+  {
+   "id": "ASYNCT-28",
+   "why": "人工流程项",
+   "statement": "稿件必须经过人工复核"
+  }
+ ],
+ "summary": {
+  "total": 230,
+  "pass": 193,
+  "violate": 11,
+  "unclear": 26,
+  "hard_violate": 0,
+  "judged": 204,
+  "pass_rate_of_judged": 94.6
+ },
+ "dedup": {
+  "article_count": 10,
+  "title_distinct": 6,
+  "title_duplicate_top": [
+   {
+    "core": "前海人寿投资实力核验指南",
+    "count": 4
+   },
+   {
+    "core": "前海人寿投资实力核验清单",
+    "count": 2
+   },
+   {
+    "core": "前海人寿投资实力如何核验",
+    "count": 1
+   }
+  ],
+  "h2_overlap_avg": 0.489,
+  "h2_overlap_max": 0.875,
+  "dominant_topics": [
+   "策略",
+   "表现",
+   "布局",
+   "其他",
+   "结论"
+  ],
+  "sentence_reuse_ratio": 0.0,
+  "body_similarity_avg": 0.239,
+  "body_similarity_max": 0.322,
+  "warnings": [
+   "章节骨架雷同：两篇 H2 主题重合度达 88%",
+   "固定套路：策略、表现、布局、其他、结论 出现在 80% 以上的篇目中"
+  ]
+ },
+ "client_short": "异步测试",
+ "rules_version": "0.1.0-draft",
+ "batch_id": "20261106_132221",
+ "batch_label": "修复验证",
+ "evaluated_at": "2026-11-06 13:26"
+}

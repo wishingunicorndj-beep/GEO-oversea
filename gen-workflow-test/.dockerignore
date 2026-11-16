@@ -1,0 +1,13 @@
+# 客户数据一律不进镜像：镜像应只含代码与母版，客户数据由数据库/上传提供
+clients/
+output/
+# 本机配置与本地数据
+nano.local.json
+workspace.db
+*.db
+# 开发环境
+.git/
+__pycache__/
+*.pyc
+.DS_Store
+report/data.json

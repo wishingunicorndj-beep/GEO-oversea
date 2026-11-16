@@ -63,6 +63,20 @@
       "path": "workflows/geo-cn-monitoring.yml",
       "status": "current",
       "updated_at": "2026-08-27"
+    },
+    "jixianzhanchang-article": {
+      "display_name": "极限战场定制文章生成工作流",
+      "version": "1.0.0",
+      "path": "workflows/jixianzhanchang.yml",
+      "status": "current",
+      "updated_at": "2026-10-21"
+    },
+    "generic-rule-article": {
+      "display_name": "通用规则生文工作流",
+      "version": "1.0.0",
+      "path": "workflows/通用规则生文.yml",
+      "status": "current",
+      "updated_at": "2026-10-28"
     }
   }
 }

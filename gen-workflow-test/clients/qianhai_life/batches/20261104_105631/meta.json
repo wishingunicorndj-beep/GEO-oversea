@@ -1,0 +1,12 @@
+{
+ "batch_id": "20261104_105631",
+ "label": "投资实力首批",
+ "created_at": "2026-11-04 11:02",
+ "article_count": 10,
+ "rules_version": "0.1.0-draft",
+ "rules_count": 60,
+ "violate": 9,
+ "hard_violate": 0,
+ "unclear": 9,
+ "pass_rate": 97.2
+}

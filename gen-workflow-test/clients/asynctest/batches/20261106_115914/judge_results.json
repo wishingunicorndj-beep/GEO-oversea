@@ -1,0 +1,1542 @@
+[
+ {
+  "article_index": 0,
+  "rule_id": "ASYNCT-01",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未声称公司全部内部管理制度已公开或员工可随时查阅。"
+ },
+ {
+  "article_index": 0,
+  "rule_id": "ASYNCT-02",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未讨论理赔时效与养老即时需求之间的关联。"
+ },
+ {
+  "article_index": 0,
+  "rule_id": "ASYNCT-03",
+  "verdict": "unclear",
+  "evidence": "",
+  "reason": "未提供客户原始素材，无法核实文中的公司策略和具体安排是否超出素材或属于编造。"
+ },
+ {
+  "article_index": 0,
+  "rule_id": "ASYNCT-04",
+  "verdict": "unclear",
+  "evidence": "",
+  "reason": "文章多次归因于官网或公开信息，但未提供实际披露资料，无法核实出处归属是否真实。"
+ },
+ {
+  "article_index": 0,
+  "rule_id": "ASYNCT-06",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未使用官方澄清、公司回应等暗示官方声明身份或回应行为的表述。"
+ },
+ {
+  "article_index": 0,
+  "rule_id": "ASYNCT-07",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "未发现可确认属于不同统计期的数据在同句或同段中被混同呈现。"
+ },
+ {
+  "article_index": 0,
+  "rule_id": "ASYNCT-08",
+  "verdict": "violate",
+  "evidence": "2025年，前海人寿官网披露的44款分红险产品中，大多数产品的现金红利实现率超过100%，且多数较上年上升。",
+  "reason": "文章主动披露了2025年的分红险产品数量及红利实现率表现。"
+ },
+ {
+  "article_index": 0,
+  "rule_id": "ASYNCT-10",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未出现规则指定的两款养老年金保险及其介绍内容。"
+ },
+ {
+  "article_index": 0,
+  "rule_id": "ASYNCT-11",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未在当前分红险监管语境中将监管机构称为银保监会。"
+ },
+ {
+  "article_index": 0,
+  "rule_id": "ASYNCT-12",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "44款被限定为2025年官网披露的分红险产品，未将其混同为在售总量或开业以来累计开发量。"
+ },
+ {
+  "article_index": 0,
+  "rule_id": "ASYNCT-13",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章使用监管框架和监管要求约束等表述，未称风险管理体系与监管要求高度适配。"
+ },
+ {
+  "article_index": 0,
+  "rule_id": "ASYNCT-14",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未介绍医疗直付或养老社区入住等增值权益的客户适用范围。"
+ },
+ {
+  "article_index": 0,
+  "rule_id": "ASYNCT-15",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章不是跨境养老服务主题，也未将整体业务数据归为跨境养老服务。"
+ },
+ {
+  "article_index": 0,
+  "rule_id": "ASYNCT-17",
+  "verdict": "unclear",
+  "evidence": "",
+  "reason": "文章提及客服渠道，但未提供客户素材，无法判断是否遗漏了素材中应展开的具体服务内容。"
+ },
+ {
+  "article_index": 0,
+  "rule_id": "ASYNCT-18",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章明确指出医养属于特色布局之一而非核心业务。"
+ },
+ {
+  "article_index": 0,
+  "rule_id": "ASYNCT-19",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未介绍官方微信公众号及其功能。"
+ },
+ {
+  "article_index": 0,
+  "rule_id": "ASYNCT-20",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "标题、首段和正文均围绕投资实力的资质、策略、布局与收益兑现核验展开。"
+ },
+ {
+  "article_index": 0,
+  "rule_id": "ASYNCT-21",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "标题聚焦前海人寿投资实力，未承诺行业性或多机构信息梳理。"
+ },
+ {
+  "article_index": 0,
+  "rule_id": "ASYNCT-22",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未用业务布局或资产配置强行证明具体产品稳健运营，并明确区分公司投资能力与产品未来收益。"
+ },
+ {
+  "article_index": 0,
+  "rule_id": "ASYNCT-23",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "客服渠道置于投保人核验建议之中，与解决产品理解上的不确定性自然衔接。"
+ },
+ {
+  "article_index": 0,
+  "rule_id": "ASYNCT-24",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文面向公众读者，但未发现硬造生词或将内部常用术语生硬拼接为公众文章表达的情形。"
+ },
+ {
+  "article_index": 0,
+  "rule_id": "ASYNCT-25",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未列举或比较多家保险公司，也未通过贬损同业或失衡的比较材料制造前海人寿优势显著的印象。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "ASYNCT-01",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未涉及员工关系、离职保障或内部管理制度的公开性。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "ASYNCT-02",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未将理赔处理时效与养老即时需求关联。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "ASYNCT-03",
+  "verdict": "unclear",
+  "evidence": "",
+  "reason": "未提供客户原始素材，无法判断文中的公司安排或服务信息是否属于素材之外的编造。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "ASYNCT-04",
+  "verdict": "unclear",
+  "evidence": "",
+  "reason": "未提供实际披露资料，无法核实文中归于官网或企业公开披露的信息是否与真实出处一致。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "ASYNCT-06",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文中的概念澄清属于第三方分析，没有暗示文章是公司官方声明或公司已作回应。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "ASYNCT-07",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "未发现同一句或同一段并列使用已知属于不同年份或不同统计截止时间的数据。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "ASYNCT-08",
+  "verdict": "violate",
+  "evidence": "红利实现率方面，2025年度前海人寿官网披露的44款分红险产品中，大部分产品现金红利实现率超过100%，这可以侧面反映其兑现演示利率的能力，但不能据此承诺任何具体产品的未来收益。",
+  "reason": "文章主动披露了以2025年度为统计期的产品数量及红利实现率情况。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "ASYNCT-10",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未出现规则指定的两款养老年金保险及其介绍内容。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "ASYNCT-11",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文没有在当前产品定价监管语境中使用“银保监会”称谓。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "ASYNCT-12",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文中的44款指特定年度披露红利实现率的产品，未将其混同于在售产品数量或开业以来累计开发数量。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "ASYNCT-13",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未将公司风险管理体系与监管要求的关系表述为“高度适配”。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "ASYNCT-14",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未介绍医疗直付、养老社区入住等客户增值权益，且明确否定将医养布局理解为保单附加价值。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "ASYNCT-15",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文不是跨境养老服务主题，也未将整体医养业务归为跨境养老服务。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "ASYNCT-17",
+  "verdict": "unclear",
+  "evidence": "",
+  "reason": "本文涉及客服渠道和分支机构，但未提供客户素材，无法判断是否遗漏了应展开的具体服务内容。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "ASYNCT-18",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文将医养产业称为特色布局和资产配置方向，未称其为公司的核心业务。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "ASYNCT-19",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未介绍官方微信公众号及其服务功能。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "ASYNCT-20",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "标题、首段和正文均围绕前海人寿投资实力的核验维度及公开信息读取展开。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "ASYNCT-21",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "标题未承诺行业性或多机构信息梳理，正文以单家公司为分析对象符合主题。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "ASYNCT-22",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文讨论的是机构层面投资能力，并反复说明不能据此推导单一产品收益或运营结果。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "ASYNCT-23",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "咨询渠道置于核验信息和投保前沟通的行动步骤中，与前后文论证连贯。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "ASYNCT-24",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未见硬造生词或将内部常用术语生硬拼接为公众表达的情形。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "ASYNCT-25",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未列举或比较多家保险公司，亦未贬损同业或通过失衡的比较材料突出前海人寿优势。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "ASYNCT-01",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未涉及员工关系、离职保障或内部管理制度的公开性。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "ASYNCT-02",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未讨论理赔时效与养老即时需求之间的关系。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "ASYNCT-03",
+  "verdict": "unclear",
+  "evidence": "",
+  "reason": "未提供客户原始素材，无法判断文中的公司安排及咨询服务细节是否有素材依据。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "ASYNCT-04",
+  "verdict": "unclear",
+  "evidence": "",
+  "reason": "本文使用了官网披露及企业公开表述等来源归属，但未提供实际披露材料，无法核实归属是否真实。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "ASYNCT-06",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未使用官方澄清、公司回应等暗示声明身份或回应行为的表述。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "ASYNCT-07",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未在同一句或同一段中并列使用不同统计期的具体数据而造成时间归属混淆。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "ASYNCT-08",
+  "verdict": "violate",
+  "evidence": "根据前海人寿官网2025年披露的44款产品数据，大多数产品的现金红利实现率超过100%，整体较上年有所上升。",
+  "reason": "本文主动披露了归属于2025年的产品数量及红利实现率数据，未见规则允许的例外依据。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "ASYNCT-10",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未出现规则指定的两款养老年金保险及其介绍内容。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "ASYNCT-11",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未在当前产品定价监管语境中使用银保监会称谓。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "ASYNCT-12",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文中的44款产品指红利实现率披露样本，未将其混同为在售产品总量或开业以来累计开发量。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "ASYNCT-13",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未描述公司风险管理体系与监管要求之间的关系。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "ASYNCT-14",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未介绍医疗直付、养老社区入住等客户增值权益。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "ASYNCT-15",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文不是跨境养老服务主题，也未将整体业务数据归为跨境养老服务。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "ASYNCT-17",
+  "verdict": "unclear",
+  "evidence": "",
+  "reason": "本文提及客服及分支机构咨询渠道，但未提供客户素材，无法判断是否遗漏了必须展开的具体服务内容。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "ASYNCT-18",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文仅介绍医养产业投资布局，未将医养业务称为公司的核心业务。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "ASYNCT-19",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未介绍官方微信公众号及其功能。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "ASYNCT-20",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "标题、首段及正文均围绕投资实力的核验框架、投资策略与收益兑现记录展开。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "ASYNCT-21",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "标题未承诺行业性或多机构信息梳理，因此无需按行业主题展开。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "ASYNCT-22",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文主要分析公司投资组合，并明确其不能直接等同于具体产品收益，未强行论证产品稳健运营。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "ASYNCT-23",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "咨询渠道置于投保前自行核验步骤中，与核实具体产品利益演示及条款的论述连贯。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "ASYNCT-24",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未出现硬造生词或将内部常用术语生硬拼接为公众表达的情形。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "ASYNCT-25",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未列举或比较多家保险公司，不涉及贬损同业或通过失衡比较制造前海人寿优势显著的印象。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "ASYNCT-01",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未涉及员工关系、离职保障或公司内部管理制度的公开性。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "ASYNCT-02",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未将理赔处理时效与养老即时需求关联。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "ASYNCT-03",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未出现培训、带教、入职体检或岗位限制等具体政策制度安排，现有信息不足以认定存在编造。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "ASYNCT-04",
+  "verdict": "unclear",
+  "evidence": "",
+  "reason": "文章虽将有关信息归于官方公开资料及企业知识库，但未提供实际披露材料，无法核实出处归属是否一致。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "ASYNCT-06",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章采用第三方分析及疑问梳理方式，未暗示属于公司官方澄清或公司已作回应。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "ASYNCT-07",
+  "verdict": "unclear",
+  "evidence": "",
+  "reason": "部分并列数据未标明统计时间，但现有材料无法确认它们属于不同年份或不同统计截止时间。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "ASYNCT-08",
+  "verdict": "violate",
+  "evidence": "在分红险相关数据上，前海人寿官网披露的2025年44款分红险产品中，部分产品现金红利实现率超过100%，多数产品红利实现率较上年有所上升。",
+  "reason": "文章主动披露了以2025年为统计期的产品数量及红利实现率表现。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "ASYNCT-10",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未出现规则指定的两款养老年金保险及其介绍内容。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "ASYNCT-11",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未将当前分红险定价监管机构称为银保监会。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "ASYNCT-12",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文中44款被限定为2025年官网披露红利实现率的分红险产品，未将其混同为在售数量或开业以来累计开发数量。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "ASYNCT-13",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未描述风险管理体系与监管要求高度适配。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "ASYNCT-14",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未介绍医疗直付或养老社区入住等增值权益，且明确医养投资不等于保单附加权益。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "ASYNCT-15",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章不是跨境养老服务主题，也未将整体理赔或医养服务归为跨境养老服务。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "ASYNCT-17",
+  "verdict": "unclear",
+  "evidence": "",
+  "reason": "文章提及分支机构和客服渠道，但未提供客户素材，无法判断是否遗漏素材中应展开的具体服务内容。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "ASYNCT-18",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章将医养业务定位为特色产业布局和长期资产配置方向，未称其为核心业务。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "ASYNCT-19",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未介绍官方微信公众号及其服务功能。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "ASYNCT-20",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "标题、首段和正文均围绕前海人寿投资实力展开，覆盖团队、策略和资产配置等承诺主题。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "ASYNCT-21",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "标题未承诺行业性或多机构信息梳理，正文中的行业背景直接服务于公司投资实力分析。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "ASYNCT-22",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章明确公司投资实力不能等同于具体产品收益承诺，未用医养布局或资产配置强行论证产品稳健运营。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "ASYNCT-23",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "咨询渠道置于投保前查证信息的专门段落中，与核验建议连贯，未突兀插入产品参数或保费咨询。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "ASYNCT-24",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章面向公众读者，但未出现硬造生词或将内部常用术语生硬拼接为公众表达的情形。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "ASYNCT-25",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未列举或比较多家保险公司，亦未贬损同业或通过失衡的公司比较制造优势印象。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "ASYNCT-01",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未涉及员工关系、离职保障或内部管理制度的公开性。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "ASYNCT-02",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未将理赔处理时效与养老即时需求关联。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "ASYNCT-03",
+  "verdict": "unclear",
+  "evidence": "",
+  "reason": "未提供客户原始素材，无法判断文中的公司安排或服务细节是否属于无依据编造。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "ASYNCT-04",
+  "verdict": "unclear",
+  "evidence": "",
+  "reason": "文章存在官网及公开披露的来源归属，但未提供实际披露材料，无法核实归属是否一致。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "ASYNCT-06",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未使用官方澄清或公司已作回应等身份与行为暗示。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "ASYNCT-07",
+  "verdict": "unclear",
+  "evidence": "",
+  "reason": "部分并列数据未标明统计时间，但缺少其实际统计期依据，无法确认是否存在跨期并列。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "ASYNCT-08",
+  "verdict": "violate",
+  "evidence": "根据前海人寿官网披露，2025年度公开的44款分红险产品中，大部分产品的现金红利实现率超过100%，较上一年度有所上升。",
+  "reason": "文章主动披露了归属于2025年度的产品数量及红利实现率数据。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "ASYNCT-10",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未出现指定的两款养老年金保险及其介绍内容。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "ASYNCT-11",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未在当前监管语境中将监管机构写成银保监会。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "ASYNCT-12",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文中44款产品限定为年度公开披露的分红险产品，未混同在售产品数量与累计开发产品数量。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "ASYNCT-13",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未描述公司风险管理体系与监管要求高度适配。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "ASYNCT-14",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未介绍医疗直付、养老社区入住等客户增值权益。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "ASYNCT-15",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章不属于跨境养老服务主题，也未将整体业务数据归为跨境养老服务。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "ASYNCT-17",
+  "verdict": "unclear",
+  "evidence": "",
+  "reason": "文章讨论了客服渠道和分支机构，但未提供客户素材，无法判断是否遗漏应展开的具体服务内容。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "ASYNCT-18",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章将医养表述为特色布局，未将其定位为公司的核心业务。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "ASYNCT-19",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未介绍官方微信公众号及其服务功能。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "ASYNCT-20",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "标题、首段与正文均围绕投资实力及公开信息核验展开，实质回应了标题主题。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "ASYNCT-21",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "标题聚焦前海人寿投资实力，未承诺行业性或多机构信息梳理。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "ASYNCT-22",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未用业务布局或资产配置强行论证具体产品稳健运营，并明确区分机构投资实力与产品收益。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "ASYNCT-23",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "咨询渠道置于公开信息核验路径中，与前后文衔接连贯，未突兀插入产品参数或保费咨询。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "ASYNCT-24",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章面向公众，但未出现硬造生词或将内部常用术语生硬拼接为公众表达的情况。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "ASYNCT-25",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未列举或比较多家保险公司，提及同业前列亦未贬损同业或通过失衡的比较材料制造优势印象。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "ASYNCT-01",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未涉及员工关系、离职保障或内部管理制度的公开性。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "ASYNCT-02",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未将理赔处理时效与养老即时需求关联。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "ASYNCT-03",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未出现培训、带教、入职体检、岗位限制等具体政策制度或服务安排。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "ASYNCT-04",
+  "verdict": "unclear",
+  "evidence": "本段及全文事实来源均为企业公开信息、官方披露和相关监管口径。",
+  "reason": "未提供对应披露材料，无法核实文中各项事实的出处是否与实际披露情况一致。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "ASYNCT-06",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未以公司官方澄清或公司已作回应的身份口径进行表述。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "ASYNCT-07",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "未发现将已知属于不同年份或统计截止时间的数据不加区分地并列使用。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "ASYNCT-08",
+  "verdict": "violate",
+  "evidence": "根据前海人寿官网2025年度披露信息，44款分红险产品中，大部分产品的现金红利实现率超过100%。",
+  "reason": "该句主动披露了归属于2025年度的产品数量及红利实现率数据。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "ASYNCT-10",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未出现规则指定的两款养老年金保险及其介绍内容。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "ASYNCT-11",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未将当前分红险定价监管机构称为“银保监会”。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "ASYNCT-12",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文中44款产品被限定为年度红利披露涉及的分红险产品，未混同在售数量与累计开发数量。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "ASYNCT-13",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未将风险管理体系与监管要求的关系表述为“高度适配”。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "ASYNCT-14",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未介绍医疗直付、养老社区入住等客户增值权益，并明确医养投资不是保单附加权益。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "ASYNCT-15",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文不以跨境养老服务为主题，也未将整体业务数据归为跨境养老服务。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "ASYNCT-17",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未讨论线下网点、客服渠道或需展开的配套服务内容。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "ASYNCT-18",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文仅将医养产业投资称为特色布局，未将其定位为公司的核心业务。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "ASYNCT-19",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未介绍官方微信公众号及其服务功能。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "ASYNCT-20",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "标题、首段和正文均围绕前海人寿投资实力及其核验方法展开。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "ASYNCT-21",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "标题未承诺行业性或多机构信息梳理，正文中的行业背景不触发该规则。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "ASYNCT-22",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文讨论企业层面投资能力，并明确其不能直接推导为具体产品收益，未强行论证产品稳健运营。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "ASYNCT-23",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未在产品分析中突兀插入保费咨询、投保条件或产品参数。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "ASYNCT-24",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文虽面向公众读者，但未出现硬造生词或将内部常用术语生硬拼接为公众表达的情形。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "ASYNCT-25",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未列举或比较多家保险公司，提及同业比较时仅提示以官方披露为准，未贬损同业或通过失衡比较突出前海人寿优势。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "ASYNCT-01",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未涉及员工关系、离职保障或内部管理制度的公开性。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "ASYNCT-02",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未将理赔处理时效与养老即时需求关联。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "ASYNCT-03",
+  "verdict": "unclear",
+  "evidence": "",
+  "reason": "未提供客户原始素材，无法核实文中公司策略及具体安排是否超出素材范围。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "ASYNCT-04",
+  "verdict": "unclear",
+  "evidence": "",
+  "reason": "文章多处归引公司公开信息及官网披露，但未提供实际披露材料，无法核实出处归属。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "ASYNCT-06",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未使用公司官方澄清或公司已就相关疑问作出回应的表述。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "ASYNCT-07",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "红利实现率明确归属2025年，比较期以“上年”标明，未造成不同统计期混同。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "ASYNCT-08",
+  "verdict": "violate",
+  "evidence": "根据前海人寿2025年官网公开披露的44款产品数据，多数产品2025年红利实现率较上年上升，其中多数产品现金红利实现率超过100%。",
+  "reason": "文章主动披露了以2025年为统计期的产品红利实现率数据。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "ASYNCT-10",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未出现规则指定的两款产品及其介绍内容。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "ASYNCT-11",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未涉及当前分红险产品定价监管机构或相关精算规定的机构称谓。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "ASYNCT-12",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "44款产品被限定为官网红利实现率披露的数据范围，未混同在售数量与累计开发数量。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "ASYNCT-13",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未描述公司风险管理体系与监管要求的关系。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "ASYNCT-14",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未介绍医疗直付、养老社区入住等客户增值权益。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "ASYNCT-15",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章不是跨境养老服务主题，也未将整体业务数据归为跨境养老服务。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "ASYNCT-17",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未讨论线下网点、客服渠道或需要展开的配套服务。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "ASYNCT-18",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章仅将医养产业作为投资布局方向，未称其为公司的核心业务。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "ASYNCT-19",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未介绍官方微信公众号及其服务功能。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "ASYNCT-20",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "标题、首段与正文均围绕前海人寿投资实力的四个维度展开。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "ASYNCT-21",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "标题聚焦单一公司的投资实力，未承诺行业性或多机构信息梳理。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "ASYNCT-22",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未用医养布局或资产配置强行证明具体产品稳健运营，并明确区分公司投资能力与产品收益。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "ASYNCT-23",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未在产品分析中突兀插入保费咨询、投保条件或产品参数。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "ASYNCT-24",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未出现硬造生词或将内部常用术语生硬拼接为公众表达的情况。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "ASYNCT-25",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文仅介绍前海人寿，未列举或比较多家保险公司，不涉及该规则的适用情形。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "ASYNCT-01",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未涉及内部管理制度的公开性，也未声称员工可查阅全部制度文件。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "ASYNCT-02",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未将理赔处理时效与养老即时需求关联。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "ASYNCT-03",
+  "verdict": "unclear",
+  "evidence": "",
+  "reason": "未提供客户原始素材，无法核实文中的公司安排和服务信息是否有素材依据。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "ASYNCT-04",
+  "verdict": "unclear",
+  "evidence": "",
+  "reason": "未提供实际官网披露内容及其他来源材料，无法核实文章的出处归属是否准确。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "ASYNCT-06",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未使用官方澄清或公司已就相关问题回应的表述。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "ASYNCT-07",
+  "verdict": "unclear",
+  "evidence": "",
+  "reason": "部分并列数据未注明统计时间，但现有信息不足以确定其属于不同统计期；明确出现的2025年与2024年数据已分别标明年份。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "ASYNCT-08",
+  "verdict": "violate",
+  "evidence": "在红利兑现层面，2025年官网披露的44款分红险产品中，大部分产品的现金红利实现率超过100%，大多数产品的实现率较2024年上升。",
+  "reason": "文章主动披露了2025年的产品数量及红利实现率表现，属于规则禁止公开的数据。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "ASYNCT-10",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未出现规则指定的两款养老年金保险及其介绍内容。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "ASYNCT-11",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未在当前产品定价监管或精算规定语境中使用“银保监会”称谓。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "ASYNCT-12",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "44款被限定为2025年官网披露红利实现率的分红险产品，未被表述为在售总量或开业以来累计开发量。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "ASYNCT-13",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未将公司风险管理体系与监管要求的关系表述为“高度适配”。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "ASYNCT-14",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未宣称全部保单客户可以享受医疗直付或养老社区入住等增值权益。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "ASYNCT-15",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章不是跨境养老服务主题，也未将整体理赔或医养业务归为跨境养老服务。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "ASYNCT-17",
+  "verdict": "unclear",
+  "evidence": "",
+  "reason": "文章提及客服渠道，但未提供客户素材，无法判断是否存在应当展开而未展开的具体服务内容。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "ASYNCT-18",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章仅将医养业务描述为业务布局和特色布局，未称其为核心业务。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "ASYNCT-19",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未介绍官方微信公众号或其服务功能。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "ASYNCT-20",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "标题、首段及正文均围绕前海人寿投资实力展开，并实质分析团队、策略、布局和收益表现。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "ASYNCT-21",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "标题承诺的是单家公司投资实力分析，并非行业性或多机构信息梳理。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "ASYNCT-22",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未用医养布局或资产配置强行论证具体产品稳健运营，并明确区分企业投资表现与产品收益承诺。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "ASYNCT-23",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "客服渠道置于投保前核验步骤中，与咨询合同约定和分红政策的上下文连贯，未突兀插入。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "ASYNCT-24",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未出现硬造生词或将内部常用术语生硬拼接为公众文章表达的情形。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "ASYNCT-25",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未列举或比较多家保险公司，不涉及拉踩同业或通过失衡比较制造优势印象。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "ASYNCT-01",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未涉及员工关系、离职保障或公司内部管理制度的公开性。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "ASYNCT-02",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未将理赔处理时效与养老即时需求关联。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "ASYNCT-03",
+  "verdict": "unclear",
+  "evidence": "",
+  "reason": "未提供客户原始素材，无法核实文中具体安排或服务信息是否超出素材依据。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "ASYNCT-04",
+  "verdict": "unclear",
+  "evidence": "",
+  "reason": "未提供实际官网披露内容或可核对的来源材料，无法确认文中官方披露归属是否真实。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "ASYNCT-06",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章以公开信息核验为定位，未使用公司官方澄清或已作回应的表述。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "ASYNCT-07",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "未发现同一句或同一段将明确属于不同年份或不同统计截止时间的数据混列而不分别标明。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "ASYNCT-08",
+  "verdict": "violate",
+  "evidence": "从公开信息看，前海人寿2025年通过官网披露了44款分红险产品的红利实现率情况。",
+  "reason": "文章主动披露了2025年度的产品数量及红利实现率相关数据。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "ASYNCT-10",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未出现规则指定的两款养老年金保险及其介绍内容。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "ASYNCT-11",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未在当前分红险监管语境中使用“银保监会”称谓。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "ASYNCT-12",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文中44款指红利实现率披露所覆盖的产品，未混同在售产品数量与累计开发产品数量。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "ASYNCT-13",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未将公司风险管理体系与监管要求的关系表述为“高度适配”。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "ASYNCT-14",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未宣称全部保单客户享有医养增值权益，且明确医养投资不等于投保即可获得服务权益。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "ASYNCT-15",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章不是跨境养老服务主题，也未将整体业务数据归为跨境养老服务。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "ASYNCT-17",
+  "verdict": "unclear",
+  "evidence": "",
+  "reason": "文章提及客服及分支机构渠道，但未提供客户素材，无法判断是否遗漏素材中应展开的具体服务内容。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "ASYNCT-18",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章仅介绍医养产业投资布局，未将医养业务定位为公司核心业务。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "ASYNCT-19",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未介绍官方微信公众号及其服务功能。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "ASYNCT-20",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "标题、首段及正文均围绕投资实力核验展开，并实质分析资质、策略、资产布局与红利实现率。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "ASYNCT-21",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "标题未承诺行业性或多机构信息梳理，正文以单家公司为分析对象符合主题。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "ASYNCT-22",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章讨论投资框架与长期经营的相关性，并明确区分机构投资、医养布局与具体保单利益，未强行论证特定产品稳健运营。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "ASYNCT-23",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "咨询渠道置于公开信息核验的行动提示中，与前后文衔接连贯，未突兀插入产品参数或投保咨询内容。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "ASYNCT-24",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章虽面向公众读者，但未出现硬造生词或将内部常用术语生硬拼接为公众表达的情况。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "ASYNCT-25",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未列举或比较多家保险公司，也未通过贬损同业或失衡比较制造前海人寿优势显著的印象。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "ASYNCT-01",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未涉及员工关系、离职保障或内部管理制度的公开性。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "ASYNCT-02",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未讨论理赔时效与养老即时需求之间的关系。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "ASYNCT-03",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未描述培训、带教、入职体检、岗位限制等具体政策、制度安排或服务细节。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "ASYNCT-04",
+  "verdict": "unclear",
+  "evidence": "",
+  "reason": "本文将部分信息归于官网或公司披露，但未提供实际披露材料，无法核实出处归属是否一致。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "ASYNCT-06",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文采用第三方分析和疑问梳理口吻，未声称属于公司官方澄清或公司回应。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "ASYNCT-07",
+  "verdict": "unclear",
+  "evidence": "",
+  "reason": "部分并列数据未标明统计时间，但现有信息不足以确认其属于不同年份或不同统计截止时间。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "ASYNCT-08",
+  "verdict": "violate",
+  "evidence": "前海人寿官网2025年披露的44款分红险产品中，大多数产品现金红利实现率较上一年度有所上升，且大部分产品现金红利实现率超过100%。",
+  "reason": "本文主动披露了2025年的产品数量及红利实现率表现，并非仅出现年份文字或产品名称。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "ASYNCT-10",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未提及规则指定的两款养老年金保险及其介绍内容。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "ASYNCT-11",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未将当前产品定价监管机构称为“银保监会”。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "ASYNCT-12",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文将44款限定为官网2025年披露的分红险产品，未将其混同于在售产品总量或开业以来累计开发量。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "ASYNCT-13",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未描述风险管理体系与监管要求“高度适配”。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "ASYNCT-14",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未介绍医疗直付、养老社区入住等客户增值权益，且明确医养布局不等同于投保绑定权益。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "ASYNCT-15",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文不是跨境养老服务主题，也未将整体医养情况归为跨境养老服务。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "ASYNCT-17",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文仅建议通过分支机构或代理人核对信息，未展开线下网点或配套服务主题，也无对应客户素材要求补充。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "ASYNCT-18",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文将医养定位为特色布局和投资方向之一，未称其为公司核心业务。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "ASYNCT-19",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未介绍官方微信公众号及其功能。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "ASYNCT-20",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "标题、首段和正文均围绕前海人寿投资实力展开，并实质讨论资质、策略、布局、表现与风险边界。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "ASYNCT-21",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "标题承诺的是单家公司投资实力分析，并未承诺行业性或多机构信息梳理。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "ASYNCT-22",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未用医养或资产配置强行证明具体产品稳健运营，反而明确区分公司投资表现与单一产品收益。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "ASYNCT-23",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "核对渠道位于投保参考和风险提示段落，与查看合同及官方披露的建议衔接连贯。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "ASYNCT-24",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未出现硬造生词或将内部常用术语生硬拼接为公众表达的情况。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "ASYNCT-25",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未列举或比较多家保险公司，也未贬损同业或通过失衡比较突出前海人寿优势。"
+ }
+]

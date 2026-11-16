@@ -1627,28 +1627,9 @@ workflow:
       width: 243
       zIndex: 0
     - data:
-        code: "def main(articles, compliance_mode: str = \"standard\", ent_body: str\
-          \ = \"\", prod_body: str = \"\", custom_writing_distribution: str = \"\"\
-          , custom_writing_preference_raw: str = \"\", company_name: str = \"\", verified_competitor_text:\
-          \ str = \"\"):\n    \"\"\"V22 upstream-preserving gate.\n\n    N7 owns article\
-          \ writing and compliance rewriting. N8-pre must not rewrite\n    title,\
-          \ description, content, tags, self_review, FAQ, prices, percentages,\n \
-          \   wording, HTML, or existing metadata. It only skips invalid non-object\n\
-          \    entries and fills two genuinely missing routing fields.\n    \"\"\"\
-          \n    if not isinstance(articles, list):\n        return {\"cleaned_articles\"\
-          : []}\n\n    cleaned_articles = []\n    for article in articles:\n     \
-          \   if not isinstance(article, dict):\n            continue\n\n        #\
-          \ Copy the complete object so current and future upstream metadata is\n\
-          \        # preserved automatically. Never rebuild from a fixed field whitelist.\n\
-          \        preserved = dict(article)\n\n        # Add routing defaults only\
-          \ when the key is absent. Existing empty or\n        # explicit values remain\
-          \ upstream-owned and are not overwritten.\n        if \"_compliance_mode\"\
-          \ not in preserved:\n            preserved[\"_compliance_mode\"] = compliance_mode\
-          \ or \"standard\"\n        if \"_company_name\" not in preserved and company_name:\n\
-          \            preserved[\"_company_name\"] = company_name\n\n        cleaned_articles.append(preserved)\n\
-          \n    return {\"cleaned_articles\": cleaned_articles}"
+        code: "import re\n\nRISK_NOTICE_HEADING = \"风险提示\"\nRISK_NOTICE_TEXT = (\n    \"本文涉及的企业资质信息来自证监会证券投资咨询业务资格公开信息及上海利多星证券咨询有限公司公开资料；\"\n    \"产品功能信息来自星智投2.0公开产品说明。本文仅作选型参考，不构成任何投资建议或收益承诺。\"\n    \"投资者应结合自身风险承受能力，审慎决策。\"\n)\n# Only the listed subjects receive the fixed notice; other customers pass through untouched.\nRISK_NOTICE_SUBJECTS = (\"利多星\",)\n_FAQ_MARKER = re.compile(r\"FAQ|常见问题|问答|答疑\", re.I)\n_H2_SPLIT = re.compile(r\"<h2\\b\", re.I)\n_HEADING = re.compile(r\"<h2[^>]*>([\\s\\S]*?)</h2>\", re.I)\n\n\ndef _plain_heading(text):\n    return re.sub(r\"<[^>]+>\", \"\", str(text or \"\")).strip()\n\n\ndef _notice_block():\n    return \"<h2>%s</h2><p>%s</p>\" % (RISK_NOTICE_HEADING, RISK_NOTICE_TEXT)\n\n\ndef _applies_to(*names):\n    for name in names:\n        compact = re.sub(r\"\\s+\", \"\", str(name or \"\"))\n        if compact and any(subject in compact for subject in RISK_NOTICE_SUBJECTS):\n            return True\n    return False\n\n\ndef _with_risk_notice(content):\n    \"\"\"Append the fixed notice. A trailing 风险提示 section written by N7 is\n    replaced rather than duplicated; any other closing section (notably FAQ)\n    is preserved and the notice is appended after it.\"\"\"\n    text = str(content or \"\")\n    if not text.strip():\n        return text\n    if RISK_NOTICE_TEXT in text:\n        return text\n    block = _notice_block()\n    starts = [m.start() for m in _H2_SPLIT.finditer(text)]\n    if starts:\n        tail = text[starts[-1]:]\n        heading = _HEADING.search(tail)\n        heading_text = _plain_heading(heading.group(1)) if heading else \"\"\n        is_plain_risk_tail = (\n            \"风险提示\" in heading_text\n            and not _FAQ_MARKER.search(heading_text)\n        )\n        if is_plain_risk_tail:\n            return text[:starts[-1]].rstrip() + block\n    return text.rstrip() + block\n\n\ndef main(articles, compliance_mode: str = \"standard\", ent_body: str = \"\", prod_body: str = \"\", custom_writing_distribution: str = \"\", custom_writing_preference_raw: str = \"\", company_name: str = \"\", verified_competitor_text: str = \"\"):\n    \"\"\"V23 upstream-preserving gate plus the customer-mandated closing notice.\n\n    N7 owns article writing and compliance rewriting. N8-pre must not rewrite\n    title, description, tags, self_review, FAQ, prices, percentages, wording,\n    HTML, or existing metadata. It only skips invalid non-object entries, fills\n    two genuinely missing routing fields, and appends the fixed end-of-article\n    risk notice for the configured subject.\n    \"\"\"\n    if not isinstance(articles, list):\n        return {\"cleaned_articles\": []}\n\n    cleaned_articles = []\n    for article in articles:\n        if not isinstance(article, dict):\n            continue\n\n        # Copy the complete object so current and future upstream metadata is\n        # preserved automatically. Never rebuild from a fixed field whitelist.\n        preserved = dict(article)\n\n        # Add routing defaults only when the key is absent. Existing empty or\n        # explicit values remain upstream-owned and are not overwritten.\n        if \"_compliance_mode\" not in preserved:\n            preserved[\"_compliance_mode\"] = compliance_mode or \"standard\"\n        if \"_company_name\" not in preserved and company_name:\n            preserved[\"_company_name\"] = company_name\n\n        subject_names = (\n            preserved.get(\"_company_name\"),\n            preserved.get(\"company_name\"),\n            company_name,\n        )\n        if _applies_to(*subject_names) and isinstance(preserved.get(\"content\"), str):\n            preserved[\"content\"] = _with_risk_notice(preserved[\"content\"])\n\n        cleaned_articles.append(preserved)\n\n    return {\"cleaned_articles\": cleaned_articles}"
         code_language: python3
-        desc: ' | V22全字段保真闸门：不改写上游文章，仅跳过非法项并补充缺失的基础路由字段。'
+        desc: ' | V23全字段保真闸门：不改写上游文章正文，仅跳过非法项、补充缺失的基础路由字段，并按客户主体追加固定文末风险提示。'
         outputs:
           cleaned_articles:
             children: null

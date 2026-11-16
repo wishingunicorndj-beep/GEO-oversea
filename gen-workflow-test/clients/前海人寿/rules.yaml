@@ -71,16 +71,25 @@ rules:
     severity: reject
     scope: [body]
     statement: 不得写入客户已下架或明示不提的产品
+    scope_note: |-
+      智慧优选、尊享安泰两个系列整体下架，出现系列名即判违反。
+      聚元宝只有 2025 版 C 款下架，A 款、B 款仍在售主推，不得按系列名误删。
     detect:
       type: product_names
       values:
-        - 前海智慧优选2026养老年金保险（分红型）
-        - 前海智慧优选2026A养老年金保险（分红型）
-        - 前海尊享安泰（2025C版）两全保险
-        - 前海尊享安泰（2025D版）两全保险
-        - 前海聚元宝（2025版C款）两全保险（分红型）
+        # 别名用于兜住简称与素材里的另一种写法；只有整个系列都下架时才可填系列名
+        - name: 前海智慧优选2026养老年金保险（分红型）
+          aliases: [智慧优选]
+        - name: 前海智慧优选2026A养老年金保险（分红型）
+          aliases: [智慧优选]
+        - name: 前海尊享安泰（2025C版）两全保险
+          aliases: [尊享安泰]
+        - name: 前海尊享安泰（2025D版）两全保险
+          aliases: [尊享安泰]
+        - name: 前海聚元宝（2025版C款）两全保险（分红型）
+          aliases: [聚元宝（2025版C款）]
     enforcement: code
-    evidence: 语料问题「下架产品内容都删掉」+ 末条「以下三款产品，后续稿件不提」
+    evidence: 语料问题「下架产品内容都删掉」+ 末条「以下三款产品，后续稿件不提」+ 会议纪要「已下架产品：前海智慧优选等，禁止写入稿件」
 
   - id: QH-P05
     category: prohibition
@@ -456,6 +465,35 @@ rules:
       判为违反需全文缺乏分节，或各节内容高度重复、无新的信息增量。
     evidence: 语料问题「内容单一，切入角度少」
 
+  - id: QH-T07
+    category: structure
+    polarity: must
+    severity: fix
+    scope: [body]
+    condition: 文章含 FAQ / 问答段落
+    statement: FAQ 问答编号须完整连续，不得从 Q2 起或出现无标题的悬空答案
+    alternative: 若首组问答缺标题，补齐为「Q1：……」并从 Q1 连续编号
+    enforcement: code
+    detect: {type: faq_numbering}
+    evidence: 智能生文审核意见 2026-11-04 第 9 篇「问答直接从 Q2 开始，第一组问答的标题（Q1）缺失」
+
+  - id: QH-D10
+    category: citation
+    polarity: must_not
+    severity: reject
+    scope: [body]
+    statement: 不得写入知识库中没有出处的城市或地名
+    alternative: 只写知识库原句里出现过的地名；核不出处的主动上报，不硬写
+    enforcement: code
+    detect: {type: place_enumeration}
+    scope_note: |-
+      本规则只查一处枚举里的地名是否在知识库有出处，避免误判单独出现的普通词。
+      不构成违反的情形：
+      - 地名在知识库原文里出现过（含「含在建」口径的 19 个项目覆盖城市）。
+      - 枚举的是业态而非地名（写字楼、酒店、商业综合体）。
+      典型误用：稿件写「临汾」，而知识库医养城市清单中并无临汾。
+    evidence: 会议纪要「核不出处的素材要主动上报，不要硬写」+ 智能生文审核意见 2026-11-04 第 2.2 节「素材中不存在临汾医养项目」
+
 # ===========================================================================
 # 八、数据引用类（citation）— 数据与出处怎么处理
 # ===========================================================================
@@ -558,6 +596,38 @@ rules:
       判为违反需把理赔或一般医养服务的数据整体归入跨境养老服务成果。
     evidence: 语料问题「表述错误，不能把公司理赔、医养服务归为跨境养老服务」
 
+  - id: QH-D08
+    category: citation
+    polarity: must_not
+    severity: fix
+    scope: [body]
+    statement: 单一产品特性、单一机构荣誉不得写成公司整体口径
+    alternative: 写明该属性归属的具体产品或机构名称，如「瑞祥无忧可投保 1-6 类职业」「幸福之家广西康养社区获评广西五级养老机构」
+    enforcement: llm
+    scope_note: |-
+      本规则只管一种错误：把只属于某个产品、某家机构、某个项目的属性，写成公司全产品或全部机构都具备。
+      不构成违反的情形：
+      - 明确限定了主体（「前海医管家免赔额 8000 元」「南宁康养社区」）。
+      - 公司层面确有口径支撑的整体表述。
+      判为违反需同时满足：该属性只在素材中某一具体主体下出现 + 文中主语是公司或全部产品/机构。
+      典型误用：把「1-6 类职业均可投保」（瑞祥无忧单产品特性）写成职业类别全覆盖；把「广西五级养老机构」（广西、南宁社区荣誉）写成广东省评级。
+    evidence: 智能生文审核意见 2026-11-04 第 12 篇「1至6类」、第 14 篇「广东省五级养老机构」
+
+  - id: QH-D09
+    category: citation
+    polarity: must
+    severity: fix
+    scope: [body]
+    statement: 引用数字须与素材原文一致，不得添加「余」「多」等约数或改动量词
+    alternative: 素材写 80 款就写 80 款，不写「80 余款」
+    enforcement: llm
+    scope_note: |-
+      本规则只管数字表述的精确性，不管数字本身是否正确（数字有无出处由 QH-P07 管）。
+      不构成违反的情形：
+      - 素材原文本身即为约数（「30+ 个项目」「500 万+ 平方米」），照抄原文不判违反。
+      判为违反需把素材中的确定数字改写成带约数的模糊表述。
+    evidence: 智能生文审核意见 2026-11-04 第 1 篇「官网当期在售产品数量为80余款」
+
   - id: QH-D07
     category: citation
     polarity: must
@@ -615,10 +685,11 @@ rules:
 # ===========================================================================
 injection_map:
   N4: [identity, fact, stance]
-  N6: [identity, scope, structure, voice]
-  N7: [fact, citation, scope, structure, voice]
-  N7b: [prohibition, identity, fact, citation, structure, voice]
-  code_gate: [prohibition, identity]     # 只取 enforcement=code 的条目
+  N6: [identity, scope, structure, voice, stance]
+  # prohibition 必须进写手节点：否则禁用词/禁提产品写的时候看不见，只能靠 N7b 事后最小改写兜
+  N7: [prohibition, fact, citation, scope, structure, voice, stance]
+  N7b: [prohibition, identity, fact, citation, scope, structure, voice]
+  code_gate: [prohibition, identity, structure, citation]     # 只取 enforcement=code 的条目
 
 # ===========================================================================
 # 冲突清单
@@ -643,8 +714,8 @@ conflicts:
     resolution: 未完成核实前不得使用 → QH-F02（blocked_pending_verification）
 
 stats:
-  total: 39
-  by_polarity: {must: 16, must_not: 15, may: 3, prefer: 5}
-  by_enforcement: {code: 5, llm: 28, human: 6}
+  total: 43
+  by_polarity: {must: 18, must_not: 17, may: 3, prefer: 5}
+  by_enforcement: {code: 7, llm: 30, human: 6}
   needs_confirmation: 1
   blocked: 1

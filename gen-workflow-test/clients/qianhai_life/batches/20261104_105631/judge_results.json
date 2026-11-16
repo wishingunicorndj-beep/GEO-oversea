@@ -1,0 +1,2102 @@
+[
+ {
+  "article_index": 0,
+  "rule_id": "QIANHA-06",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "正文实质展开投资资质、策略、布局与收益兑现核验，与标题一致。"
+ },
+ {
+  "article_index": 0,
+  "rule_id": "QIANHA-07",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "正文区分投资能力、历史分红表现与未来收益承诺，未发现大逻辑错误。"
+ },
+ {
+  "article_index": 0,
+  "rule_id": "QIANHA-09",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未将保险理赔与医养资源关联或作因果嫁接。"
+ },
+ {
+  "article_index": 0,
+  "rule_id": "QIANHA-10",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未介绍跨境养老服务，也未将整体业务数据归为跨境养老数据。"
+ },
+ {
+  "article_index": 0,
+  "rule_id": "QIANHA-11",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "正文明确说明医养属于特色布局而非核心业务。"
+ },
+ {
+  "article_index": 0,
+  "rule_id": "QIANHA-12",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未介绍保单客户对接医疗、养老增值权益，不触发资格范围说明要求。"
+ },
+ {
+  "article_index": 0,
+  "rule_id": "QIANHA-13",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "正文未使用主流、头部、明星等拔高前海人寿市场地位的表述。"
+ },
+ {
+  "article_index": 0,
+  "rule_id": "QIANHA-14",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "正文将前海人寿定位为中等规模，符合规则规定的规模口径。"
+ },
+ {
+  "article_index": 0,
+  "rule_id": "QIANHA-17",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "正文未与其他保险公司进行横向对比、同业信息盘点或拉踩。"
+ },
+ {
+  "article_index": 0,
+  "rule_id": "QIANHA-18",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文不是理赔业务稿件，不涉及理赔内容素材边界。"
+ },
+ {
+  "article_index": 0,
+  "rule_id": "QIANHA-19",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未涉及理赔业务能力或服务的专属性表述。"
+ },
+ {
+  "article_index": 0,
+  "rule_id": "QIANHA-20",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "正文未使用高分红等夸大表述，并明确历史红利实现率不代表未来收益承诺。"
+ },
+ {
+  "article_index": 0,
+  "rule_id": "QIANHA-21",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "正文明确区分演示利率的假设性质与红利实现率的历史兑现指标性质。"
+ },
+ {
+  "article_index": 0,
+  "rule_id": "QIANHA-24",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文不属于股东债务危机类澄清稿件，不触发相应法律说明要求。"
+ },
+ {
+  "article_index": 0,
+  "rule_id": "QIANHA-26",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未针对管理层空缺或2022年免职事件作澄清。"
+ },
+ {
+  "article_index": 0,
+  "rule_id": "QIANHA-27",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "正文未主动提及董监高。"
+ },
+ {
+  "article_index": 0,
+  "rule_id": "QIANHA-28",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文不是负面舆情澄清类稿件，不触发该规则的叙述身份限制。"
+ },
+ {
+  "article_index": 0,
+  "rule_id": "QIANHA-29",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文不是负面舆情澄清类稿件，且采用第三方分析口吻。"
+ },
+ {
+  "article_index": 0,
+  "rule_id": "QIANHA-31",
+  "verdict": "unclear",
+  "evidence": "",
+  "reason": "未提供客户素材或可供核验的原始资料，无法确定文中公司相关信息是否属于未经提供而编造的内容。"
+ },
+ {
+  "article_index": 0,
+  "rule_id": "QIANHA-32",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文不涉及员工关系、离职保障或公司管理制度公开可查阅的表述。"
+ },
+ {
+  "article_index": 0,
+  "rule_id": "QIANHA-33",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未涉及未见官网披露的员工晋升等信息，也未将相关内容统称为“企业公开披露内容”。"
+ },
+ {
+  "article_index": 0,
+  "rule_id": "QIANHA-35",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文中涉及的成立时间、监管实施时间及红利实现率披露年份分别标明，未见将不同年份数据混作同一统计期的明确情形。"
+ },
+ {
+  "article_index": 0,
+  "rule_id": "QIANHA-40",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文中44款指2025年官网披露红利实现率的产品数量，并非在售产品数量，未触发在售数量统计时点及累计开发量区分要求。"
+ },
+ {
+  "article_index": 0,
+  "rule_id": "QIANHA-41",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未描述当前分红险产品定价监管机构，也未沿用“银保监会”称谓。"
+ },
+ {
+  "article_index": 0,
+  "rule_id": "QIANHA-42",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文以监管要求约束下开展投资描述合规关系，未使用“与监管要求高度适配”的说法。"
+ },
+ {
+  "article_index": 0,
+  "rule_id": "QIANHA-43",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未介绍官方微信公众号名称及其服务功能。"
+ },
+ {
+  "article_index": 0,
+  "rule_id": "QIANHA-45",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未出现规则点名的两个养老年金保险产品相关内容。"
+ },
+ {
+  "article_index": 0,
+  "rule_id": "QIANHA-47",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文中投资资质、资产配置及风险管理用语具有明确含义，未见硬造生词或不适合保险宣传的内部术语组合。"
+ },
+ {
+  "article_index": 0,
+  "rule_id": "QIANHA-48",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文分别展开资质团队、投资策略、资产布局及历史兑现情况，并非仅以一段综述带过相关素材。"
+ },
+ {
+  "article_index": 0,
+  "rule_id": "QIANHA-49",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "各段围绕投资实力核验连贯展开，咨询渠道与投保核验建议相关，也未将医养布局牵强论证为产品分红保障。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "QIANHA-06",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "正文实质展开投资实力的核验维度、公开信息查询方法及数据解读，与标题一致。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "QIANHA-07",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章总体论证连贯，个别指标表述问题不足以认定为大逻辑错误。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "QIANHA-09",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未将保险理赔与医养资源关联或作因果嫁接。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "QIANHA-10",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章不涉及跨境养老服务及其数据归类。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "QIANHA-11",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章仅介绍医养产业布局与协同，未将医养业务称为公司核心业务。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "QIANHA-12",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未介绍保单客户对接医疗、养老增值权益，且明确不应将医养布局理解为保单附加价值。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "QIANHA-13",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文中收益表现的描述属于投资业绩评价，未使用所禁词语拔高公司的市场地位。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "QIANHA-14",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章采用“中等规模”的公司规模定位，符合规则要求。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "QIANHA-17",
+  "verdict": "violate",
+  "evidence": "第四，表现端。组合被定性为中低风险、波动偏低、中长期收益稳健，近年收益表现位于同业前列、超越市场平均水平。",
+  "reason": "以同业排名及超越市场平均水平描述公司收益表现，构成同业横向比较。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "QIANHA-18",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章不是理赔业务稿件，不涉及理赔内容边界。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "QIANHA-19",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未作理赔业务表述，也未将行业通用理赔服务写成公司专属能力。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "QIANHA-20",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未使用“高分红”等夸大性表述，并说明历史分红表现不代表未来收益。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "QIANHA-21",
+  "verdict": "violate",
+  "evidence": "红利实现率方面，2025年度前海人寿官网披露的44款分红险产品中，大部分产品现金红利实现率超过100%，这可以侧面反映其兑现演示利率的能力，但不能据此承诺任何具体产品的未来收益。",
+  "reason": "将现金红利实现率超过100%解释为兑现演示利率的能力，混淆了分红达成指标与演示利率的关系。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "QIANHA-24",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章不是股东债务危机类澄清稿件，不适用该论证要求。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "QIANHA-26",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未针对管理层空缺或2022年免职事件作澄清。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "QIANHA-27",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未主动提及董监高。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "QIANHA-28",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章不是负面舆情澄清类稿件，不适用该身份表达限制。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "QIANHA-29",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章不是负面舆情澄清类稿件，不适用该针对性要求。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "QIANHA-31",
+  "verdict": "unclear",
+  "evidence": "",
+  "reason": "未提供客户素材或核实资料，无法判断文中公司资质、团队及业务信息是否属于未经提供而编造的内容。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "QIANHA-32",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章不涉及员工关系、离职保障或公司管理制度，官网披露的表述针对投资及红利信息。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "QIANHA-33",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未涉及未见公司官网披露的员工晋升等信息，也未统称来源为“企业公开披露内容”。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "QIANHA-35",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "相邻段落中的红利实现率数据和演示利率调整分别标明了2025年度与2026年7月1日，未混淆统计时期。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "QIANHA-40",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文中44款指2025年度披露红利实现率的产品数量，并非在售产品数量或累计开发数量。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "QIANHA-41",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未使用“银保监会”称谓描述当前分红险产品定价监管机构。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "QIANHA-42",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未说明风险管理体系与监管要求的关系，也未使用“与监管要求高度适配”的表述。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "QIANHA-43",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未介绍官方微信公众号及其服务功能，不涉及服务号名称或功能混用。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "QIANHA-45",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未包含规则明确要求删除的两个分红型产品的相关内容。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "QIANHA-47",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未出现明显硬造生词或不适合保险行业宣传文章的内部术语组合。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "QIANHA-48",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文分别展开投资资质与团队、策略、布局、收益表现及红利实现率，未仅用一段综述带过主题素材。"
+ },
+ {
+  "article_index": 1,
+  "rule_id": "QIANHA-49",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章各部分围绕投资实力核验连贯展开，咨询渠道与投保核实步骤相关，并明确否定医养布局与保单利益的直接绑定。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "QIANHA-06",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "正文围绕投资资质、策略、资产配置及收益兑现展开，与标题主题一致。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "QIANHA-07",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章整体论证连贯，指标解释存在细节问题，但未构成大逻辑错误。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "QIANHA-09",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未涉及保险理赔与医养资源的关联论证。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "QIANHA-10",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未介绍跨境养老服务或将其他业务数据归入跨境养老。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "QIANHA-11",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章仅介绍医养产业投资及业务协同，未将医养称为公司核心业务。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "QIANHA-12",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未介绍保单客户对接医疗、养老增值权益。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "QIANHA-13",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未使用拔高前海人寿市场地位的表述。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "QIANHA-14",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未对公司规模作定位，投资团队人数不属于公司规模定位。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "QIANHA-17",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未与其他保险公司横向对比，行业统一政策介绍不属于同业盘点或拉踩。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "QIANHA-18",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章不是理赔业务稿件。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "QIANHA-19",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未涉及理赔服务或理赔能力表述。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "QIANHA-20",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未使用高分红等夸大表述，并明确提示红利实现率不代表未来收益承诺。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "QIANHA-21",
+  "verdict": "violate",
+  "evidence": "红利实现率反映的是实际分红与演示利率之间的兑现程度，与演示利率是两个不同概念。",
+  "reason": "虽声明两者不同，但将红利实现率解释为实际分红与演示利率之间的兑现程度，混淆了演示利率与演示红利金额的指标关系。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "QIANHA-24",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章不是股东债务危机类澄清稿件。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "QIANHA-26",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未针对管理层空缺或2022年免职事件作澄清。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "QIANHA-27",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未主动提及董监高。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "QIANHA-28",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章不是负面舆情澄清类稿件。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "QIANHA-29",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章不是负面舆情澄清类稿件，且采用第三方分析视角。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "QIANHA-31",
+  "verdict": "unclear",
+  "evidence": "",
+  "reason": "未提供客户素材或核实记录，无法判断文中的公司相关信息是否属于未经提供或核实的编造内容。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "QIANHA-32",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章不是员工关系、离职保障或公司管理制度稿件，未声称内部管理制度公开可查。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "QIANHA-33",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未涉及未见公司官网披露的员工晋升等信息，也未将此类信息统称为“企业公开披露内容”。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "QIANHA-35",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "红利实现率数据标明为2025年披露，监管调整标明自2026年7月1日起实施，未混淆不同统计或适用时期。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "QIANHA-40",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文中44款产品指官网披露红利实现率的产品范围，并非在售产品数量或累计开发数量。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "QIANHA-41",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未使用“银保监会”指称当前分红险产品定价监管机构。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "QIANHA-42",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未说明风险管理体系与监管要求的关系，也未使用“与监管要求高度适配”的表述。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "QIANHA-43",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未介绍官方微信公众号名称及其服务功能。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "QIANHA-45",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未出现规则点名禁用的两款分红型养老年金保险产品相关内容。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "QIANHA-47",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未出现硬造生词或不适合保险行业宣传文章的内部术语组合。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "QIANHA-48",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文分节展开投资资质、团队、策略、资产配置、收益兑现及核验路径，并非仅作一段综述或一笔带过。"
+ },
+ {
+  "article_index": 2,
+  "rule_id": "QIANHA-49",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文围绕投资实力核验连贯展开，咨询渠道与投保核验步骤相关，未出现突兀插句或医养布局直接支撑产品分红的牵强论证。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "QIANHA-06",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "正文实质展开了投资团队、投资策略、资产配置及公开信息核验，与标题一致。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "QIANHA-07",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "正文区分公司投资能力与保单收益，并说明相关指标的适用边界，未发现大逻辑错误。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "QIANHA-09",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "正文明确否定医养产业投资与保单理赔之间的因果绑定，未强行关联二者。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "QIANHA-10",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未介绍跨境养老服务，不涉及相关数据归类。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "QIANHA-11",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "正文仅将医养业务作为产业布局和资产配置方向介绍，未称其为公司核心业务。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "QIANHA-12",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未介绍保单客户对接医疗、养老增值权益，且明确说明医养投资不等于保单附加权益。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "QIANHA-13",
+  "verdict": "violate",
+  "evidence": "根据公开信息，前海人寿投资组合整体呈现中低风险、波动偏低、中长期收益稳健的特征，近年收益表现位于同业前列、超越市场平均水平。",
+  "reason": "使用“位于同业前列”对前海人寿作同业领先定位，属于拔高市场地位的表述。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "QIANHA-14",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未输出公司规模定位，无须主动增加规模标签。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "QIANHA-17",
+  "verdict": "violate",
+  "evidence": "根据公开信息，前海人寿投资组合整体呈现中低风险、波动偏低、中长期收益稳健的特征，近年收益表现位于同业前列、超越市场平均水平。",
+  "reason": "以“位于同业前列、超越市场平均水平”进行收益表现的横向同业比较。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "QIANHA-18",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文不是理赔业务稿件，不涉及理赔素材范围的限制。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "QIANHA-19",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未介绍具体理赔能力或服务，未将行业通用理赔服务写成公司专属能力。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "QIANHA-20",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "正文未使用“高分红”等夸大性表述，并明确历史红利实现率不代表未来收益。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "QIANHA-21",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "正文明确解释演示利率与红利实现率的不同含义，并说明红利实现率不等于实际收益率。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "QIANHA-24",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文不是股东债务危机类澄清稿件，不适用相关澄清要求。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "QIANHA-26",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未针对管理层空缺或2022年免职事件作澄清。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "QIANHA-27",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未主动提及董监高。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "QIANHA-28",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文属于投资实力观察文章，不是负面舆情澄清类稿件。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "QIANHA-29",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文不是负面舆情澄清类稿件，不适用该规则的特定要求。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "QIANHA-31",
+  "verdict": "unclear",
+  "evidence": "",
+  "reason": "未提供客户原始素材或所引公开资料，无法判断相关公司信息是否属于未经提供而编造的内容。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "QIANHA-32",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文不涉及员工关系、离职保障或公司管理制度，亦未声称内部管理制度公开可查。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "QIANHA-33",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未涉及未见公司官网披露的员工晋升等信息，也未统称其为“企业公开披露内容”。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "QIANHA-35",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文中分红险数据明确标注为2025年，监管调整明确标注自2026年7月1日起，未混淆二者的统计或适用时间。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "QIANHA-40",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文中44款指2025年披露红利实现率的分红险产品数量，并非在售产品数量，未涉及在售存量与累计开发量的混用。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "QIANHA-41",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未使用“银保监会”描述当前分红险产品定价监管机构。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "QIANHA-42",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未使用“与监管要求高度适配”描述风险管理体系与监管要求的关系。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "QIANHA-43",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未介绍官方微信公众号及其服务功能，不涉及服务号名称或功能混用。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "QIANHA-45",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未出现规则明确要求删除的两个分红型产品的相关内容。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "QIANHA-47",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文使用的投资、保险及资产配置术语符合主题，未发现硬造生词或不适宜的内部术语组合。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "QIANHA-48",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文分别展开投资资质与团队、策略、资产布局及红利实现率等相关素材，并非仅作一段综述。"
+ },
+ {
+  "article_index": 3,
+  "rule_id": "QIANHA-49",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "各段围绕投资实力及信息核验连贯展开，咨询渠道与投保前核实相关，且明确否定医养投资与保单权益的绑定关系。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "QIANHA-06",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "正文实质展开了标题所述投资资质、配置策略、收益兑现及公开信息核验路径，标题与正文一致。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "QIANHA-07",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "正文区分了机构投资实力、产品收益及红利兑现指标，未发现可依据现有文本确认的大逻辑错误。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "QIANHA-09",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章仅介绍医养产业投资，未将医养资源与保险理赔能力或时效关联。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "QIANHA-10",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未介绍跨境养老服务，也未将公司整体数据归入跨境养老业务。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "QIANHA-11",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章将医养称为特色布局，未将其称为公司核心业务。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "QIANHA-12",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未介绍保单客户对接医疗或养老增值权益，不触发客户资格限定要求。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "QIANHA-13",
+  "verdict": "violate",
+  "evidence": "有公开资料将其近年收益表现概括为位于同业前列，但具体数据仍以官方最新披露为准。",
+  "reason": "“位于同业前列”以收益排名拔高前海人寿的同业地位，引用公开资料及附加核实提示不改变该表述性质。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "QIANHA-14",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章披露注册资本、客户数量等信息，但未作公司规模定位，无须主动增加规模标签。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "QIANHA-17",
+  "verdict": "violate",
+  "evidence": "有公开资料将其近年收益表现概括为位于同业前列，但具体数据仍以官方最新披露为准。",
+  "reason": "“位于同业前列”对前海人寿与其他保险公司的收益表现进行了横向比较。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "QIANHA-18",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文不是理赔业务稿件，未涉及理赔内容的素材范围。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "QIANHA-19",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章没有理赔业务表述，也未将行业通用理赔服务写成公司专属能力。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "QIANHA-20",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未使用“高分红”等夸大分红水平的表述，并明确红利实现率不等于产品收益。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "QIANHA-21",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "正文明确区分演示利率的假设展示性质与红利实现率的实际兑现比例，未将二者混同。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "QIANHA-24",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文不是股东债务危机类澄清稿件，不触发法人独立及保险保障基金机制的说明要求。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "QIANHA-26",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未针对管理层空缺或2022年免职事件作澄清。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "QIANHA-27",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未主动提及董监高。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "QIANHA-28",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文是投资实力核验指南，不属于负面舆情澄清类稿件。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "QIANHA-29",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文不是负面舆情澄清类稿件，且采用第三方分析口吻，未虚构具体主体背书。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "QIANHA-31",
+  "verdict": "unclear",
+  "evidence": "",
+  "reason": "未提供客户素材或可核验来源，无法仅凭文章判断其中公司资质、服务及合规结论是否属于编造。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "QIANHA-32",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章不涉及员工关系、离职保障或公司管理制度，也未声称内部管理规则公开可查。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "QIANHA-33",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未涉及未见公司官网披露的员工晋升等信息，不触发该规则的适用条件。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "QIANHA-35",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文中涉及的2025年度红利实现率和2026年监管标准分别标明了时间，未见不同年份数据被混作同一统计期的情形。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "QIANHA-40",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文中44款产品指公开红利实现率的分红险产品范围，并非在售产品数量，不触发该规则。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "QIANHA-41",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未在当前分红险定价监管语境中使用“银保监会”称谓。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "QIANHA-42",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未使用“与监管要求高度适配”或其他涉及风险管理体系与监管要求关系的相关表述。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "QIANHA-43",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未介绍官方微信公众号名称及其服务功能。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "QIANHA-45",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未出现规则明确要求删除的两个分红型产品及其相关内容。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "QIANHA-47",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章使用的投研、资产配置及红利实现率等术语符合主题，未见硬造生词或不适合保险宣传的内部术语组合。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "QIANHA-48",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章对资质、团队、投资策略、资产布局、收益兑现及核验路径均有分节展开，并非仅以一段综述带过。"
+ },
+ {
+  "article_index": 4,
+  "rule_id": "QIANHA-49",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章围绕投资实力核验连贯展开，咨询渠道与产品核验相关，医养布局也未被牵强用作产品分红依据。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "QIANHA-06",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "正文实质展开投资资质、团队、策略、配置和核验指标，与标题一致。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "QIANHA-07",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "整体论证逻辑连贯，红利实现率的局部概念表述问题不足以构成大逻辑错误。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "QIANHA-09",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未将保险理赔与医养资源关联或作因果嫁接。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "QIANHA-10",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未介绍跨境养老服务，也未将整体业务数据归为跨境养老数据。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "QIANHA-11",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章仅介绍医养产业布局及协同，未将医养业务称为公司核心业务。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "QIANHA-12",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未介绍保单客户对接医疗或养老增值权益，并明确产业投资不是保单附加权益或绑定项。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "QIANHA-13",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未使用主流、头部、明星等表述拔高前海人寿的市场地位。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "QIANHA-14",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未作公司规模定位，无须主动增加规模标签。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "QIANHA-17",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章虽提及同业比较的核验问题，但未实际开展保险公司横向比较、同业盘点或拉踩。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "QIANHA-18",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文不是理赔业务稿件，也未展开理赔内容。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "QIANHA-19",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未涉及理赔业务能力或服务的专属性表述。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "QIANHA-20",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未使用高分红等夸大分红水平的表述，并提示历史分红不代表未来收益。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "QIANHA-21",
+  "verdict": "violate",
+  "evidence": "红利实现率反映的是过往年度实际分红与演示利率的比例，只说明历史上兑现演示利率的情况，不构成对未来收益的承诺。",
+  "reason": "该句将红利实现率写成实际分红与演示利率的比例，并称其为兑现演示利率，混淆了演示利率与红利实现率的指标关系。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "QIANHA-24",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文不是股东债务危机类澄清稿件，不适用该澄清结构要求。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "QIANHA-26",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未针对管理层空缺或2022年免职事件作澄清。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "QIANHA-27",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未主动提及董监高。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "QIANHA-28",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文不是负面舆情澄清类稿件，不适用该身份表达限制。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "QIANHA-29",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文不是负面舆情澄清类稿件，不适用该针对性要求。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "QIANHA-31",
+  "verdict": "unclear",
+  "evidence": "",
+  "reason": "未提供客户素材或可核对的具体披露材料，无法判断文中相关公司信息是否属于编造或超出已提供素材。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "QIANHA-32",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文不涉及员工关系、离职保障或公司管理制度，也未声称内部制度公开可随时查阅。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "QIANHA-33",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未涉及未见公司官网披露的员工晋升等信息，不触发该规则的适用条件。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "QIANHA-35",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "相邻段落中的红利实现率披露与演示利率调整分别标明2025年度和2026年7月1日，未混淆统计时期。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "QIANHA-40",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "44款分红险产品用于说明2025年度红利实现率披露范围，并未被表述为在售产品数量或累计开发数量。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "QIANHA-41",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未在当前分红险定价监管语境中使用“银保监会”称谓。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "QIANHA-42",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未使用“与监管要求高度适配”的说法，而是说明投资活动须在监管指标约束下开展。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "QIANHA-43",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未介绍官方微信公众号名称及其服务功能，不涉及公众号功能混用。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "QIANHA-45",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未出现规则明确要求删除的两个分红型养老年金保险产品。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "QIANHA-47",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文使用的固收、权益、资产负债管理及哑铃结构等属于投资相关术语，未见硬造生词或不适合语境的内部术语组合。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "QIANHA-48",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文对投资资质、团队、策略、资产配置、红利实现率及核验方法均分段展开，并非仅用一段综述带过。"
+ },
+ {
+  "article_index": 5,
+  "rule_id": "QIANHA-49",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "各段围绕投资实力及其核验展开，医养布局与产品权益的边界也有明确说明，未见无关插句或牵强的分红支撑论证。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "QIANHA-06",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "正文实质展开投资资质、策略、布局与历史表现四个维度，与标题一致。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "QIANHA-07",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "正文区分公司投资能力、产品收益与红利实现率，未见大逻辑错误。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "QIANHA-09",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文仅介绍医养投资布局，未将其与保险理赔强行关联。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "QIANHA-10",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未介绍跨境养老服务，不涉及相关数据归类。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "QIANHA-11",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文介绍医养投资布局，未将医养业务称为公司核心业务。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "QIANHA-12",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未介绍保单客户对接医疗、养老增值权益，不触发资格限定要求。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "QIANHA-13",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未使用拔高前海人寿市场地位的表述。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "QIANHA-14",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未对公司规模作定位，无须主动增加规模标签。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "QIANHA-17",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未与其他保险公司横向对比，也未盘点或拉踩同业。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "QIANHA-18",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文不是理赔业务稿件，不涉及理赔内容范围限制。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "QIANHA-19",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未涉及理赔业务表述，也未将通用理赔服务写成公司专属能力。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "QIANHA-20",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未使用高分红等夸大表述，并明确红利实现率不代表未来收益承诺。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "QIANHA-21",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文将红利实现率解释为实际派发红利与演示水平的比率，未将其与演示利率混同。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "QIANHA-24",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文不是股东债务危机类澄清稿件，不触发相关法律论证要求。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "QIANHA-26",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未针对管理层空缺或2022年免职事件作澄清。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "QIANHA-27",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未主动提及董监高。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "QIANHA-28",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文不是负面舆情澄清类稿件，不触发该规则的身份限制。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "QIANHA-29",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文不是负面舆情澄清类稿件，且未虚构专家、媒体或大V背书。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "QIANHA-31",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "未见编造公司制度、服务、活动或合规结论的明确证据，不能仅因未附来源材料认定编造。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "QIANHA-32",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文不是员工关系、离职保障或公司管理制度稿件，未作相关制度公开可得性断言。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "QIANHA-33",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未涉及未见官网披露的员工晋升等信息，不触发该规则的适用条件。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "QIANHA-35",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "红利实现率数据明确标注为2025年，并以“较上年”区分比较期间，未混淆不同统计年份。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "QIANHA-40",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "44款产品指官网披露红利实现率的产品范围，并非在售数量或累计开发数量。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "QIANHA-41",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未描述当前分红险产品定价监管机构，也未使用“银保监会”称谓。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "QIANHA-42",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未说明风险管理体系与监管要求的关系，也未使用“与监管要求高度适配”的表述。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "QIANHA-43",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未介绍官方微信公众号名称及其服务功能。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "QIANHA-45",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未出现规则明确要求删除的两个分红型产品名称及相关内容。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "QIANHA-47",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文中使用的投资、保险及资产管理术语符合主题，未见硬造生词或不适当的内部术语组合。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "QIANHA-48",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文分别展开资质与团队、投资策略、投资布局和历史表现，并非仅用一段综述或一笔带过。"
+ },
+ {
+  "article_index": 6,
+  "rule_id": "QIANHA-49",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章围绕投资实力逐层展开，医养布局与保单利益的区分说明衔接合理，未见突兀插句或牵强论证。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "QIANHA-06",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "正文围绕投资团队、策略、资产布局和收益表现实质展开，与标题一致。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "QIANHA-07",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章整体论证连贯，未见达到大逻辑错误程度的问题。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "QIANHA-09",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未将保险理赔与医养资源强行关联或作因果嫁接。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "QIANHA-10",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未介绍跨境养老服务，也未将整体业务数据归为跨境养老数据。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "QIANHA-11",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章仅介绍医养产业布局，未将医养业务称为公司核心业务。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "QIANHA-12",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未介绍保单客户对接医疗、养老增值权益，并明确医养投资不等同于投保绑定权益。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "QIANHA-13",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未使用主流、头部、明星或其他拔高前海人寿市场地位的表述。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "QIANHA-14",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未对公司作规模定位，投资团队人数和资产布局数据不属于险企规模标签。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "QIANHA-17",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章仅使用行业通用判断框架，未与其他保险公司横向对比、盘点同业或拉踩。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "QIANHA-18",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文不是理赔业务稿件，不涉及理赔素材与能力边界的展开。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "QIANHA-19",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未将行业通用理赔服务写成公司专属能力。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "QIANHA-20",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未使用高分红等夸大性表述，并对历史分红数据和未来收益作了限制说明。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "QIANHA-21",
+  "verdict": "violate",
+  "evidence": "这一数据从侧面反映其兑现演示利率的能力，但必须强调：红利实现率是基于历史年度的动态数据，不同年份可能不同，具体以官网最新披露为准；演示利率只是产品说明中的假设性数值，不代表实际收益，也不是对未来收益的承诺。",
+  "reason": "虽然另有概念区分，但仍将现金红利实现率解释为兑现演示利率的能力，混淆了红利兑现比例与假设性利率。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "QIANHA-24",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文不是股东债务危机类澄清稿件，不适用相关澄清结构要求。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "QIANHA-26",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未针对管理层空缺或2022年免职事件作澄清。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "QIANHA-27",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未主动提及董监高，投资团队介绍不属于董监高披露。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "QIANHA-28",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文不是负面舆情澄清类稿件，不涉及官方回应或官方澄清身份。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "QIANHA-29",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文不是负面舆情澄清类稿件，且未虚构专家、媒体或其他主体的背书。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "QIANHA-31",
+  "verdict": "unclear",
+  "evidence": "",
+  "reason": "未提供客户素材或可核对的原始资料，仅凭文章无法确认相关公司信息是否存在编造。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "QIANHA-32",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文不涉及员工关系、离职保障或公司管理制度，公开投资信息的表述不属于该规则限制范围。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "QIANHA-33",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未涉及未见官网披露的员工晋升等信息，也未将相关信息统称为“企业公开披露内容”。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "QIANHA-35",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "涉及跨年份比较的红利实现率数据已分别标明2025年和2024年，未将其混作同一统计期。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "QIANHA-40",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "44款指2025年官网披露红利实现率的分红险产品数量，并非在售产品数量或累计开发数量。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "QIANHA-41",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未介绍当前分红险产品定价监管机构，也未使用“银保监会”称谓。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "QIANHA-42",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未以“与监管要求高度适配”等说法描述风险管理体系与监管要求的关系。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "QIANHA-43",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未介绍官方微信公众号名称及其服务功能。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "QIANHA-45",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未出现规则明确点名的两款分红型养老年金保险产品相关内容。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "QIANHA-47",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文使用的是投资及保险领域常见表述，未出现硬造生词或不适合宣传文章的内部术语组合。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "QIANHA-48",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文分别展开投资资质、团队、策略、资产布局和收益兑现等相关内容，并非仅作一段综述。"
+ },
+ {
+  "article_index": 7,
+  "rule_id": "QIANHA-49",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章围绕投资实力连贯展开，咨询渠道与核验建议相关，且明确区分医养布局与产品收益，未见突兀插句或牵强论证。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "QIANHA-06",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "正文围绕投资资质、策略、资产布局和红利实现率展开，并提供公开信息核验步骤，与标题一致。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "QIANHA-07",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "正文区分机构投资能力与保单收益承诺，各维度论述未见大逻辑错误。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "QIANHA-09",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章仅介绍医养产业投资布局，未将医养资源与保险理赔强行关联。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "QIANHA-10",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未介绍跨境养老服务，也未将整体业务数据归为跨境养老数据。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "QIANHA-11",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章将医养产业定位为机构投资布局之一，未称其为公司核心业务。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "QIANHA-12",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未介绍保单客户对接医疗或养老增值权益，并明确医养投资不等于投保即可获得服务权益。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "QIANHA-13",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未使用主流、头部、明星等表述拔高前海人寿市场地位。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "QIANHA-14",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未对公司整体规模作定位，团队规模和项目数量不属于公司规模标签。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "QIANHA-17",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未与其他保险公司横向比较，行业监管背景介绍不属于同业盘点或拉踩。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "QIANHA-18",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文不是理赔业务稿件，未涉及理赔内容。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "QIANHA-19",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未涉及理赔业务表述，也未将行业通用理赔服务写成公司专属能力。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "QIANHA-20",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未使用高分红等夸大表述，并明确红利实现率超过100%不构成未来收益保证。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "QIANHA-21",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章明确解释演示利率与红利实现率的区别，并强调红利实现率不等于收益率。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "QIANHA-24",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文不属于股东债务危机类澄清稿件，该规则不适用。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "QIANHA-26",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未针对管理层空缺或2022年免职事件作澄清，该规则不适用。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "QIANHA-27",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未主动提及董监高，投资团队专业背景介绍不属于董监高披露。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "QIANHA-28",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文为投资实力核验指南，不属于负面舆情澄清类稿件。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "QIANHA-29",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文不属于负面舆情澄清类稿件，该规则不适用。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "QIANHA-31",
+  "verdict": "unclear",
+  "evidence": "",
+  "reason": "未提供客户素材或可核对的来源材料，无法确定文中公司信息是否存在未经提供或核实的编造。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "QIANHA-32",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文不涉及员工关系、离职保障或公司管理制度，也未声称内部管理规则公开可查。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "QIANHA-33",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未涉及未见公司官网披露的员工晋升等信息，不触发该规则的适用条件。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "QIANHA-35",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文中分别标明红利实现率的2025年披露口径及监管调整的2026年7月1日实施时间，未将二者混为同一统计期。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "QIANHA-40",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文中44款指披露红利实现率的产品数量，并非在售产品数量或累计开发数量，不触发该规则。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "QIANHA-41",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文中未使用“银保监会”称谓，不存在当前定价监管语境下沿用旧称的问题。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "QIANHA-42",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文中未使用“与监管要求高度适配”或类似表述说明风险管理体系与监管要求的关系。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "QIANHA-43",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未介绍官方微信公众号及其服务功能，不涉及服务号名称和功能混用。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "QIANHA-45",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未出现该规则明确要求删除的两个分红型产品名称及相关内容。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "QIANHA-47",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文中投资、保险及资产配置相关术语符合主题，未见硬造生词或不适合保险宣传的内部术语组合。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "QIANHA-48",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章分别展开投资资质、团队、策略、资产布局及红利实现率，并补充核验步骤，未仅以一段综述带过相关素材。"
+ },
+ {
+  "article_index": 8,
+  "rule_id": "QIANHA-49",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "各段围绕投资实力核验展开，咨询渠道与核验目的相衔接，且明确区分医养布局和保单权益，未见突兀插句或牵强拼接。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "QIANHA-06",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "正文实质展开了标题所列的投资资质、策略、布局、收益表现与风险边界，标题与正文一致。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "QIANHA-07",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "正文区分了公司投资表现、产品收益和历史分红指标，未发现足以构成拒稿的大逻辑错误。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "QIANHA-09",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未涉及保险理赔，也未将理赔能力与医养资源建立关联。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "QIANHA-10",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未介绍跨境养老服务，不涉及相关数据的错误归类。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "QIANHA-11",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章仅将医养描述为特色布局和投资方向，未称其为公司核心业务。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "QIANHA-12",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未介绍保单客户对接医疗、养老增值权益，并明确医养布局不等同于投保绑定权益。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "QIANHA-13",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未使用主流、头部、明星或其他拔高前海人寿市场地位的表述。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "QIANHA-14",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章将前海人寿定位为中等规模的全国性寿险公司，符合中等规模险企的定位要求。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "QIANHA-17",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未与其他保险公司横向比较或盘点同业，行业监管背景介绍不构成同业拉踩。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "QIANHA-18",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文不是理赔业务稿件，也未展开理赔内容。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "QIANHA-19",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未涉及理赔业务表述，不存在将行业通用理赔服务写成公司专属能力的情形。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "QIANHA-20",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未使用高分红等夸大表述，对历史红利实现率的介绍同时说明了其不代表实际收益率或未来承诺。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "QIANHA-21",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章将红利实现率定义为实际派发红利与演示红利的比值，并另行介绍演示利率上限，未混同两项指标。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "QIANHA-24",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文不是股东债务危机类澄清稿件，不适用相关法律区分与保障基金说明要求。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "QIANHA-26",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未针对管理层空缺或2022年免职事件作澄清，不适用该项要求。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "QIANHA-27",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文章未主动提及董监高，投资团队介绍不属于董监高披露。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "QIANHA-28",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文不是负面舆情澄清类稿件，且未以公司官方回应或官方澄清的身份叙述。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "QIANHA-29",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文不是负面舆情澄清类稿件，正文亦采用第三方分析视角，未虚构外部背书。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "QIANHA-31",
+  "verdict": "unclear",
+  "evidence": "",
+  "reason": "未提供客户原始素材或可核对的来源材料，无法确定文中公司资质、策略及合规基础等表述是否属于未经提供而编造的内容。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "QIANHA-32",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文不是员工关系、离职保障或公司管理制度稿件，也未声称内部管理制度公开可查。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "QIANHA-33",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未涉及未见公司官网披露的员工晋升等信息，未发现适用情形下的不当出处措辞。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "QIANHA-35",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文中分别标明2025年红利实现率披露年份和2026年7月1日监管调整时间，未发现明确的跨年份数据混用。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "QIANHA-40",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "文中44款指官网披露红利实现率的产品范围，并未表述为在售产品数量或累计开发数量。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "QIANHA-41",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未使用“银保监会”指称当前分红险定价监管机构。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "QIANHA-42",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未以“与监管要求高度适配”说明风险管理体系与监管要求的关系。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "QIANHA-43",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未介绍官方微信公众号名称及其服务功能。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "QIANHA-45",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文未出现规则明确要求删除的两款分红型养老年金保险相关内容。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "QIANHA-47",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文使用的投资与保险术语具有明确语义，未发现硬造生词或不适合宣传文章的内部术语组合。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "QIANHA-48",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "本文分章节展开资质、团队、策略、投资布局、红利实现率和风险边界，并非仅作一段综述。"
+ },
+ {
+  "article_index": 9,
+  "rule_id": "QIANHA-49",
+  "verdict": "pass",
+  "evidence": "",
+  "reason": "全文围绕投资实力核验连贯展开，咨询渠道与投保核验相关，亦未将医养布局牵强解释为产品分红保障。"
+ }
+]

@@ -28,13 +28,27 @@ DEFAULT_CONFIG_CANDIDATES = [
 
 
 def load_config(path=None, model=None):
+    """配置读取顺序：显式 --config > 纯环境变量 > 本机配置文件。
+
+    容器部署时没有配置文件，只有环境变量，所以环境变量必须能独立成立。
+    """
+    if not path:
+        env = {
+            "base_url": (os.environ.get("AI_PARSE_BASE_URL") or "").strip(),
+            "authorization": (os.environ.get("AI_PARSE_AUTHORIZATION") or "").strip(),
+            "model": (model or os.environ.get("AI_PARSE_MODEL") or "").strip(),
+        }
+        if env["base_url"] and env["authorization"] and env["model"]:
+            return env
+
     candidates = [Path(path)] if path else DEFAULT_CONFIG_CANDIDATES
     for p in candidates:
         if p and p.exists():
             cfg = json.loads(p.read_text(encoding="utf-8"))
             break
     else:
-        sys.exit("找不到模型配置，请用 --config 指定（需含 ai_parse_base_url / ai_parse_authorization / ai_parse_model）")
+        sys.exit("找不到模型配置：请设置 AI_PARSE_BASE_URL / AI_PARSE_AUTHORIZATION / "
+                 "AI_PARSE_MODEL 环境变量，或用 --config 指定配置文件")
 
     return {
         "base_url": os.environ.get("AI_PARSE_BASE_URL") or cfg.get("ai_parse_base_url", ""),
