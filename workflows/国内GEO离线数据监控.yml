@@ -1389,10 +1389,12 @@ workflow:
           ,line):\n        if m.start()>0:boundaries.add(m.start())\n    # 产品卡片常用“香调/气质/适合/缺点/✅/⚠️”作为无标点字段边界，\n\
           \    # 这些边界必须拆开，避免把中性参数和后面的正负评价合并。\n    # 字段标签即使与前一短语粘连（如“插件缺点：默认推送”）也必须切开；\n\
           \    # 否定语境“并不适合”不作为字段标签处理。\n    for m in re.finditer(r\"(?:✅|⚠️|❌|(?:优点|缺点|香调|气质|优势|劣势)[：:]|(?<!不)适合[：:])\"\
-          , line):\n        if m.start()>0:boundaries.add(m.start())\n    # 支持同一物理行中的编号/项目符号；\\\
-          \\. 是 answer_raw 常见的转义写法。\n    for m in re.finditer(r\"(?<![0-9A-Za-z\\\
-          u4e00-\\u9fff])(?:\\d{1,2}\\\\?[.)、：:]|[①②③④⑤⑥⑦⑧⑨⑩])\\s*|(?<!\\S)[*•·▪◦]\\\
-          s+\", line):\n        table_start=line.rfind(\"\\ue000\",0,m.start())\n\
+          , line):\n        # 小节标题写成“### ✅ 分类名”时，emoji属于标题文本；在此切开会让“###”独立成单元，\n \
+          \       # context_heading恒为空，下游无法按小节分榜。\n        if m.start()>0 and not\
+          \ re.search(r\"#{1,6}\\s*$\",line[:m.start()]):boundaries.add(m.start())\n\
+          \    # 支持同一物理行中的编号/项目符号；\\\\. 是 answer_raw 常见的转义写法。\n    for m in re.finditer(r\"\
+          (?<![0-9A-Za-z\\u4e00-\\u9fff])(?:\\d{1,2}\\\\?[.)、：:]|[①②③④⑤⑥⑦⑧⑨⑩])\\s*|(?<!\\\
+          S)[*•·▪◦]\\s+\", line):\n        table_start=line.rfind(\"\\ue000\",0,m.start())\n\
           \        if table_start>=0:\n            table_end=line.find(\"\\ue000\"\
           ,table_start+1)\n            if table_end<0:table_end=len(line)\n      \
           \      # 推荐单元格内部的“1.品牌、2.品牌”属于同一表格行，保留给分榜解析，\n            # 不能按普通编号列表切断管道结构。\n\
@@ -2234,10 +2236,25 @@ workflow:
           \ for e in unique if isinstance(e,dict) and e.get(\"rank_membership\")==\"\
           ordered_choice\"]\n    if query_recommendation_intent and len(category_ordered)>=2\
           \ and structure==\"no_ranking\":\n        requested=True\n        structure=\"\
-          table\"\n    # 排名只认独立核心推荐实体。显式序号优先；无序号按模块内出现顺序补最小未占用正整数。\n    ordered_groups={}\n\
-          \    for e in unique:\n        if e.get(\"rank_membership\")!=\"ordered_choice\"\
-          :continue\n        module=str(e.get(\"module_id\") or \"M1\")\n        ordered_groups.setdefault(module,[]).append(e)\n\
-          \    for module,rows in ordered_groups.items():\n        # 显式序号永远优先保留；没有序号的实体按品牌/实体名称排序，\n\
+          table\"\n    # 标题型分榜确定性识别：正文用「### 分类标题」把推荐对象分成若干并列小组时，\n    # 每组是独立分榜，组内名次各自从1起。跨组连续编号(1..N)只是全文计数器，\n\
+          \    # 不能当作组内名次。仅在至少两个标题组、且存在多实体组时启用，\n    # 避免把「### 品牌A / ### 品牌B」这类单实体章节误拆成多个第1。\n\
+          \    heading_sections={}\n    for e in unique:\n        if not isinstance(e,dict)\
+          \ or e.get(\"rank_membership\")!=\"ordered_choice\":continue\n        item=smap.get(str(e.get(\"\
+          rank_anchor_sentence_id\") or \"\"),{})\n        heading=str(item.get(\"\
+          context_heading\") or \"\").strip()\n        if heading:heading_sections.setdefault(heading,[]).append(e)\n\
+          \    if len(heading_sections)>=2 and any(len(rows)>=2 for rows in heading_sections.values()):\n\
+          \        for idx,(heading,rows) in enumerate(heading_sections.items(),1):\n\
+          \            rows.sort(key=lambda x:(x.get(\"_order\",99999),x.get(\"_offset\"\
+          ,999999999)))\n            explicit=[max(0,int(x.get(\"_explicit_rank\"\
+          ,0) or 0)) for x in rows]\n            # 组内序号本身已是1..k连续序列则保留；否则说明它是跨组计数器，按组内物理先后重排。\n\
+          \            keep=len(explicit)>1 and explicit==list(range(1,len(rows)+1))\n\
+          \            for pos,e in enumerate(rows,1):\n                e[\"module_id\"\
+          ]=f\"HEAD:{idx}\"\n                e[\"_explicit_rank\"]=explicit[pos-1]\
+          \ if keep else pos\n    # 排名只认独立核心推荐实体。显式序号优先；无序号按模块内出现顺序补最小未占用正整数。\n  \
+          \  ordered_groups={}\n    for e in unique:\n        if e.get(\"rank_membership\"\
+          )!=\"ordered_choice\":continue\n        module=str(e.get(\"module_id\")\
+          \ or \"M1\")\n        ordered_groups.setdefault(module,[]).append(e)\n \
+          \   for module,rows in ordered_groups.items():\n        # 显式序号永远优先保留；没有序号的实体按品牌/实体名称排序，\n\
           \        # 再填入本模块最小可用排名，避免把正文出现顺序误当排名。\n        used={int(e.get(\"_explicit_rank\"\
           ,0)) for e in rows if int(e.get(\"_explicit_rank\",0))>0}\n        explicit_rows=[e\
           \ for e in rows if int(e.get(\"_explicit_rank\",0))>0]\n        implicit_rows=[e\

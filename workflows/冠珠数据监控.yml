@@ -1555,363 +1555,374 @@ workflow:
       width: 244
     - data:
         "code": "import json\nimport re\nfrom typing import Any\n\ndef extract_json(v: Any):\n\
-          \    t=re.sub(r\"```(?:json)?|```\",\"\",str(v or \"\"),flags=re.I).strip();s=t.find(\"\
-          {\")\n    if s<0:return {}\n    stack=[];q=None;esc=False\n    for i in range(s,len(t)):\n\
-          \        c=t[i]\n        if q:\n            if esc:esc=False\n            elif c==\"\
-          \\\\\":esc=True\n            elif c==q:q=None\n            continue\n        if\
-          \ c in ('\"',\"'\"):q=c\n        elif c in \"{[\":stack.append(c)\n        elif\
-          \ c in \"}]\":\n            if not stack:return {}\n            stack.pop()\n  \
-          \          if not stack:\n                try:return json.loads(t[s:i+1])\n    \
-          \            except Exception:return {}\n    return {}\ndef parse_list(v: Any):\n\
-          \    \"\"\"兼容 Dify 将数组输入传成 JSON 字符串、原生数组、数字或空值。\"\"\"\n    if isinstance(v,list):return\
-          \ v\n    if isinstance(v,tuple):return list(v)\n    if not isinstance(v,str):return\
-          \ []\n    try:parsed=json.loads(v or \"[]\")\n    except Exception:return []\n \
-          \   return parsed if isinstance(parsed,list) else []\ndef norm(v: Any)->str:return\
-          \ re.sub(r\"[^0-9a-z\\u4e00-\\u9fff]+\",\"\",str(v or \"\").lower())\ndef contains(a:\
-          \ str,t: str)->bool:\n    a=str(a or \"\").strip();t=str(t or \"\")\n    if not\
-          \ a:return False\n    if re.fullmatch(r\"[A-Za-z0-9 ._+&-]+\",a):return re.search(r\"\
-          (?<![A-Za-z0-9])\"+re.escape(a)+r\"(?![A-Za-z0-9])\",t,flags=re.I) is not None\n\
-          \    return norm(a) in norm(t)\ndef target_alias_match(alias: str,name: str)->bool:\n\
-          \    a=norm(alias);n=norm(name)\n    if not a or not n:return False\n    if a==n:return\
-          \ True\n    if len(a)<4:return False\n    qualifiers=(\"男士\",\"女士\",\"香水\",\"系列\"\
-          ,\"经典\",\"同名\",\"edt\",\"edp\")\n    if a in n:return n[len(a):] in qualifiers\n\
-          \    if n in a:return a[len(n):] in qualifiers\n    return False\ndef product_norm(v:\
-          \ Any)->str:\n    \"\"\"P5产品同粒度校验：忽略括号英文名及EDT/EDP规格后比较核心名。\"\"\"\n    s=re.sub(r\"\
-          [（(][^）)]*[）)]\", \"\", str(v or \"\"))\n    s=re.sub(r\"(?i)(?:^|\\\\s)(?:edt|edp)(?:\\\
-          \\s|$)\", \" \", s)\n    return norm(s)\ndef clamp(v):\n    try:return max(-1.0,min(1.0,float(v)))\n\
-          \    except Exception:return 0.0\ndef words(v,limit=5):\n    if isinstance(v,str):v=re.split(r\"\
-          [,，、;；|]+\",v)\n    if not isinstance(v,list):return []\n    out=[]\n    for x in\
-          \ v:\n        x=re.sub(r\"\\s+\",\" \",str(x or \"\")).strip()[:30]\n        if\
-          \ x and x not in out:out.append(x)\n    return out[:limit]\n\nPOS_HINTS=(\"强烈推荐\"\
-          ,\"唯一推荐\",\"行业领先\",\"行业标杆\",\"显著优于\",\"全面领先\",\"明显领先\",\"全面超越\",\"更胜一筹\",\"唯一答案\"\
-          ,\"性价比高\",\"值得考虑\",\"体验很好\",\"体验好\",\"口碑好\",\"所见即所得\",\"直出不用P图\",\"省去修图\",\"表现不错\"\
-          ,\"细节丰富\",\"控制出色\",\"远超\",\"碾压\",\"完胜\",\"天花板\",\"最佳\",\"顶级\",\"首选\",\"推荐\",\"值得\"\
-          ,\"占优\",\"更强\",\"强大\",\"可靠\",\"便捷\",\"专业\",\"成熟\",\"稳定\",\"自然\",\"清晰\",\"丰富\",\"\
-          准确\",\"讨喜\",\"有创意\",\"有提升\",\"更好的选择\",\"更好\",\"好闻\",\"优雅\",\"魅惑\",\"清爽\",\"干净\"\
-          ,\"温柔\",\"治愈\",\"高级\",\"通透\",\"友好\",\"不挑人\",\"排面\")\nNEG_HINTS=(\"强烈不推荐\",\"严重故障\"\
-          ,\"投诉集中\",\"重大风险\",\"严重质量问题\",\"严重安全问题\",\"表现不稳定\",\"体验欠佳\",\"需要改进\",\"速度慢\",\"\
-          尚不成熟\",\"并不领先\",\"没有更好\",\"不值得\",\"不够稳定\",\"不适合\",\"不稳定\",\"亮度不足\",\"解析力不足\",\"\
-          明显不足\",\"仍有差距\",\"有差距\",\"鬼影\",\"畸变\",\"噪点\",\"价格较贵\",\"较贵\",\"偏高\",\"昂贵\",\"落后\"\
-          ,\"受限\",\"欺诈\",\"风险\",\"不推荐\",\"限制\",\"不便\",\"不够\",\"较弱\",\"较差\",\"故障\",\"缺点\",\"\
-          不足\",\"差距\",\"问题\",\"撞香\",\"留香偏短\",\"留香一般\",\"浓郁\",\"厚重\",\"踩雷\",\"曝光弱\",\"曝光少\"\
-          ,\"知名度低\",\"影响力弱\",\"覆盖不足\",\"规模有限\",\"成立时间短\",\"门槛高\",\"不如\")\ndef hint_hits(text,hints):\n\
-          \    out=[]\n    for word in sorted(hints,key=len,reverse=True):\n        if word\
-          \ in text and not any(word in old for old in out):out.append(word)\n    return out[:10]\n\
-          # 前置否定词：出现在负向词之前时，该负向词不成立（无问题/没问题/毫无问题/并不领先）。\nNEG_CUES=(\"无\",\"没\",\"没有\",\"并未\"\
-          ,\"并无\",\"毫无\",\"谈不上\",\"不算\",\"并不\",\"未\",\"非\")\ndef negated_at(text,start):\n\
-          \    prefix=str(text or \"\")[max(0,start-3):max(0,start)]\n    return any(cue in\
-          \ prefix for cue in NEG_CUES)\ndef polarity_hits(text):\n    # 香调/内核/规格等字段默认是事实参数，即使包含“温柔/清爽”等描述词也不构成情感。\n\
-          \    if re.match(r\"^\\s*(?:香调|内核|规格|参数|型号|容量|价格|成分|材质)\\s*[：:]\",str(text or \"\
-          \")):\n        return [],[]\n    text=str(text or \"\")\n    # 负向词需逐次判断前置否定；“无问题”整句只有“问题”命中时不能判负。\n\
-          \    neg=[]\n    for word in sorted(NEG_HINTS,key=len,reverse=True):\n        if\
-          \ word not in text:continue\n        if any(word in old for old in neg):continue\n\
-          \        hits=[m.start() for m in re.finditer(re.escape(word),text)]\n        if\
-          \ hits and all(negated_at(text,i) for i in hits):continue\n        neg.append(word)\n\
-          \    neg=neg[:10];pos=[]\n    for word in sorted(POS_HINTS,key=len,reverse=True):\n\
-          \        if word not in text:continue\n        if re.search(r\"(?:不|未|没有|并不|尚不|谈不上).{0,4}\"\
-          +re.escape(word),text):continue\n        if not any(word in old for old in pos):pos.append(word)\n\
-          \    return neg,pos[:10]\n\ndef main(llm_output: str,sentence_catalog: str,target_aliases:\
-          \ str,entity_inventory: str,is_ranking: str,answer_total_len: int)->dict:\n    data=extract_json(llm_output)\n\
-          \    # V2.2紧凑协议转为旧字段，后续证据校验和最终输出逻辑保持不变。\n    if isinstance(data,dict) and any(k\
-          \ in data for k in (\"detected\",\"brand\",\"mention\",\"score\",\"pos\",\"neg\"\
-          )):\n        compact=dict(data)\n        def expand(items):\n            out=[]\n\
-          \            for item in items if isinstance(items,list) else []:\n            \
-          \    if isinstance(item,dict):out.append(item)\n                elif isinstance(item,list)\
-          \ and item:\n                    out.append({\"sentence_id\":item[0],\"keywords\"\
-          :item[1] if len(item)>1 else []})\n                elif isinstance(item,str):out.append({\"\
-          sentence_id\":item,\"keywords\":[]})\n            return out\n        data={\n \
-          \           \"brand_detected\":compact.get(\"detected\",False),\"matched_brand\"\
-          :compact.get(\"brand\",\"\"),\n            \"matched_mention\":compact.get(\"mention\"\
-          ,\"\"),\"brand_pattern\":compact.get(\"pattern\",\"\"),\n            \"evidence_sentence_ids\"\
-          :compact.get(\"evidence\",[]),\"sentiment_score\":compact.get(\"score\",0),\n  \
-          \          \"sentiment_reasoning\":compact.get(\"reason\",\"\"),\"sentiment_classic_words\"\
-          :compact.get(\"words\",[]),\n            \"positive_sentences\":expand(compact.get(\"\
-          pos\",[])),\"negative_sentences\":expand(compact.get(\"neg\",[])),\"neutral_sentences\"\
-          :expand(compact.get(\"neu\",[]))}\n    catalog=parse_list(sentence_catalog)\n  \
-          \  aliases=parse_list(target_aliases)\n    entities=parse_list(entity_inventory)\n\
-          \    smap={str(x.get(\"id\")):x for x in catalog if isinstance(x,dict) and x.get(\"\
-          id\")};order={sid:i for i,sid in enumerate(smap)}\n    subject_entities=[e for e\
-          \ in entities if isinstance(e,dict) and e.get(\"is_target_entity\") and e.get(\"\
-          rank_membership\")==\"independent_subject\"]\n    subject_start=min((order.get(str(e.get(\"\
-          rank_anchor_sentence_id\") or \"\"),99999) for e in subject_entities),default=99999)\n\
-          \    subject_end=min((order.get(sid,99999) for sid,item in smap.items() if re.fullmatch(r\"\
-          \\s*相关视频\\s*\",str(item.get(\"text\") or \"\"))),default=99999)\n    alias_rows=[x\
-          \ for x in aliases if isinstance(x,dict) and x.get(\"alias\")]\n    strict_brand_aliases=[str(x.get(\"\
-          alias\") or \"\") for x in alias_rows if str(x.get(\"alias\") or \"\") and float(x.get(\"\
-          confidence\",0))>=0.90]\n    # 完整别名可命中；短别名若只是更完整声明别名的子串，不允许它单独把母品牌/兄弟产品升级为目标。\n\
-          \    usable_brand_aliases=[a for a in strict_brand_aliases if not any(norm(a)!=norm(b)\
-          \ and norm(a) in norm(b) for b in strict_brand_aliases if norm(b))]\n    # 全局节点确认的客户产品/子品牌也并入目标证据边界，例如“苹果公司\
-          \ → iPhone”。\n    known_aliases={norm(x.get(\"alias\")) for x in alias_rows}\n \
-          \   for e in entities if isinstance(entities,list) else []:\n        if not isinstance(e,dict)\
-          \ or not e.get(\"is_target_entity\"):continue\n        for name in (e.get(\"surface\"\
-          ,\"\"),e.get(\"canonical_name\",\"\"),e.get(\"parent_brand\",\"\")):\n         \
-          \   name=str(name or \"\").strip();key=norm(name)\n            if key and key not\
-          \ in known_aliases:\n                alias_rows.append({\"alias\":name,\"type\"\
-          :\"validated_target_family\",\"confidence\":0.95,\"source\":\"entity_inventory\"\
-          });known_aliases.add(key)\n    # 子串歧义保护不能误伤“别名与已校验目标实体完全相等”的产品系列。\n    # 例如声明别名“香奈儿蔚蓝”虽是“香奈儿蔚蓝男士”的子串，但它与实体\n\
-          \    # canonical完全相等，必须保留为硬匹配；“360”仍不会因这条规则命中“360智见”。\n    target_entity_norms={norm(n)\
-          \ for e in entities if isinstance(e,dict) and e.get(\"is_target_entity\")\n    \
-          \                     for n in (e.get(\"surface\",\"\"),e.get(\"canonical_name\"\
-          ,\"\")) if norm(n)}\n    exact_entity_aliases=[a for a in strict_brand_aliases if\
-          \ norm(a) in target_entity_norms]\n    usable_brand_aliases=list(dict.fromkeys(usable_brand_aliases+exact_entity_aliases))\n\
-          \    # 上游LLM是语义判定来源；本节点只补充可验证的原文别名和证据，不覆盖上游brand_detected。\n    llm_detected = data.get(\"\
-          brand_detected\") if isinstance(data,dict) else False\n    llm_detected = llm_detected\
-          \ is True or (isinstance(llm_detected,str) and llm_detected.strip().lower() in {\"\
-          true\",\"1\",\"yes\",\"是\"})\n    llm_matched_brand=str(data.get(\"matched_brand\"\
-          ) or \"\").strip() if isinstance(data,dict) else \"\"\n    llm_mentions=[]\n   \
-          \ if isinstance(data,dict):\n        for value in (data.get(\"matched_mention\"\
-          ),data.get(\"matched_brand\")):\n            value=str(value or \"\").strip()\n\
-          \            if len(norm(value))>=2 and value not in llm_mentions:llm_mentions.append(value)\n\
-          \    known_aliases={norm(x.get(\"alias\")) for x in alias_rows}\n    for value in\
-          \ llm_mentions:\n        if norm(value) not in known_aliases:\n            alias_rows.append({\"\
-          alias\":value,\"type\":\"llm_confirmed_mention\",\"confidence\":0.99,\"source\"\
-          :\"llm_output\"})\n            known_aliases.add(norm(value))\n    llm_product_mentions=[x\
-          \ for x in llm_mentions if len(product_norm(x))>=4]\n    direct_all=[]\n    for\
-          \ row in alias_rows:\n        ids=[sid for sid,item in smap.items() if contains(row[\"\
-          alias\"],item.get(\"text\",\"\"))]\n        if ids:direct_all.append((row,ids))\n\
-          \    strict_keys={norm(x) for x in strict_brand_aliases if norm(x)}\n    direct=[x\
-          \ for x in direct_all if norm(x[0].get(\"alias\")) in {norm(a) for a in usable_brand_aliases}]\n\
-          \    high=direct\n    pattern=str(data.get(\"brand_pattern\") or \"\") if isinstance(data,dict)\
-          \ else \"\"\n    sensitive=pattern.startswith((\"P3\",\"P4\",\"P5\"))\n    # 品牌提及必须落到与brand_name同粒度的独立推荐实体；comparison_only、母品牌和兄弟产品均不算。\n\
-          \    brand_alias_names=usable_brand_aliases\n    independent_target=False\n    for\
-          \ e in entities if isinstance(entities,list) else []:\n        if not isinstance(e,dict)\
-          \ or e.get(\"rank_membership\") not in {\"ordered_choice\",\"independent_subject\"\
-          }:continue\n        primary=[str(e.get(\"surface\") or \"\"),str(e.get(\"canonical_name\"\
-          ) or \"\")]\n        exact_brand=any(target_alias_match(a,n) for a in brand_alias_names\
-          \ if norm(a) for n in primary if norm(n))\n        exact_llm_product=any(product_norm(m)\
-          \ and any(product_norm(m)==product_norm(n) for n in primary) for m in llm_product_mentions)\n\
-          \        semantic_family=bool(e.get(\"is_target_entity\")) and str(e.get(\"target_relation\"\
-          ) or \"\") in {\"exact_target\",\"target_product\",\"target_subbrand\",\"target_service\"\
-          }\n        # 上游3v已用brand_name粒度和正文anchor确认了独立目标时，所有模式（含P5产品系列）\n        # 都应信任该关系。P5禁止的是母品牌/兄弟产品猜测，而不是阻断已校验的exact_target。\n\
-          \        if exact_brand or exact_llm_product or semantic_family:independent_target=True;break\n\
-          \    # 最终提及判定必须同时满足：上游LLM判断为已提及，且代码确认存在同粒度独立目标实体。\n    detected=llm_detected and\
-          \ independent_target\n    # 多识别词按正文物理位置最早命中；同位置再取最完整别名。\n    matched=\"\";direct_ids=[]\n\
-          \    if detected:\n        # 目标实体本身是上游已校验的可靠产品/主体名；即使声明别名层因短词歧义过滤，也用实体surface回填正文证据。\n\
-          \        target_names=[]\n        for e in entities if isinstance(entities,list)\
-          \ else []:\n            if isinstance(e,dict) and e.get(\"is_target_entity\") and\
-          \ e.get(\"rank_membership\") in {\"ordered_choice\",\"independent_subject\"}:\n\
-          \                target_names.extend([str(e.get(\"surface\") or \"\"),str(e.get(\"\
-          canonical_name\") or \"\")])\n        target_names=[x for x in dict.fromkeys(target_names)\
-          \ if norm(x)]\n        for name in target_names:\n            ids=[sid for sid,item\
-          \ in smap.items() if contains(name,item.get(\"text\",\"\"))]\n            direct_ids.extend(ids)\n\
-          \        if target_names:\n            ranked_names=[]\n            for name in\
-          \ target_names:\n                ids=[sid for sid in direct_ids if contains(name,smap.get(sid,{}).get(\"\
-          text\",\"\"))]\n                if ids:ranked_names.append((min(order.get(sid,99999)\
-          \ for sid in ids),-len(norm(name)),name))\n            if ranked_names:matched=sorted(ranked_names)[0][2]\n\
-          \        direct_ids=list(dict.fromkeys(direct_ids))\n    if direct:\n        ranked=[]\n\
-          \        for row,ids in direct:\n            first=min(order.get(x,99999) for x\
-          \ in ids);ranked.append((first,-len(norm(row[\"alias\"])),row[\"alias\"],ids))\n\
-          \        ranked.sort();matched=ranked[0][2];direct_ids=list(dict.fromkeys(x for\
-          \ _,ids in direct for x in ids))\n    strict_norms={norm(x) for x in usable_brand_aliases\
-          \ if norm(x)}\n    confirmed_mentions=[x for x in llm_mentions if norm(x) in strict_norms]\n\
-          \    if detected and not matched and confirmed_mentions:matched=confirmed_mentions[0]\n\
-          \    if llm_matched_brand and norm(llm_matched_brand) in strict_norms:matched=llm_matched_brand\n\
-          \    # LLM给出的证据ID是上游证据；只要ID存在，就纳入结构化回填范围。\n    llm_evidence_ids=[]\n    if isinstance(data,dict):\n\
-          \        values=data.get(\"evidence_sentence_ids\",[])\n        values=values if\
-          \ isinstance(values,list) else ([values] if isinstance(values,str) else [])\n  \
-          \      llm_evidence_ids=[str(x) for x in values if str(x) in smap]\n    direct_ids=list(dict.fromkeys(direct_ids+llm_evidence_ids))\n\
-          \    rank=0\n    if detected and str(is_ranking).lower()==\"true\":\n        candidates=[]\n\
-          \        alias_names=list(dict.fromkeys(x for x in usable_brand_aliases if x))\n\
-          \        for e in entities if isinstance(entities,list) else []:\n            if\
-          \ not isinstance(e,dict):continue\n            if e.get(\"rank_membership\")!=\"\
-          ordered_choice\":continue\n            names=[e.get(\"surface\",\"\"),e.get(\"canonical_name\"\
-          ,\"\"),e.get(\"parent_brand\",\"\")]\n            primary=names[:2];parent=names[2]\n\
-          \            entity_match=bool(e.get(\"is_target_entity\")) or any(target_alias_match(a,n)\
-          \ for a in alias_names for n in primary if a and n)\n            if not entity_match\
-          \ and norm(parent):entity_match=any(target_alias_match(a,parent) for a in alias_names\
-          \ if norm(a))\n            if entity_match:\n                anchor=str(e.get(\"\
-          rank_anchor_sentence_id\") or \"\");anchor_item=smap.get(anchor,{})\n          \
-          \      # rank_position 只能来自同一条有显式编号的正式条目，不能借同集团说明或总结复述。\n                line=str(anchor_item.get(\"\
-          line_text\") or anchor_item.get(\"text\") or \"\")\n                line=re.sub(r\"\
-          \\\\([.#*+\\-])\",r\"\\1\",line);prefix=re.sub(r\"^\\s{0,3}#{1,6}\\s*\",\"\",line).strip()\n\
-          \                numbered=bool(re.match(r\"^(?:Top|No\\.?)[ \\t]*[1-9]\\d*\\b|^第[\
-          \ \\t]*[1-9]\\d*[ \\t]*(?:名|位)|^[1-9]\\d*[ \\t]*[.、)）:：]\",prefix,re.I))\n     \
-          \           try:p=int(e.get(\"rank_position\",0))\n                except Exception:p=0\n\
-          \                if p>0 and numbered:candidates.append(p)\n        if candidates:rank=min(candidates)\n\
-          \        # 目标未进入entity_inventory时，按目标证据句所在核心表格/列表的物理位置补排。\n        if rank<=0:\n\
-          \            anchor_candidates=[]\n            for sid in list(dict.fromkeys(llm_evidence_ids+direct_ids)):\n\
-          \                item=smap.get(sid,{})\n                line=\" \".join(str(item.get(k)\
-          \ or \"\") for k in (\"text\",\"context_heading\"))\n                core=bool(item)\
-          \ and (\"|\" in line or str(item.get(\"block_type\") or \"\") in {\"heading\",\"\
-          table_row\",\"list_item\"} or re.search(r\"(?:^|\\\\s)(?:Top|No\\\\.?|第\\\\s*[0-9一二三四五六七八九十]+|[0-9一二三四五六七八九十]+[.、)）])\"\
-          ,line,re.I))\n                if core:anchor_candidates.append((order.get(sid,99999),sid))\n\
-          \            anchor_order,target_anchor=min(anchor_candidates) if anchor_candidates\
-          \ else (99999,\"\")\n            if target_anchor and anchor_order<99999:\n    \
-          \            before=[]\n                for e in entities if isinstance(entities,list)\
-          \ else []:\n                    if not isinstance(e,dict):continue\n           \
-          \         try:p=int(e.get(\"rank_position\",0))\n                    except Exception:p=0\n\
-          \                    sid=str(e.get(\"rank_anchor_sentence_id\") or \"\")\n     \
-          \               if p>0 and sid in order and order[sid]<anchor_order:before.append((order[sid],p))\n\
-          \                rank=len({x[0] for x in before})+1\n        # 规则补强：进入正式排名结构的独立目标不能因实体清单漏写rank而回落为0。\n\
-          \        # 仅对 detected=true 且 is_ranking=true 生效；independent_subject 的非排名回答仍保持0。\n\
-          \        if rank<=0:\n            target_rows=[e for e in entities if isinstance(e,dict)\
-          \ and e.get(\"is_target_entity\")\n                         and e.get(\"rank_membership\"\
-          ) in {\"ordered_choice\",\"independent_subject\"}]\n            for e in target_rows:\n\
-          \                try:\n                    p=int(e.get(\"rank_position\",0) or e.get(\"\
-          local_position\",0) or 0)\n                except Exception:\n                 \
-          \   p=0\n                if p>0:\n                    rank=p;break\n           \
-          \ if rank<=0 and target_rows:\n                anchor=str(target_rows[0].get(\"\
-          rank_anchor_sentence_id\") or \"\")\n                anchor_order=order.get(anchor,99999)\n\
-          \                module=str(target_rows[0].get(\"module_id\") or \"\")\n       \
-          \         same_module=[]\n                for e in entities:\n                 \
-          \   if not isinstance(e,dict) or e.get(\"rank_membership\")!=\"ordered_choice\"\
-          :continue\n                    if module and str(e.get(\"module_id\") or \"\")!=module:continue\n\
-          \                    sid=str(e.get(\"rank_anchor_sentence_id\") or \"\")\n     \
-          \               if sid in order and order[sid]<=anchor_order:same_module.append(order[sid])\n\
-          \                if same_module:\n                    rank=len(set(same_module))\n\
-          \                else:\n                    # 目标实体是排名模块的唯一/伞形主体时，按其首个有效结构锚点归入第1位。\n\
-          \                    rank=1\n    # 最终布尔门禁以实体角色和可验证正文证据为准，不让LLM单独的false覆盖independent_subject。\n\
-          \n    def linked(sid, attributed=\"\"):\n        item=smap.get(sid,{});scope=\"\
-          \ \".join(str(item.get(k,\"\")) for k in (\"text\",\"context_heading\",\"context_before\"\
-          ))\n        # attributed_entity只能放宽省略主语，附近原文仍必须出现目标别名，禁止凭标签跨段串品牌。\n        if attributed\
-          \ and any(contains(row[\"alias\"],attributed) or contains(attributed,row[\"alias\"\
-          ]) for row,_ in direct):\n            if any(contains(row[\"alias\"],scope) for\
-          \ row,_ in direct):return True\n        if sid in direct_ids:return True\n     \
-          \   if any(contains(row[\"alias\"],scope) for row,_ in direct):return True\n   \
-          \     # independent_subject的评价可跨多个章节继承到全文主体；仅放宽LLM已选证据，自动补漏仍要求直接作用域，避免串入竞品。\n  \
-          \      idx=order.get(sid,-99)\n        if subject_start<=idx<subject_end:return\
-          \ True\n        for did in direct_ids:\n            d=order.get(did,-999)\n    \
-          \        if 0<idx-d<=2:\n                between=catalog[d+1:idx+1]\n          \
-          \      if not any(x.get(\"block_type\") in (\"heading\",\"table_row\",\"list_item\"\
-          ) for x in between[:-1]):return True\n        return False\n    def details(raw,blocked=None):\n\
-          \        blocked=blocked or set();out=[];ids=set()\n        if not isinstance(raw,list):return\
-          \ out,ids\n        for x in raw:\n            if isinstance(x,str):sid=x;k=[];attributed=\"\
-          \"\n            elif isinstance(x,dict):\n                sid=str(x.get(\"sentence_id\"\
-          ) or x.get(\"id\") or \"\");k=words(x.get(\"keywords\",[]),10);attributed=str(x.get(\"\
-          attributed_entity\") or \"\")\n            else:continue\n            if sid not\
-          \ in smap or sid in blocked or sid in ids or not linked(sid,attributed):continue\n\
-          \            # 最终text只从原文目录回填，禁止strip、重写或使用LLM生成quote。\n            text=str(smap[sid].get(\"\
-          text\", \"\"));k=[w for w in k if w and w in text]\n            out.append({\"text\"\
-          :text,\"char_count\":int(smap[sid].get(\"char_count\",len(re.sub(r\"\\s+\",\"\"\
-          ,text)))),\"keywords\":k,\"_start\":int(smap[sid].get(\"start\",999999999))});ids.add(sid)\n\
-          \        return out,ids\n    neg,negids=details(data.get(\"negative_sentences\"\
-          ,[]) if isinstance(data,dict) else [])\n    pos,posids=details(data.get(\"positive_sentences\"\
-          ,[]) if isinstance(data,dict) else [],negids)\n    # 语义词根二次校验：修正LLM把“不推荐/并不领先”放进正向，或把纯正向句放进负向的错误。\n\
-          \    semantic_pos=[];semantic_neg=[]\n    for row in neg:\n        nh,ph=polarity_hits(row.get(\"\
-          text\",\"\"))\n        if not row.get(\"keywords\") and not nh and not ph:continue\n\
-          \        if ph and not nh:\n            row[\"keywords\"]=words(list(row.get(\"\
-          keywords\",[]))+ph,10);semantic_pos.append(row)\n        else:semantic_neg.append(row)\n\
-          \    for row in pos:\n        nh,ph=polarity_hits(row.get(\"text\",\"\"))\n    \
-          \    if not row.get(\"keywords\") and not nh and not ph:continue\n        if nh\
-          \ and not ph:\n            row[\"keywords\"]=words(list(row.get(\"keywords\",[]))+nh,10);semantic_neg.append(row)\n\
-          \        else:semantic_pos.append(row)\n    pos=semantic_pos;neg=semantic_neg\n\
-          \    # 对“品牌名：评价，但负向评价”这类单行结构做确定性补漏；多实体同一行只自动处理直接点名的单元，避免串品牌。\n    alias_names=[str(row.get(\"\
-          alias\") or \"\") for row,_ in direct]\n    if not alias_names:\n        alias_names=[str(e.get(\"\
-          surface\") or \"\") for e in entities if isinstance(e,dict) and e.get(\"is_target_entity\"\
-          ) and e.get(\"rank_membership\") in {\"ordered_choice\",\"independent_subject\"\
-          }]\n    target_anchor_order=min((order.get(str(e.get(\"rank_anchor_sentence_id\"\
-          ) or \"\"),99999) for e in entities if isinstance(e,dict) and e.get(\"is_target_entity\"\
-          ) and e.get(\"rank_membership\") in {\"ordered_choice\",\"independent_subject\"\
-          }),default=99999)\n    other_names=[]\n    for e in entities if isinstance(entities,list)\
-          \ else []:\n        if not isinstance(e,dict):continue\n        for name in (e.get(\"\
-          surface\",\"\"),e.get(\"canonical_name\",\"\"),e.get(\"parent_brand\",\"\")):\n\
-          \            name=str(name or \"\")\n            if name and not any(contains(a,name)\
-          \ or contains(name,a) for a in alias_names if a):other_names.append(name)\n    COMP_CUES=(\"\
-          全面超越\",\"明显超越\",\"远超\",\"优于\",\"胜过\",\"领先于\",\"碾压\",\"完胜\",\"超越\",\"领先\")\n    def\
-          \ comparison_direction(text):\n        # 1=当前目标是胜方；-1=当前目标是败方；0=没有可确定方向。\n     \
-          \   for current in alias_names:\n            if not current or not contains(current,text):continue\n\
-          \            for other in other_names:\n                if not other or not contains(other,text):continue\n\
-          \                a=re.escape(current);b=re.escape(other);cue=\"(?:\"+\"|\".join(map(re.escape,COMP_CUES))+\
-          \ \")\"\n                if re.search(a+r\".{0,16}被.{0,20}\"+b+r\".{0,24}\"+cue,text,flags=re.I):return\
-          \ -1\n                if re.search(b+r\".{0,48}\"+cue+r\".{0,24}\"+a,text,flags=re.I):return\
-          \ -1\n                if re.search(a+r\".{0,48}\"+cue+r\".{0,24}\"+b,text,flags=re.I):return\
-          \ 1\n        return 0\n    # LLM即使把“vivo远超iPhone”误列为iPhone正向，也在代码层按比较方向纠偏。\n   \
-          \ corrected_pos=[];corrected_neg=list(neg)\n    for row in pos:\n        if comparison_direction(row.get(\"\
-          text\",\"\"))<0:\n            cues=hint_hits(row.get(\"text\",\"\"),COMP_CUES);row[\"\
-          keywords\"]=cues or row.get(\"keywords\",[]);corrected_neg.append(row)\n       \
-          \ else:corrected_pos.append(row)\n    pos=corrected_pos;neg=corrected_neg\n    def\
-          \ auto_scope(sid):\n        item=smap.get(sid,{});unit=str(item.get(\"text\", \"\
-          \"));heading=str(item.get(\"context_heading\", \"\"))\n        if any(contains(a,unit)\
-          \ for a in alias_names if a):return True\n        for scope in (heading,):\n   \
-          \         if any(contains(a,scope) for a in alias_names if a) and not any(contains(n,scope)\
-          \ for n in other_names if n):return True\n        # LLM 可能因返回长度/误判没有列出证据ID。对编号推荐项后的连续描述，\n\
-          \        # 以最近一个同级结构锚点确定局部作用域：最近锚点必须是目标实体，且不能被\n        # 其他实体的后续编号项覆盖。这样“2. 香奈儿蔚蓝”后的香调/优缺点仍能回填，\n\
-          \        # 但不会把“3. Creed”后的评价串给香奈儿。\n        idx=order.get(sid,-1)\n        if idx>=0:\n\
-          \            previous=[(x,j) for x,j in order.items() if j<idx and str(smap.get(x,{}).get(\"\
-          block_type\") or \"\") in {\"heading\",\"table_row\",\"list_item\"}]\n         \
-          \   if previous and idx>target_anchor_order:\n                anchor_id=max(previous,key=lambda\
-          \ z:z[1])[0];anchor_text=str(smap.get(anchor_id,{}).get(\"text\") or \"\")\n   \
-          \             if any(contains(a,anchor_text) for a in alias_names if a) and not\
-          \ any(contains(n,anchor_text) for n in other_names if n):return True\n        return\
-          \ False\n    used=set(negids)|set(posids)\n    for sid,item in sorted(smap.items(),key=lambda\
-          \ kv:order.get(kv[0],99999)):\n        if sid in used or not auto_scope(sid):continue\n\
-          \        text=str(item.get(\"text\", \"\"));nh,ph=polarity_hits(text)\n        direction=comparison_direction(text)\n\
-          \        if direction<0:nh=hint_hits(text,COMP_CUES);ph=[]\n        elif direction>0\
-          \ and not nh:ph=ph or hint_hits(text,COMP_CUES)\n        row={\"text\":text,\"char_count\"\
-          :int(item.get(\"char_count\",len(re.sub(r\"\\s+\",\"\",text)))),\"keywords\":nh\
-          \ or ph,\"_start\":int(item.get(\"start\",999999999))}\n        if nh:neg.append(row);negids.add(sid);used.add(sid)\n\
-          \        elif ph:pos.append(row);posids.add(sid);used.add(sid)\n    # 用原文offset稳定排序，不依赖LLM数组顺序。\n\
-          \    pos.sort(key=lambda x:x.get(\"_start\",999999999));neg.sort(key=lambda x:x.get(\"\
-          _start\",999999999))\n    for row in pos+neg:row.pop(\"_start\",None)\n    try:total=max(0,int(answer_total_len\
-          \ or 0))\n    except Exception:total=0\n    score=clamp(data.get(\"sentiment_score\"\
-          ,0) if isinstance(data,dict) else 0)\n    if not detected:\n        score=0.0;reason=\"\
-          品牌未被提及\";pos=[];neg=[];classic=[]\n    else:\n        if not pos and not neg:score=0.0\n\
-          \        elif pos and not neg and score<0.1:score=0.3\n        elif neg and not\
-          \ pos and score>-0.1:score=-0.3\n        reason=str(data.get(\"sentiment_reasoning\"\
-          ) or \"\").strip()[:240]\n        classic=words(data.get(\"sentiment_classic_words\"\
-          ,[]),3)\n        if not classic:\n            pool=[]\n            for row in (neg\
-          \ if neg else pos):pool.extend(row.get(\"keywords\",[]))\n            classic=words(pool,3)\
-          \ or ([\"仅提及\"] if detected else [])\n        if not reason:\n            reason=f\"\
-          {matched or '目标品牌'}：正向证据{len(pos)}条，负向证据{len(neg)}条\"\n    # ---------------- 情感词云（新增）\
-          \ ----------------\n    WC_MAX=10\n    wc_target_names=[];wc_other_names=[]\n  \
-          \  for e in (entities if isinstance(entities,list) else []):\n        if not isinstance(e,dict):continue\n\
-          \        names=[str(e.get(k) or \"\").strip() for k in (\"surface\",\"canonical_name\"\
-          ,\"parent_brand\")]\n        names=[n for n in dict.fromkeys(names) if n]\n    \
-          \    if e.get(\"is_target_entity\") and e.get(\"rank_membership\") in {\"ordered_choice\"\
-          ,\"independent_subject\"}:\n            wc_target_names.extend(names)\n        else:\n\
-          \            wc_other_names.extend(names)\n    wc_target_names=list(dict.fromkeys(wc_target_names))\n\
-          \    wc_other_names=[n for n in dict.fromkeys(wc_other_names)\n                \
-          \    if not any(contains(t,n) or contains(n,t) for t in wc_target_names if t)]\n\
-          \    text_start={str(x.get(\"text\") or \"\"):int(x.get(\"start\",0)) for x in smap.values()}\n\
-          \n    def wc_owned(unit):\n        if not unit:return False\n        if any(contains(n,unit)\
-          \ for n in wc_target_names if n):return True\n        # 点名的竞品句一律排除，避免竞品评价计入本品词云\n\
-          \        if any(contains(n,unit) for n in wc_other_names if n):return False\n  \
-          \      # 围绕本品提问的形态下，未点名竞品的句子视为承接主语\n        return not wc_other_names\n\n    # 负面词根可能只是更长正向短语的一部分，如“偏高性价比”中的“偏高”。\n\
-          \    WC_POS_TAIL=(\"性价比\",\"口碑\",\"品质\",\"评分\",\"评价\",\"满意度\",\"关注度\",\"知名度\",\"\
-          复购率\",\n                 \"销量\",\"热度\",\"颜值\",\"配置\",\"性能\",\"档次\",\"频率\",\"占比\"\
-          )\n    def wc_occ(term,unit,negative):\n        \"\"\"返回有效出现位置；负向词若紧接正向属性词，则该次出现视为误切并跳过。\"\
-          \"\"\n        out=[];cur=0\n        while True:\n            i=unit.find(term,cur)\n\
-          \            if i<0:break\n            tail_hit=any(unit[i+len(term):].startswith(a)\
-          \ for a in WC_POS_TAIL)\n            if not (negative and (tail_hit or negated_at(unit,i))):\n\
-          \                out.append(i)\n            cur=i+len(term)\n        return out\n\
-          \    def wc_pick(row,negative=False):\n        unit=str(row.get(\"text\") or \"\"\
-          )\n        if not wc_owned(unit):return None\n        kws=[]\n        for w in (row.get(\"\
-          keywords\") or []):\n            t=str(w or \"\").strip()\n            if not t\
-          \ or len(t)>WC_MAX or t not in unit or t in kws:continue\n            if not wc_occ(t,unit,negative):continue\
-          \   # 该词全部出现均为误切，丢弃\n            kws.append(t)\n            if len(kws)>=2:break\
-          \   # 每句三类合计最多2个\n        if not kws:return None\n        return {\"text\":unit,\"\
-          keywords\":kws,\"start\":text_start.get(unit,999999999)}\n\n    def wc_cloud(rows,negative=False):\n\
-          \        terms={}\n        for row in rows:\n            unit=row[\"text\"]\n  \
-          \          for t in row[\"keywords\"]:\n                occ=wc_occ(t,unit,negative)\n\
-          \                if not occ:continue\n                at=row[\"start\"]+occ[0]\n\
-          \                if t not in terms:terms[t]={\"term\":t,\"count\":0,\"first\":at}\n\
-          \                elif at<terms[t][\"first\"]:terms[t][\"first\"]=at\n          \
-          \      terms[t][\"count\"]+=len(occ)\n        return [{\"term\":x[\"term\"],\"count\"\
-          :x[\"count\"]}\n                for x in sorted(terms.values(),key=lambda z:(-z[\"\
-          count\"],z[\"first\"],z[\"term\"]))]\n\n    if detected:\n        wc_pos=[r for\
-          \ r in (wc_pick(x) for x in pos) if r]\n        wc_neg=[r for r in (wc_pick(x,True)\
-          \ for x in neg) if r]\n        neu_rows,_=details(data.get(\"neutral_sentences\"\
-          ,[]) if isinstance(data,dict) else [])\n        used_text={x[\"text\"] for x in\
-          \ pos+neg}\n        wc_neu=[r for r in (wc_pick(x) for x in neu_rows if x[\"text\"\
-          ] not in used_text) if r]\n    else:\n        wc_pos=[];wc_neg=[];wc_neu=[]\n  \
-          \  word_clouds={\"positive\":wc_cloud(wc_pos),\"neutral\":wc_cloud(wc_neu),\"negative\"\
-          :wc_cloud(wc_neg,True)}\n    word_cloud_summary={\n        \"positive_count\":sum(x[\"\
-          count\"] for x in word_clouds[\"positive\"]),\n        \"neutral_count\":sum(x[\"\
-          count\"] for x in word_clouds[\"neutral\"]),\n        \"negative_count\":sum(x[\"\
-          count\"] for x in word_clouds[\"negative\"]),\n    }\n    word_cloud_summary[\"\
-          total_count\"]=(word_cloud_summary[\"positive_count\"]\n        +word_cloud_summary[\"\
-          neutral_count\"]+word_cloud_summary[\"negative_count\"])\n\n    label=\"positive\"\
-          \ if score>=0.1 else (\"negative\" if score<=-0.1 else \"neutral\")\n    detail={\"\
-          char_count\":{\"total\":total,\"positive\":sum(x[\"char_count\"] for x in pos),\"\
-          negative\":sum(x[\"char_count\"] for x in neg)},\"positive_sentences\":pos,\"negative_sentences\"\
-          :neg}\n    # 业务固定口径：是否重点推荐 = 是否位于全文排名前三；强推荐词但无排名不能置true。\n    top3=detected and\
-          \ str(is_ranking).lower()==\"true\" and 1<=rank<=3\n    return {\"brand_detected\"\
-          :\"true\" if detected else \"false\",\"matched_brand\":matched if detected else\
-          \ \"\",\"rank_pos\":str(rank if rank>0 else 0),\n            \"is_top_recommend\"\
-          :\"true\" if top3 else \"false\",\"sentiment_score\":f\"{score:.3f}\",\"sentiment_label\"\
-          :label,\n            \"sentiment_reasoning\":reason,\"sentiment_classic_words\"\
-          :classic,\"brand_sentiment_analysis\":detail,\n            \"sentiment_word_clouds\"\
-          :word_clouds,\"sentiment_word_cloud_summary\":word_cloud_summary}"
+  \    t=re.sub(r\"```(?:json)?|```\",\"\",str(v or \"\"),flags=re.I).strip();s=t.find(\"\
+  {\")\n    if s<0:return {}\n    stack=[];q=None;esc=False\n    for i in range(s,len(t)):\n\
+  \        c=t[i]\n        if q:\n            if esc:esc=False\n            elif c==\"\
+  \\\\\":esc=True\n            elif c==q:q=None\n            continue\n        if\
+  \ c in ('\"',\"'\"):q=c\n        elif c in \"{[\":stack.append(c)\n        elif\
+  \ c in \"}]\":\n            if not stack:return {}\n            stack.pop()\n  \
+  \          if not stack:\n                try:return json.loads(t[s:i+1])\n    \
+  \            except Exception:return {}\n    return {}\ndef parse_list(v: Any):\n\
+  \    \"\"\"兼容 Dify 将数组输入传成 JSON 字符串、原生数组、数字或空值。\"\"\"\n    if isinstance(v,list):return\
+  \ v\n    if isinstance(v,tuple):return list(v)\n    if not isinstance(v,str):return\
+  \ []\n    try:parsed=json.loads(v or \"[]\")\n    except Exception:return []\n \
+  \   return parsed if isinstance(parsed,list) else []\ndef norm(v: Any)->str:return\
+  \ re.sub(r\"[^0-9a-z\\u4e00-\\u9fff]+\",\"\",str(v or \"\").lower())\ndef contains(a:\
+  \ str,t: str)->bool:\n    a=str(a or \"\").strip();t=str(t or \"\")\n    if not\
+  \ a:return False\n    if re.fullmatch(r\"[A-Za-z0-9 ._+&-]+\",a):return re.search(r\"\
+  (?<![A-Za-z0-9])\"+re.escape(a)+r\"(?![A-Za-z0-9])\",t,flags=re.I) is not None\n\
+  \    return norm(a) in norm(t)\ndef target_alias_match(alias: str,name: str)->bool:\n\
+  \    a=norm(alias);n=norm(name)\n    if not a or not n:return False\n    if a==n:return\
+  \ True\n    if len(a)<4:return False\n    qualifiers=(\"男士\",\"女士\",\"香水\",\"系列\"\
+  ,\"经典\",\"同名\",\"edt\",\"edp\")\n    if a in n:return n[len(a):] in qualifiers\n\
+  \    if n in a:return a[len(n):] in qualifiers\n    return False\ndef product_norm(v:\
+  \ Any)->str:\n    \"\"\"P5产品同粒度校验：忽略括号英文名及EDT/EDP规格后比较核心名。\"\"\"\n    s=re.sub(r\"\
+  [（(][^）)]*[）)]\", \"\", str(v or \"\"))\n    s=re.sub(r\"(?i)(?:^|\\\\s)(?:edt|edp)(?:\\\
+  \\s|$)\", \" \", s)\n    return norm(s)\ndef clamp(v):\n    try:return max(-1.0,min(1.0,float(v)))\n\
+  \    except Exception:return 0.0\ndef words(v,limit=5):\n    if isinstance(v,str):v=re.split(r\"\
+  [,，、;；|]+\",v)\n    if not isinstance(v,list):return []\n    out=[]\n    for x in\
+  \ v:\n        x=re.sub(r\"\\s+\",\" \",str(x or \"\")).strip()[:30]\n        if\
+  \ x and x not in out:out.append(x)\n    return out[:limit]\n\nPOS_HINTS=(\"强烈推荐\"\
+  ,\"唯一推荐\",\"行业领先\",\"行业标杆\",\"显著优于\",\"全面领先\",\"明显领先\",\"全面超越\",\"更胜一筹\",\"唯一答案\"\
+  ,\"性价比高\",\"值得考虑\",\"体验很好\",\"体验好\",\"口碑好\",\"所见即所得\",\"直出不用P图\",\"省去修图\",\"表现不错\"\
+  ,\"细节丰富\",\"控制出色\",\"远超\",\"碾压\",\"完胜\",\"天花板\",\"最佳\",\"顶级\",\"首选\",\"推荐\",\"值得\"\
+  ,\"占优\",\"更强\",\"强大\",\"可靠\",\"便捷\",\"专业\",\"成熟\",\"稳定\",\"自然\",\"清晰\",\"丰富\",\"\
+  准确\",\"讨喜\",\"有创意\",\"有提升\",\"更好的选择\",\"更好\",\"好闻\",\"优雅\",\"魅惑\",\"清爽\",\"干净\"\
+  ,\"温柔\",\"治愈\",\"高级\",\"通透\",\"友好\",\"不挑人\",\"排面\")\nNEG_HINTS=(\"强烈不推荐\",\"严重故障\"\
+  ,\"投诉集中\",\"重大风险\",\"严重质量问题\",\"严重安全问题\",\"表现不稳定\",\"体验欠佳\",\"需要改进\",\"速度慢\",\"\
+  尚不成熟\",\"并不领先\",\"没有更好\",\"不值得\",\"不够稳定\",\"不适合\",\"不稳定\",\"亮度不足\",\"解析力不足\",\"\
+  明显不足\",\"仍有差距\",\"有差距\",\"鬼影\",\"畸变\",\"噪点\",\"价格较贵\",\"较贵\",\"偏高\",\"昂贵\",\"落后\"\
+  ,\"受限\",\"欺诈\",\"风险\",\"不推荐\",\"限制\",\"不便\",\"不够\",\"较弱\",\"较差\",\"故障\",\"缺点\",\"\
+  不足\",\"差距\",\"问题\",\"撞香\",\"留香偏短\",\"留香一般\",\"浓郁\",\"厚重\",\"踩雷\",\"曝光弱\",\"曝光少\"\
+  ,\"知名度低\",\"影响力弱\",\"覆盖不足\",\"规模有限\",\"成立时间短\",\"门槛高\",\"不如\")\ndef hint_hits(text,hints):\n\
+  \    out=[]\n    for word in sorted(hints,key=len,reverse=True):\n        if word\
+  \ in text and not any(word in old for old in out):out.append(word)\n    return out[:10]\n\
+  # 前置否定词：出现在负向词之前时，该负向词不成立（无问题/没问题/毫无问题/并不领先）。\nNEG_CUES=(\"无\",\"没\",\"没有\",\"并未\"\
+  ,\"并无\",\"毫无\",\"谈不上\",\"不算\",\"并不\",\"未\",\"非\")\ndef negated_at(text,start):\n\
+  \    prefix=str(text or \"\")[max(0,start-3):max(0,start)]\n    return any(cue in\
+  \ prefix for cue in NEG_CUES)\ndef polarity_hits(text):\n    # 香调/内核/规格等字段默认是事实参数，即使包含“温柔/清爽”等描述词也不构成情感。\n\
+  \    if re.match(r\"^\\s*(?:香调|内核|规格|参数|型号|容量|价格|成分|材质)\\s*[：:]\",str(text or \"\
+  \")):\n        return [],[]\n    text=str(text or \"\")\n    # 负向词需逐次判断前置否定；“无问题”整句只有“问题”命中时不能判负。\n\
+  \    neg=[]\n    for word in sorted(NEG_HINTS,key=len,reverse=True):\n        if\
+  \ word not in text:continue\n        if any(word in old for old in neg):continue\n\
+  \        hits=[m.start() for m in re.finditer(re.escape(word),text)]\n        if\
+  \ hits and all(negated_at(text,i) for i in hits):continue\n        neg.append(word)\n\
+  \    neg=neg[:10];pos=[]\n    for word in sorted(POS_HINTS,key=len,reverse=True):\n\
+  \        if word not in text:continue\n        if re.search(r\"(?:不|未|没有|并不|尚不|谈不上).{0,4}\"\
+  +re.escape(word),text):continue\n        if not any(word in old for old in pos):pos.append(word)\n\
+  \    return neg,pos[:10]\n\ndef main(llm_output: str,sentence_catalog: str,target_aliases:\
+  \ str,entity_inventory: str,is_ranking: str,answer_total_len: int)->dict:\n    data=extract_json(llm_output)\n\
+  \    # V2.2紧凑协议转为旧字段，后续证据校验和最终输出逻辑保持不变。\n    if isinstance(data,dict) and any(k\
+  \ in data for k in (\"detected\",\"brand\",\"mention\",\"score\",\"pos\",\"neg\"\
+  )):\n        compact=dict(data)\n        def expand(items):\n            out=[]\n\
+  \            for item in items if isinstance(items,list) else []:\n            \
+  \    if isinstance(item,dict):out.append(item)\n                elif isinstance(item,list)\
+  \ and item:\n                    out.append({\"sentence_id\":item[0],\"keywords\"\
+  :item[1] if len(item)>1 else []})\n                elif isinstance(item,str):out.append({\"\
+  sentence_id\":item,\"keywords\":[]})\n            return out\n        data={\n \
+  \           \"brand_detected\":compact.get(\"detected\",False),\"matched_brand\"\
+  :compact.get(\"brand\",\"\"),\n            \"matched_mention\":compact.get(\"mention\"\
+  ,\"\"),\"brand_pattern\":compact.get(\"pattern\",\"\"),\n            \"evidence_sentence_ids\"\
+  :compact.get(\"evidence\",[]),\"sentiment_score\":compact.get(\"score\",0),\n  \
+  \          \"sentiment_reasoning\":compact.get(\"reason\",\"\"),\"sentiment_classic_words\"\
+  :compact.get(\"words\",[]),\n            \"positive_sentences\":expand(compact.get(\"\
+  pos\",[])),\"negative_sentences\":expand(compact.get(\"neg\",[])),\"neutral_sentences\"\
+  :expand(compact.get(\"neu\",[]))}\n    catalog=parse_list(sentence_catalog)\n  \
+  \  aliases=parse_list(target_aliases)\n    entities=parse_list(entity_inventory)\n\
+  \    smap={str(x.get(\"id\")):x for x in catalog if isinstance(x,dict) and x.get(\"\
+  id\")};order={sid:i for i,sid in enumerate(smap)}\n    subject_entities=[e for e\
+  \ in entities if isinstance(e,dict) and e.get(\"is_target_entity\") and e.get(\"\
+  rank_membership\")==\"independent_subject\"]\n    subject_start=min((order.get(str(e.get(\"\
+  rank_anchor_sentence_id\") or \"\"),99999) for e in subject_entities),default=99999)\n\
+  \    subject_end=min((order.get(sid,99999) for sid,item in smap.items() if re.fullmatch(r\"\
+  \\s*相关视频\\s*\",str(item.get(\"text\") or \"\"))),default=99999)\n    alias_rows=[x\
+  \ for x in aliases if isinstance(x,dict) and x.get(\"alias\")]\n    strict_brand_aliases=[str(x.get(\"\
+  alias\") or \"\") for x in alias_rows if str(x.get(\"alias\") or \"\") and float(x.get(\"\
+  confidence\",0))>=0.90]\n    # 完整别名可命中；短别名若只是更完整声明别名的子串，不允许它单独把母品牌/兄弟产品升级为目标。\n\
+  \    usable_brand_aliases=[a for a in strict_brand_aliases if not any(norm(a)!=norm(b)\
+  \ and norm(a) in norm(b) for b in strict_brand_aliases if norm(b))]\n    # 全局节点确认的客户产品/子品牌也并入目标证据边界，例如“苹果公司\
+  \ → iPhone”。\n    known_aliases={norm(x.get(\"alias\")) for x in alias_rows}\n \
+  \   for e in entities if isinstance(entities,list) else []:\n        if not isinstance(e,dict)\
+  \ or not e.get(\"is_target_entity\"):continue\n        for name in (e.get(\"surface\"\
+  ,\"\"),e.get(\"canonical_name\",\"\"),e.get(\"parent_brand\",\"\")):\n         \
+  \   name=str(name or \"\").strip();key=norm(name)\n            if key and key not\
+  \ in known_aliases:\n                alias_rows.append({\"alias\":name,\"type\"\
+  :\"validated_target_family\",\"confidence\":0.95,\"source\":\"entity_inventory\"\
+  });known_aliases.add(key)\n    # 子串歧义保护不能误伤“别名与已校验目标实体完全相等”的产品系列。\n    # 例如声明别名“香奈儿蔚蓝”虽是“香奈儿蔚蓝男士”的子串，但它与实体\n\
+  \    # canonical完全相等，必须保留为硬匹配；“360”仍不会因这条规则命中“360智见”。\n    target_entity_norms={norm(n)\
+  \ for e in entities if isinstance(e,dict) and e.get(\"is_target_entity\")\n    \
+  \                     for n in (e.get(\"surface\",\"\"),e.get(\"canonical_name\"\
+  ,\"\")) if norm(n)}\n    exact_entity_aliases=[a for a in strict_brand_aliases if\
+  \ norm(a) in target_entity_norms]\n    usable_brand_aliases=list(dict.fromkeys(usable_brand_aliases+exact_entity_aliases))\n\
+  \    # 上游LLM是语义判定来源；本节点只补充可验证的原文别名和证据，不覆盖上游brand_detected。\n    llm_detected = data.get(\"\
+  brand_detected\") if isinstance(data,dict) else False\n    llm_detected = llm_detected\
+  \ is True or (isinstance(llm_detected,str) and llm_detected.strip().lower() in {\"\
+  true\",\"1\",\"yes\",\"是\"})\n    llm_matched_brand=str(data.get(\"matched_brand\"\
+  ) or \"\").strip() if isinstance(data,dict) else \"\"\n    llm_mentions=[]\n   \
+  \ if isinstance(data,dict):\n        for value in (data.get(\"matched_mention\"\
+  ),data.get(\"matched_brand\")):\n            value=str(value or \"\").strip()\n\
+  \            if len(norm(value))>=2 and value not in llm_mentions:llm_mentions.append(value)\n\
+  \    known_aliases={norm(x.get(\"alias\")) for x in alias_rows}\n    for value in\
+  \ llm_mentions:\n        if norm(value) not in known_aliases:\n            alias_rows.append({\"\
+  alias\":value,\"type\":\"llm_confirmed_mention\",\"confidence\":0.99,\"source\"\
+  :\"llm_output\"})\n            known_aliases.add(norm(value))\n    llm_product_mentions=[x\
+  \ for x in llm_mentions if len(product_norm(x))>=4]\n    direct_all=[]\n    for\
+  \ row in alias_rows:\n        ids=[sid for sid,item in smap.items() if contains(row[\"\
+  alias\"],item.get(\"text\",\"\"))]\n        if ids:direct_all.append((row,ids))\n\
+  \    strict_keys={norm(x) for x in strict_brand_aliases if norm(x)}\n    direct=[x\
+  \ for x in direct_all if norm(x[0].get(\"alias\")) in {norm(a) for a in usable_brand_aliases}]\n\
+  \    high=direct\n    pattern=str(data.get(\"brand_pattern\") or \"\") if isinstance(data,dict)\
+  \ else \"\"\n    sensitive=pattern.startswith((\"P3\",\"P4\",\"P5\"))\n    # 品牌提及必须落到与brand_name同粒度的独立推荐实体；comparison_only、母品牌和兄弟产品均不算。\n\
+  \    brand_alias_names=usable_brand_aliases\n    independent_target=False\n    for\
+  \ e in entities if isinstance(entities,list) else []:\n        if not isinstance(e,dict)\
+  \ or e.get(\"rank_membership\") not in {\"ordered_choice\",\"independent_subject\"\
+  }:continue\n        primary=[str(e.get(\"surface\") or \"\"),str(e.get(\"canonical_name\"\
+  ) or \"\")]\n        exact_brand=any(target_alias_match(a,n) for a in brand_alias_names\
+  \ if norm(a) for n in primary if norm(n))\n        exact_llm_product=any(product_norm(m)\
+  \ and any(product_norm(m)==product_norm(n) for n in primary) for m in llm_product_mentions)\n\
+  \        semantic_family=bool(e.get(\"is_target_entity\")) and str(e.get(\"target_relation\"\
+  ) or \"\") in {\"exact_target\",\"target_product\",\"target_subbrand\",\"target_service\"\
+  }\n        # 上游3v已用brand_name粒度和正文anchor确认了独立目标时，所有模式（含P5产品系列）\n        # 都应信任该关系。P5禁止的是母品牌/兄弟产品猜测，而不是阻断已校验的exact_target。\n\
+  \        if exact_brand or exact_llm_product or semantic_family:independent_target=True;break\n\
+  \    # 最终提及判定必须同时满足：上游LLM判断为已提及，且代码确认存在同粒度独立目标实体。\n    detected=llm_detected and\
+  \ independent_target\n    # 多识别词按正文物理位置最早命中；同位置再取最完整别名。\n    matched=\"\";direct_ids=[]\n\
+  \    if detected:\n        # 目标实体本身是上游已校验的可靠产品/主体名；即使声明别名层因短词歧义过滤，也用实体surface回填正文证据。\n\
+  \        target_names=[]\n        for e in entities if isinstance(entities,list)\
+  \ else []:\n            if isinstance(e,dict) and e.get(\"is_target_entity\") and\
+  \ e.get(\"rank_membership\") in {\"ordered_choice\",\"independent_subject\"}:\n\
+  \                target_names.extend([str(e.get(\"surface\") or \"\"),str(e.get(\"\
+  canonical_name\") or \"\")])\n        target_names=[x for x in dict.fromkeys(target_names)\
+  \ if norm(x)]\n        for name in target_names:\n            ids=[sid for sid,item\
+  \ in smap.items() if contains(name,item.get(\"text\",\"\"))]\n            direct_ids.extend(ids)\n\
+  \        if target_names:\n            ranked_names=[]\n            for name in\
+  \ target_names:\n                ids=[sid for sid in direct_ids if contains(name,smap.get(sid,{}).get(\"\
+  text\",\"\"))]\n                if ids:ranked_names.append((min(order.get(sid,99999)\
+  \ for sid in ids),-len(norm(name)),name))\n            if ranked_names:matched=sorted(ranked_names)[0][2]\n\
+  \        direct_ids=list(dict.fromkeys(direct_ids))\n    if direct:\n        ranked=[]\n\
+  \        for row,ids in direct:\n            first=min(order.get(x,99999) for x\
+  \ in ids);ranked.append((first,-len(norm(row[\"alias\"])),row[\"alias\"],ids))\n\
+  \        ranked.sort();matched=ranked[0][2];direct_ids=list(dict.fromkeys(x for\
+  \ _,ids in direct for x in ids))\n    strict_norms={norm(x) for x in usable_brand_aliases\
+  \ if norm(x)}\n    confirmed_mentions=[x for x in llm_mentions if norm(x) in strict_norms]\n\
+  \    if detected and not matched and confirmed_mentions:matched=confirmed_mentions[0]\n\
+  \    if llm_matched_brand and norm(llm_matched_brand) in strict_norms:matched=llm_matched_brand\n\
+  \    # LLM给出的证据ID是上游证据；只要ID存在，就纳入结构化回填范围。\n    llm_evidence_ids=[]\n    if isinstance(data,dict):\n\
+  \        values=data.get(\"evidence_sentence_ids\",[])\n        values=values if\
+  \ isinstance(values,list) else ([values] if isinstance(values,str) else [])\n  \
+  \      llm_evidence_ids=[str(x) for x in values if str(x) in smap]\n    direct_ids=list(dict.fromkeys(direct_ids+llm_evidence_ids))\n\
+  \    rank=0\n    if detected and str(is_ranking).lower()==\"true\":\n        candidates=[]\n\
+  \        alias_names=list(dict.fromkeys(x for x in usable_brand_aliases if x))\n\
+  \        for e in entities if isinstance(entities,list) else []:\n            if\
+  \ not isinstance(e,dict):continue\n            if e.get(\"rank_membership\")!=\"\
+  ordered_choice\":continue\n            names=[e.get(\"surface\",\"\"),e.get(\"canonical_name\"\
+  ,\"\"),e.get(\"parent_brand\",\"\")]\n            primary=names[:2];parent=names[2]\n\
+  \            entity_match=bool(e.get(\"is_target_entity\")) or any(target_alias_match(a,n)\
+  \ for a in alias_names for n in primary if a and n)\n            if not entity_match\
+  \ and norm(parent):entity_match=any(target_alias_match(a,parent) for a in alias_names\
+  \ if norm(a))\n            if entity_match:\n                anchor=str(e.get(\"\
+  rank_anchor_sentence_id\") or \"\");anchor_item=smap.get(anchor,{})\n          \
+  \      # rank_position 只能来自同一条有显式编号的正式条目，不能借同集团说明或总结复述。\n                line=str(anchor_item.get(\"\
+  line_text\") or anchor_item.get(\"text\") or \"\")\n                line=re.sub(r\"\
+  \\\\([.#*+\\-])\",r\"\\1\",line);prefix=re.sub(r\"^\\s{0,3}#{1,6}\\s*\",\"\",line).strip()\n\
+  \                numbered=bool(re.match(r\"^(?:Top|No\\.?)[ \\t]*[1-9]\\d*\\b|^第[\
+  \ \\t]*[1-9]\\d*[ \\t]*(?:名|位)|^[1-9]\\d*[ \\t]*[.、)）:：]\",prefix,re.I))\n     \
+  \           try:p=int(e.get(\"rank_position\",0))\n                except Exception:p=0\n\
+  \                if p>0 and numbered:candidates.append(p)\n        if candidates:rank=min(candidates)\n\
+  \        # 目标未进入entity_inventory时，按目标证据句所在核心表格/列表的物理位置补排。\n        if rank<=0:\n\
+  \            anchor_candidates=[]\n            for sid in list(dict.fromkeys(llm_evidence_ids+direct_ids)):\n\
+  \                item=smap.get(sid,{})\n                line=\" \".join(str(item.get(k)\
+  \ or \"\") for k in (\"text\",\"context_heading\"))\n                core=bool(item)\
+  \ and (\"|\" in line or str(item.get(\"block_type\") or \"\") in {\"heading\",\"\
+  table_row\",\"list_item\"} or re.search(r\"(?:^|\\\\s)(?:Top|No\\\\.?|第\\\\s*[0-9一二三四五六七八九十]+|[0-9一二三四五六七八九十]+[.、)）])\"\
+  ,line,re.I))\n                if core:anchor_candidates.append((order.get(sid,99999),sid))\n\
+  \            anchor_order,target_anchor=min(anchor_candidates) if anchor_candidates\
+  \ else (99999,\"\")\n            if target_anchor and anchor_order<99999:\n    \
+  \            before=[]\n                for e in entities if isinstance(entities,list)\
+  \ else []:\n                    if not isinstance(e,dict):continue\n           \
+  \         try:p=int(e.get(\"rank_position\",0))\n                    except Exception:p=0\n\
+  \                    sid=str(e.get(\"rank_anchor_sentence_id\") or \"\")\n     \
+  \               if p>0 and sid in order and order[sid]<anchor_order:before.append((order[sid],p))\n\
+  \                rank=len({x[0] for x in before})+1\n        # 规则补强：进入正式排名结构的独立目标不能因实体清单漏写rank而回落为0。\n\
+  \        # 仅对 detected=true 且 is_ranking=true 生效；independent_subject 的非排名回答仍保持0。\n\
+  \        if rank<=0:\n            target_rows=[e for e in entities if isinstance(e,dict)\
+  \ and e.get(\"is_target_entity\")\n                         and e.get(\"rank_membership\"\
+  ) in {\"ordered_choice\",\"independent_subject\"}]\n            for e in target_rows:\n\
+  \                try:\n                    p=int(e.get(\"rank_position\",0) or e.get(\"\
+  local_position\",0) or 0)\n                except Exception:\n                 \
+  \   p=0\n                if p>0:\n                    rank=p;break\n           \
+  \ if rank<=0 and target_rows:\n                anchor=str(target_rows[0].get(\"\
+  rank_anchor_sentence_id\") or \"\")\n                anchor_order=order.get(anchor,99999)\n\
+  \                module=str(target_rows[0].get(\"module_id\") or \"\")\n       \
+  \         same_module=[]\n                for e in entities:\n                 \
+  \   if not isinstance(e,dict) or e.get(\"rank_membership\")!=\"ordered_choice\"\
+  :continue\n                    if module and str(e.get(\"module_id\") or \"\")!=module:continue\n\
+  \                    sid=str(e.get(\"rank_anchor_sentence_id\") or \"\")\n     \
+  \               if sid in order and order[sid]<=anchor_order:same_module.append(order[sid])\n\
+  \                if same_module:\n                    rank=len(set(same_module))\n\
+  \                else:\n                    # 目标实体是排名模块的唯一/伞形主体时，按其首个有效结构锚点归入第1位。\n\
+  \                    rank=1\n    # 最终布尔门禁以实体角色和可验证正文证据为准，不让LLM单独的false覆盖independent_subject。\n\
+  \n    def linked(sid, attributed=\"\"):\n        item=smap.get(sid,{});scope=\"\
+  \ \".join(str(item.get(k,\"\")) for k in (\"text\",\"context_heading\",\"context_before\"\
+  ))\n        # attributed_entity只能放宽省略主语，附近原文仍必须出现目标别名，禁止凭标签跨段串品牌。\n        if attributed\
+  \ and any(contains(row[\"alias\"],attributed) or contains(attributed,row[\"alias\"\
+  ]) for row,_ in direct):\n            if any(contains(row[\"alias\"],scope) for\
+  \ row,_ in direct):return True\n        if sid in direct_ids:return True\n     \
+  \   if any(contains(row[\"alias\"],scope) for row,_ in direct):return True\n   \
+  \     # independent_subject的评价可跨多个章节继承到全文主体；仅放宽LLM已选证据，自动补漏仍要求直接作用域，避免串入竞品。\n  \
+  \      idx=order.get(sid,-99)\n        if subject_start<=idx<subject_end:return\
+  \ True\n        for did in direct_ids:\n            d=order.get(did,-999)\n    \
+  \        if 0<idx-d<=2:\n                between=catalog[d+1:idx+1]\n          \
+  \      if not any(x.get(\"block_type\") in (\"heading\",\"table_row\",\"list_item\"\
+  ) for x in between[:-1]):return True\n        return False\n    def details(raw,blocked=None):\n\
+  \        blocked=blocked or set();out=[];ids=set()\n        if not isinstance(raw,list):return\
+  \ out,ids\n        for x in raw:\n            if isinstance(x,str):sid=x;k=[];attributed=\"\
+  \"\n            elif isinstance(x,dict):\n                sid=str(x.get(\"sentence_id\"\
+  ) or x.get(\"id\") or \"\");k=words(x.get(\"keywords\",[]),10);attributed=str(x.get(\"\
+  attributed_entity\") or \"\")\n            else:continue\n            if sid not\
+  \ in smap or sid in blocked or sid in ids or not linked(sid,attributed):continue\n\
+  \            # 最终text只从原文目录回填，禁止strip、重写或使用LLM生成quote。\n            text=str(smap[sid].get(\"\
+  text\", \"\"));k=[w for w in k if w and w in text]\n            out.append({\"text\"\
+  :text,\"char_count\":int(smap[sid].get(\"char_count\",len(re.sub(r\"\\s+\",\"\"\
+  ,text)))),\"keywords\":k,\"_start\":int(smap[sid].get(\"start\",999999999))});ids.add(sid)\n\
+  \        return out,ids\n    neg,negids=details(data.get(\"negative_sentences\"\
+  ,[]) if isinstance(data,dict) else [])\n    pos,posids=details(data.get(\"positive_sentences\"\
+  ,[]) if isinstance(data,dict) else [],negids)\n    # 语义词根二次校验：修正LLM把“不推荐/并不领先”放进正向，或把纯正向句放进负向的错误。\n\
+  \    semantic_pos=[];semantic_neg=[]\n    for row in neg:\n        nh,ph=polarity_hits(row.get(\"\
+  text\",\"\"))\n        if not row.get(\"keywords\") and not nh and not ph:continue\n\
+  \        if ph and not nh:\n            row[\"keywords\"]=words(list(row.get(\"\
+  keywords\",[]))+ph,10);semantic_pos.append(row)\n        else:semantic_neg.append(row)\n\
+  \    for row in pos:\n        nh,ph=polarity_hits(row.get(\"text\",\"\"))\n    \
+  \    if not row.get(\"keywords\") and not nh and not ph:continue\n        if nh\
+  \ and not ph:\n            row[\"keywords\"]=words(list(row.get(\"keywords\",[]))+nh,10);semantic_neg.append(row)\n\
+  \        else:semantic_pos.append(row)\n    pos=semantic_pos;neg=semantic_neg\n\
+  \    # 对“品牌名：评价，但负向评价”这类单行结构做确定性补漏；多实体同一行只自动处理直接点名的单元，避免串品牌。\n    alias_names=[str(row.get(\"\
+  alias\") or \"\") for row,_ in direct]\n    if not alias_names:\n        alias_names=[str(e.get(\"\
+  surface\") or \"\") for e in entities if isinstance(e,dict) and e.get(\"is_target_entity\"\
+  ) and e.get(\"rank_membership\") in {\"ordered_choice\",\"independent_subject\"\
+  }]\n    target_anchor_order=min((order.get(str(e.get(\"rank_anchor_sentence_id\"\
+  ) or \"\"),99999) for e in entities if isinstance(e,dict) and e.get(\"is_target_entity\"\
+  ) and e.get(\"rank_membership\") in {\"ordered_choice\",\"independent_subject\"\
+  }),default=99999)\n    other_names=[]\n    for e in entities if isinstance(entities,list)\
+  \ else []:\n        if not isinstance(e,dict):continue\n        for name in (e.get(\"\
+  surface\",\"\"),e.get(\"canonical_name\",\"\"),e.get(\"parent_brand\",\"\")):\n\
+  \            name=str(name or \"\")\n            if name and not any(contains(a,name)\
+  \ or contains(name,a) for a in alias_names if a):other_names.append(name)\n    COMP_CUES=(\"\
+  全面超越\",\"明显超越\",\"远超\",\"优于\",\"胜过\",\"领先于\",\"碾压\",\"完胜\",\"超越\",\"领先\")\n    def\
+  \ comparison_direction(text):\n        # 1=当前目标是胜方；-1=当前目标是败方；0=没有可确定方向。\n     \
+  \   for current in alias_names:\n            if not current or not contains(current,text):continue\n\
+  \            for other in other_names:\n                if not other or not contains(other,text):continue\n\
+  \                a=re.escape(current);b=re.escape(other);cue=\"(?:\"+\"|\".join(map(re.escape,COMP_CUES))+\
+  \ \")\"\n                if re.search(a+r\".{0,16}被.{0,20}\"+b+r\".{0,24}\"+cue,text,flags=re.I):return\
+  \ -1\n                if re.search(b+r\".{0,48}\"+cue+r\".{0,24}\"+a,text,flags=re.I):return\
+  \ -1\n                if re.search(a+r\".{0,48}\"+cue+r\".{0,24}\"+b,text,flags=re.I):return\
+  \ 1\n        return 0\n    # LLM即使把“vivo远超iPhone”误列为iPhone正向，也在代码层按比较方向纠偏。\n   \
+  \ corrected_pos=[];corrected_neg=list(neg)\n    for row in pos:\n        if comparison_direction(row.get(\"\
+  text\",\"\"))<0:\n            cues=hint_hits(row.get(\"text\",\"\"),COMP_CUES);row[\"\
+  keywords\"]=cues or row.get(\"keywords\",[]);corrected_neg.append(row)\n       \
+  \ else:corrected_pos.append(row)\n    pos=corrected_pos;neg=corrected_neg\n    def\
+  \ auto_scope(sid):\n        item=smap.get(sid,{});unit=str(item.get(\"text\", \"\
+  \"));heading=str(item.get(\"context_heading\", \"\"))\n        if any(contains(a,unit)\
+  \ for a in alias_names if a):return True\n        for scope in (heading,):\n   \
+  \         if any(contains(a,scope) for a in alias_names if a) and not any(contains(n,scope)\
+  \ for n in other_names if n):return True\n        # LLM 可能因返回长度/误判没有列出证据ID。对编号推荐项后的连续描述，\n\
+  \        # 以最近一个同级结构锚点确定局部作用域：最近锚点必须是目标实体，且不能被\n        # 其他实体的后续编号项覆盖。这样“2. 香奈儿蔚蓝”后的香调/优缺点仍能回填，\n\
+  \        # 但不会把“3. Creed”后的评价串给香奈儿。\n        idx=order.get(sid,-1)\n        if idx>=0:\n\
+  \            previous=[(x,j) for x,j in order.items() if j<idx and str(smap.get(x,{}).get(\"\
+  block_type\") or \"\") in {\"heading\",\"table_row\",\"list_item\"}]\n         \
+  \   if previous and idx>target_anchor_order:\n                anchor_id=max(previous,key=lambda\
+  \ z:z[1])[0];anchor_text=str(smap.get(anchor_id,{}).get(\"text\") or \"\")\n   \
+  \             if any(contains(a,anchor_text) for a in alias_names if a) and not\
+  \ any(contains(n,anchor_text) for n in other_names if n):return True\n        return\
+  \ False\n    used=set(negids)|set(posids)\n    for sid,item in sorted(smap.items(),key=lambda\
+  \ kv:order.get(kv[0],99999)):\n        if sid in used or not auto_scope(sid):continue\n\
+  \        text=str(item.get(\"text\", \"\"));nh,ph=polarity_hits(text)\n        direction=comparison_direction(text)\n\
+  \        if direction<0:nh=hint_hits(text,COMP_CUES);ph=[]\n        elif direction>0\
+  \ and not nh:ph=ph or hint_hits(text,COMP_CUES)\n        row={\"text\":text,\"char_count\"\
+  :int(item.get(\"char_count\",len(re.sub(r\"\\s+\",\"\",text)))),\"keywords\":nh\
+  \ or ph,\"_start\":int(item.get(\"start\",999999999))}\n        if nh:neg.append(row);negids.add(sid);used.add(sid)\n\
+  \        elif ph:pos.append(row);posids.add(sid);used.add(sid)\n    # 用原文offset稳定排序，不依赖LLM数组顺序。\n\
+  \    pos.sort(key=lambda x:x.get(\"_start\",999999999));neg.sort(key=lambda x:x.get(\"\
+  _start\",999999999))\n    for row in pos+neg:row.pop(\"_start\",None)\n    try:total=max(0,int(answer_total_len\
+  \ or 0))\n    except Exception:total=0\n    score=clamp(data.get(\"sentiment_score\"\
+  ,0) if isinstance(data,dict) else 0)\n    if not detected:\n        score=0.0;reason=\"\
+  品牌未被提及\";pos=[];neg=[];classic=[]\n    else:\n        if not pos and not neg:score=0.0\n\
+  \        elif pos and not neg and score<0.1:score=0.3\n        elif neg and not\
+  \ pos and score>-0.1:score=-0.3\n        reason=str(data.get(\"sentiment_reasoning\"\
+  ) or \"\").strip()[:240]\n        classic=words(data.get(\"sentiment_classic_words\"\
+  ,[]),3)\n        if not classic:\n            pool=[]\n            for row in (neg\
+  \ if neg else pos):pool.extend(row.get(\"keywords\",[]))\n            classic=words(pool,3)\
+  \ or ([\"仅提及\"] if detected else [])\n        if not reason:\n            reason=f\"\
+  {matched or '目标品牌'}：正向证据{len(pos)}条，负向证据{len(neg)}条\"\n    # ---------------- 情感词云（新增）\
+  \ ----------------\n    WC_MAX=10\n    wc_target_names=[];wc_other_names=[]\n  \
+  \  for e in (entities if isinstance(entities,list) else []):\n        if not isinstance(e,dict):continue\n\
+  \        names=[str(e.get(k) or \"\").strip() for k in (\"surface\",\"canonical_name\"\
+  ,\"parent_brand\")]\n        names=[n for n in dict.fromkeys(names) if n]\n    \
+  \    if e.get(\"is_target_entity\") and e.get(\"rank_membership\") in {\"ordered_choice\"\
+  ,\"independent_subject\"}:\n            wc_target_names.extend(names)\n        else:\n\
+  \            wc_other_names.extend(names)\n    wc_target_names=list(dict.fromkeys(wc_target_names))\n\
+  \    wc_other_names=[n for n in dict.fromkeys(wc_other_names)\n                \
+  \    if not any(contains(t,n) or contains(n,t) for t in wc_target_names if t)]\n\
+  \    text_start={str(x.get(\"text\") or \"\"):int(x.get(\"start\",0)) for x in smap.values()}\n\
+  \    def wc_anchor(sid):\n        \"\"\"句子的局部作用域锚点：最近一个标题/表格行/列表项，否则退回所在标题。\"\"\"\
+  \n        idx=order.get(sid,-1)\n        if idx>=0:\n            prev=[(x,j) for\
+  \ x,j in order.items() if j<idx and str(smap.get(x,{}).get(\"block_type\") or \"\
+  \") in {\"heading\",\"table_row\",\"list_item\"}]\n            if prev:return str(smap.get(max(prev,key=lambda\
+  \ z:z[1])[0],{}).get(\"text\") or \"\")\n        return str(smap.get(sid,{}).get(\"\
+  context_heading\") or \"\")\n    text_anchor={}\n    for _sid,_item in smap.items():\n\
+  \        _t=str(_item.get(\"text\") or \"\")\n        if _t and _t not in text_anchor:text_anchor[_t]=wc_anchor(_sid)\n\
+  \n    def wc_owned(unit,anchor=\"\"):\n        if not unit:return False\n      \
+  \  if any(contains(n,unit) for n in wc_target_names if n):return True\n        #\
+  \ 点名的竞品句一律排除，避免竞品评价计入本品词云\n        if any(contains(n,unit) for n in wc_other_names\
+  \ if n):return False\n        # 省略主语的评价句按局部锚点归属：锚点点名本品则保留，只点名竞品才排除。\n        # 不能因为全文出现过任一竞品就整体丢弃本品词云。\n\
+  \        if any(contains(n,anchor) for n in wc_target_names if n):return True\n\
+  \        return not any(contains(n,anchor) for n in wc_other_names if n)\n\n   \
+  \ # 负面词根可能只是更长正向短语的一部分，如“偏高性价比”中的“偏高”。\n    WC_POS_TAIL=(\"性价比\",\"口碑\",\"品质\",\"\
+  评分\",\"评价\",\"满意度\",\"关注度\",\"知名度\",\"复购率\",\n                 \"销量\",\"热度\",\"\
+  颜值\",\"配置\",\"性能\",\"档次\",\"频率\",\"占比\")\n    def wc_occ(term,unit,negative):\n\
+  \        \"\"\"返回有效出现位置；负向词若紧接正向属性词，则该次出现视为误切并跳过。\"\"\"\n        out=[];cur=0\n\
+  \        while True:\n            i=unit.find(term,cur)\n            if i<0:break\n\
+  \            tail_hit=any(unit[i+len(term):].startswith(a) for a in WC_POS_TAIL)\n\
+  \            if not (negative and (tail_hit or negated_at(unit,i))):\n         \
+  \       out.append(i)\n            cur=i+len(term)\n        return out\n    def\
+  \ wc_pick(row,negative=False):\n        unit=str(row.get(\"text\") or \"\")\n  \
+  \      if not wc_owned(unit,text_anchor.get(unit,\"\")):return None\n        kws=[]\n\
+  \        for w in (row.get(\"keywords\") or []):\n            t=str(w or \"\").strip()\n\
+  \            if not t or len(t)>WC_MAX or t not in unit or t in kws:continue\n \
+  \           if not wc_occ(t,unit,negative):continue   # 该词全部出现均为误切，丢弃\n        \
+  \    kws.append(t)\n            if len(kws)>=2:break   # 每句三类合计最多2个\n        if\
+  \ not kws:return None\n        return {\"text\":unit,\"keywords\":kws,\"start\"\
+  :text_start.get(unit,999999999)}\n\n    def wc_cloud(rows,negative=False):\n   \
+  \     terms={}\n        for row in rows:\n            unit=row[\"text\"]\n     \
+  \       for t in row[\"keywords\"]:\n                occ=wc_occ(t,unit,negative)\n\
+  \                if not occ:continue\n                at=row[\"start\"]+occ[0]\n\
+  \                if t not in terms:terms[t]={\"term\":t,\"count\":0,\"first\":at}\n\
+  \                elif at<terms[t][\"first\"]:terms[t][\"first\"]=at\n          \
+  \      terms[t][\"count\"]+=len(occ)\n        return [{\"term\":x[\"term\"],\"count\"\
+  :x[\"count\"]}\n                for x in sorted(terms.values(),key=lambda z:(-z[\"\
+  count\"],z[\"first\"],z[\"term\"]))]\n\n    if detected:\n        wc_pos=[r for\
+  \ r in (wc_pick(x) for x in pos) if r]\n        wc_neg=[r for r in (wc_pick(x,True)\
+  \ for x in neg) if r]\n        neu_rows,_=details(data.get(\"neutral_sentences\"\
+  ,[]) if isinstance(data,dict) else [])\n        used_text={x[\"text\"] for x in\
+  \ pos+neg}\n        wc_neu=[r for r in (wc_pick(x) for x in neu_rows if x[\"text\"\
+  ] not in used_text) if r]\n    else:\n        wc_pos=[];wc_neg=[];wc_neu=[]\n  \
+  \  word_clouds={\"positive\":wc_cloud(wc_pos),\"neutral\":wc_cloud(wc_neu),\"negative\"\
+  :wc_cloud(wc_neg,True)}\n    word_cloud_summary={\n        \"positive_count\":sum(x[\"\
+  count\"] for x in word_clouds[\"positive\"]),\n        \"neutral_count\":sum(x[\"\
+  count\"] for x in word_clouds[\"neutral\"]),\n        \"negative_count\":sum(x[\"\
+  count\"] for x in word_clouds[\"negative\"]),\n    }\n    word_cloud_summary[\"\
+  total_count\"]=(word_cloud_summary[\"positive_count\"]\n        +word_cloud_summary[\"\
+  neutral_count\"]+word_cloud_summary[\"negative_count\"])\n\n    label=\"positive\"\
+  \ if score>=0.1 else (\"negative\" if score<=-0.1 else \"neutral\")\n    detail={\"\
+  char_count\":{\"total\":total,\"positive\":sum(x[\"char_count\"] for x in pos),\"\
+  negative\":sum(x[\"char_count\"] for x in neg)},\"positive_sentences\":pos,\"negative_sentences\"\
+  :neg}\n    # 业务固定口径：是否重点推荐 = 是否位于全文排名前三；强推荐词但无排名不能置true。\n    top3=detected and\
+  \ str(is_ranking).lower()==\"true\" and 1<=rank<=3\n    return {\"brand_detected\"\
+  :\"true\" if detected else \"false\",\"matched_brand\":matched if detected else\
+  \ \"\",\"rank_pos\":str(rank if rank>0 else 0),\n            \"is_top_recommend\"\
+  :\"true\" if top3 else \"false\",\"sentiment_score\":f\"{score:.3f}\",\"sentiment_label\"\
+  :label,\n            \"sentiment_reasoning\":reason,\"sentiment_classic_words\"\
+  :classic,\"brand_sentiment_analysis\":detail,\n            \"sentiment_word_clouds\"\
+  :word_clouds,\"sentiment_word_cloud_summary\":word_cloud_summary}"
         code_language: python3
         desc: 兼容紧凑目标LLM协议；按完整目录校验证据并回填原文；排名、Top3与中正率由代码确定性计算
         outputs:
