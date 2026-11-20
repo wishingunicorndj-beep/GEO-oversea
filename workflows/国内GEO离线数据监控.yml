@@ -2448,11 +2448,11 @@ workflow:
         prompt_template:
         - id: aec38796-ac93-4ff5-ac42-e971185debbb
           role: system
-          text: "你是GEO目标品牌独立提及、实体归属和全量情感证据专家。全局实体资格、模块和排名已由上游校验；本节点不得新增竞品、修改实体资格、重算排名或自行输出Top3。你只判断目标是否以正确粒度作为独立推荐实体或独立核心主体出现，并穷举属于该目标的全部正负证据。\n\
-            \n【一、品牌提及的硬门禁】\ndetected=true必须同时满足：\n1. 已校验目标清单中存在与目标同粒度的实体，且membership为ordered_choice或independent_subject；\n\
-            2. 正文至少一条evidence句直接出现brand_name、其可靠完整别名，或上游确认的同一独立产品名称；\n3. ordered_choice必须位于正式回答的独立推荐项；正式推荐分类表/选型表中的“如A、B”具体品牌，只要上游已校验为ordered_choice且anchor落在该推荐行，同样属于独立推荐候选，不要求另起编号；independent_subject必须是正文围绕目标持续展开的官网、详评、影响力、好用吗或优势/短板主体，而不是搜索资料、相关视频、其他品牌说明、比较宾语或非推荐性背景举例。\n\
-            comparison_only/background即使精确出现目标全称，也不算品牌提及；只有这种情况才清空score、pos/neg/evidence/words并使用“品牌未被提及”。independent_subject虽rank_pos=0，仍必须进行完整目标情感分析。\n\
-            \nbrand_name非空时，识别粒度必须与brand_name一致。公司名、母品牌、集团简称和兄弟产品不能替代；只有brand_name为空时才回退company_name。confidence>=0.90的完整别名可硬命中；较低置信简称只辅助理解，存在歧义时不命中。不得把模型猜测写法加入硬别名。\n\
+          text: "你是GEO目标品牌提及、实体归属和全量情感证据专家。全局实体资格、模块和排名已由上游校验；本节点不得新增竞品、修改实体资格、重算排名或自行输出Top3。你要区分“是否提及目标”和“是否属于目标的独立实体”。\n\
+            \n【一、品牌提及与实体归属】\n若answer_raw正文直接出现brand_name或confidence>=0.90的声明别名，直接视为目标已提及；短别名不能因为被更长别名包含而失效。若正文没有直接声明别名，才要求已校验目标实体、membership和上下文共同确认。\n\
+            目标实体清单用于判断目标粒度、独立推荐和排名，不得反向删除已经存在的目标别名提及。ordered_choice必须位于正式回答的独立推荐项；正式推荐分类表/选型表中的“如A、B”具体品牌，只要上游已校验为ordered_choice且anchor落在该推荐行，同样属于独立推荐候选，不要求另起编号；independent_subject必须是正文围绕目标持续展开的官网、详评、影响力、好用吗或优势/短板主体，而不是搜索资料、相关视频、其他品牌说明、比较宾语或非推荐性背景举例。\n\
+            comparison_only/background不能据此否定直接品牌提及，但不能把该实体的比较/背景内容自动归入目标正负面证据；没有直接别名证据且仅属于comparison_only/background时，才清空score、pos/neg/evidence/words并使用“品牌未被提及”。independent_subject虽rank_pos=0，仍必须进行完整目标情感分析。\n\
+            \nbrand_name非空时，识别粒度必须与brand_name一致。公司名、母品牌、集团简称和兄弟产品不能替代；只有brand_name为空时才回退company_name。confidence>=0.90的完整别名可硬命中；较低置信简称只辅助理解，存在歧义时不命中。若某个短名称本身已作为brand_name或高置信声明别名输入，则正文直接出现该短名称也算目标提及；它是否能代表具体产品实体，另由上游实体粒度判断。不得把模型猜测写法加入硬别名。\n\
             例如目标为“360安全浏览器”时：“360”“北京奇元科技”“360浏览器”“360极速浏览器/360极速X”均不能单独证明目标被提及；正文独立出现“5.\
             \ 360安全浏览器”才可命中。若“360安全浏览器”只出现在“极速版广告少于360安全浏览器”，必须判未提及。\n\n【二、六类品牌模式二次确认】\n\
             P1单一实体：实名或无歧义公认简称作为独立推荐即可；\nP2多产品线：品牌本身或品牌+本次相关产品语境命中；\nP3平台生态：必须同时满足本次目标业务，其他业务线排除；\n\
@@ -2630,7 +2630,7 @@ workflow:
           \    alias_rows=[x for x in aliases if isinstance(x,dict) and x.get(\"alias\"\
           )]\n    strict_brand_aliases=[str(x.get(\"alias\") or \"\") for x in alias_rows\
           \ if str(x.get(\"alias\") or \"\") and float(x.get(\"confidence\",0))>=0.90]\n\
-          \    # 完整别名可命中；短别名若只是更完整声明别名的子串，不允许它单独把母品牌/兄弟产品升级为目标。\n    usable_brand_aliases=[a\
+          \    # 提及判定保留全部高置信声明别名；实体/排名判定另用去歧义后的长别名集合。\n    mention_brand_aliases=list(dict.fromkeys(strict_brand_aliases))\n    usable_brand_aliases=[a\
           \ for a in strict_brand_aliases if not any(norm(a)!=norm(b) and norm(a)\
           \ in norm(b) for b in strict_brand_aliases if norm(b))]\n    # 全局节点确认的客户产品/子品牌也并入目标证据边界，例如“苹果公司\
           \ → iPhone”。\n    known_aliases={norm(x.get(\"alias\")) for x in alias_rows}\n\
@@ -2665,7 +2665,7 @@ workflow:
           \ in smap.items() if contains(row[\"alias\"],item.get(\"text\",\"\"))]\n\
           \        if ids:direct_all.append((row,ids))\n    strict_keys={norm(x) for\
           \ x in strict_brand_aliases if norm(x)}\n    direct=[x for x in direct_all\
-          \ if norm(x[0].get(\"alias\")) in {norm(a) for a in usable_brand_aliases}]\n\
+          \ if norm(x[0].get(\"alias\")) in {norm(a) for a in mention_brand_aliases}]\n\
           \    high=direct\n    pattern=str(data.get(\"brand_pattern\") or \"\") if\
           \ isinstance(data,dict) else \"\"\n    sensitive=pattern.startswith((\"\
           P3\",\"P4\",\"P5\"))\n    # 品牌提及必须落到与brand_name同粒度的独立推荐实体；comparison_only、母品牌和兄弟产品均不算。\n\
@@ -2685,8 +2685,8 @@ workflow:
           }\n        # 上游3v已用brand_name粒度和正文anchor确认了独立目标时，所有模式（含P5产品系列）\n       \
           \ # 都应信任该关系。P5禁止的是母品牌/兄弟产品猜测，而不是阻断已校验的exact_target。\n        if exact_brand\
           \ or exact_llm_product or semantic_family:independent_target=True;break\n\
-          \    # 最终提及判定必须同时满足：上游LLM判断为已提及，且代码确认存在同粒度独立目标实体。\n    detected=llm_detected\
-          \ and independent_target\n    # 多识别词按正文物理位置最早命中；同位置再取最完整别名。\n    matched=\"\
+          \    # 高置信声明别名直接出现在answer_raw时，确定性判为提及；实体门禁继续用于实体归属和排名，不再用于否定直接提及。\n    direct_strict_mention=bool(direct)\
+          \n    detected=direct_strict_mention or (llm_detected and independent_target)\n    # 多识别词按正文物理位置最早命中；同位置再取最完整别名。\n    matched=\"\
           \";direct_ids=[]\n    if detected:\n        # 目标实体本身是上游已校验的可靠产品/主体名；即使声明别名层因短词歧义过滤，也用实体surface回填正文证据。\n\
           \        target_names=[]\n        for e in entities if isinstance(entities,list)\
           \ else []:\n            if isinstance(e,dict) and e.get(\"is_target_entity\"\
@@ -2705,7 +2705,7 @@ workflow:
           \ for x in ids);ranked.append((first,-len(norm(row[\"alias\"])),row[\"alias\"\
           ],ids))\n        ranked.sort();matched=ranked[0][2];direct_ids=list(dict.fromkeys(x\
           \ for _,ids in direct for x in ids))\n    strict_norms={norm(x) for x in\
-          \ usable_brand_aliases if norm(x)}\n    confirmed_mentions=[x for x in llm_mentions\
+          \ mention_brand_aliases if norm(x)}\n    confirmed_mentions=[x for x in llm_mentions\
           \ if norm(x) in strict_norms]\n    if detected and not matched and confirmed_mentions:matched=confirmed_mentions[0]\n\
           \    if llm_matched_brand and norm(llm_matched_brand) in strict_norms:matched=llm_matched_brand\n\
           \    # LLM给出的证据ID是上游证据；只要ID存在，就纳入结构化回填范围。\n    llm_evidence_ids=[]\n   \
