@@ -461,3 +461,62 @@ dialog.modal>form>p{margin:0;font-size:12px;line-height:1.6;color:var(--ui-text-
 /* 弹窗内进度 */
 .modal-progress{margin:14px 0 4px}
 .modal-step{margin:8px 0 0;font-size:12px;color:var(--ui-text-muted)}
+
+/* ---------- 规则包评审：编辑与裁决 ---------- */
+.section-foot{display:flex;justify-content:flex-end;gap:8px;padding:12px 18px;border-top:1px solid var(--ui-divider);background:var(--ui-surface-muted)}
+.section-foot:empty{display:none}
+
+.select{height:36px;padding:0 30px 0 11px;border:1px solid var(--ui-border-strong);border-radius:8px;background:var(--ui-surface);color:var(--ui-text);font-size:13px;
+  appearance:none;background-image:url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M3 4.5 6 7.5 9 4.5' fill='none' stroke='%236f7076' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 9px center;background-size:11px}
+.select.small{height:32px;font-size:12px;padding:0 26px 0 9px}
+.select:hover{border-color:var(--ui-border-hover)}
+
+.input{width:100%;border:1px solid var(--ui-border-strong);border-radius:8px;padding:8px 11px;background:var(--ui-surface);color:var(--ui-text);
+  font-size:13px;font-family:inherit;line-height:1.55;resize:vertical}
+.input:hover{border-color:#bcbcc0}
+.input:focus{outline:0;border-color:var(--ui-blue);box-shadow:0 0 0 3px rgba(47,111,237,.12)}
+.input[readonly]{background:var(--ui-surface-muted);color:var(--ui-text-muted)}
+
+/* 冲突裁决 */
+.conflict.is-decided{background:var(--ui-surface-muted)}
+.conflict.is-decided summary{background:var(--ui-accent-soft)}
+.party.is-chosen{background:var(--ui-accent-soft);box-shadow:inset 0 0 0 1px var(--ui-accent)}
+.party.is-chosen label{color:var(--ui-accent-ink)}
+.decide-row{display:flex;flex-wrap:wrap;gap:14px;margin-top:12px;padding-top:12px;border-top:1px dashed var(--ui-border)}
+.decide-radio{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--ui-cell-text);cursor:pointer}
+.decide-radio input{margin:0;accent-color:var(--ui-accent);cursor:pointer}
+.decide-text{margin-top:10px}
+.decide-note-row{margin-top:8px}
+.decide-note{width:100%;height:32px;border:1px solid var(--ui-border-strong);border-radius:7px;padding:0 10px;font-size:12px;font-family:inherit;color:var(--ui-text);background:var(--ui-surface)}
+.apply-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:12px;padding-top:12px;border-top:1px dashed var(--ui-border)}
+.apply-label{font-size:11px;font-weight:700;color:var(--ui-text-muted)}
+.apply-hint{flex:1 1 100%;font-size:11px;line-height:1.5;color:var(--ui-text-subtle)}
+.decided-badge{margin:10px 0 0;font-size:11px;font-weight:600;color:var(--ui-accent-ink)}
+
+/* 规则操作 */
+.rule-actions{margin-left:auto;display:flex;gap:8px;opacity:0;transition:opacity .12s}
+.rule:hover .rule-actions,.rule:focus-within .rule-actions{opacity:1}
+.link-btn{border:0;background:none;padding:0;font-size:11px;font-weight:600;color:var(--ui-blue);cursor:pointer}
+.link-btn:hover{text-decoration:underline}
+.link-btn.danger{color:var(--ui-danger)}
+
+/* 规则编辑表单 */
+.rule-editor{margin:12px 18px;padding:16px;border:1px solid var(--ui-accent);border-radius:10px;background:var(--ui-surface);box-shadow:0 0 0 3px var(--ui-accent-soft)}
+.editor-head{display:flex;align-items:baseline;gap:10px;margin-bottom:14px}
+.editor-head b{font-size:14px}
+.editor-hint{font-size:11px;color:var(--ui-text-subtle)}
+.editor-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.rule-editor .field{margin-bottom:12px}
+.rule-editor .field>label{display:block;font-size:11px;font-weight:700;color:var(--ui-text-muted);margin-bottom:6px}
+.rule-editor .field em{color:var(--ui-danger);font-style:normal}
+.field-tip{font-weight:400;color:var(--ui-text-subtle)}
+.check-row{display:flex;gap:14px;padding-top:8px}
+.editor-foot{display:flex;align-items:center;gap:8px;margin-top:4px;padding-top:12px;border-top:1px solid var(--ui-divider)}
+.editor-out{flex:1;font-size:11px;color:var(--ui-text-subtle)}
+.dismissed-cell{font-size:11px;color:var(--ui-text-subtle)}
+
+@media(max-width:900px){
+  .editor-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .rule-actions{opacity:1}
+}

@@ -21,10 +21,14 @@
 import argparse
 import html
 import json
+import os
+import sys
 from datetime import datetime
 from pathlib import Path
 
 import yaml
+
+from rule_schema import active_rules, is_dismissed, is_resolved, is_pending
 
 
 def esc(s):
@@ -94,9 +98,14 @@ tr:last-child td{border-bottom:0}
 .conflict .detail{font-size:12px;color:#7a5c1e;margin:0 0 10px;line-height:1.7}
 .parties{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .party{background:#fff;border:1px solid #eee6d5;border-radius:5px;padding:10px 12px}
+.party.chosen{background:#f2fbf7;border-color:#10a37f}
 .party label{display:block;font-size:11px;color:#999;margin-bottom:4px}
 .party p{margin:0;font-size:12px;line-height:1.6}
 .party small{display:block;margin-top:5px;color:#aaa;font-size:11px}
+.badge{display:inline-block;font-size:11px;font-weight:600;padding:2px 7px;border-radius:9px;vertical-align:middle}
+.badge.wait{background:#fff3d6;color:#a46b12}
+.badge.ok{background:#e6f7f1;color:#087b5d}
+.verdict{margin:10px 0 0;padding:8px 11px;background:#f2fbf7;border-left:2px solid #10a37f;border-radius:0 4px 4px 0;font-size:12px;line-height:1.7;color:#2b6b56}
 
 .excluded td{color:var(--muted);font-size:12px}
 .foot{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);
@@ -118,7 +127,8 @@ tr:last-child td{border-bottom:0}
 
 def build(doc):
     meta = doc.get("meta") or {}
-    rules = doc.get("rules") or []
+    # 软删除的规则不发给客户；冲突保留全部，但要标出裁决结果
+    rules = active_rules(doc)
     conflicts = doc.get("conflicts") or []
     not_rules = doc.get("not_rules") or []
 
@@ -152,17 +162,36 @@ def build(doc):
 <div class="meta">规则包 {esc(version)}　·　共 {len(rules)} 条　·　生成于 {datetime.now().strftime('%Y-%m-%d %H:%M')}</div>""")
 
     # ---- 需要拍板 ----
-    A(f'<h2>一、需要您拍板的问题<span class="count">{len(conflicts)} 处</span></h2>')
-    if conflicts:
-        A('<p class="hint">客户提供的资料之间有互相矛盾的地方，系统没有替您做决定。请确认最终按哪个口径执行。</p>')
-        for i, c in enumerate(conflicts, 1):
+    live_conflicts = [c for c in conflicts if not is_dismissed(c)]
+    pending = [c for c in live_conflicts if is_pending(c)]
+    A(f'<h2>一、需要您拍板的问题<span class="count">{len(live_conflicts)} 处</span></h2>')
+    if live_conflicts:
+        if pending:
+            A(f'<p class="hint">客户提供的资料之间有互相矛盾的地方，系统没有替您做决定。'
+              f'其中 {len(pending)} 处仍待确认，请在「结论」一栏确认最终按哪个口径执行。</p>')
+        for i, c in enumerate(live_conflicts, 1):
+            res = c.get("resolution") or {}
+            dec = res.get("decision")
+            verdict = ""
+            if dec == "accept_a":
+                verdict = "已确认采用口径 A"
+            elif dec == "accept_b":
+                verdict = "已确认采用口径 B"
+            elif dec == "custom":
+                verdict = "已确认按以下口径执行：" + str(res.get("custom_text") or "")
+            if res.get("note"):
+                verdict += ("；" if verdict else "") + "理由：" + str(res.get("note"))
+            badge = ("已确认" if verdict else "待确认")
+            badge_cls = "ok" if verdict else "wait"
             A(f'''<div class="conflict">
-<h3>{i}. {esc(c.get("topic"))}</h3>
+<h3>{i}. {esc(c.get("topic"))} <span class="badge {badge_cls}">{badge}</span></h3>
 <p class="detail">{esc(c.get("detail"))}</p>
 <div class="parties">
-  <div class="party"><label>口径 A</label><p>{esc(c.get("party_a"))}</p><small>出自：{esc(c.get("from_a"))}</small></div>
-  <div class="party"><label>口径 B</label><p>{esc(c.get("party_b"))}</p><small>出自：{esc(c.get("from_b"))}</small></div>
-</div></div>''')
+  <div class="party{' chosen' if dec == 'accept_a' else ''}"><label>口径 A{(' · 已采用' if dec == 'accept_a' else '')}</label><p>{esc(c.get("party_a"))}</p><small>出自：{esc(c.get("from_a"))}</small></div>
+  <div class="party{' chosen' if dec == 'accept_b' else ''}"><label>口径 B{(' · 已采用' if dec == 'accept_b' else '')}</label><p>{esc(c.get("party_b"))}</p><small>出自：{esc(c.get("from_b"))}</small></div>
+</div>
+{('<p class="verdict">结论：' + esc(verdict) + '</p>') if verdict else ''}
+</div>''')
     else:
         A('<p class="empty">没有发现互相矛盾的资料。</p>')
 

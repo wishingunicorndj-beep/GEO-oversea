@@ -31,11 +31,23 @@
 
 ```
 1. 导入客户资料   /upload.html       填客户信息 + 拖入资料 → 自动抽取
-2. 规则包评审     /rules/            逐条勾选、裁决冲突 → 生成工作流
+2. 规则包评审     /rules/            裁决冲突、增删改规则、确认转正 → 生成工作流
 3. 验收报告       /index.html        选客户 → 新建批次 → 上传文章 JSON → 出报告
 ```
 
 **工作流的正确使用顺序就是上面 1→2→3**，侧栏也是按这个顺序排的。
+
+### 规则包评审页能做什么
+
+| 操作 | 说明 |
+|---|---|
+| 裁决冲突 | 二选一 / 写自定义口径 / 删除该项（软删，记录保留）；可勾选「应用到规则」把结论写入指定规则的指定字段 |
+| 新增规则 | 结构化表单，自动分配未占用的 id；人工录入固定为「模型判定」类，出处记「人工录入」 |
+| 编辑规则 | 就地展开表单，id 不变（历史批次引用不断） |
+| 移除规则 | 取消勾选或点「移除」→ 软删除：记录保留在 yaml 里，不再注入工作流也不参与验收，可随时恢复 |
+| 确认转正 | 前置条件：冲突全部裁决 + 规则校验通过；去掉版本号里的 `-draft` |
+
+**裁决不会自动改规则**：必须显式选择目标规则和字段。改 `statement` / `condition` 影响生文与验收；改 `scope_note` 只影响验收判定。被覆盖的原文记在规则的 `field_history` 里。
 
 ### 命令行
 
@@ -156,6 +168,19 @@ stats:
 
 2. **`scope_note` 是必需字段**。没有判定边界的规则会让模型判定漂移。
    实测：不写边界时，同一批 10 篇文章判出 24 处违规，其中 20 处是误判；补了边界后降到 4 处，全部成立。
+
+**另外几类取值不报错但会让规则静默失效**，`rule_schema.py` 会在保存时拦截：
+
+| 写错的内容 | 后果 |
+|---|---|
+| `category` 拼错（如 `prohibit`） | 不在 `injection_map` 里，工作流 prompt 中完全没有这条 |
+| `scope` 写成 `all` / 只写 `tags` | 评估器 targets 为空，永远判 pass（漏判） |
+| `enforcement=code` 但没有 `detect` | 永远判 unclear |
+| `detect.type` 是 `replace`/`required` 等 | 门禁支持但验收评估器不支持，永远判 unclear |
+
+人工录入只允许 `enforcement=llm`，从入口避免后两类问题。
+
+**软删除**：取消勾选或点「移除」的规则保留在 yaml 里（`status: dismissed`），但不注入工作流、不参与判定，可在「已移除的规则」里恢复。id 不复用 —— 已删除的编号不会再分配给新规则，否则历史批次的 `rules_snapshot.yaml` 会指向另一条规则。
 
 ### 3.3 生文输出 JSON（从 Dify 导出）
 
@@ -280,9 +305,16 @@ clients/<slug>/batches/<batch_id>/
 |---|---|---|
 | POST | `/api/upload` | 上传客户资料（multipart：`slug` `name` `short` `files`） |
 | POST | `/api/extract` | 抽取规则 → **返回 202 + task_id** |
-| POST | `/api/rules/<slug>/save` | 保存评审结果（`{"kept": {"规则id": true/false}}`） |
+| POST | `/api/rules/<slug>/save` | 批量设置保留/移除（`{"kept": {"规则id": true/false}}`，false 走软删除） |
+| POST | `/api/rules/<slug>/rule` | 新增或编辑一条规则（`{"mode":"create\|update","rule":{...}}`），仅允许模型判定类 |
+| POST | `/api/rules/<slug>/rule/<id>/dismiss` | 软删除一条规则（保留记录，不再注入与判定） |
+| POST | `/api/rules/<slug>/rule/<id>/restore` | 恢复一条软删除的规则 |
+| POST | `/api/rules/<slug>/conflicts` | 保存冲突裁决（`{"conflicts":[{"topic","resolution","apply"}]}`） |
+| POST | `/api/rules/<slug>/promote` | 确认转正：去掉版本号里的 `-draft` |
 | POST | `/api/build/<slug>` | 生成定制工作流 yml |
 | POST | `/api/evaluate` | 上传文章 JSON 评估 → **返回 202 + task_id** |
+
+**所有规则写接口都会重建 `evaluate.py`**：评估器内嵌规则副本，不重建则新规则在验收时完全不生效。
 
 ### 下载
 
@@ -387,6 +419,7 @@ scripts/
   extract_client_docs.py        docx/xlsx → 纯文本（保留段落边界）
   extract_rules.py              ★模型抽取规则（唯一调模型的抽取环节）
   draft_to_rules.py             初稿 → 规则包（schema 校验、detect 推导）
+  rule_schema.py                ★schema 单一事实来源：枚举、校验、统计重算、软删除过滤
   build_client_workflow.py      规则包 → 定制 yml（注入 prompt + 代码门禁）
   gate_template.py              门禁代码模板（独立存放，避免 f-string 转义地狱）
   build_client_evaluator.py     规则包 → 评估器（代码可判 + 模型判定）

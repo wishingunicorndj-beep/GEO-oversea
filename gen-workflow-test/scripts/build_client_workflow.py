@@ -20,6 +20,7 @@ import sys
 import yaml
 
 from gate_template import GATE_MODULE
+from rule_schema import active_rules
 
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPO = os.path.dirname(BASE)
@@ -79,6 +80,8 @@ def load_rules(path):
     for key in ("meta", "rules", "injection_map"):
         if key not in rules:
             sys.exit(f"规则包缺少必需字段：{key}")
+    # 软删除的规则留在 yaml 里供审计，但不参与注入
+    rules["rules"] = active_rules(rules)
     return rules
 
 

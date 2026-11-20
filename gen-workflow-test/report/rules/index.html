@@ -48,7 +48,8 @@
           </div>
           <div class="head-actions">
             <select class="select" id="clientSelect" aria-label="选择客户"></select>
-            <button class="button" id="toggleAll">只看待确认</button>
+            <button class="button" id="toggleAll">只看人工录入</button>
+            <button class="button" id="promoteBtn" hidden>确认转正</button>
             <button class="button primary" id="buildBtn">生成定制工作流</button>
           </div>
         </div>
@@ -68,22 +69,37 @@
 
         <section class="section-card">
           <div class="section-head">
-            <div><h2>待裁决的冲突</h2><p>客户资料之间互相矛盾，系统不做自动裁决</p></div>
+            <div><h2>待裁决的冲突</h2><p>客户资料之间互相矛盾，系统不做自动裁决。可选口径、写自定义解释，或删除该项。</p></div>
             <span class="section-count" id="conflictCount"></span>
           </div>
           <div class="section-body" id="conflicts"></div>
+          <div class="section-foot" id="conflictFoot"></div>
         </section>
 
         <section class="section-card">
           <div class="section-head">
             <div><h2>写作规则</h2><p id="ruleSub"></p></div>
             <div class="filter-row">
+              <button class="button small" id="newRuleBtn">新增规则</button>
               <select class="select" id="catFilter" aria-label="按类别筛选">
                 <option value="">全部类别</option>
               </select>
             </div>
           </div>
           <div class="rule-list" id="rules"></div>
+        </section>
+
+        <section class="section-card">
+          <div class="section-head">
+            <div><h2>已移除的规则</h2><p>取消勾选或点「移除」的规则保留在这里，不写入工作流也不参与验收，可随时恢复</p></div>
+            <span class="section-count" id="dismissedCount"></span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th style="width:110px">ID</th><th>规则本身</th><th style="width:130px">移除时间</th><th style="width:60px">操作</th></tr></thead>
+              <tbody id="dismissedRules"></tbody>
+            </table>
+          </div>
         </section>
 
         <section class="section-card">
@@ -99,7 +115,7 @@
           </div>
         </section>
 
-        <p class="foot-note">规则包版本 <span id="verText"></span>。转正前请确认全部冲突已裁决、不适用的规则已取消勾选。</p>
+        <p class="foot-note">规则包版本 <span id="verText"></span>。转正前请确认全部冲突已裁决、不适用的规则已移除。</p>
       </div>
     </main>
   </div>

@@ -566,12 +566,12 @@ workflow:
       height: 724
       id: '1792200000001'
       position:
-        x: 2090.831868565936
-        y: 1054.1831711639088
+        x: 2125.7105783566567
+        y: 944.4858018059992
       positionAbsolute:
-        x: 2090.831868565936
-        y: 1054.1831711639088
-      selected: true
+        x: 2125.7105783566567
+        y: 944.4858018059992
+      selected: false
       sourcePosition: right
       targetPosition: left
       type: custom
@@ -699,11 +699,11 @@ workflow:
       height: 190
       id: '1792200000002'
       position:
-        x: 2357.751478531396
-        y: 1098.2680496612907
+        x: 2409.472427866886
+        y: 1083.4906355654364
       positionAbsolute:
-        x: 2357.751478531396
-        y: 1098.2680496612907
+        x: 2409.472427866886
+        y: 1083.4906355654364
       selected: false
       sourcePosition: right
       targetPosition: left
@@ -928,10 +928,10 @@ workflow:
       height: 114
       id: '1792200000003'
       position:
-        x: 2638.390853296196
+        x: 2680.26019323445
         y: 1103.7231614810214
       positionAbsolute:
-        x: 2638.390853296196
+        x: 2680.26019323445
         y: 1103.7231614810214
       selected: false
       sourcePosition: right
@@ -962,12 +962,12 @@ workflow:
       height: 98
       id: '1792200000004'
       position:
-        x: 2346.581994088331
-        y: 1372.933544561039
+        x: 2409.472427866886
+        y: 1365.5448375131118
       positionAbsolute:
-        x: 2346.581994088331
-        y: 1372.933544561039
-      selected: false
+        x: 2409.472427866886
+        y: 1365.5448375131118
+      selected: true
       sourcePosition: right
       targetPosition: left
       type: custom
@@ -2039,12 +2039,12 @@ workflow:
           \ 这只在上游尚未建立目标实体时触发，且要求正文存在同一完整别名；不会把比较宾语或视频标签升级为目标。\n    if not any(e.get(\"\
           is_target_entity\") and e.get(\"rank_membership\") in {\"ordered_choice\"\
           ,\"independent_subject\"} for e in candidates if isinstance(e,dict)):\n\
-          \        query_target=any(target_alias_match(str(a),query) for a in target_aliases\
+          \        query_target=any((len(norm(str(a)))>=4 or norm(str(a)) in declared_norm_set) and contains(str(a),query) for a in target_aliases\
           \ if norm(a))\n        if query_target:\n            subject_hits=[]\n \
           \           for sid,item in smap.items():\n                if sid in source_background:continue\n\
           \                unit=str(item.get(\"text\") or \"\")\n                aliases=[str(a)\
-          \ for a in target_aliases if (len(norm(a))>=4 or norm(a) in declared_norm_set)\
-          \ and target_line_match(str(a),unit)]\n                if not aliases:continue\n\
+          \ for a in target_aliases if (len(norm(a))>=2 or norm(a) in declared_norm_set)\
+          \ and contains(str(a),unit)]\n                if not aliases:continue\n\
           \                structural=str(item.get(\"block_type\") or \"\") in {\"\
           heading\",\"paragraph\"} or any(contains(a,str(item.get(\"context_heading\"\
           ) or \"\")) for a in aliases)\n                if structural:subject_hits.append((order.get(sid,99999),sid,max(aliases,key=lambda\
@@ -2055,8 +2055,7 @@ workflow:
           \            if heading_hits or (len(subject_hits)>=2 and mention_total>=2):\n\
           \                _,subject_sid,subject_alias=min(heading_hits or subject_hits,key=lambda\
           \ x:(x[0],-len(norm(x[2]))))\n                existing_target=next((e for\
-          \ e in candidates if e.get(\"is_target_entity\") or any(target_alias_match(str(a),str(e.get(\"\
-          surface\") or \"\")) for a in target_aliases if norm(a))),None)\n      \
+          \ e in candidates if e.get(\"is_target_entity\") or any(contains(str(a),str(e.get(k) or \"\")) or contains(str(e.get(k) or \"\"),str(a)) for a in target_aliases for k in (\"surface\",\"canonical_name\",\"parent_brand\") if norm(a))),None)\n      \
           \          if existing_target:\n                    existing_target[\"surface\"\
           ]=subject_alias;existing_target[\"canonical_name\"]=subject_alias;existing_target[\"\
           parent_brand\"]=subject_alias\n                    existing_target[\"competition_role\"\
@@ -2158,13 +2157,10 @@ workflow:
           \            if sid in source_background:continue\n            scope_text=str(item.get(\"\
           text\") or \"\")\n            context=\" \".join((scope_text,str(item.get(\"\
           context_heading\") or \"\")))\n            if not any(contains(a,scope_text)\
-          \ for a in target_alias_candidates):continue\n            if not any(marker\
-          \ in context for marker in recommendation_markers):continue\n          \
-          \  if not any(marker in context for marker in example_markers):continue\n\
+          \ for a in target_alias_candidates):continue\n            block_type=str(item.get(\"block_type\") or \"\")\n            structured_anchor=block_type in {\"heading\",\"table_row\",\"list_item\"} or \"|\" in scope_text\n            if not any(marker in context for marker in recommendation_markers) and not structured_anchor:continue\n            if not any(marker in context for marker in example_markers) and not structured_anchor:continue\n\
           \            if any(marker in context for marker in forbidden_category_markers):continue\n\
           \            matched_alias=max((a for a in target_alias_candidates if contains(a,scope_text)),key=lambda\
-          \ a:len(norm(a)),default=\"\")\n            if not matched_alias:continue\n\
-          \            if existing_target:\n                existing_target[\"surface\"\
+          \ a:len(norm(a)),default=\"\")\n            if not matched_alias:continue\n            if not existing_target:\n                existing_target=next((e for e in unique if any(contains(a,str(e.get(k) or \"\")) for a in target_alias_candidates for k in (\"surface\",\"canonical_name\",\"parent_brand\"))),None)\n            if existing_target:\n                existing_target[\"surface\"\
           ]=matched_alias;existing_target[\"canonical_name\"]=matched_alias;existing_target[\"\
           parent_brand\"]=matched_alias\n                existing_target[\"entity_type\"\
           ]=\"brand\";existing_target[\"competition_role\"]=\"recommended\";existing_target[\"\
@@ -2527,10 +2523,10 @@ workflow:
       id: '17774580798580'
       position:
         x: 1550
-        y: 749
+        y: 590.4162411729654
       positionAbsolute:
         x: 1550
-        y: 749
+        y: 590.4162411729654
       selected: false
       sourcePosition: right
       targetPosition: left
@@ -3037,11 +3033,11 @@ workflow:
       height: 114
       id: '17774583588430'
       position:
-        x: 1854
-        y: 757
+        x: 1842.7356213387943
+        y: 596.0484305035685
       positionAbsolute:
-        x: 1854
-        y: 757
+        x: 1842.7356213387943
+        y: 596.0484305035685
       selected: false
       sourcePosition: right
       targetPosition: left
@@ -3148,10 +3144,10 @@ workflow:
       id: '1779800168375'
       position:
         x: 1550
-        y: 931
+        y: 803.3370418396665
       positionAbsolute:
         x: 1550
-        y: 931
+        y: 803.3370418396665
       selected: false
       sourcePosition: right
       targetPosition: left
@@ -3402,11 +3398,11 @@ workflow:
       height: 114
       id: '1779847959183'
       position:
-        x: 1854
-        y: 947
+        x: 1850.2452071129314
+        y: 803.3370418396665
       positionAbsolute:
-        x: 1854
-        y: 947
+        x: 1850.2452071129314
+        y: 803.3370418396665
       selected: false
       sourcePosition: right
       targetPosition: left
@@ -3670,11 +3666,11 @@ workflow:
       height: 98
       id: '17774728161280'
       position:
-        x: 2120.4920732261057
-        y: 850.195078737528
+        x: 2125.7105783566567
+        y: 663.1683268380302
       positionAbsolute:
-        x: 2120.4920732261057
-        y: 850.195078737528
+        x: 2125.7105783566567
+        y: 663.1683268380302
       selected: false
       sourcePosition: right
       targetPosition: left
@@ -4219,6 +4215,6 @@ workflow:
       type: custom
       width: 244
     viewport:
-      x: -497.21995999980345
-      y: -257.9891619743372
-      zoom: 0.5359781908049337
+      x: -130.90708844462574
+      y: 12.864764050676342
+      zoom: 0.40602502989229017

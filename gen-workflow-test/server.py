@@ -429,6 +429,12 @@ def read_manifest(cdir):
 def rules_to_page(cdir, slug):
     """把 rules.yaml 转成评审页需要的 JSON。"""
     import yaml
+    sys.path.insert(0, str(SCRIPTS))
+    try:
+        import rule_schema as rs
+    finally:
+        sys.path.pop(0)
+
     rp = cdir / "rules.yaml"
     if not rp.exists():
         return None
@@ -441,31 +447,39 @@ def rules_to_page(cdir, slug):
     pol = {"must": "必须", "must_not": "不得", "may": "允许", "prefer": "建议"}
     enf = {"code": "代码可判", "llm": "模型判定", "human": "人工流程"}
 
-    rules = []
+    rules, dismissed = [], []
     for r in d.get("rules") or []:
         item = dict(r)
         item["category_label"] = label.get(r.get("category"), r.get("category"))
         item["polarity_label"] = pol.get(r.get("polarity"), r.get("polarity"))
         item["enforcement_label"] = enf.get(r.get("enforcement"), r.get("enforcement"))
-        rules.append(item)
+        item["is_manual"] = r.get("origin") == "manual"
+        (dismissed if r.get("status") == "dismissed" else rules).append(item)
     rules.sort(key=lambda x: (order.index(x["category"]) if x.get("category") in order else 99, x.get("id", "")))
+    dismissed.sort(key=lambda x: x.get("id", ""))
 
     used = set((d.get("meta", {}).get("extraction", {}) or {}).get("source_files") or [])
     man = read_manifest(cdir)
     sources = [{"name": m["source_file"], "chars": m["chars"]} for m in man if m["source_file"] in used]
     excluded = [m["source_file"] for m in man if used and m["source_file"] not in used]
 
+    conflicts = d.get("conflicts") or []
     return {
         "client": {"name": d["meta"].get("client_name"), "short": d["meta"].get("client_short"),
-                   "version": d["meta"].get("version"), "note": d["meta"].get("note", "")},
+                   "version": d["meta"].get("version"), "note": d["meta"].get("note", ""),
+                   "is_draft": "draft" in str(d["meta"].get("version") or "")},
         "stats": d.get("stats") or {},
         "source_files": sources,
         "excluded_files": excluded,
         "extraction": d["meta"].get("extraction") or {},
         "rules": rules,
-        "conflicts": d.get("conflicts") or [],
+        "dismissed_rules": dismissed,
+        "conflicts": conflicts,
+        "conflicts_pending": len(rs.pending_conflicts(d)),
+        "conflicts_active": len(rs.active_conflicts(d)),
         "not_rules": d.get("not_rules") or [],
         "slug": slug,
+        "next_rule_id": rs.next_rule_id(d.get("rules") or [], slug),
     }
 
 
@@ -595,7 +609,12 @@ class Handler(SimpleHTTPRequestHandler):
                         try:
                             import yaml
                             doc = yaml.safe_load(rp.read_text(encoding="utf-8")) or {}
-                            rule_count = len(doc.get("rules") or [])
+                            sys.path.insert(0, str(SCRIPTS))
+                            try:
+                                import rule_schema as rs
+                            finally:
+                                sys.path.pop(0)
+                            rule_count = len(rs.active_rules(doc))
                             rule_version = (doc.get("meta") or {}).get("version", "")
                         except Exception:
                             pass
@@ -779,6 +798,21 @@ class Handler(SimpleHTTPRequestHandler):
         m = re.match(r"^/api/rules/([a-z0-9_]+)/save$", path)
         if m:
             return self.api_save_rules(m.group(1))
+        m = re.match(r"^/api/rules/([a-z0-9_]+)/rule$", path)
+        if m:
+            return self.api_rule_upsert(m.group(1))
+        m = re.match(r"^/api/rules/([a-z0-9_]+)/rule/([A-Za-z0-9_\-]+)/dismiss$", path)
+        if m:
+            return self.api_rule_dismiss(m.group(1), m.group(2))
+        m = re.match(r"^/api/rules/([a-z0-9_]+)/rule/([A-Za-z0-9_\-]+)/restore$", path)
+        if m:
+            return self.api_rule_restore(m.group(1), m.group(2))
+        m = re.match(r"^/api/rules/([a-z0-9_]+)/conflicts$", path)
+        if m:
+            return self.api_conflicts_save(m.group(1))
+        m = re.match(r"^/api/rules/([a-z0-9_]+)/promote$", path)
+        if m:
+            return self.api_rules_promote(m.group(1))
         m = re.match(r"^/api/build/([a-z0-9_]+)$", path)
         if m:
             return self.api_build(m.group(1))
@@ -932,52 +966,310 @@ class Handler(SimpleHTTPRequestHandler):
             pass
         return {"slug": slug, "rule_count": cnt, "log": out[-1500:] + "\n" + out2[-800:]}
 
+    # ---------------- 规则包写操作 ----------------
+    def _rules_ctx(self, slug):
+        """读取规则包并返回 (cdir, doc, yaml)。不存在时抛 ValueError。"""
+        import yaml
+        try:
+            cdir = client_dir(slug)
+        except ValueError as e:
+            raise ValueError(str(e))
+        rp = cdir / "rules.yaml"
+        if not rp.exists():
+            raise ValueError("规则包不存在")
+        doc = yaml.safe_load(rp.read_text(encoding="utf-8")) or {}
+        return cdir, doc, yaml
+
+    def _write_rules(self, cdir, doc, slug, note=""):
+        """落盘 + 重算统计 + 同步数据库 + 重建评估器。
+
+        重建评估器是必须的：评估器内嵌了规则副本，不重建的话
+        新加/改过的规则在验收时完全不会生效。
+        """
+        sys.path.insert(0, str(SCRIPTS))
+        try:
+            import rule_schema as rs
+        finally:
+            sys.path.pop(0)
+
+        import yaml
+        rs.recompute_stats(doc)
+        import os as _os
+        cdir = Path(cdir)
+        tmp = cdir / "rules.yaml.tmp"
+        tmp.write_text(yaml.safe_dump(doc, allow_unicode=True, sort_keys=False, width=4000),
+                       encoding="utf-8")
+        _os.replace(tmp, cdir / "rules.yaml")
+
+        ev = cdir / "evaluate.py"
+        ok, out = run_script([SCRIPTS / "build_client_evaluator.py", cdir / "rules.yaml",
+                              "--out", ev], timeout=120)
+        persist(dblayer.sync_client_to_db, store(), cdir, slug)
+        return ok, out
+
+    def _rule_error(self, errs):
+        return json_out(self, 400, {"error": "；".join(errs), "errors": errs})
+
     def api_save_rules(self, slug):
+        """批量设置保留/移除。移除走软删除：规则留在 yaml 里但不再注入与判定。"""
         try:
             body = self.read_json()
         except Exception as e:
             return json_out(self, 400, {"error": str(e)})
         try:
-            cdir = client_dir(slug)
+            cdir, doc, yaml = self._rules_ctx(slug)
         except ValueError as e:
             return json_out(self, 400, {"error": str(e)})
-        rp = cdir / "rules.yaml"
-        if not rp.exists():
-            return json_out(self, 404, {"error": "规则包不存在"})
 
         kept = body.get("kept")
         if not isinstance(kept, dict):
             return json_out(self, 400, {"error": "缺少 kept 映射"})
 
-        import yaml
-        doc = yaml.safe_load(rp.read_text(encoding="utf-8"))
-        removed = []
-        new_rules = []
+        removed, restored = [], []
         for r in doc.get("rules") or []:
-            if kept.get(r.get("id"), True):
-                new_rules.append(r)
+            rid = r.get("id")
+            if rid not in kept:
+                continue
+            if kept[rid]:
+                if r.get("status") == "dismissed":
+                    r.pop("status", None)
+                    r.pop("dismissed_at", None)
+                    restored.append(rid)
             else:
-                removed.append(r.get("id"))
-        doc["rules"] = new_rules
-        doc["meta"]["reviewed_at"] = datetime.now().strftime("%Y-%m-%d %H:%M")
-        doc["meta"]["removed_rules"] = removed
+                if r.get("status") != "dismissed":
+                    r["status"] = "dismissed"
+                    r["dismissed_at"] = datetime.now().strftime("%Y-%m-%d %H:%M")
+                    removed.append(rid)
 
-        from collections import Counter
-        doc["stats"]["total"] = len(new_rules)
-        doc["stats"]["by_category"] = dict(Counter(r["category"] for r in new_rules))
-        doc["stats"]["by_polarity"] = dict(Counter(r["polarity"] for r in new_rules))
-        doc["stats"]["by_enforcement"] = dict(Counter(r["enforcement"] for r in new_rules))
-        doc["stats"]["delivery_excluded"] = sum(1 for r in new_rules if r["category"] == "delivery")
+        doc.setdefault("meta", {})["reviewed_at"] = datetime.now().strftime("%Y-%m-%d %H:%M")
+        ok, out = self._write_rules(cdir, doc, slug)
+        if not ok:
+            return json_out(self, 500, {"error": "规则已保存，但评估器重建失败", "detail": out[-800:]})
+        return json_out(self, 200, {"ok": True, "removed": removed, "restored": restored})
 
-        header = (
-            "# 客户规则包（人工评审后保存）\n"
-            f"# 评审时间: {doc['meta']['reviewed_at']}\n"
-            f"# 移除 {len(removed)} 条: {', '.join(removed) if removed else '无'}\n\n"
-        )
-        rp.write_text(header + yaml.safe_dump(doc, allow_unicode=True, sort_keys=False, width=4000),
-                      encoding="utf-8")
-        persist(dblayer.sync_client_to_db, store(), cdir, slug)
-        return json_out(self, 200, {"ok": True, "kept": len(new_rules), "removed": removed})
+    def api_rule_upsert(self, slug):
+        """新增或编辑一条规则。人工录入只允许模型判定类（enforcement=llm）。"""
+        try:
+            body = self.read_json()
+        except Exception as e:
+            return json_out(self, 400, {"error": str(e)})
+        try:
+            cdir, doc, yaml = self._rules_ctx(slug)
+        except ValueError as e:
+            return json_out(self, 400, {"error": str(e)})
+
+        sys.path.insert(0, str(SCRIPTS))
+        try:
+            import rule_schema as rs
+        finally:
+            sys.path.pop(0)
+
+        raw = body.get("rule") or {}
+        mode = body.get("mode") or "create"
+        rules = doc.get("rules") or []
+
+        rule = {
+            "id": (raw.get("id") or "").strip(),
+            "category": (raw.get("category") or "").strip(),
+            "polarity": (raw.get("polarity") or "").strip(),
+            "severity": (raw.get("severity") or "").strip(),
+            "scope": raw.get("scope") or ["title", "body"],
+            "statement": (raw.get("statement") or "").strip(),
+            "scope_note": (raw.get("scope_note") or "").strip(),
+            "enforcement": "llm",          # 人工录入固定为模型判定，避免填了 detect 却判不出来
+            "origin": "manual",
+            "evidence": "人工录入",
+            "source_file": "人工录入",
+        }
+        for k in ("condition", "alternative", "status"):
+            if raw.get(k):
+                rule[k] = raw[k].strip() if isinstance(raw[k], str) else raw[k]
+        exs = [e for e in (raw.get("examples") or [])
+               if isinstance(e, dict) and (e.get("wrong") or e.get("right"))]
+        if exs:
+            rule["examples"] = exs
+
+        if mode == "create":
+            candidate = rs.next_rule_id(rules, slug)
+            if not rule["id"] or rule["id"] in {r.get("id") for r in rules}:
+                rule["id"] = candidate
+            others = {r.get("id") for r in rules}
+            errs = rs.validate_rule(rule, all_ids=others, for_manual_input=True)
+            if errs:
+                return self._rule_error(errs)
+            rules.append(rule)
+        else:
+            target = next((r for r in rules if r.get("id") == rule["id"]), None)
+            if not target:
+                return json_out(self, 404, {"error": f"规则 {rule['id']} 不存在"})
+            others = {r.get("id") for r in rules if r.get("id") != rule["id"]}
+            errs = rs.validate_rule(rule, all_ids=others, for_manual_input=True)
+            if errs:
+                return self._rule_error(errs)
+            # 保留不可在界面编辑的字段
+            for k in ("status", "dismissed_at", "detect", "needs_source"):
+                if k in target and k not in rule:
+                    rule[k] = target[k]
+            if target.get("origin") != "manual":
+                rule["origin"] = "extracted"
+            idx = rules.index(target)
+            rules[idx] = rule
+
+        doc["rules"] = rules
+        doc.setdefault("meta", {})["edited_at"] = datetime.now().strftime("%Y-%m-%d %H:%M")
+        ok, out = self._write_rules(cdir, doc, slug)
+        if not ok:
+            return json_out(self, 500, {"error": "规则已保存，但评估器重建失败", "detail": out[-800:]})
+        return json_out(self, 200, {"ok": True, "rule": rule,
+                                    "next_rule_id": rs.next_rule_id(rules, slug)})
+
+    def api_rule_dismiss(self, slug, rid):
+        """软删除一条规则：保留记录，标记 dismissed，不再注入与判定。"""
+        try:
+            cdir, doc, yaml = self._rules_ctx(slug)
+        except ValueError as e:
+            return json_out(self, 400, {"error": str(e)})
+        target = next((r for r in (doc.get("rules") or []) if r.get("id") == rid), None)
+        if not target:
+            return json_out(self, 404, {"error": f"规则 {rid} 不存在"})
+        target["status"] = "dismissed"
+        target["dismissed_at"] = datetime.now().strftime("%Y-%m-%d %H:%M")
+        ok, out = self._write_rules(cdir, doc, slug)
+        if not ok:
+            return json_out(self, 500, {"error": "规则已保存，但评估器重建失败", "detail": out[-800:]})
+        return json_out(self, 200, {"ok": True, "id": rid})
+
+    def api_rule_restore(self, slug, rid):
+        """恢复一条软删除的规则。"""
+        try:
+            cdir, doc, yaml = self._rules_ctx(slug)
+        except ValueError as e:
+            return json_out(self, 400, {"error": str(e)})
+        target = next((r for r in (doc.get("rules") or []) if r.get("id") == rid), None)
+        if not target:
+            return json_out(self, 404, {"error": f"规则 {rid} 不存在"})
+        target.pop("status", None)
+        target.pop("dismissed_at", None)
+        ok, out = self._write_rules(cdir, doc, slug)
+        if not ok:
+            return json_out(self, 500, {"error": "规则已保存，但评估器重建失败", "detail": out[-800:]})
+        return json_out(self, 200, {"ok": True, "id": rid})
+
+    def api_conflicts_save(self, slug):
+        """保存冲突裁决。人工选口径后可直接应用到某条规则的指定字段。"""
+        try:
+            body = self.read_json()
+        except Exception as e:
+            return json_out(self, 400, {"error": str(e)})
+        try:
+            cdir, doc, yaml = self._rules_ctx(slug)
+        except ValueError as e:
+            return json_out(self, 400, {"error": str(e)})
+
+        sys.path.insert(0, str(SCRIPTS))
+        try:
+            import rule_schema as rs
+        finally:
+            sys.path.pop(0)
+
+        incoming = body.get("conflicts")
+        if not isinstance(incoming, list):
+            return json_out(self, 400, {"error": "缺少 conflicts 数组"})
+
+        # 以 topic 为主键合并：前端只提交改动过的项，未提交的保持原样
+        current = doc.get("conflicts") or []
+        by_topic = {c.get("topic"): c for c in current}
+        applied = []
+        now = datetime.now().strftime("%Y-%m-%d %H:%M")
+
+        for inc in incoming:
+            topic = inc.get("topic")
+            if topic not in by_topic:
+                continue
+            item = by_topic[topic]
+            res = dict(inc.get("resolution") or {})
+            decision = res.get("decision")
+            if decision not in (None, "accept_a", "accept_b", "custom", "dismissed"):
+                return json_out(self, 400, {"error": f"「{topic}」的裁决取值非法：{decision}"})
+            if decision == "custom" and not str(res.get("custom_text") or "").strip():
+                return json_out(self, 400, {"error": f"「{topic}」选择自定义口径时，必须填写内容"})
+            if decision:
+                res["resolved_at"] = res.get("resolved_at") or now
+                item["resolution"] = res
+
+            # 可选的「应用到规则」：裁决不会自动改规则，必须显式指定目标与字段
+            apply = inc.get("apply") or {}
+            rid, field = apply.get("rule_id"), apply.get("field")
+            if rid and field and decision in ("accept_a", "accept_b", "custom"):
+                if field not in ("statement", "condition", "scope_note"):
+                    return json_out(self, 400, {"error": f"不能写入字段 {field}"})
+                target = next((r for r in (doc.get("rules") or []) if r.get("id") == rid), None)
+                if not target:
+                    return json_out(self, 404, {"error": f"规则 {rid} 不存在"})
+                text = {"accept_a": item.get("party_a"), "accept_b": item.get("party_b"),
+                        "custom": res.get("custom_text")}.get(decision) or ""
+                if text.strip():
+                    # 被替换的原文留在 history 里，规则包仍能回答「这条边界为什么这么写」
+                    history = target.setdefault("field_history", [])
+                    history.append({
+                        "field": field,
+                        "before": target.get(field, ""),
+                        "after": text.strip(),
+                        "from_conflict": topic,
+                        "at": now,
+                    })
+                    target[field] = text.strip()
+                    if target.get("origin") != "manual":
+                        target["origin"] = "extracted+reviewed"
+                    applied.append({"rule_id": rid, "field": field})
+
+        errs = rs.validate_rule_set(doc.get("rules") or [], for_manual_input=False)
+        blocking = [e for e in errs if "不能为空" in e]
+        if blocking:
+            return self._rule_error(blocking + ["（裁决应用后规则字段为空，已拒绝保存）"])
+
+        doc.setdefault("meta", {})["conflicts_reviewed_at"] = now
+        ok, out = self._write_rules(cdir, doc, slug)
+        if not ok:
+            return json_out(self, 500, {"error": "裁决已保存，但评估器重建失败", "detail": out[-800:]})
+        return json_out(self, 200, {"ok": True, "applied": applied,
+                                    "pending": len(rs.pending_conflicts(doc))})
+
+    def api_rules_promote(self, slug):
+        """确认转正：去掉版本号里的 -draft。"""
+        try:
+            cdir, doc, yaml = self._rules_ctx(slug)
+        except ValueError as e:
+            return json_out(self, 400, {"error": str(e)})
+
+        meta = doc.setdefault("meta", {})
+        version = str(meta.get("version") or "")
+        if "draft" not in version:
+            return json_out(self, 400, {"error": f"当前版本 {version} 已经是正式版"})
+
+        sys.path.insert(0, str(SCRIPTS))
+        try:
+            import rule_schema as rs
+        finally:
+            sys.path.pop(0)
+
+        pending = rs.pending_conflicts(doc)
+        if pending:
+            return json_out(self, 400, {
+                "error": f"还有 {len(pending)} 处冲突未裁决，不能转正",
+                "pending": [c.get("topic") for c in pending]})
+
+        active = rs.active_rules(doc)
+        errs = rs.validate_rule_set(active, for_manual_input=False)
+        if errs:
+            return self._rule_error(errs + ["（转正前必须全部修正）"])
+
+        meta["version"] = re.sub(r"-?draft", "", version).strip("-") or "0.1.0"
+        meta["promoted_at"] = datetime.now().strftime("%Y-%m-%d %H:%M")
+        ok, out = self._write_rules(cdir, doc, slug)
+        if not ok:
+            return json_out(self, 500, {"error": "已转正，但评估器重建失败", "detail": out[-800:]})
+        return json_out(self, 200, {"ok": True, "version": meta["version"]})
 
     def api_build(self, slug):
         try:

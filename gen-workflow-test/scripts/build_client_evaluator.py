@@ -19,12 +19,17 @@ import os
 
 import yaml
 
+from rule_schema import active_rules
+
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 def load_rules(path):
     with open(path, encoding="utf-8") as f:
-        return yaml.safe_load(f)
+        doc = yaml.safe_load(f)
+    # 软删除的规则不参与判定
+    doc["rules"] = active_rules(doc)
+    return doc
 
 
 def select_rules(rules):

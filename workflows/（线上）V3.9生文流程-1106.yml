@@ -1,5 +1,7 @@
 app:
-  description: '50、模型从doubao切到v4.1flash
+  description: '51、冠珠恢复key
+
+    50、模型从doubao切到v4.1flash
 
     49、增加vivo定制；1104 11:05
 
@@ -23,7 +25,7 @@ app:
   icon: 🤖
   icon_background: '#FFEAD5'
   mode: workflow
-  name: （线上）V3.9生文流程-1106
+  name: （线上）V3.9生文流程-1118
   use_icon_as_answer_icon: false
 kind: app
 version: 0.1.3
@@ -2742,11 +2744,11 @@ workflow:
       height: 428
       id: '1776938309919'
       position:
-        x: 10088
-        y: 1053.1416016923026
+        x: 9881.167738558053
+        y: 1074
       positionAbsolute:
-        x: 10088
-        y: 1053.1416016923026
+        x: 9881.167738558053
+        y: 1074
       selected: false
       sourcePosition: right
       targetPosition: left
@@ -2767,8 +2769,8 @@ workflow:
         x: 40
         y: 60
       positionAbsolute:
-        x: 10128
-        y: 1113.1416016923026
+        x: 9921.167738558053
+        y: 1134
       selectable: false
       selected: false
       sourcePosition: right
@@ -4415,11 +4417,11 @@ workflow:
       height: 116
       id: '1776995423990'
       position:
-        x: 1550
-        y: 830
+        x: 1272.4416911104279
+        y: 843.2170623280748
       positionAbsolute:
-        x: 1550
-        y: 830
+        x: 1272.4416911104279
+        y: 843.2170623280748
       selected: false
       sourcePosition: right
       targetPosition: left
@@ -4635,6 +4637,13 @@ workflow:
             variable_selector:
             - '1776153503356'
             - company_name
+          - comparison_operator: contains
+            id: 7614470f-0eac-4b86-a866-2ca7d17f2492
+            value: 新明珠集团股份有限公司
+            varType: string
+            variable_selector:
+            - '1776153503356'
+            - company_name
           id: e1b964e5-7ad7-421b-8d39-4ea6bedfef2a
           logical_operator: or
         - case_id: 4b4603c0-8fe0-4a5f-bd76-b9c6927af9f1
@@ -4764,7 +4773,7 @@ workflow:
         selected: false
         title: 条件分支
         type: if-else
-      height: 1124
+      height: 1150
       id: '1778893342210'
       position:
         x: 164.8031535812588
@@ -7839,10 +7848,10 @@ workflow:
       height: 98
       id: '1779793448584'
       position:
-        x: 7960
+        x: 7958
         y: 1117
       positionAbsolute:
-        x: 7960
+        x: 7958
         y: 1117
       selected: false
       sourcePosition: right
@@ -10264,8 +10273,8 @@ workflow:
         x: 1537.6946230797275
         y: 91.92044352574317
       positionAbsolute:
-        x: 11625.694623079728
-        y: 1145.0620452180458
+        x: 11418.86236163778
+        y: 1165.9204435257432
       selected: false
       sourcePosition: right
       targetPosition: left
@@ -10775,8 +10784,8 @@ workflow:
         x: 339.50172279845356
         y: 95.04277037716997
       positionAbsolute:
-        x: 10427.501722798454
-        y: 1148.1843720694726
+        x: 10220.669461356507
+        y: 1169.04277037717
       selected: false
       sourcePosition: right
       targetPosition: left
@@ -11150,8 +11159,8 @@ workflow:
         x: 978.8844387114605
         y: 93.68352664099768
       positionAbsolute:
-        x: 11066.88443871146
-        y: 1146.8251283333002
+        x: 10860.052177269514
+        y: 1167.6835266409976
       selected: false
       sourcePosition: right
       targetPosition: left
@@ -16027,10 +16036,10 @@ workflow:
       parentId: '1783100000003'
       position:
         x: 92.35684637868326
-        y: 68
+        y: 67
       positionAbsolute:
         x: 5118.356846378683
-        y: 898
+        y: 897
       selectable: true
       selected: false
       sourcePosition: right
@@ -21042,10 +21051,10 @@ workflow:
       id: '17884176471300'
       position:
         x: 942
-        y: 2843
+        y: 2841.862440875785
       positionAbsolute:
         x: 942
-        y: 2843
+        y: 2841.862440875785
       selected: false
       sourcePosition: right
       targetPosition: left
@@ -22564,7 +22573,38 @@ workflow:
       type: custom
       width: 244
     - data:
-        "code": "import json\nimport re\n\n\ndef main(keyword_pack=None, company_name=None, industry=None, company_intro=None,\n         core_qualifications=None, awards=None, advantages=None, product_info=None,\n         ent_dataset_id=None, prod_dataset_id=None, task_name=None, task_description=None,\n         publish_media=None, article_type=None, article_count=None, article_style=None):\n\n    def sanitize(value):\n        \"\"\"清洗 JSON 非法控制字符：移除或替换为空格\"\"\"\n        if value is None:\n            return \"\"\n        if not isinstance(value, str):\n            value = str(value)\n        # 1. \\r\\n → 空格（Windows 换行）\n        value = value.replace(\"\\r\\n\", \" \")\n        # 2. \\r → 空格（旧 Mac 换行）\n        value = value.replace(\"\\r\", \" \")\n        # 3. \\n → 空格（Unix 换行）\n        value = value.replace(\"\\n\", \" \")\n        # 4. \\t → 空格\n        value = value.replace(\"\\t\", \" \")\n        # 5. 移除其余 ASCII 控制字符 (0x00-0x08, 0x0B, 0x0C, 0x0E-0x1F, 0x7F)\n        value = re.sub(r\"[\\x00-\\x08\\x0b\\x0c\\x0e-\\x1f\\x7f]\", \"\", value)\n        # 6. 压缩连续空格\n        value = re.sub(r\" +\", \" \", value).strip()\n        return value\n\n    cleaned = {\n        \"keyword_pack\": sanitize(keyword_pack),\n        \"company_name\": sanitize(company_name),\n        \"industry\": sanitize(industry),\n        \"company_intro\": sanitize(company_intro),\n        \"core_qualifications\": sanitize(core_qualifications),\n        \"awards\": sanitize(awards),\n        \"advantages\": sanitize(advantages),\n        \"product_info\": sanitize(product_info),\n        \"ent_dataset_id\": sanitize(ent_dataset_id),\n        \"prod_dataset_id\": sanitize(prod_dataset_id),\n        \"task_name\": sanitize(task_name),\n        \"task_description\": sanitize(task_description),\n        \"publish_media\": sanitize(publish_media),\n        \"article_type\": sanitize(article_type),\n        \"article_count\": sanitize(article_count),\n        \"article_style\": sanitize(article_style),\n    }\n\n    # 请求体在这里用 json.dumps 生成，不再交给 HTTP 节点做字符串内插。\n    # 原写法在 body 里直接嵌 {{变量}}，长文本含换行或引号时会把 JSON 拼坏。\n    request_body = json.dumps({\n        \"inputs\": cleaned,\n        \"response_mode\": \"blocking\",\n        \"user\": \"v3-caller\",\n    }, ensure_ascii=False)\n\n    out = dict(cleaned)\n    out[\"request_body\"] = request_body\n    return out"
+        code: "import json\nimport re\n\n\ndef main(keyword_pack=None, company_name=None,\
+          \ industry=None, company_intro=None,\n         core_qualifications=None,\
+          \ awards=None, advantages=None, product_info=None,\n         ent_dataset_id=None,\
+          \ prod_dataset_id=None, task_name=None, task_description=None,\n       \
+          \  publish_media=None, article_type=None, article_count=None, article_style=None):\n\
+          \n    def sanitize(value):\n        \"\"\"清洗 JSON 非法控制字符：移除或替换为空格\"\"\"\n\
+          \        if value is None:\n            return \"\"\n        if not isinstance(value,\
+          \ str):\n            value = str(value)\n        # 1. \\r\\n → 空格（Windows\
+          \ 换行）\n        value = value.replace(\"\\r\\n\", \" \")\n        # 2. \\\
+          r → 空格（旧 Mac 换行）\n        value = value.replace(\"\\r\", \" \")\n      \
+          \  # 3. \\n → 空格（Unix 换行）\n        value = value.replace(\"\\n\", \" \"\
+          )\n        # 4. \\t → 空格\n        value = value.replace(\"\\t\", \" \")\n\
+          \        # 5. 移除其余 ASCII 控制字符 (0x00-0x08, 0x0B, 0x0C, 0x0E-0x1F, 0x7F)\n\
+          \        value = re.sub(r\"[\\x00-\\x08\\x0b\\x0c\\x0e-\\x1f\\x7f]\", \"\
+          \", value)\n        # 6. 压缩连续空格\n        value = re.sub(r\" +\", \" \",\
+          \ value).strip()\n        return value\n\n    cleaned = {\n        \"keyword_pack\"\
+          : sanitize(keyword_pack),\n        \"company_name\": sanitize(company_name),\n\
+          \        \"industry\": sanitize(industry),\n        \"company_intro\": sanitize(company_intro),\n\
+          \        \"core_qualifications\": sanitize(core_qualifications),\n     \
+          \   \"awards\": sanitize(awards),\n        \"advantages\": sanitize(advantages),\n\
+          \        \"product_info\": sanitize(product_info),\n        \"ent_dataset_id\"\
+          : sanitize(ent_dataset_id),\n        \"prod_dataset_id\": sanitize(prod_dataset_id),\n\
+          \        \"task_name\": sanitize(task_name),\n        \"task_description\"\
+          : sanitize(task_description),\n        \"publish_media\": sanitize(publish_media),\n\
+          \        \"article_type\": sanitize(article_type),\n        \"article_count\"\
+          : sanitize(article_count),\n        \"article_style\": sanitize(article_style),\n\
+          \    }\n\n    # 请求体在这里用 json.dumps 生成，不再交给 HTTP 节点做字符串内插。\n    # 原写法在 body\
+          \ 里直接嵌 {{变量}}，长文本含换行或引号时会把 JSON 拼坏。\n    request_body = json.dumps({\n \
+          \       \"inputs\": cleaned,\n        \"response_mode\": \"blocking\",\n\
+          \        \"user\": \"v3-caller\",\n    }, ensure_ascii=False)\n\n    out\
+          \ = dict(cleaned)\n    out[\"request_body\"] = request_body\n    return\
+          \ out"
         code_language: python3
         desc: ''
         outputs:
@@ -22709,7 +22749,7 @@ workflow:
         body:
           data:
           - type: text
-            value: "{{#17936801011200.request_body#}}"
+            value: '{{#17936801011200.request_body#}}'
           type: json
         desc: 原为workflow-as-tool节点，需手动改为HTTP调用对应工作流API
         headers: 'Content-Type:application/json
@@ -22854,7 +22894,7 @@ workflow:
           - '17936801011212'
           - article_tags
           variable: article_tags
-        selected: true
+        selected: false
         title: '前海人寿结束 '
         type: end
       height: 168
@@ -22865,7 +22905,7 @@ workflow:
       positionAbsolute:
         x: 1539.3339472763375
         y: 329.1574058484359
-      selected: true
+      selected: false
       sourcePosition: right
       targetPosition: left
       type: custom
@@ -23217,34 +23257,34 @@ workflow:
       type: custom
       width: 244
     - data:
-        code: "import re\n\ndef main(\n    keyword_pack: str,\n    company_name: str,\n\
-          \    industry: str,\n    company_intro: str,\n    core_qualifications: str,\n\
-          \    awards: str,\n    advantages: str,\n    product_info: str,\n    ent_dataset_id:\
-          \ str,\n    prod_dataset_id: str,\n    task_name: str,\n    task_description:\
-          \ str,\n    publish_media: str,\n    article_type: str,\n    article_count:\
-          \ str,\n    article_style: str,\n) -> dict:\n\n    def sanitize(value):\n\
-          \        \"\"\"清洗 JSON 非法控制字符：移除或替换为空格\"\"\"\n        if value is None:\n\
-          \            return \"\"\n        if not isinstance(value, str):\n     \
-          \       value = str(value)\n        # 1. \\r\\n → 空格（Windows 换行）\n     \
-          \   value = value.replace(\"\\r\\n\", \" \")\n        # 2. \\r → 空格（旧 Mac\
-          \ 换行）\n        value = value.replace(\"\\r\", \" \")\n        # 3. \\n →\
-          \ 空格（Unix 换行）\n        value = value.replace(\"\\n\", \" \")\n        #\
-          \ 4. \\t → 空格\n        value = value.replace(\"\\t\", \" \")\n        #\
-          \ 5. 移除其余 ASCII 控制字符 (0x00-0x08, 0x0B, 0x0C, 0x0E-0x1F, 0x7F)\n        value\
-          \ = re.sub(r\"[\\x00-\\x08\\x0b\\x0c\\x0e-\\x1f\\x7f]\", \"\", value)\n\
-          \        # 6. 压缩连续空格\n        value = re.sub(r\" +\", \" \", value).strip()\n\
-          \        return value\n\n    return {\n        \"keyword_pack\": sanitize(keyword_pack),\n\
-          \        \"company_name\": sanitize(company_name),\n        \"industry\"\
-          : sanitize(industry),\n        \"company_intro\": sanitize(company_intro),\n\
-          \        \"core_qualifications\": sanitize(core_qualifications),\n     \
-          \   \"awards\": sanitize(awards),\n        \"advantages\": sanitize(advantages),\n\
-          \        \"product_info\": sanitize(product_info),\n        \"ent_dataset_id\"\
-          : sanitize(ent_dataset_id),\n        \"prod_dataset_id\": sanitize(prod_dataset_id),\n\
-          \        \"task_name\": sanitize(task_name),\n        \"task_description\"\
-          : sanitize(task_description),\n        \"publish_media\": sanitize(publish_media),\n\
-          \        \"article_type\": sanitize(article_type),\n        \"article_count\"\
-          : sanitize(article_count),\n        \"article_style\": sanitize(article_style),\n\
-          \    }"
+        code: "import json\nimport re\n\n\ndef main(\n    keyword_pack: str,\n    company_name: str\
+          ,\n    industry: str,\n    company_intro: str,\n    core_qualifications: str,\n    a\
+          wards: str,\n    advantages: str,\n    product_info: str,\n    ent_dataset_id: str,\
+          \n    prod_dataset_id: str,\n    task_name: str,\n    task_description: str,\n    pu\
+          blish_media: str,\n    article_type: str,\n    article_count: str,\n    article_styl\
+          e: str,\n    custom_writing_preference: str = \"\",\n) -> dict:\n\n    def sanitize(\
+          value):\n        \"\"\"清洗不可见字符并压缩空白；引号与反斜杠交由 json.dumps 转义。\"\"\"\n        if value \
+          is None:\n            return \"\"\n        if not isinstance(value, str):\n         \
+          \   value = str(value)\n        value = value.replace(\"\\r\\n\", \" \").replace(\"\\\
+          r\", \" \")\n        value = value.replace(\"\\n\", \" \").replace(\"\\t\", \" \")\n\
+          \        value = \"\".join(ch for ch in value if ord(ch) >= 32 and ord(ch) != 127)\n \
+          \       return re.sub(r\" +\", \" \", value).strip()\n\n    cleaned = {\n        \"ke\
+          yword_pack\": sanitize(keyword_pack),\n        \"company_name\": sanitize(company_na\
+          me),\n        \"industry\": sanitize(industry),\n        \"company_intro\": sanitize\
+          (company_intro),\n        \"core_qualifications\": sanitize(core_qualifications),\n \
+          \       \"awards\": sanitize(awards),\n        \"advantages\": sanitize(advantages),\
+          \n        \"product_info\": sanitize(product_info),\n        \"ent_dataset_id\": san\
+          itize(ent_dataset_id),\n        \"prod_dataset_id\": sanitize(prod_dataset_id),\n   \
+          \     \"task_name\": sanitize(task_name),\n        \"task_description\": sanitize(tas\
+          k_description),\n        \"publish_media\": sanitize(publish_media),\n        \"arti\
+          cle_type\": sanitize(article_type),\n        \"article_count\": sanitize(article_cou\
+          nt),\n        \"article_style\": sanitize(article_style),\n    }\n\n    payload_inpu\
+          ts = dict(cleaned)\n    payload_inputs[\"custom_writing_preference\"] = sanitize(cus\
+          tom_writing_preference)\n\n    # 请求体交给 json.dumps 生成，避免正文中的换行/双引号/反斜杠把 JSON 拼坏。\n   \
+          \ request_body = json.dumps({\n        \"inputs\": payload_inputs,\n        \"respons\
+          e_mode\": \"blocking\",\n        \"user\": \"v3-caller\",\n    }, ensure_ascii=False\
+          )\n\n    out = dict(cleaned)\n    out[\"request_body\"] = request_body\n    return o\
+          ut"
         code_language: python3
         desc: ''
         outputs:
@@ -23288,6 +23328,9 @@ workflow:
             children: null
             type: string
           publish_media:
+            children: null
+            type: string
+          request_body:
             children: null
             type: string
           task_description:
@@ -23364,6 +23407,10 @@ workflow:
           - '1776153503356'
           - article_style
           variable: article_style
+        - value_selector:
+          - '1776153503356'
+          - custom_writing_preference
+          variable: custom_writing_preference
       height: 54
       id: '17937873303850'
       position:
@@ -23386,22 +23433,7 @@ workflow:
         body:
           data:
           - type: text
-            value: "{\n  \"inputs\": {\n    \"keyword_pack\": \"{{#1776153503356.keyword_pack#}}\"\
-              ,\n    \"company_name\": \"{{#1776153503356.company_name#}}\",\n   \
-              \ \"industry\": \"{{#1776153503356.industry#}}\",\n    \"company_intro\"\
-              : \"{{#1776153503356.company_intro#}}\",\n    \"core_qualifications\"\
-              : \"{{#1776153503356.core_qualifications#}}\",\n    \"awards\": \"{{#1776153503356.awards#}}\"\
-              ,\n    \"advantages\": \"{{#1776153503356.advantages#}}\",\n    \"product_info\"\
-              : \"{{#1776153503356.product_info#}}\",\n    \"ent_dataset_id\": \"\
-              {{#1776153503356.ent_dataset_id#}}\",\n    \"prod_dataset_id\": \"{{#1776153503356.prod_dataset_id#}}\"\
-              ,\n    \"task_name\": \"{{#1776153503356.task_name#}}\",\n    \"task_description\"\
-              : \"{{#1776153503356.task_description#}}\",\n    \"publish_media\":\
-              \ \"{{#1776153503356.publish_media#}}\",\n    \"article_type\": \"{{#1776153503356.article_type#}}\"\
-              ,\n    \"article_count\": \"{{#1776153503356.article_count#}}\",\n \
-              \   \"article_style\": \"{{#1776153503356.article_style#}}\",\n    \"\
-              custom_writing_preference\": \"{{#1776153503356.custom_writing_preference#}}\"\
-              \n  },\n  \"response_mode\": \"blocking\",\n  \"user\": \"v3-caller\"\
-              \n}"
+            value: '{{#17937873303850.request_body#}}'
           type: json
         desc: 原为workflow-as-tool节点，需手动改为HTTP调用对应工作流API
         headers: 'Content-Type:application/json
@@ -23563,34 +23595,33 @@ workflow:
       type: custom
       width: 244
     - data:
-        code: "import re\n\ndef main(\n    keyword_pack: str,\n    company_name: str,\n\
-          \    industry: str,\n    company_intro: str,\n    core_qualifications: str,\n\
-          \    awards: str,\n    advantages: str,\n    product_info: str,\n    ent_dataset_id:\
-          \ str,\n    prod_dataset_id: str,\n    task_name: str,\n    task_description:\
-          \ str,\n    publish_media: str,\n    article_type: str,\n    article_count:\
-          \ str,\n    article_style: str,\n) -> dict:\n\n    def sanitize(value):\n\
-          \        \"\"\"清洗 JSON 非法控制字符：移除或替换为空格\"\"\"\n        if value is None:\n\
-          \            return \"\"\n        if not isinstance(value, str):\n     \
-          \       value = str(value)\n        # 1. \\r\\n → 空格（Windows 换行）\n     \
-          \   value = value.replace(\"\\r\\n\", \" \")\n        # 2. \\r → 空格（旧 Mac\
-          \ 换行）\n        value = value.replace(\"\\r\", \" \")\n        # 3. \\n →\
-          \ 空格（Unix 换行）\n        value = value.replace(\"\\n\", \" \")\n        #\
-          \ 4. \\t → 空格\n        value = value.replace(\"\\t\", \" \")\n        #\
-          \ 5. 移除其余 ASCII 控制字符 (0x00-0x08, 0x0B, 0x0C, 0x0E-0x1F, 0x7F)\n        value\
-          \ = re.sub(r\"[\\x00-\\x08\\x0b\\x0c\\x0e-\\x1f\\x7f]\", \"\", value)\n\
-          \        # 6. 压缩连续空格\n        value = re.sub(r\" +\", \" \", value).strip()\n\
-          \        return value\n\n    return {\n        \"keyword_pack\": sanitize(keyword_pack),\n\
-          \        \"company_name\": sanitize(company_name),\n        \"industry\"\
-          : sanitize(industry),\n        \"company_intro\": sanitize(company_intro),\n\
-          \        \"core_qualifications\": sanitize(core_qualifications),\n     \
-          \   \"awards\": sanitize(awards),\n        \"advantages\": sanitize(advantages),\n\
-          \        \"product_info\": sanitize(product_info),\n        \"ent_dataset_id\"\
-          : sanitize(ent_dataset_id),\n        \"prod_dataset_id\": sanitize(prod_dataset_id),\n\
-          \        \"task_name\": sanitize(task_name),\n        \"task_description\"\
-          : sanitize(task_description),\n        \"publish_media\": sanitize(publish_media),\n\
-          \        \"article_type\": sanitize(article_type),\n        \"article_count\"\
-          : sanitize(article_count),\n        \"article_style\": sanitize(article_style),\n\
-          \    }"
+        code: "import json\nimport re\n\n\ndef main(\n    keyword_pack: str,\n    company_name: str\
+          ,\n    industry: str,\n    company_intro: str,\n    core_qualifications: str,\n    a\
+          wards: str,\n    advantages: str,\n    product_info: str,\n    ent_dataset_id: str,\
+          \n    prod_dataset_id: str,\n    task_name: str,\n    task_description: str,\n    pu\
+          blish_media: str,\n    article_type: str,\n    article_count: str,\n    article_styl\
+          e: str,\n    custom_writing_preference: str = \"\",\n) -> dict:\n\n    def sanitize(\
+          value):\n        \"\"\"清洗不可见字符并压缩空白；引号与反斜杠交由 json.dumps 转义。\"\"\"\n        if value \
+          is None:\n            return \"\"\n        if not isinstance(value, str):\n         \
+          \   value = str(value)\n        value = value.replace(\"\\r\\n\", \" \").replace(\"\\\
+          r\", \" \")\n        value = value.replace(\"\\n\", \" \").replace(\"\\t\", \" \")\n\
+          \        value = \"\".join(ch for ch in value if ord(ch) >= 32 and ord(ch) != 127)\n \
+          \       return re.sub(r\" +\", \" \", value).strip()\n\n    cleaned = {\n        \"ke\
+          yword_pack\": sanitize(keyword_pack),\n        \"company_name\": sanitize(company_na\
+          me),\n        \"industry\": sanitize(industry),\n        \"company_intro\": sanitize\
+          (company_intro),\n        \"core_qualifications\": sanitize(core_qualifications),\n \
+          \       \"awards\": sanitize(awards),\n        \"advantages\": sanitize(advantages),\
+          \n        \"product_info\": sanitize(product_info),\n        \"ent_dataset_id\": san\
+          itize(ent_dataset_id),\n        \"prod_dataset_id\": sanitize(prod_dataset_id),\n   \
+          \     \"task_name\": sanitize(task_name),\n        \"task_description\": sanitize(tas\
+          k_description),\n        \"publish_media\": sanitize(publish_media),\n        \"arti\
+          cle_type\": sanitize(article_type),\n        \"article_count\": sanitize(article_cou\
+          nt),\n        \"article_style\": sanitize(article_style),\n    }\n\n    payload_inpu\
+          ts = dict(cleaned)\n    payload_inputs[\"customer_rules\"] = sanitize(custom_writing\
+          _preference)\n\n    # 请求体交给 json.dumps 生成，避免正文中的换行/双引号/反斜杠把 JSON 拼坏。\n    request_bo\
+          dy = json.dumps({\n        \"inputs\": payload_inputs,\n        \"response_mode\": \
+          \"blocking\",\n        \"user\": \"v3-caller\",\n    }, ensure_ascii=False)\n\n    o\
+          ut = dict(cleaned)\n    out[\"request_body\"] = request_body\n    return out"
         code_language: python3
         desc: ''
         outputs:
@@ -23634,6 +23665,9 @@ workflow:
             children: null
             type: string
           publish_media:
+            children: null
+            type: string
+          request_body:
             children: null
             type: string
           task_description:
@@ -23710,6 +23744,10 @@ workflow:
           - '1776153503356'
           - article_style
           variable: article_style
+        - value_selector:
+          - '1776153503356'
+          - custom_writing_preference
+          variable: custom_writing_preference
       height: 54
       id: '17938756236450'
       position:
@@ -23732,22 +23770,7 @@ workflow:
         body:
           data:
           - type: text
-            value: "{\n  \"inputs\": {\n    \"keyword_pack\": \"{{#1776153503356.keyword_pack#}}\"\
-              ,\n    \"company_name\": \"{{#1776153503356.company_name#}}\",\n   \
-              \ \"industry\": \"{{#1776153503356.industry#}}\",\n    \"company_intro\"\
-              : \"{{#1776153503356.company_intro#}}\",\n    \"core_qualifications\"\
-              : \"{{#1776153503356.core_qualifications#}}\",\n    \"awards\": \"{{#1776153503356.awards#}}\"\
-              ,\n    \"advantages\": \"{{#1776153503356.advantages#}}\",\n    \"product_info\"\
-              : \"{{#1776153503356.product_info#}}\",\n    \"ent_dataset_id\": \"\
-              {{#1776153503356.ent_dataset_id#}}\",\n    \"prod_dataset_id\": \"{{#1776153503356.prod_dataset_id#}}\"\
-              ,\n    \"task_name\": \"{{#1776153503356.task_name#}}\",\n    \"task_description\"\
-              : \"{{#1776153503356.task_description#}}\",\n    \"publish_media\":\
-              \ \"{{#1776153503356.publish_media#}}\",\n    \"article_type\": \"{{#1776153503356.article_type#}}\"\
-              ,\n    \"article_count\": \"{{#1776153503356.article_count#}}\",\n \
-              \   \"article_style\": \"{{#1776153503356.article_style#}}\",\n    \"\
-              custom_writing_preference\": \"{{#1776153503356.custom_writing_preference#}}\"\
-              \n  },\n  \"response_mode\": \"blocking\",\n  \"user\": \"v3-caller\"\
-              \n}"
+            value: '{{#17938756236450.request_body#}}'
           type: json
         desc: 原为workflow-as-tool节点，需手动改为HTTP调用对应工作流API
         headers: 'Content-Type:application/json
@@ -23775,7 +23798,7 @@ workflow:
       positionAbsolute:
         x: 942
         y: -68.63480896559936
-      selected: false
+      selected: true
       sourcePosition: right
       targetPosition: left
       type: custom
@@ -23909,6 +23932,6 @@ workflow:
       type: custom
       width: 244
     viewport:
-      x: -624.5562619685713
-      y: -77.84817425459636
-      zoom: 0.8779824933745433
+      x: -166.5281332090134
+      y: 217.3658775024392
+      zoom: 0.7145044126428797
