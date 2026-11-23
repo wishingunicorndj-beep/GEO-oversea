@@ -1147,9 +1147,41 @@ workflow:
           from typing import Any
 
 
-          MAIN_CLASS = "ds-assistant-message-main-content"
-          THINK_CLASS = "ds-think-content"
+          PLATFORM_RULES = {
+              "deepseek": {
+                  "main_classes": {"ds-assistant-message-main-content"},
+                  "ignored_classes": {"ds-think-content"},
+                  "require_assistant_role": False,
+              },
+              "yuanbao": {
+                  "main_classes": {"hyc-content-md"},
+                  "ignored_classes": {"ds-think-content", "think", "refs"},
+                  "require_assistant_role": False,
+              },
+              "zhipu": {
+                  "main_classes": {"markdown-body"},
+                  "ignored_classes": {
+                      "thinking-group", "thinking-body", "markdown-table-copy",
+                      "search-source-placeholder", "toolbar", "zoom-control",
+                      "preview-pane", "line-number",
+                  },
+                  "require_assistant_role": True,
+              },
+              "doubao": {
+                  "main_classes": {"md-box-root"},
+                  "main_attributes": {"data-testid": "message_text_content"},
+                  "ignored_classes": set(),
+                  "ignored_attributes": {
+                      "data-thinking-box-tool-call": {"true"},
+                      "data-plugin-identifier": {"block_type:10025 | search_query_result_block.search_type:1"},
+                      "data-testid": {"suggest_message_list", "message_action_bar", "carousel-item"},
+                  },
+                  "require_assistant_role": True,
+              },
+          }
+          PENDING_PLATFORMS = {"qianwen", "yiyan", "kimi"}
           IGNORED_TAGS = {"script", "style", "svg", "noscript", "template"}
+          VOID_TAGS = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"}
           BLOCK_TAGS = {
               "article", "blockquote", "div", "header", "hr", "main", "p",
               "pre", "section", "table", "tbody", "td", "tfoot", "th", "thead",
@@ -1163,8 +1195,10 @@ workflow:
 
 
           class MarkdownAnswerParser(HTMLParser):
-              def __init__(self) -> None:
+              def __init__(self, model_id: str) -> None:
                   super().__init__(convert_charrefs=True)
+                  self.model_id = model_id
+                  self.rules = PLATFORM_RULES[model_id]
                   self.stack = []
                   self.main_depth = 0
                   self.ignore_depth = 0
@@ -1209,9 +1243,27 @@ workflow:
 
               def handle_starttag(self, tag: str, attrs: Any) -> None:
                   tokens = class_tokens(attrs)
-                  is_main = MAIN_CLASS in tokens
-                  is_ignored = self.ignore_depth > 0 or tag in IGNORED_TAGS or THINK_CLASS in tokens
-                  self.stack.append((tag, is_main, is_ignored))
+                  attributes = dict(attrs)
+                  role = attributes.get("data-message-role") or (self.stack[-1][3] if self.stack else "")
+                  is_ignored = (
+                      self.ignore_depth > 0 or tag in IGNORED_TAGS
+                      or bool(tokens & self.rules["ignored_classes"])
+                      or any(attributes.get(name) in values for name, values in self.rules.get("ignored_attributes", {}).items())
+                      or role in {"user", "system"}
+                      or (self.model_id == "yuanbao" and tag == "sup" and "cite" in tokens)
+                  )
+                  is_main = (
+                      not is_ignored and bool(tokens & self.rules["main_classes"])
+                      and all(attributes.get(name) == value for name, value in self.rules.get("main_attributes", {}).items())
+                      and (not self.rules["require_assistant_role"] or role == "assistant")
+                  )
+                  if tag not in VOID_TAGS:
+                      self.stack.append((tag, is_main, is_ignored, role))
+
+                  if is_ignored:
+                      if tag not in VOID_TAGS:
+                          self.ignore_depth += 1
+                      return
 
                   if is_main:
                       self.flush()
@@ -1219,9 +1271,7 @@ workflow:
                       self.found_main += 1
                       return
 
-                  if is_ignored or not self.main_depth:
-                      if is_ignored:
-                          self.ignore_depth += 1
+                  if not self.main_depth:
                       return
 
                   if tag == "table":
@@ -1239,7 +1289,10 @@ workflow:
                           self.current_row_has_header = self.current_row_has_header or tag == "th"
                           return
                   if self.table_depth and self.cell_depth:
-                      self.cell_depth += 1
+                      if tag == "br":
+                          self.current_cell.append(" ")
+                      if tag not in VOID_TAGS:
+                          self.cell_depth += 1
                       return
 
                   if tag in {"h1", "h2", "h3", "h4", "h5", "h6"}:
@@ -1273,9 +1326,6 @@ workflow:
                       self.pre_depth += 1
 
               def handle_endtag(self, tag: str) -> None:
-                  if tag == "pre" and self.pre_depth:
-                      self.pre_depth -= 1
-
                   entry_index = None
                   for index in range(len(self.stack) - 1, -1, -1):
                       if self.stack[index][0] == tag:
@@ -1283,8 +1333,13 @@ workflow:
                           break
                   if entry_index is None:
                       return
-                  entry = self.stack[entry_index]
+                  entries = self.stack[entry_index:]
                   del self.stack[entry_index:]
+                  for entry in reversed(entries):
+                      self.close_entry(entry)
+
+              def close_entry(self, entry: Any) -> None:
+                  tag = entry[0]
 
                   if entry[2]:
                       self.ignore_depth = max(self.ignore_depth - 1, 0)
@@ -1295,6 +1350,8 @@ workflow:
                       return
                   if not self.main_depth:
                       return
+                  if tag == "pre" and self.pre_depth:
+                      self.pre_depth -= 1
 
                   if self.table_depth:
                       if self.cell_depth:
@@ -1340,12 +1397,15 @@ workflow:
 
               def handle_startendtag(self, tag: str, attrs: Any) -> None:
                   self.handle_starttag(tag, attrs)
-                  self.handle_endtag(tag)
+                  if tag not in VOID_TAGS:
+                      self.handle_endtag(tag)
 
               def result(self) -> str:
                   self.flush()
                   if not self.found_main:
-                      raise ValueError("HTML 中未找到 ds-assistant-message-main-content 回答区域")
+                      selectors = " / ".join(sorted(self.rules["main_classes"]))
+                      selectors += "".join(f'[{name}="{value}"]' for name, value in self.rules.get("main_attributes", {}).items())
+                      raise ValueError(f"model_id={self.model_id}：HTML 中未找到匹配的回答区域（{selectors}），不跨平台回退")
                   value = "\n\n".join(self.blocks)
                   value = re.sub(r"[ \t]+\n", "\n", value)
                   value = re.sub(
@@ -1396,9 +1456,16 @@ workflow:
               raise ValueError("answer_html_b64 解压后不是可识别的 HTML")
 
 
-          def main(answer_html_b64: Any) -> dict:
+          def main(answer_html_b64: Any, model_id: Any) -> dict:
+              platform = str(model_id or "").strip().lower()
+              if not platform:
+                  raise ValueError("model_id 为空，无法选择平台适配规则")
+              if platform in PENDING_PLATFORMS:
+                  raise ValueError(f"model_id={platform} 尚未适配，请提供该平台的 HTML 样本")
+              if platform not in PLATFORM_RULES:
+                  raise ValueError(f"不支持的 model_id：{platform}")
               html = decode_html(answer_html_b64)
-              parser = MarkdownAnswerParser()
+              parser = MarkdownAnswerParser(platform)
               parser.feed(html)
               parser.close()
               answer_raw_new = parser.result()
@@ -1408,7 +1475,7 @@ workflow:
                   "parse_error": "",
               }
         code_language: python3
-        desc: 从 answer_html_b64 解码、解压并提取回答区域，过滤思考内容后生成 Markdown；解析失败时显式报错。
+        desc: 读取现有 model_id，按平台规则提取回答并排除思考内容；共用解码与 Markdown 转换，不跨平台、不回退旧 answer_raw，未适配平台显式报错。
         outputs:
           answer_raw_new:
             children: null
@@ -1427,6 +1494,10 @@ workflow:
           - '1766746558986'
           - answer_html_b64
           variable: answer_html_b64
+        - value_selector:
+          - '1766746558986'
+          - model_id
+          variable: model_id
       height: 130
       id: '1766746558988'
       position:
