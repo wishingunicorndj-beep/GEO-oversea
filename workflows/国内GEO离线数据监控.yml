@@ -107,13 +107,25 @@ workflow:
     edges:
     - data:
         isInIteration: false
-        sourceType: start
+        sourceType: code
         targetType: if-else
       id: e01-route
       selected: false
-      source: '1766746558986'
+      source: '1766746558988'
       sourceHandle: source
       target: '1766746558987'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: start
+        targetType: code
+      id: e01-normalize
+      selected: false
+      source: '1766746558986'
+      sourceHandle: source
+      target: '1766746558988'
       targetHandle: target
       type: custom
       zIndex: 0
@@ -1007,7 +1019,7 @@ workflow:
         - label: 模型回答内容
           max_length: null
           options: []
-          required: true
+          required: false
           type: paragraph
           variable: answer_raw
         - label: task_id
@@ -1103,7 +1115,7 @@ workflow:
         - label: 回答html压缩内容
           max_length: null
           options: []
-          required: false
+          required: true
           type: text-input
           variable: answer_html_b64
         - label: answer_html
@@ -1121,6 +1133,309 @@ workflow:
         x: -36.2568556486807
         y: 479.64888928735036
       selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: |
+          import base64
+          import gzip
+          import re
+          import zlib
+          from html.parser import HTMLParser
+          from typing import Any
+
+
+          MAIN_CLASS = "ds-assistant-message-main-content"
+          THINK_CLASS = "ds-think-content"
+          IGNORED_TAGS = {"script", "style", "svg", "noscript", "template"}
+          BLOCK_TAGS = {
+              "article", "blockquote", "div", "header", "hr", "main", "p",
+              "pre", "section", "table", "tbody", "td", "tfoot", "th", "thead",
+              "tr", "ul", "ol",
+          }
+
+
+          def class_tokens(attrs: Any) -> set:
+              value = dict(attrs).get("class", "") or ""
+              return set(str(value).split())
+
+
+          class MarkdownAnswerParser(HTMLParser):
+              def __init__(self) -> None:
+                  super().__init__(convert_charrefs=True)
+                  self.stack = []
+                  self.main_depth = 0
+                  self.ignore_depth = 0
+                  self.found_main = 0
+                  self.blocks = []
+                  self.current = []
+                  self.list_stack = []
+                  self.li_depth = 0
+                  self.pre_depth = 0
+                  self.table_depth = 0
+                  self.cell_depth = 0
+                  self.current_row = []
+                  self.current_cell = []
+                  self.current_row_has_header = False
+                  self.table_lines = []
+
+              def active(self) -> bool:
+                  return self.main_depth > 0 and self.ignore_depth == 0
+
+              def flush(self) -> None:
+                  value = "".join(self.current).strip()
+                  if value:
+                      self.blocks.append(value)
+                  self.current = []
+
+              def add(self, value: str) -> None:
+                  if value:
+                      self.current.append(value)
+
+              def flush_table_row(self) -> None:
+                  if not self.current_row:
+                      return
+                  cells = [re.sub(r"\s+", " ", str(cell or "")).strip() for cell in self.current_row]
+                  cells = [cell for cell in cells if cell]
+                  if cells:
+                      cells[0] = "**" + cells[0].strip("*") + "**"
+                      self.table_lines.append("| " + " | ".join(cells) + " |")
+                      if self.current_row_has_header and len(self.table_lines) == 1:
+                          self.table_lines.append("| " + " | ".join("---" for _ in cells) + " |")
+                  self.current_row = []
+                  self.current_row_has_header = False
+
+              def handle_starttag(self, tag: str, attrs: Any) -> None:
+                  tokens = class_tokens(attrs)
+                  is_main = MAIN_CLASS in tokens
+                  is_ignored = self.ignore_depth > 0 or tag in IGNORED_TAGS or THINK_CLASS in tokens
+                  self.stack.append((tag, is_main, is_ignored))
+
+                  if is_main:
+                      self.flush()
+                      self.main_depth += 1
+                      self.found_main += 1
+                      return
+
+                  if is_ignored or not self.main_depth:
+                      if is_ignored:
+                          self.ignore_depth += 1
+                      return
+
+                  if tag == "table":
+                      self.flush()
+                      self.table_depth += 1
+                      self.table_lines = []
+                      return
+                  if self.table_depth and not self.cell_depth:
+                      if tag == "tr":
+                          self.current_row = []
+                          return
+                      if tag in {"td", "th"}:
+                          self.current_cell = []
+                          self.cell_depth = 1
+                          self.current_row_has_header = self.current_row_has_header or tag == "th"
+                          return
+                  if self.table_depth and self.cell_depth:
+                      self.cell_depth += 1
+                      return
+
+                  if tag in {"h1", "h2", "h3", "h4", "h5", "h6"}:
+                      self.flush()
+                      self.add("#" * int(tag[1]) + " ")
+                  elif tag == "br":
+                      self.flush()
+                  elif tag in {"strong", "b"}:
+                      self.add("**")
+                  elif tag in {"em", "i"}:
+                      self.add("*")
+                  elif tag in {"ul", "ol"}:
+                      self.flush()
+                      self.list_stack.append({"tag": tag, "next": 1})
+                  elif tag == "li":
+                      self.flush()
+                      self.li_depth += 1
+                      if self.list_stack:
+                          current_list = self.list_stack[-1]
+                          indent = "  " * max(len(self.list_stack) - 1, 0)
+                          if current_list["tag"] == "ol":
+                              self.add(f"{indent}{current_list['next']}. ")
+                              current_list["next"] += 1
+                          else:
+                              self.add(f"{indent}- ")
+                  elif tag in BLOCK_TAGS:
+                      if not self.li_depth:
+                          self.flush()
+
+                  if tag == "pre":
+                      self.pre_depth += 1
+
+              def handle_endtag(self, tag: str) -> None:
+                  if tag == "pre" and self.pre_depth:
+                      self.pre_depth -= 1
+
+                  entry_index = None
+                  for index in range(len(self.stack) - 1, -1, -1):
+                      if self.stack[index][0] == tag:
+                          entry_index = index
+                          break
+                  if entry_index is None:
+                      return
+                  entry = self.stack[entry_index]
+                  del self.stack[entry_index:]
+
+                  if entry[2]:
+                      self.ignore_depth = max(self.ignore_depth - 1, 0)
+                      return
+                  if entry[1]:
+                      self.flush()
+                      self.main_depth = max(self.main_depth - 1, 0)
+                      return
+                  if not self.main_depth:
+                      return
+
+                  if self.table_depth:
+                      if self.cell_depth:
+                          if tag in {"td", "th"} and self.cell_depth == 1:
+                              self.current_row.append("".join(self.current_cell).strip())
+                              self.current_cell = []
+                              self.cell_depth = 0
+                          else:
+                              self.cell_depth = max(self.cell_depth - 1, 0)
+                          return
+                      if tag == "tr":
+                          self.flush_table_row()
+                          return
+                      if tag == "table":
+                          self.flush_table_row()
+                          if self.table_lines:
+                              self.blocks.append("\n".join(self.table_lines))
+                          self.table_lines = []
+                          self.table_depth = max(self.table_depth - 1, 0)
+                          return
+
+                  if tag in {"strong", "b"}:
+                      self.add("**")
+                  elif tag in {"em", "i"}:
+                      self.add("*")
+                  elif tag == "li":
+                      self.flush()
+                      self.li_depth = max(self.li_depth - 1, 0)
+                  elif tag in BLOCK_TAGS or tag in {"h1", "h2", "h3", "h4", "h5", "h6"}:
+                      if not self.li_depth:
+                          self.flush()
+                  elif tag in {"ul", "ol"} and self.list_stack:
+                      self.list_stack.pop()
+
+              def handle_data(self, data: str) -> None:
+                  if not self.active():
+                      return
+                  value = data if self.pre_depth else re.sub(r"\s+", " ", data)
+                  if self.table_depth and self.cell_depth:
+                      self.current_cell.append(value)
+                      return
+                  self.add(value)
+
+              def handle_startendtag(self, tag: str, attrs: Any) -> None:
+                  self.handle_starttag(tag, attrs)
+                  self.handle_endtag(tag)
+
+              def result(self) -> str:
+                  self.flush()
+                  if not self.found_main:
+                      raise ValueError("HTML 中未找到 ds-assistant-message-main-content 回答区域")
+                  value = "\n\n".join(self.blocks)
+                  value = re.sub(r"[ \t]+\n", "\n", value)
+                  value = re.sub(
+                      r"(?m)(^\s*(?:[-*]|\d+\.)\s.*)\n{2,}(?=\s*(?:[-*]|\d+\.)\s)",
+                      r"\1\n",
+                      value,
+                  )
+                  value = re.sub(r"\n{3,}", "\n\n", value).strip()
+                  if not value:
+                      raise ValueError("回答区域为空，无法生成标准化回答")
+                  return value
+
+
+          def decode_html(value: Any) -> str:
+              encoded = str(value or "").strip()
+              if not encoded:
+                  raise ValueError("answer_html_b64 为空")
+              if encoded.lower().startswith("data:") and "," in encoded:
+                  encoded = encoded.split(",", 1)[1]
+              encoded = re.sub(r"\s+", "", encoded)
+              padding = "=" * (-len(encoded) % 4)
+              try:
+                  payload = base64.b64decode(encoded + padding, altchars=b"-_")
+              except Exception as exc:
+                  raise ValueError(f"answer_html_b64 Base64 解码失败：{exc}") from exc
+
+              candidates = []
+              for decoder in (
+                  lambda data: zlib.decompress(data),
+                  lambda data: gzip.decompress(data),
+                  lambda data: zlib.decompress(data, -15),
+                  lambda data: data,
+              ):
+                  try:
+                      candidate = decoder(payload)
+                  except Exception:
+                      continue
+                  if candidate not in candidates:
+                      candidates.append(candidate)
+
+              for candidate in candidates:
+                  try:
+                      text = candidate.decode("utf-8")
+                  except UnicodeDecodeError:
+                      continue
+                  if "<" in text and ">" in text:
+                      return text
+              raise ValueError("answer_html_b64 解压后不是可识别的 HTML")
+
+
+          def main(answer_html_b64: Any) -> dict:
+              html = decode_html(answer_html_b64)
+              parser = MarkdownAnswerParser()
+              parser.feed(html)
+              parser.close()
+              answer_raw_new = parser.result()
+              return {
+                  "answer_raw_new": answer_raw_new,
+                  "parse_status": "success",
+                  "parse_error": "",
+              }
+        code_language: python3
+        desc: 从 answer_html_b64 解码、解压并提取回答区域，过滤思考内容后生成 Markdown；解析失败时显式报错。
+        outputs:
+          answer_raw_new:
+            children: null
+            type: string
+          parse_error:
+            children: null
+            type: string
+          parse_status:
+            children: null
+            type: string
+        selected: false
+        title: 1.0 HTML回答提取与标准化（代码）
+        type: code
+        variables:
+        - value_selector:
+          - '1766746558986'
+          - answer_html_b64
+          variable: answer_html_b64
+      height: 130
+      id: '1766746558988'
+      position:
+        x: 300
+        y: 650
+      positionAbsolute:
+        x: 300
+        y: 650
+      selected: false
       sourcePosition: right
       targetPosition: left
       type: custom
@@ -1153,8 +1468,8 @@ workflow:
         type: code
         variables:
         - value_selector:
-          - '1766746558986'
-          - answer_raw
+          - '1766746558988'
+          - answer_raw_new
           variable: answer_raw
         - value_selector:
           - '1766746558986'
@@ -1562,8 +1877,8 @@ workflow:
         type: code
         variables:
         - value_selector:
-          - '1766746558986'
-          - answer_raw
+          - '1766746558988'
+          - answer_raw_new
           variable: answer_raw
         - value_selector:
           - '1766746558986'
@@ -3660,8 +3975,8 @@ workflow:
           - ent_dataset_id
           variable: ent_dataset_id
         - value_selector:
-          - '1766746558986'
-          - answer_raw
+          - '1766746558988'
+          - answer_raw_new
           variable: answer_raw
         - value_selector:
           - '1766746558986'
@@ -3792,8 +4107,8 @@ workflow:
           - matched_brand
           variable: matched_brand
         - value_selector:
-          - '1766746558986'
-          - answer_raw
+          - '1766746558988'
+          - answer_raw_new
           variable: answer_raw
         - value_selector:
           - '1766746558986'
