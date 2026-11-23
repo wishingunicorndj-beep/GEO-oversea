@@ -1,5 +1,7 @@
 app:
-  description: 'V2.61：detected = llm_detected and independent_target
+  description: 'v2.7新增answer_html_b64字段，拿回来answer_html字段，1123
+
+    V2.61：detected = llm_detected and independent_target
 
     V2.6：更新到自研模型；0916
 
@@ -967,7 +969,7 @@ workflow:
       positionAbsolute:
         x: 2409.472427866886
         y: 1365.5448375131118
-      selected: true
+      selected: false
       sourcePosition: right
       targetPosition: left
       type: custom
@@ -998,7 +1000,7 @@ workflow:
       width: 244
     - data:
         desc: V1.12输入契约：14字段，名称与类型保持不变
-        selected: false
+        selected: true
         title: 1.开始
         type: start
         variables:
@@ -1098,7 +1100,19 @@ workflow:
           required: false
           type: number
           variable: keyword_id
-      height: 498
+        - label: 回答html压缩内容
+          max_length: null
+          options: []
+          required: false
+          type: text-input
+          variable: answer_html_b64
+        - label: answer_html
+          max_length: null
+          options: []
+          required: false
+          type: text-input
+          variable: answer_html
+      height: 550
       id: '1766746558986'
       position:
         x: -36.2568556486807
@@ -1106,7 +1120,7 @@ workflow:
       positionAbsolute:
         x: -36.2568556486807
         y: 479.64888928735036
-      selected: false
+      selected: true
       sourcePosition: right
       targetPosition: left
       type: custom
@@ -2039,9 +2053,10 @@ workflow:
           \ 这只在上游尚未建立目标实体时触发，且要求正文存在同一完整别名；不会把比较宾语或视频标签升级为目标。\n    if not any(e.get(\"\
           is_target_entity\") and e.get(\"rank_membership\") in {\"ordered_choice\"\
           ,\"independent_subject\"} for e in candidates if isinstance(e,dict)):\n\
-          \        query_target=any((len(norm(str(a)))>=4 or norm(str(a)) in declared_norm_set) and contains(str(a),query) for a in target_aliases\
-          \ if norm(a))\n        if query_target:\n            subject_hits=[]\n \
-          \           for sid,item in smap.items():\n                if sid in source_background:continue\n\
+          \        query_target=any((len(norm(str(a)))>=4 or norm(str(a)) in declared_norm_set)\
+          \ and contains(str(a),query) for a in target_aliases if norm(a))\n     \
+          \   if query_target:\n            subject_hits=[]\n            for sid,item\
+          \ in smap.items():\n                if sid in source_background:continue\n\
           \                unit=str(item.get(\"text\") or \"\")\n                aliases=[str(a)\
           \ for a in target_aliases if (len(norm(a))>=2 or norm(a) in declared_norm_set)\
           \ and contains(str(a),unit)]\n                if not aliases:continue\n\
@@ -2055,9 +2070,11 @@ workflow:
           \            if heading_hits or (len(subject_hits)>=2 and mention_total>=2):\n\
           \                _,subject_sid,subject_alias=min(heading_hits or subject_hits,key=lambda\
           \ x:(x[0],-len(norm(x[2]))))\n                existing_target=next((e for\
-          \ e in candidates if e.get(\"is_target_entity\") or any(contains(str(a),str(e.get(k) or \"\")) or contains(str(e.get(k) or \"\"),str(a)) for a in target_aliases for k in (\"surface\",\"canonical_name\",\"parent_brand\") if norm(a))),None)\n      \
-          \          if existing_target:\n                    existing_target[\"surface\"\
-          ]=subject_alias;existing_target[\"canonical_name\"]=subject_alias;existing_target[\"\
+          \ e in candidates if e.get(\"is_target_entity\") or any(contains(str(a),str(e.get(k)\
+          \ or \"\")) or contains(str(e.get(k) or \"\"),str(a)) for a in target_aliases\
+          \ for k in (\"surface\",\"canonical_name\",\"parent_brand\") if norm(a))),None)\n\
+          \                if existing_target:\n                    existing_target[\"\
+          surface\"]=subject_alias;existing_target[\"canonical_name\"]=subject_alias;existing_target[\"\
           parent_brand\"]=subject_alias\n                    existing_target[\"competition_role\"\
           ]=\"recommended\";existing_target[\"target_relation\"]=\"exact_target\"\
           ;existing_target[\"is_target_entity\"]=True\n                    existing_target[\"\
@@ -2157,10 +2174,19 @@ workflow:
           \            if sid in source_background:continue\n            scope_text=str(item.get(\"\
           text\") or \"\")\n            context=\" \".join((scope_text,str(item.get(\"\
           context_heading\") or \"\")))\n            if not any(contains(a,scope_text)\
-          \ for a in target_alias_candidates):continue\n            block_type=str(item.get(\"block_type\") or \"\")\n            structured_anchor=block_type in {\"heading\",\"table_row\",\"list_item\"} or \"|\" in scope_text\n            if not any(marker in context for marker in recommendation_markers) and not structured_anchor:continue\n            if not any(marker in context for marker in example_markers) and not structured_anchor:continue\n\
-          \            if any(marker in context for marker in forbidden_category_markers):continue\n\
+          \ for a in target_alias_candidates):continue\n            block_type=str(item.get(\"\
+          block_type\") or \"\")\n            structured_anchor=block_type in {\"\
+          heading\",\"table_row\",\"list_item\"} or \"|\" in scope_text\n        \
+          \    if not any(marker in context for marker in recommendation_markers)\
+          \ and not structured_anchor:continue\n            if not any(marker in context\
+          \ for marker in example_markers) and not structured_anchor:continue\n  \
+          \          if any(marker in context for marker in forbidden_category_markers):continue\n\
           \            matched_alias=max((a for a in target_alias_candidates if contains(a,scope_text)),key=lambda\
-          \ a:len(norm(a)),default=\"\")\n            if not matched_alias:continue\n            if not existing_target:\n                existing_target=next((e for e in unique if any(contains(a,str(e.get(k) or \"\")) for a in target_alias_candidates for k in (\"surface\",\"canonical_name\",\"parent_brand\"))),None)\n            if existing_target:\n                existing_target[\"surface\"\
+          \ a:len(norm(a)),default=\"\")\n            if not matched_alias:continue\n\
+          \            if not existing_target:\n                existing_target=next((e\
+          \ for e in unique if any(contains(a,str(e.get(k) or \"\")) for a in target_alias_candidates\
+          \ for k in (\"surface\",\"canonical_name\",\"parent_brand\"))),None)\n \
+          \           if existing_target:\n                existing_target[\"surface\"\
           ]=matched_alias;existing_target[\"canonical_name\"]=matched_alias;existing_target[\"\
           parent_brand\"]=matched_alias\n                existing_target[\"entity_type\"\
           ]=\"brand\";existing_target[\"competition_role\"]=\"recommended\";existing_target[\"\
@@ -2630,23 +2656,23 @@ workflow:
           \    alias_rows=[x for x in aliases if isinstance(x,dict) and x.get(\"alias\"\
           )]\n    strict_brand_aliases=[str(x.get(\"alias\") or \"\") for x in alias_rows\
           \ if str(x.get(\"alias\") or \"\") and float(x.get(\"confidence\",0))>=0.90]\n\
-          \    # 提及判定保留全部高置信声明别名；实体/排名判定另用去歧义后的长别名集合。\n    mention_brand_aliases=list(dict.fromkeys(strict_brand_aliases))\n    usable_brand_aliases=[a\
-          \ for a in strict_brand_aliases if not any(norm(a)!=norm(b) and norm(a)\
-          \ in norm(b) for b in strict_brand_aliases if norm(b))]\n    # 全局节点确认的客户产品/子品牌也并入目标证据边界，例如“苹果公司\
-          \ → iPhone”。\n    known_aliases={norm(x.get(\"alias\")) for x in alias_rows}\n\
-          \    for e in entities if isinstance(entities,list) else []:\n        if\
-          \ not isinstance(e,dict) or not e.get(\"is_target_entity\"):continue\n \
-          \       for name in (e.get(\"surface\",\"\"),e.get(\"canonical_name\",\"\
-          \"),e.get(\"parent_brand\",\"\")):\n            name=str(name or \"\").strip();key=norm(name)\n\
-          \            if key and key not in known_aliases:\n                alias_rows.append({\"\
-          alias\":name,\"type\":\"validated_target_family\",\"confidence\":0.95,\"\
-          source\":\"entity_inventory\"});known_aliases.add(key)\n    # 子串歧义保护不能误伤“别名与已校验目标实体完全相等”的产品系列。\n\
-          \    # 例如声明别名“香奈儿蔚蓝”虽是“香奈儿蔚蓝男士”的子串，但它与实体\n    # canonical完全相等，必须保留为硬匹配；“360”仍不会因这条规则命中“360智见”。\n\
-          \    target_entity_norms={norm(n) for e in entities if isinstance(e,dict)\
-          \ and e.get(\"is_target_entity\")\n                         for n in (e.get(\"\
-          surface\",\"\"),e.get(\"canonical_name\",\"\")) if norm(n)}\n    exact_entity_aliases=[a\
-          \ for a in strict_brand_aliases if norm(a) in target_entity_norms]\n   \
-          \ usable_brand_aliases=list(dict.fromkeys(usable_brand_aliases+exact_entity_aliases))\n\
+          \    # 提及判定保留全部高置信声明别名；实体/排名判定另用去歧义后的长别名集合。\n    mention_brand_aliases=list(dict.fromkeys(strict_brand_aliases))\n\
+          \    usable_brand_aliases=[a for a in strict_brand_aliases if not any(norm(a)!=norm(b)\
+          \ and norm(a) in norm(b) for b in strict_brand_aliases if norm(b))]\n  \
+          \  # 全局节点确认的客户产品/子品牌也并入目标证据边界，例如“苹果公司 → iPhone”。\n    known_aliases={norm(x.get(\"\
+          alias\")) for x in alias_rows}\n    for e in entities if isinstance(entities,list)\
+          \ else []:\n        if not isinstance(e,dict) or not e.get(\"is_target_entity\"\
+          ):continue\n        for name in (e.get(\"surface\",\"\"),e.get(\"canonical_name\"\
+          ,\"\"),e.get(\"parent_brand\",\"\")):\n            name=str(name or \"\"\
+          ).strip();key=norm(name)\n            if key and key not in known_aliases:\n\
+          \                alias_rows.append({\"alias\":name,\"type\":\"validated_target_family\"\
+          ,\"confidence\":0.95,\"source\":\"entity_inventory\"});known_aliases.add(key)\n\
+          \    # 子串歧义保护不能误伤“别名与已校验目标实体完全相等”的产品系列。\n    # 例如声明别名“香奈儿蔚蓝”虽是“香奈儿蔚蓝男士”的子串，但它与实体\n\
+          \    # canonical完全相等，必须保留为硬匹配；“360”仍不会因这条规则命中“360智见”。\n    target_entity_norms={norm(n)\
+          \ for e in entities if isinstance(e,dict) and e.get(\"is_target_entity\"\
+          )\n                         for n in (e.get(\"surface\",\"\"),e.get(\"canonical_name\"\
+          ,\"\")) if norm(n)}\n    exact_entity_aliases=[a for a in strict_brand_aliases\
+          \ if norm(a) in target_entity_norms]\n    usable_brand_aliases=list(dict.fromkeys(usable_brand_aliases+exact_entity_aliases))\n\
           \    # 上游LLM是语义判定来源；本节点只补充可验证的原文别名和证据，不覆盖上游brand_detected。\n    llm_detected\
           \ = data.get(\"brand_detected\") if isinstance(data,dict) else False\n \
           \   llm_detected = llm_detected is True or (isinstance(llm_detected,str)\
@@ -2685,9 +2711,10 @@ workflow:
           }\n        # 上游3v已用brand_name粒度和正文anchor确认了独立目标时，所有模式（含P5产品系列）\n       \
           \ # 都应信任该关系。P5禁止的是母品牌/兄弟产品猜测，而不是阻断已校验的exact_target。\n        if exact_brand\
           \ or exact_llm_product or semantic_family:independent_target=True;break\n\
-          \    # 高置信声明别名直接出现在answer_raw时，确定性判为提及；实体门禁继续用于实体归属和排名，不再用于否定直接提及。\n    direct_strict_mention=bool(direct)\
-          \n    detected=direct_strict_mention or (llm_detected and independent_target)\n    # 多识别词按正文物理位置最早命中；同位置再取最完整别名。\n    matched=\"\
-          \";direct_ids=[]\n    if detected:\n        # 目标实体本身是上游已校验的可靠产品/主体名；即使声明别名层因短词歧义过滤，也用实体surface回填正文证据。\n\
+          \    # 高置信声明别名直接出现在answer_raw时，确定性判为提及；实体门禁继续用于实体归属和排名，不再用于否定直接提及。\n   \
+          \ direct_strict_mention=bool(direct)\n    detected=direct_strict_mention\
+          \ or (llm_detected and independent_target)\n    # 多识别词按正文物理位置最早命中；同位置再取最完整别名。\n\
+          \    matched=\"\";direct_ids=[]\n    if detected:\n        # 目标实体本身是上游已校验的可靠产品/主体名；即使声明别名层因短词歧义过滤，也用实体surface回填正文证据。\n\
           \        target_names=[]\n        for e in entities if isinstance(entities,list)\
           \ else []:\n            if isinstance(e,dict) and e.get(\"is_target_entity\"\
           ) and e.get(\"rank_membership\") in {\"ordered_choice\",\"independent_subject\"\
@@ -2705,9 +2732,10 @@ workflow:
           \ for x in ids);ranked.append((first,-len(norm(row[\"alias\"])),row[\"alias\"\
           ],ids))\n        ranked.sort();matched=ranked[0][2];direct_ids=list(dict.fromkeys(x\
           \ for _,ids in direct for x in ids))\n    strict_norms={norm(x) for x in\
-          \ mention_brand_aliases if norm(x)}\n    confirmed_mentions=[x for x in llm_mentions\
-          \ if norm(x) in strict_norms]\n    if detected and not matched and confirmed_mentions:matched=confirmed_mentions[0]\n\
-          \    if llm_matched_brand and norm(llm_matched_brand) in strict_norms:matched=llm_matched_brand\n\
+          \ mention_brand_aliases if norm(x)}\n    confirmed_mentions=[x for x in\
+          \ llm_mentions if norm(x) in strict_norms]\n    if detected and not matched\
+          \ and confirmed_mentions:matched=confirmed_mentions[0]\n    if llm_matched_brand\
+          \ and norm(llm_matched_brand) in strict_norms:matched=llm_matched_brand\n\
           \    # LLM给出的证据ID是上游证据；只要ID存在，就纳入结构化回填范围。\n    llm_evidence_ids=[]\n   \
           \ if isinstance(data,dict):\n        values=data.get(\"evidence_sentence_ids\"\
           ,[])\n        values=values if isinstance(values,list) else ([values] if\
@@ -4215,6 +4243,6 @@ workflow:
       type: custom
       width: 244
     viewport:
-      x: -130.90708844462574
-      y: 12.864764050676342
-      zoom: 0.40602502989229017
+      x: 157.98458528534343
+      y: -373.8323903509919
+      zoom: 1.0516548197248017
